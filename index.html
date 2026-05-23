@@ -666,22 +666,23 @@ body {
 
 /* RACE DETAIL HORSE GRID */
 .race-horse-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   margin-bottom: 4px;
 }
 
 .race-horse-card {
   background: var(--card2);
   border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 9px 12px;
+  border-radius: 6px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   cursor: default;
   transition: all .15s;
+  min-height: 44px;
 }
 
 /* 全頭診断ページあり → クリッカブル */
@@ -694,6 +695,55 @@ body {
 .race-horse-card.no-page {
   opacity: 0.45;
   cursor: default;
+}
+
+/* 馬名＋総合評価エリア */
+.rhc-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+/* 直近2走エリア */
+.rhc-recent {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.rhc-race-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  min-width: 0;
+  flex: 1;
+  max-width: 160px;
+}
+
+.rhc-race-name {
+  font-size: 11px;
+  color: var(--muted2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  letter-spacing: .3px;
+}
+
+.rhc-race-track {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 
@@ -1095,7 +1145,11 @@ body {
 
   /* レースページ */
   .race-horses-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
-  .race-horse-card { padding: 8px 6px !important; font-size: 11px !important; }
+  .race-horse-card { padding: 7px 8px !important; font-size: 11px !important; }
+  .rhc-left { width: 130px !important; }
+  .rhc-race-item { max-width: 160px !important; }
+  .rhc-race-name { font-size: 10px !important; }
+  .rhc-race-track { display: none !important; }
   .history-page { padding: 16px 12px !important; }
   .race-tabs { overflow-x: auto !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-wrap: nowrap !important; }
   .race-tabs::-webkit-scrollbar { display: none; }
@@ -172722,6 +172776,7 @@ let selectedDate = null;
 let selectedVenue = null;
 let selectedRace = null;
 let selectedHorse = null;
+let horseReturnContext = null; // jumpToHorse経由で来た場合の戻り先
 let memos = {};
 
 // ===== IndexedDB ストレージ =====
@@ -173446,24 +173501,6 @@ function renderWeekContent(day) {
           </div>
 
           ${horseGridHTML}
-
-          <div class="section-lbl">レース展開</div>
-          <div class="memo-box" style="margin-bottom:14px">
-            <textarea class="memo-textarea" id="memoFlow" placeholder="ペース予想、隊列、展開メモ..." oninput="saveRaceSection('${key}','flow')">${memo1}</textarea>
-            <div class="memo-saved-msg" id="savedFlow">保存しました</div>
-          </div>
-
-          <div class="section-lbl">予想</div>
-          <div class="memo-box" style="margin-bottom:14px">
-            <textarea class="memo-textarea" id="memoPred" placeholder="本命・対抗・買い目など..." oninput="saveRaceSection('${key}','pred')">${memo2}</textarea>
-            <div class="memo-saved-msg" id="savedPred">保存しました</div>
-          </div>
-
-          <div class="section-lbl">レース結果・寸評</div>
-          <div class="memo-box">
-            <textarea class="memo-textarea" id="memoResult" placeholder="結果・振り返りなど..." oninput="saveRaceSection('${key}','result')">${memo3}</textarea>
-            <div class="memo-saved-msg" id="savedResult">保存しました</div>
-          </div>
         </div>
       `;
     }
@@ -173524,35 +173561,97 @@ async function saveRaceSection(key, section) {
 function buildHorseGrid(race) {
   if (!race.horses || race.horses.length === 0) return '';
   const frameColors = ['','f1','f1','f3','f3','f5','f5','f7','f8'];
+  const evalOrder = ['S','A','B','C','D','F'];
+  const evalColors = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+  const evalBg = { S:'rgba(255,215,0,0.18)', A:'rgba(82,196,138,0.18)', B:'rgba(92,196,100,0.12)', C:'rgba(92,154,224,0.15)', D:'rgba(224,150,92,0.18)', F:'rgba(160,160,160,0.15)' };
+
+  // 総合評価（最頻評価）を計算
+  function getOverallEval(ghRaces) {
+    if (!ghRaces || ghRaces.length === 0) return null;
+    const counts = {};
+    for (const e of evalOrder) counts[e] = 0;
+    for (const r of ghRaces) {
+      const ev = r.eval;
+      if (evalOrder.includes(ev)) counts[ev]++;
+      else if (ev === 'good') counts['A']++;
+      else if (ev === 'mid')  counts['B']++;
+      else if (ev === 'bad')  counts['C']++;
+      else counts['C']++;
+    }
+    return evalOrder.reduce((a, b) => counts[a] >= counts[b] ? a : b, evalOrder[0]);
+  }
+
+  // eval値を正規化
+  function normalizeEval(ev) {
+    if (evalOrder.includes(ev)) return ev;
+    if (ev === 'good') return 'A';
+    if (ev === 'mid')  return 'B';
+    if (ev === 'bad')  return 'C';
+    return 'C';
+  }
+
+  // 評価バッジHTML（サイズ指定可）
+  function evalBadge(ev, fontSize) {
+    const e = normalizeEval(ev);
+    const color = evalColors[e];
+    const bg = evalBg[e];
+    const lbl = e === 'F' ? 'F' : e;
+    return `<span style="display:inline-flex;align-items:center;justify-content:center;background:${bg};color:${color};border-radius:3px;font-size:${fontSize || '10px'};font-weight:700;letter-spacing:.5px;padding:2px 7px;line-height:1.5;flex-shrink:0">${lbl}</span>`;
+  }
+
   const cards = race.horses.map(h => {
     const fc = frameColors[h.frame] || 'f8';
-    // horsesをリアルタイム参照（後からインポートされた場合も自動反映）
     const gh = horses.find(x => x.name === h.name);
-    // 全頭診断に登録済みかどうか
     const hasPage = !!gh;
-    // メモ・近走データがあれば太字
     const hasMemo = gh && (gh.races.length > 0 || memos['horse-' + h.name]);
 
     if (hasPage) {
-      // 全頭診断ページあり → クリッカブル・名前色付き
+      const overall = getOverallEval(gh.races);
+      const overallBadge = overall ? evalBadge(overall, '11px') : '';
+
+      // 直近4走：レース名 + コース + 評価バッジ
+      const recent2 = gh.races.slice(0, 4);
+      const recentItemsHTML = recent2.map(r => {
+        const badge = evalBadge(r.eval, '10px');
+        // レース名を短縮（長すぎる場合）
+        const raceName = (r.name || '').replace(/\d{4}\/\d+\/\d+/, '').trim();
+        const track = r.track || '';
+        return `<div class="rhc-race-item">
+          ${badge}
+          <span class="rhc-race-name">${raceName}</span>
+          <span class="rhc-race-track">${track}</span>
+        </div>`;
+      }).join('');
+
+      const recentSection = recent2.length > 0
+        ? `<div class="rhc-recent">${recentItemsHTML}</div>`
+        : `<div class="rhc-recent"><span style="font-size:11px;color:var(--muted)">—</span></div>`;
+
       return `
         <div class="race-horse-card linked" onclick="jumpToHorse('${h.name}')">
           <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
-          <div class="race-horse-name${hasMemo ? ' has-memo' : ''}">${h.name}</div>
+          <div class="rhc-left">
+            <div class="race-horse-name${hasMemo ? ' has-memo' : ''}" style="flex:1;min-width:0;font-size:13px">${h.name}</div>
+            ${overallBadge}
+          </div>
+          ${recentSection}
         </div>`;
     } else {
-      // 全頭診断ページなし → 名前のみ表示（グレーアウト）
       return `
         <div class="race-horse-card no-page">
           <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
-          <div class="race-horse-name">${h.name}</div>
+          <div class="rhc-left">
+            <div class="race-horse-name" style="font-size:13px">${h.name}</div>
+          </div>
+          <div class="rhc-recent"><span style="font-size:11px;color:var(--muted)">データなし</span></div>
         </div>`;
     }
   }).join('');
+
   return `
     <div class="section-lbl" style="margin-bottom:8px">全頭考察</div>
     <div class="race-horse-grid">${cards}</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px">太字 = 近走データあり　タップで全頭診断へ</div>`;
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px">右バッジ = 総合評価　直近最大4走のレース・評価表示　タップで全頭診断へ</div>`;
 }
 
 // レースの馬カードをクリック → horses配列を名前で照合
@@ -173560,6 +173659,11 @@ function buildHorseGrid(race) {
 function jumpToHorse(name) {
   const found = horses.find(h => h.name === name);
   if (!found) return;
+
+  // 呼び出し元のコンテキストを記録（戻るボタン用）
+  // どのビューから来たかを保存
+  horseReturnContext = { view: currentView, selectedDate, selectedRace, selectedHistoryDate };
+
   // selectedHorseをセット
   selectedHorse = found;
   // switchViewを使わずDOMだけ切り替え（showHorseRowGridを経由させない）
@@ -173577,6 +173681,43 @@ function jumpToHorse(name) {
 }
 
 // ================= HORSES =================
+
+// 馬詳細ページからの「戻る」処理
+// jumpToHorse経由で来た場合は元のレースページへ、そうでなければ一覧へ
+function returnFromHorse() {
+  if (horseReturnContext) {
+    const ctx = horseReturnContext;
+    horseReturnContext = null;
+    selectedHorse = null;
+
+    // 元のビューに切り替え
+    currentView = ctx.view;
+    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(el => {
+      el.classList.toggle('active', el.dataset.view === ctx.view);
+    });
+    const vEl = document.getElementById('view-' + ctx.view);
+    if (vEl) vEl.classList.add('active');
+
+    if (ctx.view === 'week') {
+      selectedDate  = ctx.selectedDate;
+      selectedRace  = ctx.selectedRace;
+      renderWeek();
+    } else if (ctx.view === 'history') {
+      selectedHistoryDate = ctx.selectedHistoryDate;
+      selectedRace = ctx.selectedRace;
+      renderHistoryDateList();
+      renderHistoryMain();
+    } else {
+      // fallback
+      showHorseRowGrid();
+    }
+    updateBreadcrumb();
+  } else {
+    // 通常遷移（全頭診断一覧から来た場合）
+    showHorseRowGrid();
+  }
+}
 let horseFilter = '';
 
 // ===== 50音ユーティリティ =====
@@ -173916,12 +174057,14 @@ function filterHorses(val) {
 }
 
 function selectHorseByName(name) {
+  horseReturnContext = null;
   selectedHorse = horses.find(h => h.name === name);
   renderHorseList();
   renderHorseDetail();
 }
 
 function selectHorse(num) {
+  horseReturnContext = null;
   selectedHorse = horses.find(h => h.num === num);
   renderHorseList();
   renderHorseDetail();
@@ -174097,7 +174240,7 @@ function renderHorseDetail() {
     <div class="horse-detail fade-in">
       <div class="horse-detail-header">
         <div class="horse-detail-title">
-          <button onclick="showHorseRowGrid()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 8px 0 0;line-height:1" title="一覧に戻る">←</button>
+          <button onclick="returnFromHorse()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 8px 0 0;line-height:1" title="戻る">←</button>
           <h2>${h.name}</h2>
         </div>
       </div>
@@ -174647,21 +174790,6 @@ function renderHistoryMain() {
             </div>
           </div>
           ${horseGridHTML}
-          <div class="section-lbl">レース展開</div>
-          <div class="memo-box" style="margin-bottom:14px">
-            <textarea class="memo-textarea" id="hMemoFlow" placeholder="ペース予想、隊列、展開メモ..." oninput="saveRaceSection('${key}','flow')">${memo1}</textarea>
-            <div class="memo-saved-msg" id="savedFlow">保存しました</div>
-          </div>
-          <div class="section-lbl">予想</div>
-          <div class="memo-box" style="margin-bottom:14px">
-            <textarea class="memo-textarea" id="hMemoPred" placeholder="本命・対抗・買い目など..." oninput="saveRaceSection('${key}','pred')">${memo2}</textarea>
-            <div class="memo-saved-msg" id="savedPred">保存しました</div>
-          </div>
-          <div class="section-lbl">レース結果・寸評</div>
-          <div class="memo-box">
-            <textarea class="memo-textarea" id="hMemoResult" placeholder="結果・振り返りなど..." oninput="saveRaceSection('${key}','result')">${memo3}</textarea>
-            <div class="memo-saved-msg" id="savedResult">保存しました</div>
-          </div>
         </div>
       `;
     }
