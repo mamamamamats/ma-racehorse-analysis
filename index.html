@@ -625,6 +625,30 @@ body {
   color: rgba(232,228,220,0.8);
 }
 
+/* 編集モード: 近走評価の並び替え */
+.result-reorder {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.result-reorder-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  width: 22px;
+  height: 20px;
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+.result-reorder-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent2); }
+.result-reorder-btn:disabled { opacity: .25; cursor: default; }
+
 /* MEMO */
 .memo-box {
   background: var(--card);
@@ -766,6 +790,28 @@ body {
 }
 
 .race-horse-name { font-size: 13px; flex: 1; line-height: 1.3; }
+
+/* 編集モード: レースカード内インライン編集 */
+.rhc-item { }
+.rhc-edit-toggle {
+  font-size: 10.5px;
+  color: var(--muted2);
+  letter-spacing: .5px;
+  padding: 3px 12px 3px 38px;
+  cursor: pointer;
+  transition: color .15s;
+  user-select: none;
+}
+.rhc-edit-toggle:hover { color: var(--accent2); }
+.rhc-edit-toggle.open { color: var(--accent2); }
+.rhc-edit-form {
+  margin: 2px 0 6px 38px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 6px 6px 6px;
+  padding: 10px 12px;
+}
 
 /* ===== HISTORY VIEW ===== */
 .history-page { padding: 32px; max-width: 900px; }
@@ -920,6 +966,91 @@ body {
 .import-zone-icon { font-size: 28px; margin-bottom: 8px; opacity: .6; }
 .import-zone-title { font-size: 14px; color: var(--muted2); letter-spacing: 1px; margin-bottom: 4px; }
 .import-zone-sub { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+
+/* ===== EDIT MODE (レース・馬ページ作成) ===== */
+.edit-page { padding: 28px 32px; max-width: 920px; }
+.edit-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 26px;
+  margin-bottom: 28px;
+}
+.edit-card-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent2);
+  letter-spacing: 1.5px;
+  margin-bottom: 18px;
+}
+.edit-field { margin-bottom: 14px; }
+.edit-field-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted2);
+  margin-bottom: 6px;
+  display: block;
+}
+.edit-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.edit-row > div { flex: 1; min-width: 110px; }
+select.search-input, textarea.search-input { width: 100%; }
+textarea.search-input { line-height: 1.7; }
+.horse-slot-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.horse-slot-row .slot-frame { width: 70px; flex-shrink: 0; }
+.horse-slot-row .slot-num { width: 64px; flex-shrink: 0; }
+.horse-slot-row .slot-name { flex: 1; }
+.horse-race-row {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.edit-btn-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 13px;
+  transition: all .15s;
+}
+.edit-btn-remove:hover { border-color: var(--red); color: var(--red); }
+.edit-btn-add {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--muted2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all .15s;
+  width: 100%;
+  margin-top: 4px;
+}
+.edit-btn-add:hover { border-color: var(--accent); color: var(--accent2); }
+.edit-btn-save {
+  background: rgba(201,168,76,.12);
+  border: 1px solid var(--accent);
+  color: var(--accent2);
+  padding: 10px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 700;
+  transition: all .15s;
+}
+.edit-btn-save:hover { background: rgba(201,168,76,.22); }
+.edit-msg { font-size: 12px; min-height: 16px; letter-spacing: .5px; }
+.edit-hint { font-size: 11px; margin-top: 6px; }
 
 .import-log {
   margin-top: 16px;
@@ -1256,6 +1387,9 @@ body {
     <div class="nav-tab" onclick="switchView('history')" data-view="history">
       <span class="tab-icon">📚</span> 過去開催
     </div>
+    <div class="nav-tab" onclick="switchView('edit')" data-view="edit" id="navEditTab" style="display:none">
+      <span class="tab-icon">✏️</span> 編集
+    </div>
   </div>
 
   <!-- CONTENT -->
@@ -1410,6 +1544,122 @@ body {
           <div class="history-page" id="historyPage"></div>
         </div>
       </div>
+    </div>
+
+    <!-- 編集モード（?edit のときのみナビに表示） -->
+    <div class="view" id="view-edit">
+      <div class="edit-page">
+        <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px">編集モード</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:24px;letter-spacing:.5px;line-height:1.8">レースリストの作成・追加、馬ページの新規作成ができます。出走馬欄に馬名を記入すると、全頭診断に同じ名前の馬ページがあれば自動的にそのページへ紐づきます。</div>
+
+        <!-- ① レースリスト作成 -->
+        <div class="edit-card">
+          <div class="edit-card-title">🏇 レース・レースリストを作成</div>
+
+          <div class="edit-field">
+            <label class="edit-field-label">開催日</label>
+            <select id="editDaySelect" class="search-input" onchange="onEditDayChange()"></select>
+          </div>
+          <div class="edit-field" id="editNewDateWrap" style="display:none">
+            <label class="edit-field-label">新しい日付</label>
+            <input type="date" id="editNewDate" class="search-input">
+          </div>
+
+          <div class="edit-field">
+            <label class="edit-field-label">競馬場</label>
+            <select id="editVenueSelect" class="search-input" onchange="onEditVenueChange()"></select>
+          </div>
+          <div class="edit-field" id="editNewVenueWrap" style="display:none">
+            <label class="edit-field-label">新しい競馬場名</label>
+            <input type="text" id="editNewVenueName" class="search-input" placeholder="例: 中山">
+          </div>
+
+          <div class="edit-field">
+            <label class="edit-field-label">レース（既存のレースを選ぶと出走馬を追記・編集できます）</label>
+            <select id="editRaceSelect" class="search-input" onchange="onEditRaceChange()"></select>
+          </div>
+
+          <div class="edit-row">
+            <div style="max-width:90px">
+              <label class="edit-field-label">R</label>
+              <input type="number" id="editRaceNum" class="search-input" min="1" max="12" placeholder="11">
+            </div>
+            <div style="flex:2">
+              <label class="edit-field-label">レース名</label>
+              <input type="text" id="editRaceName" class="search-input" placeholder="例: 有馬記念">
+            </div>
+            <div>
+              <label class="edit-field-label">クラス</label>
+              <select id="editRaceGrade" class="search-input">
+                <option value="new">新馬</option>
+                <option value="un">未勝利</option>
+                <option value="1s">1勝クラス</option>
+                <option value="2s">2勝クラス</option>
+                <option value="3s">3勝クラス</option>
+                <option value="op" selected>オープン・特別</option>
+                <option value="g3">G3</option>
+                <option value="g2">G2</option>
+                <option value="g1">G1</option>
+              </select>
+            </div>
+            <div>
+              <label class="edit-field-label">コース</label>
+              <input type="text" id="editRaceTrack" class="search-input" placeholder="例: 芝2500">
+            </div>
+          </div>
+
+          <div class="edit-field" style="margin-top:18px">
+            <label class="edit-field-label">出走馬（枠・馬番・馬名）</label>
+            <div id="editHorseSlotsContainer"></div>
+            <button type="button" class="edit-btn-add" onclick="addEditHorseSlotRow()">＋ 馬を追加</button>
+          </div>
+
+          <div style="margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button class="edit-btn-save" onclick="saveEditRace()">💾 レースを保存</button>
+            <div class="edit-msg" id="editRaceMsg"></div>
+          </div>
+        </div>
+
+        <!-- ② 馬ページ作成 -->
+        <div class="edit-card">
+          <div class="edit-card-title">🐴 馬ページを新規作成・編集</div>
+
+          <div class="edit-row">
+            <div style="flex:2">
+              <label class="edit-field-label">馬名</label>
+              <input type="text" id="editHorseName" class="search-input" list="editHorseNameList" placeholder="例: ボーンディスウェイ" oninput="onEditHorseNameInput()">
+              <div class="edit-hint" id="editHorseExistsHint" style="display:none;color:var(--accent2)"></div>
+            </div>
+            <div>
+              <label class="edit-field-label">枠（任意）</label>
+              <input type="number" id="editHorseFrame" class="search-input" min="1" max="8" placeholder="任意">
+            </div>
+            <div>
+              <label class="edit-field-label">馬番（任意）</label>
+              <input type="number" id="editHorseNum" class="search-input" min="1" max="18" placeholder="任意">
+            </div>
+          </div>
+
+          <div class="edit-field">
+            <label class="edit-field-label">短評</label>
+            <textarea id="editHorseShortNote" class="search-input" style="min-height:54px;resize:vertical" placeholder="例: 中山適性高い先行型"></textarea>
+          </div>
+
+          <div class="edit-field">
+            <label class="edit-field-label">近走評価</label>
+            <div id="editHorseRacesContainer"></div>
+            <button type="button" class="edit-btn-add" onclick="addEditHorseRaceRow()">＋ 近走を追加</button>
+          </div>
+
+          <div style="margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button class="edit-btn-save" onclick="saveEditHorse()">💾 馬ページを保存</button>
+            <button type="button" class="btn-back" onclick="resetEditHorseForm()">クリア</button>
+            <div class="edit-msg" id="editHorseMsg"></div>
+          </div>
+        </div>
+
+      </div>
+      <datalist id="editHorseNameList"></datalist>
     </div>
 
   </div>
@@ -173366,11 +173616,12 @@ function switchView(v) {
   if (v === 'week') renderWeek();
   if (v === 'horses') { showHorseRowGrid(); renderHorseList(); }
   if (v === 'history') renderHistory();
+  if (v === 'edit') renderEditView();
 }
 
 function updateBreadcrumb() {
   const bc = document.getElementById('breadcrumb');
-  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催' };
+  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催', edit:'編集' };
   bc.innerHTML = `<span class="crumb" onclick="switchView('home')">ホーム</span>`;
   if (currentView !== 'home') {
     bc.innerHTML += `<span class="sep">/</span><span class="current">${labels[currentView]}</span>`;
@@ -173488,7 +173739,7 @@ function renderWeekContent(day) {
       const memo3 = memos[key+'-result'] || '';
 
       // ---- 全頭考察 ----
-      const horseGridHTML = buildHorseGrid(race);
+      const horseGridHTML = buildHorseGrid(race, day, venue);
 
       detailHTML = `
         <div class="race-detail fade-in">
@@ -173558,12 +173809,18 @@ async function saveRaceSection(key, section) {
 }
 
 // 全頭考察グリッドHTML構築（race.horses + 全頭診断リアルタイム参照）
-function buildHorseGrid(race) {
+function buildHorseGrid(race, day, venue) {
   if (!race.horses || race.horses.length === 0) return '';
   const frameColors = ['','f1','f1','f3','f3','f5','f5','f7','f8'];
   const evalOrder = ['S','A','B','C','D','F'];
   const evalColors = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
   const evalBg = { S:'rgba(255,215,0,0.18)', A:'rgba(82,196,138,0.18)', B:'rgba(92,196,100,0.12)', C:'rgba(92,154,224,0.15)', D:'rgba(224,150,92,0.18)', F:'rgba(160,160,160,0.15)' };
+
+  // 編集モード用：レース名・コースのプリフィル値（新馬戦は「新馬YYYY/M/D」表記）
+  const prefillRaceName = race.grade === 'new' ? `新馬${day.date}` : (race.name || '');
+  const prefillTrack = `${venue.name}${(race.track || '').replace('ダート', 'ダ')}`;
+  const prefillRaceNameSafe = escHtml(prefillRaceName);
+  const prefillTrackSafe = escHtml(prefillTrack);
 
   // 総合評価（最頻評価）を計算
   function getOverallEval(ghRaces) {
@@ -173604,6 +173861,7 @@ function buildHorseGrid(race) {
     const gh = horses.find(x => x.name === h.name);
     const hasPage = !!gh;
     const hasMemo = gh && (gh.races.length > 0 || memos['horse-' + h.name]);
+    const safeName = escHtml(h.name);
 
     if (hasPage) {
       const overall = getOverallEval(gh.races);
@@ -173627,23 +173885,64 @@ function buildHorseGrid(race) {
         ? `<div class="rhc-recent">${recentItemsHTML}</div>`
         : `<div class="rhc-recent"><span style="font-size:11px;color:var(--muted)">—</span></div>`;
 
-      return `
-        <div class="race-horse-card linked" onclick="jumpToHorse('${h.name}')">
-          <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
-          <div class="rhc-left">
-            <div class="race-horse-name${hasMemo ? ' has-memo' : ''}" style="flex:1;min-width:0;font-size:13px">${h.name}</div>
-            ${overallBadge}
+      const editAddon = isEditMode ? `
+        <div class="rhc-edit-toggle" onclick="event.stopPropagation(); toggleRhcForm(this)">＋ 近走を追加</div>
+        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}">
+          <div class="edit-row" style="gap:6px;margin-bottom:6px">
+            <input type="text" class="rhc-add-name search-input" placeholder="レース名（例: 有馬記念）" value="${prefillRaceNameSafe}" style="flex:2">
+            <input type="text" class="rhc-add-track search-input" placeholder="コース（例: 中山芝2500）" value="${prefillTrackSafe}" style="flex:1.4">
+            <select class="rhc-add-eval search-input" style="max-width:64px">
+              <option value="S">S</option><option value="A">A</option><option value="B" selected>B</option><option value="C">C</option><option value="D">D</option><option value="F">F</option>
+            </select>
           </div>
-          ${recentSection}
+          <textarea class="rhc-add-comment search-input" style="min-height:42px;resize:vertical;margin-bottom:6px" placeholder="コメント（振り返り）"></textarea>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" class="edit-btn-save" style="padding:6px 14px;font-size:12px" onclick="saveRhcInlineRace(this)">＋ 追加</button>
+            <span class="rhc-add-msg edit-msg"></span>
+          </div>
+        </div>` : '';
+
+      return `
+        <div class="rhc-item">
+          <div class="race-horse-card linked" onclick="jumpToHorse('${safeName}')">
+            <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
+            <div class="rhc-left">
+              <div class="race-horse-name${hasMemo ? ' has-memo' : ''}" style="flex:1;min-width:0;font-size:13px">${h.name}</div>
+              ${overallBadge}
+            </div>
+            ${recentSection}
+          </div>
+          ${editAddon}
         </div>`;
     } else {
-      return `
-        <div class="race-horse-card no-page">
-          <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
-          <div class="rhc-left">
-            <div class="race-horse-name" style="font-size:13px">${h.name}</div>
+      const editAddon = isEditMode ? `
+        <div class="rhc-edit-toggle" onclick="event.stopPropagation(); toggleRhcForm(this)">＋ 馬ページを作成</div>
+        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}" data-frame="${h.frame||0}" data-num="${h.num||0}">
+          <textarea class="rhc-new-shortnote search-input" style="min-height:40px;resize:vertical;margin-bottom:6px" placeholder="短評（任意）"></textarea>
+          <div class="edit-row" style="gap:6px;margin-bottom:6px">
+            <input type="text" class="rhc-new-rname search-input" placeholder="近走レース名（任意）" value="${prefillRaceNameSafe}" style="flex:2">
+            <input type="text" class="rhc-new-rtrack search-input" placeholder="コース（任意）" value="${prefillTrackSafe}" style="flex:1.4">
+            <select class="rhc-new-reval search-input" style="max-width:64px">
+              <option value="S">S</option><option value="A">A</option><option value="B" selected>B</option><option value="C">C</option><option value="D">D</option><option value="F">F</option>
+            </select>
           </div>
-          <div class="rhc-recent"><span style="font-size:11px;color:var(--muted)">データなし</span></div>
+          <textarea class="rhc-new-rcomment search-input" style="min-height:38px;resize:vertical;margin-bottom:6px" placeholder="コメント（任意）"></textarea>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" class="edit-btn-save" style="padding:6px 14px;font-size:12px" onclick="createHorsePageInline(this)">🐴 ページを作成</button>
+            <span class="rhc-add-msg edit-msg"></span>
+          </div>
+        </div>` : '';
+
+      return `
+        <div class="rhc-item">
+          <div class="race-horse-card no-page">
+            <div class="race-horse-num frame-circle ${fc}">${h.num}</div>
+            <div class="rhc-left">
+              <div class="race-horse-name" style="font-size:13px">${h.name}</div>
+            </div>
+            <div class="rhc-recent"><span style="font-size:11px;color:var(--muted)">データなし</span></div>
+          </div>
+          ${editAddon}
         </div>`;
     }
   }).join('');
@@ -174083,9 +174382,16 @@ function renderHorseDetail() {
   const evalClass = { S:'eval-S', A:'eval-A', B:'eval-B', C:'eval-C', D:'eval-D', F:'eval-F',
     good:'eval-good', mid:'eval-mid', bad:'eval-bad' };
 
-  const racesHTML = h.races.length ? h.races.map(r => `
+  const racesHTML = h.races.length ? h.races.map((r, idx) => {
+    const reorderControls = isEditMode ? `
+      <div class="result-reorder">
+        <button type="button" class="result-reorder-btn" onclick="moveHorseRaceEntry(${idx},-1)" ${idx===0 ? 'disabled' : ''} title="上へ（新しい方へ）">▲</button>
+        <button type="button" class="result-reorder-btn" onclick="moveHorseRaceEntry(${idx},1)" ${idx===h.races.length-1 ? 'disabled' : ''} title="下へ（古い方へ）">▼</button>
+      </div>` : '';
+    return `
     <div class="result-card">
       <div class="result-card-top">
+        ${reorderControls}
         <div class="result-race-name">${r.name}</div>
         <span class="eval-badge ${evalClass[r.eval]||evalClass['C']}">
           ${r.eval==='good'?'高評価':r.eval==='mid'?'中評価':r.eval==='bad'?'低評価':evalLabel[r.eval]||r.eval||'C'}
@@ -174094,7 +174400,8 @@ function renderHorseDetail() {
       </div>
       <div class="result-comment">${r.comment}</div>
     </div>
-  `).join('') : `<div style="color:var(--muted);font-size:13px;padding:16px 0;letter-spacing:1px">近走データがありません</div>`;
+  `;
+  }).join('') : `<div style="color:var(--muted);font-size:13px;padding:16px 0;letter-spacing:1px">近走データがありません</div>`;
 
   // 分析データ
   const total = h.races.length;
@@ -174279,6 +174586,20 @@ async function saveHorseMemo(name) {
   await saveMemos();
   const msg = document.getElementById('horseMemoSaved');
   if (msg) { msg.style.opacity='1'; setTimeout(()=>msg.style.opacity='0',1500); }
+}
+
+// 馬ページの近走評価の並び替え（編集モード）
+async function moveHorseRaceEntry(index, direction) {
+  const h = selectedHorse;
+  if (!h || !h.races) return;
+  const newIndex = index + direction;
+  if (newIndex < 0 || newIndex >= h.races.length) return;
+  const tmp = h.races[index];
+  h.races[index] = h.races[newIndex];
+  h.races[newIndex] = tmp;
+  await saveHorse(h);
+  invalidateHorseCache();
+  renderHorseDetail();
 }
 
 
@@ -174779,7 +175100,7 @@ function renderHistoryMain() {
       const memo2 = memos[key+'-pred']   || '';
       const memo3 = memos[key+'-result'] || '';
 
-      const horseGridHTML = buildHorseGrid(race);
+      const horseGridHTML = buildHorseGrid(race, day, venue);
 
       detailHTML = `
         <div class="race-detail fade-in">
@@ -174860,6 +175181,8 @@ function updateHomeStats() {
 const isEditMode = location.search.includes('edit');
 const importSection = document.getElementById('importSection');
 if (importSection) importSection.style.display = isEditMode ? 'block' : 'none';
+const navEditTab = document.getElementById('navEditTab');
+if (navEditTab) navEditTab.style.display = isEditMode ? 'flex' : 'none';
 
 // ============================================================
 //  NOTION IMPORT
@@ -175409,6 +175732,442 @@ function addLog(type, msg) {
   const icon = type === 'ok' ? '✓' : type === 'err' ? '✗' : '⚠';
   console.log(`${icon} ${msg}`);
 }
+
+// ============================================================
+//  編集モード（?edit）: レースリスト作成 / 馬ページ新規作成
+// ============================================================
+
+function dowFromYMD(y, m, d) {
+  const map = ['日','月','火','水','木','金','土'];
+  return map[new Date(y, m - 1, d).getDay()];
+}
+
+// 編集ビューの初期描画（開催日セレクト・馬名オートコンプリートを構築）
+function renderEditView() {
+  if (!raceDays || !horses) return; // データロード前の保護
+
+  refreshHorseNameDatalist();
+
+  const daySel = document.getElementById('editDaySelect');
+  if (daySel) {
+    const sorted = [...raceDays].sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+    daySel.innerHTML = sorted.map(d =>
+      `<option value="${d.id}">${d.label}（${(d.venues||[]).map(v=>v.name).join('/') || '—'}）</option>`
+    ).join('') + `<option value="__new__">＋ 新しい日付を追加</option>`;
+    onEditDayChange();
+  }
+
+  // 馬ページ作成フォームの近走行が空なら1行だけ用意
+  const horseRacesContainer = document.getElementById('editHorseRacesContainer');
+  if (horseRacesContainer && horseRacesContainer.children.length === 0) {
+    addEditHorseRaceRow();
+  }
+}
+
+function refreshHorseNameDatalist() {
+  const dl = document.getElementById('editHorseNameList');
+  if (dl) dl.innerHTML = horses.map(h => `<option value="${escHtml(h.name)}">`).join('');
+}
+
+function onEditDayChange() {
+  const val = document.getElementById('editDaySelect').value;
+  const wrap = document.getElementById('editNewDateWrap');
+  if (wrap) wrap.style.display = val === '__new__' ? 'block' : 'none';
+  populateEditVenueSelect();
+}
+
+function populateEditVenueSelect() {
+  const dayId = document.getElementById('editDaySelect').value;
+  const day = dayId !== '__new__' ? raceDays.find(d => d.id === dayId) : null;
+  const sel = document.getElementById('editVenueSelect');
+  const venues = day ? [...(day.venues || [])] : [];
+  sel.innerHTML = venues.map(v => `<option value="${escHtml(v.name)}">${v.name}</option>`).join('') +
+    `<option value="__new__">＋ 新しい競馬場を追加</option>`;
+  onEditVenueChange();
+}
+
+function onEditVenueChange() {
+  const val = document.getElementById('editVenueSelect').value;
+  const wrap = document.getElementById('editNewVenueWrap');
+  if (wrap) wrap.style.display = val === '__new__' ? 'block' : 'none';
+  populateEditRaceSelect();
+}
+
+function populateEditRaceSelect() {
+  const dayId = document.getElementById('editDaySelect').value;
+  const venueVal = document.getElementById('editVenueSelect').value;
+  const sel = document.getElementById('editRaceSelect');
+  let races = [];
+  if (dayId !== '__new__' && venueVal !== '__new__') {
+    const day = raceDays.find(d => d.id === dayId);
+    const venue = day && (day.venues || []).find(v => v.name === venueVal);
+    races = venue ? [...venue.races].sort((a, b) => a.r - b.r) : [];
+  }
+  sel.innerHTML = races.map(r => `<option value="${r.r}">${r.r}R ${escHtml(r.name)}</option>`).join('') +
+    `<option value="__new__">＋ 新しいレースを追加</option>`;
+  onEditRaceChange();
+}
+
+function onEditRaceChange() {
+  const dayId = document.getElementById('editDaySelect').value;
+  const venueVal = document.getElementById('editVenueSelect').value;
+  const raceVal = document.getElementById('editRaceSelect').value;
+  const numInput = document.getElementById('editRaceNum');
+  const nameInput = document.getElementById('editRaceName');
+  const gradeSel = document.getElementById('editRaceGrade');
+  const trackInput = document.getElementById('editRaceTrack');
+  const slotsContainer = document.getElementById('editHorseSlotsContainer');
+
+  let race = null;
+  if (raceVal !== '__new__' && dayId !== '__new__' && venueVal !== '__new__') {
+    const day = raceDays.find(d => d.id === dayId);
+    const venue = day && (day.venues || []).find(v => v.name === venueVal);
+    race = venue && venue.races.find(r => r.r === parseInt(raceVal));
+  }
+
+  if (race) {
+    numInput.value = race.r;
+    numInput.disabled = true;
+    nameInput.value = race.name || '';
+    gradeSel.value = race.grade || 'op';
+    trackInput.value = race.track || '';
+    slotsContainer.innerHTML = '';
+    (race.horses || []).forEach(h => addEditHorseSlotRow(h.frame, h.num, h.name));
+    if (!race.horses || race.horses.length === 0) addEditHorseSlotRow();
+  } else {
+    numInput.disabled = false;
+    numInput.value = '';
+    nameInput.value = '';
+    gradeSel.value = 'op';
+    trackInput.value = '';
+    slotsContainer.innerHTML = '';
+    addEditHorseSlotRow();
+  }
+}
+
+// 出走馬の入力行（枠・馬番・馬名）を1行追加
+function addEditHorseSlotRow(frame, num, name) {
+  const container = document.getElementById('editHorseSlotsContainer');
+  if (!container) return;
+  let nextNum = 1;
+  container.querySelectorAll('.slot-num').forEach(inp => {
+    const v = parseInt(inp.value) || 0;
+    if (v >= nextNum) nextNum = v + 1;
+  });
+  const f = frame || 1;
+  const n = (num !== undefined && num !== null && num !== 0) ? num : nextNum;
+  const nm = name || '';
+  const row = document.createElement('div');
+  row.className = 'horse-slot-row';
+  row.innerHTML = `
+    <select class="slot-frame search-input">${[1,2,3,4,5,6,7,8].map(i => `<option value="${i}" ${i===f?'selected':''}>${i}枠</option>`).join('')}</select>
+    <input class="slot-num search-input" type="number" min="1" max="18" value="${n}" placeholder="馬番">
+    <input class="slot-name search-input" type="text" list="editHorseNameList" value="${escHtml(nm)}" placeholder="馬名（全頭診断の登録名と完全一致させると自動で紐づきます）">
+    <button type="button" class="edit-btn-remove" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+// レースを保存（既存レースなら更新、新規なら作成）
+async function saveEditRace() {
+  const msgEl = document.getElementById('editRaceMsg');
+  msgEl.style.color = 'var(--red)';
+
+  // --- 開催日 ---
+  let dayId, dateStr, dayOfWeek, label;
+  const dayMode = document.getElementById('editDaySelect').value;
+  if (dayMode === '__new__') {
+    const dateVal = document.getElementById('editNewDate').value;
+    if (!dateVal) { msgEl.textContent = '⚠ 日付を入力してください'; return; }
+    const [y, m, d] = dateVal.split('-').map(Number);
+    dateStr = `${y}/${m}/${d}`;
+    dayOfWeek = dowFromYMD(y, m, d);
+    label = `${m}月${d}日（${dayOfWeek}）`;
+    dayId = `day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  } else {
+    dayId = dayMode;
+  }
+
+  let day = raceDays.find(d => d.id === dayId);
+  if (!day) {
+    day = { id: dayId, date: dateStr, dayOfWeek, label, venues: [] };
+    raceDays.push(day);
+  }
+
+  // --- 競馬場 ---
+  let venueVal = document.getElementById('editVenueSelect').value;
+  let venueName = venueVal;
+  if (venueVal === '__new__') {
+    venueName = document.getElementById('editNewVenueName').value.trim();
+  }
+  if (!venueName) { msgEl.textContent = '⚠ 競馬場名を入力してください'; return; }
+  let venue = day.venues.find(v => v.name === venueName);
+  if (!venue) { venue = { name: venueName, races: [] }; day.venues.push(venue); }
+
+  // --- レース ---
+  const rNum = parseInt(document.getElementById('editRaceNum').value);
+  if (!rNum) { msgEl.textContent = '⚠ R番号を入力してください'; return; }
+  const raceName = document.getElementById('editRaceName').value.trim();
+  if (!raceName) { msgEl.textContent = '⚠ レース名を入力してください'; return; }
+  const grade = document.getElementById('editRaceGrade').value;
+  const track = document.getElementById('editRaceTrack').value.trim();
+
+  // --- 出走馬 ---
+  const rows = document.querySelectorAll('#editHorseSlotsContainer .horse-slot-row');
+  const horsesArr = [];
+  rows.forEach(row => {
+    const frame = parseInt(row.querySelector('.slot-frame').value);
+    const num = parseInt(row.querySelector('.slot-num').value);
+    const name = row.querySelector('.slot-name').value.trim();
+    if (name) horsesArr.push({ frame: frame || 0, num: num || 0, name });
+  });
+
+  let race = venue.races.find(r => r.r === rNum);
+  if (!race) {
+    race = { r: rNum, name: raceName, grade };
+    if (track) race.track = track;
+    venue.races.push(race);
+  } else {
+    race.name = raceName;
+    race.grade = grade;
+    if (track) race.track = track;
+  }
+  if (horsesArr.length) race.horses = horsesArr;
+
+  await idbPut('raceDays', day);
+  invalidateHorseCache();
+  updateHomeStats();
+
+  // フォームを保存内容のまま再描画して続けて編集できるようにする
+  renderEditView();
+  document.getElementById('editDaySelect').value = day.id;
+  onEditDayChange();
+  document.getElementById('editVenueSelect').value = venue.name;
+  onEditVenueChange();
+  document.getElementById('editRaceSelect').value = String(rNum);
+  onEditRaceChange();
+
+  msgEl.style.color = 'var(--green)';
+  msgEl.textContent = `✓ 保存しました（${day.label} ${venue.name} ${rNum}R ${raceName}）`;
+}
+
+// --- 馬ページ作成・編集 ---
+
+function onEditHorseNameInput() {
+  const name = document.getElementById('editHorseName').value.trim();
+  const hint = document.getElementById('editHorseExistsHint');
+  const h = horses.find(x => x.name === name);
+  if (h && name) {
+    hint.style.display = 'block';
+    hint.innerHTML = `既存の馬ページが見つかりました。<a href="javascript:void(0)" onclick="loadEditHorseForEdit('${escHtml(name)}')" style="color:var(--accent2);text-decoration:underline">編集データを読み込む</a>（読み込まずに保存すると上書きされます）`;
+  } else {
+    hint.style.display = 'none';
+  }
+}
+
+function normalizeEvalForEdit(ev) {
+  if (['S','A','B','C','D','F'].includes(ev)) return ev;
+  if (ev === 'good') return 'A';
+  if (ev === 'mid')  return 'B';
+  if (ev === 'bad')  return 'C';
+  return 'B';
+}
+
+function loadEditHorseForEdit(name) {
+  const h = horses.find(x => x.name === name);
+  if (!h) return;
+  document.getElementById('editHorseFrame').value = h.frame || '';
+  document.getElementById('editHorseNum').value = h.num || '';
+  document.getElementById('editHorseShortNote').value = h.shortNote || '';
+  const container = document.getElementById('editHorseRacesContainer');
+  container.innerHTML = '';
+  (h.races || []).forEach(r => addEditHorseRaceRow(r.name, r.track, normalizeEvalForEdit(r.eval), r.comment));
+  if (!h.races || h.races.length === 0) addEditHorseRaceRow();
+  document.getElementById('editHorseExistsHint').style.display = 'none';
+}
+
+function addEditHorseRaceRow(name, track, evalVal, comment) {
+  const container = document.getElementById('editHorseRacesContainer');
+  if (!container) return;
+  const ev = evalVal || 'B';
+  const row = document.createElement('div');
+  row.className = 'horse-race-row';
+  row.innerHTML = `
+    <div class="edit-row" style="margin-bottom:6px">
+      <input class="hr-name search-input" type="text" placeholder="レース名（例: 有馬記念）" value="${escHtml(name||'')}" style="flex:2">
+      <input class="hr-track search-input" type="text" placeholder="コース（例: 中山芝2500）" value="${escHtml(track||'')}" style="flex:1.4">
+      <select class="hr-eval search-input" style="max-width:80px">
+        ${['S','A','B','C','D','F'].map(e => `<option value="${e}" ${e===ev?'selected':''}>${e}</option>`).join('')}
+      </select>
+      <button type="button" class="edit-btn-remove" onclick="this.closest('.horse-race-row').remove()">✕</button>
+    </div>
+    <textarea class="hr-comment search-input" style="min-height:50px;resize:vertical" placeholder="コメント（レース内容の振り返り）">${escHtml(comment||'')}</textarea>
+  `;
+  container.appendChild(row);
+}
+
+function resetEditHorseForm() {
+  document.getElementById('editHorseName').value = '';
+  document.getElementById('editHorseFrame').value = '';
+  document.getElementById('editHorseNum').value = '';
+  document.getElementById('editHorseShortNote').value = '';
+  document.getElementById('editHorseExistsHint').style.display = 'none';
+  const container = document.getElementById('editHorseRacesContainer');
+  container.innerHTML = '';
+  addEditHorseRaceRow();
+  const msgEl = document.getElementById('editHorseMsg');
+  if (msgEl) msgEl.textContent = '';
+}
+
+async function saveEditHorse() {
+  const msgEl = document.getElementById('editHorseMsg');
+  msgEl.style.color = 'var(--red)';
+
+  const name = document.getElementById('editHorseName').value.trim();
+  if (!name) { msgEl.textContent = '⚠ 馬名を入力してください'; return; }
+
+  const frame = parseInt(document.getElementById('editHorseFrame').value) || 0;
+  const num = parseInt(document.getElementById('editHorseNum').value) || 0;
+  const shortNote = document.getElementById('editHorseShortNote').value.trim();
+
+  const rows = document.querySelectorAll('#editHorseRacesContainer .horse-race-row');
+  const races = [];
+  rows.forEach(row => {
+    const rName = row.querySelector('.hr-name').value.trim();
+    const track = row.querySelector('.hr-track').value.trim();
+    const evalVal = row.querySelector('.hr-eval').value;
+    const comment = row.querySelector('.hr-comment').value.trim();
+    if (rName) races.push({ name: rName, track, eval: evalVal, comment });
+  });
+
+  let h = horses.find(x => x.name === name);
+  const isNew = !h;
+  if (!h) {
+    h = { frame, num, name, checked: false, shortNote, races };
+    horses.push(h);
+  } else {
+    if (frame) h.frame = frame;
+    if (num) h.num = num;
+    h.shortNote = shortNote;
+    h.races = races;
+  }
+  await saveHorse(h);
+  invalidateHorseCache();
+  renderHorseList();
+  updateHomeStats();
+  refreshHorseNameDatalist();
+
+  msgEl.style.color = 'var(--green)';
+  msgEl.textContent = isNew ? `✓「${name}」のページを新規作成しました` : `✓「${name}」のページを更新しました`;
+}
+
+// ============================================================
+//  編集モード: レースカード内インライン編集
+//  （各レースの出走馬カードから直接、近走追加・馬ページ作成）
+// ============================================================
+
+function toggleRhcForm(toggleEl) {
+  const form = toggleEl.nextElementSibling;
+  if (!form) return;
+  const willOpen = form.style.display === 'none' || !form.style.display;
+  form.style.display = willOpen ? 'block' : 'none';
+  toggleEl.classList.toggle('open', willOpen);
+}
+
+// 簡易トースト通知（成功/エラーを一瞬だけ表示）
+function showToast(msg, isError) {
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--accent);padding:10px 22px;border-radius:8px;font-size:13px;letter-spacing:.5px;z-index:9999;opacity:0;transition:opacity .25s;box-shadow:0 6px 24px rgba(0,0,0,.4);pointer-events:none;font-family:\'Zen Kaku Gothic New\',sans-serif';
+    document.body.appendChild(toast);
+  }
+  toast.style.borderColor = isError ? 'var(--red)' : 'var(--accent)';
+  toast.style.color = isError ? 'var(--red)' : 'var(--accent2)';
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 1800);
+}
+
+// 現在表示中のレースカードグリッドを再描画（今週/過去開催どちらにも対応）
+function refreshActiveRaceGrid() {
+  if (currentView === 'week' && selectedDate) {
+    const day = raceDays.find(d => d.id === selectedDate);
+    if (day) renderWeekContent(day);
+  } else if (currentView === 'history' && selectedHistoryDate) {
+    renderHistoryMain();
+  }
+}
+
+// レースカードから既存の馬ページへ近走（直近のレース結果評価）を追加
+async function saveRhcInlineRace(btn) {
+  const form = btn.closest('.rhc-edit-form');
+  const msgEl = form.querySelector('.rhc-add-msg');
+  const name = form.dataset.horseName;
+  const h = horses.find(x => x.name === name);
+  if (!h) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = '⚠ 馬ページが見つかりません';
+    return;
+  }
+  const raceName = form.querySelector('.rhc-add-name').value.trim();
+  if (!raceName) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = '⚠ レース名を入力してください';
+    return;
+  }
+  const track = form.querySelector('.rhc-add-track').value.trim();
+  const evalVal = form.querySelector('.rhc-add-eval').value;
+  const comment = form.querySelector('.rhc-add-comment').value.trim();
+
+  h.races = h.races || [];
+  h.races.unshift({ name: raceName, track, eval: evalVal, comment }); // 最新走を先頭に追加
+
+  await saveHorse(h);
+  invalidateHorseCache();
+  updateHomeStats();
+  showToast(`✓「${name}」に近走を追加しました`);
+  refreshActiveRaceGrid();
+}
+
+// レースカードから出走馬の新規ページを作成（全頭診断に未登録の馬向け）
+async function createHorsePageInline(btn) {
+  const form = btn.closest('.rhc-edit-form');
+  const msgEl = form.querySelector('.rhc-add-msg');
+  const name = form.dataset.horseName;
+
+  if (horses.find(x => x.name === name)) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = '⚠ 既に同じ名前の馬ページがあります';
+    return;
+  }
+
+  const frame = parseInt(form.dataset.frame) || 0;
+  const num = parseInt(form.dataset.num) || 0;
+  const shortNote = form.querySelector('.rhc-new-shortnote').value.trim();
+  const rName = form.querySelector('.rhc-new-rname').value.trim();
+  const races = [];
+  if (rName) {
+    races.push({
+      name: rName,
+      track: form.querySelector('.rhc-new-rtrack').value.trim(),
+      eval: form.querySelector('.rhc-new-reval').value,
+      comment: form.querySelector('.rhc-new-rcomment').value.trim()
+    });
+  }
+
+  const h = { frame, num, name, checked: false, shortNote, races };
+  horses.push(h);
+  await saveHorse(h);
+  invalidateHorseCache();
+  updateHomeStats();
+  showToast(`✓「${name}」のページを作成しました`);
+  refreshActiveRaceGrid();
+}
+
+
 </script>
 
 <!-- JSZip for zip support -->
