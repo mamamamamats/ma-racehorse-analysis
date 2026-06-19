@@ -1552,6 +1552,19 @@ textarea.search-input { line-height: 1.7; }
         <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px">編集モード</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:24px;letter-spacing:.5px;line-height:1.8">レースリストの作成・追加、馬ページの新規作成ができます。出走馬欄に馬名を記入すると、全頭診断に同じ名前の馬ページがあれば自動的にそのページへ紐づきます。</div>
 
+        <!-- ⓪ Firestore（クラウドDB）への移行 -->
+        <div class="edit-card" style="border-color:var(--accent)">
+          <div class="edit-card-title">☁️ Firestoreへのデータ移行</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.8">
+            これまでこの端末に保存されていたレースリスト・馬ページのデータを、クラウドデータベース（Firestore）へ送信します。送信後は、他の端末でアプリを開き直す（再読み込みする）だけで自動的に最新データが反映されます。<br>
+            通常は最初に1回だけ実行すれば十分です。以降は編集モードでの保存が自動的にFirestoreへ反映されるので、このボタンを押す必要はありません。
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button class="edit-btn-save" onclick="migrateLocalDataToFirestore()">☁️ 現在のデータをFirestoreへ送信</button>
+            <div class="edit-msg" id="migrateMsg"></div>
+          </div>
+        </div>
+
         <!-- ① レースリスト作成 -->
         <div class="edit-card">
           <div class="edit-card-title">🏇 レース・レースリストを作成</div>
@@ -173074,9 +173087,89 @@ function idbDelete(storeName, key) {
   });
 }
 
+// ===== Firestore 同期（データベース化） =====
+// raceDays・horsesをFirestoreの 'raceDays' / 'horses' コレクションにも保存する。
+// これにより、編集モードで保存した内容が他の端末にも「アプリを開き直すだけ」で反映される。
+// IndexedDBはオフラインキャッシュとして引き続き使用（ネットが無い時もこれまで通り閲覧・編集可）。
+async function waitForFirebase(timeoutMs) {
+  let waited = 0;
+  const limit = timeoutMs || 4000;
+  while ((!window._fbDb || !window._fbFns) && waited < limit) {
+    await new Promise(r => setTimeout(r, 100));
+    waited += 100;
+  }
+  return !!(window._fbDb && window._fbFns);
+}
+
+async function fbSaveRaceDay(day) {
+  try {
+    if (!(await waitForFirebase())) return false;
+    const { doc, setDoc } = window._fbFns;
+    await setDoc(doc(window._fbDb, 'raceDays', day.id), day);
+    return true;
+  } catch(e) { console.warn('[keiba] Firestore raceDays保存失敗:', e.message); return false; }
+}
+
+async function fbSaveHorse(horse) {
+  try {
+    if (!(await waitForFirebase())) return false;
+    const { doc, setDoc } = window._fbFns;
+    await setDoc(doc(window._fbDb, 'horses', horse.name), horse);
+    return true;
+  } catch(e) { console.warn('[keiba] Firestore horses保存失敗:', e.message); return false; }
+}
+
+async function fbDeleteHorse(name) {
+  try {
+    if (!(await waitForFirebase())) return false;
+    const { doc, deleteDoc } = window._fbFns;
+    await deleteDoc(doc(window._fbDb, 'horses', name));
+    return true;
+  } catch(e) { console.warn('[keiba] Firestore horses削除失敗:', e.message); return false; }
+}
+
+// アプリ起動時：Firestoreを正データとして取得し、IndexedDBキャッシュへ反映する。
+// オフライン等で取得できない場合は何もせず、既存のIndexedDBキャッシュをそのまま使う。
+async function fetchFirestoreData() {
+  try {
+    const ready = await waitForFirebase(5000);
+    if (!ready) { console.log('[keiba] Firebase未準備のためFirestore同期をスキップ'); return; }
+    const { collection, getDocs } = window._fbFns;
+    const [daysSnap, horsesSnap] = await Promise.all([
+      getDocs(collection(window._fbDb, 'raceDays')),
+      getDocs(collection(window._fbDb, 'horses'))
+    ]);
+    const fsDays = [];   daysSnap.forEach(d => fsDays.push(d.data()));
+    const fsHorses = []; horsesSnap.forEach(d => fsHorses.push(d.data()));
+
+    // Firestoreがまだ空（移行前）の場合は何もしない＝ローカルのデータをそのまま使う
+    if (fsDays.length === 0 && fsHorses.length === 0) {
+      console.log('[keiba] Firestoreは空のためローカルキャッシュを使用します（編集モードの「Firestoreへ送信」で移行できます）');
+      return;
+    }
+
+    // Firestoreを正として、IndexedDBキャッシュを最新化
+    for (const day of fsDays) await idbPut('raceDays', day);
+    for (const h of fsHorses) await idbPut('horses', h);
+
+    // Firestore側で削除された日付・馬はローカルキャッシュからも削除
+    const existingDays = await idbGetAll('raceDays');
+    const fsDayIds = new Set(fsDays.map(d => d.id));
+    for (const d of existingDays) { if (!fsDayIds.has(d.id)) await idbDelete('raceDays', d.id); }
+    const existingHorsesLocal = await idbGetAll('horses');
+    const fsHorseNames = new Set(fsHorses.map(h => h.name));
+    for (const h of existingHorsesLocal) { if (!fsHorseNames.has(h.name)) await idbDelete('horses', h.name); }
+
+    console.log(`[keiba] Firestoreから最新データを同期しました（${fsDays.length}日分・${fsHorses.length}頭）`);
+  } catch(e) {
+    console.log('[keiba] Firestore同期をスキップ（オフライン等）:', e.message);
+  }
+}
+
 // 馬1頭を保存
 async function saveHorse(horse) {
   try { await idbPut('horses', horse); } catch(e) { console.warn('馬保存失敗:', horse.name, e); }
+  fbSaveHorse(horse); // Firestoreへも反映（失敗してもローカル保存は維持される）
 }
 
 // 全馬をロード
@@ -173087,6 +173180,7 @@ async function loadAllHorses() {
 // 馬を削除
 async function deleteHorse(name) {
   try { await idbDelete('horses', name); } catch(e) {}
+  fbDeleteHorse(name); // Firestoreからも削除
   const idx = horses.findIndex(h => h.name === name);
   if (idx >= 0) horses.splice(idx, 1);
   invalidateHorseCache();
@@ -173126,8 +173220,8 @@ async function initApp() {
   // IndexedDBを開く
   db = await openDB();
 
-  // GitHub上の keiba-data.json を自動フェッチ（管理者がアップロードした最新データ）
-  await fetchGitHubData();
+  // Firestore（クラウドDB）から最新データを自動取得（アプリ起動時/再読み込み時のみ）
+  await fetchFirestoreData();
 
   // raceDaysをロード
   const savedDays   = await idbGetAll('raceDays');
@@ -175429,6 +175523,7 @@ async function importDayPage(title, text) {
   }
   // dayObjの変更をIndexedDBに保存
   await idbPut('raceDays', dayObj);
+  fbSaveRaceDay(dayObj);
 }
 
 // ---- RACE PAGE ----
@@ -175737,6 +175832,29 @@ function addLog(type, msg) {
 //  編集モード（?edit）: レースリスト作成 / 馬ページ新規作成
 // ============================================================
 
+// ローカル（IndexedDB）にある現在のデータを丸ごとFirestoreへ送信する（初回移行用）
+async function migrateLocalDataToFirestore() {
+  const msgEl = document.getElementById('migrateMsg');
+  msgEl.style.color = 'var(--accent2)';
+  msgEl.textContent = '送信中…';
+  try {
+    const ready = await waitForFirebase(5000);
+    if (!ready) {
+      msgEl.style.color = 'var(--red)';
+      msgEl.textContent = '⚠ Firebaseに接続できませんでした（通信環境をご確認ください）';
+      return;
+    }
+    let dCount = 0, hCount = 0;
+    for (const day of raceDays) { if (await fbSaveRaceDay(day)) dCount++; }
+    for (const h of horses)    { if (await fbSaveHorse(h))   hCount++; }
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = `✓ 送信完了（${dCount}日分・${hCount}頭）。他の端末は再読み込みすると反映されます`;
+  } catch(e) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = '⚠ 送信に失敗しました: ' + e.message;
+  }
+}
+
 function dowFromYMD(y, m, d) {
   const map = ['日','月','火','水','木','金','土'];
   return map[new Date(y, m - 1, d).getDay()];
@@ -175935,6 +176053,7 @@ async function saveEditRace() {
   if (horsesArr.length) race.horses = horsesArr;
 
   await idbPut('raceDays', day);
+  fbSaveRaceDay(day); // Firestoreへも反映（他端末は再読み込みで自動取得）
   invalidateHorseCache();
   updateHomeStats();
 
