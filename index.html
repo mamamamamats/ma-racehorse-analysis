@@ -1307,7 +1307,7 @@ textarea.search-input { line-height: 1.7; }
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, startAfter, getDocs, deleteDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBx-2zCZdjcZ549aT1_Sh2pXCVLbfFdPVI",
@@ -1329,7 +1329,7 @@ textarea.search-input { line-height: 1.7; }
     sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink,
     signOut, onAuthStateChanged,
     doc, setDoc, getDoc, collection, query, orderBy, limit,
-    startAfter, getDocs, deleteDoc, serverTimestamp
+    startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch
   };
 
   // メールリンクからのサインイン処理
@@ -1562,6 +1562,12 @@ textarea.search-input { line-height: 1.7; }
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
             <button class="edit-btn-save" onclick="migrateLocalDataToFirestore()">☁️ 現在のデータをFirestoreへ送信</button>
             <div class="edit-msg" id="migrateMsg"></div>
+          </div>
+          <div id="migrateProgressWrap" style="display:none;margin-top:12px">
+            <div style="height:8px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
+              <div id="migrateProgressBar" style="height:100%;width:0%;background:var(--accent);transition:width .15s"></div>
+            </div>
+            <div id="migrateProgressLabel" style="font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.5px"></div>
           </div>
         </div>
 
@@ -173087,6 +173093,18 @@ function idbDelete(storeName, key) {
   });
 }
 
+// 複数件を1つのトランザクションでまとめて書き込む（馬3000頭超など大量データの高速化用）
+function idbPutAll(storeName, values) {
+  return new Promise((resolve, reject) => {
+    if (!values || values.length === 0) return resolve();
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    for (const v of values) store.put(v);
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
 // ===== Firestore 同期（データベース化） =====
 // raceDays・horsesをFirestoreの 'raceDays' / 'horses' コレクションにも保存する。
 // これにより、編集モードで保存した内容が他の端末にも「アプリを開き直すだけ」で反映される。
@@ -173148,9 +173166,9 @@ async function fetchFirestoreData() {
       return;
     }
 
-    // Firestoreを正として、IndexedDBキャッシュを最新化
-    for (const day of fsDays) await idbPut('raceDays', day);
-    for (const h of fsHorses) await idbPut('horses', h);
+    // Firestoreを正として、IndexedDBキャッシュを最新化（1トランザクションでまとめて）
+    await idbPutAll('raceDays', fsDays);
+    await idbPutAll('horses', fsHorses);
 
     // Firestore側で削除された日付・馬はローカルキャッシュからも削除
     const existingDays = await idbGetAll('raceDays');
@@ -175833,25 +175851,75 @@ function addLog(type, msg) {
 // ============================================================
 
 // ローカル（IndexedDB）にある現在のデータを丸ごとFirestoreへ送信する（初回移行用）
+// データ件数が多い（馬3000頭超）ため、1件ずつではなくバッチ書き込みでまとめて送信し、
+// 進捗バー（件数・％）をリアルタイムに表示する。
 async function migrateLocalDataToFirestore() {
   const msgEl = document.getElementById('migrateMsg');
+  const wrap = document.getElementById('migrateProgressWrap');
+  const bar = document.getElementById('migrateProgressBar');
+  const label = document.getElementById('migrateProgressLabel');
+
   msgEl.style.color = 'var(--accent2)';
-  msgEl.textContent = '送信中…';
+  msgEl.textContent = '準備中…';
+  wrap.style.display = 'block';
+  bar.style.width = '0%';
+  label.textContent = '';
+
   try {
     const ready = await waitForFirebase(5000);
     if (!ready) {
       msgEl.style.color = 'var(--red)';
       msgEl.textContent = '⚠ Firebaseに接続できませんでした（通信環境をご確認ください）';
+      wrap.style.display = 'none';
       return;
     }
-    let dCount = 0, hCount = 0;
-    for (const day of raceDays) { if (await fbSaveRaceDay(day)) dCount++; }
-    for (const h of horses)    { if (await fbSaveHorse(h))   hCount++; }
-    msgEl.style.color = 'var(--green)';
-    msgEl.textContent = `✓ 送信完了（${dCount}日分・${hCount}頭）。他の端末は再読み込みすると反映されます`;
+
+    const { doc, writeBatch } = window._fbFns;
+    const items = [
+      ...raceDays.map(d => ({ col: 'raceDays', id: d.id, data: d })),
+      ...horses.map(h => ({ col: 'horses', id: h.name, data: h }))
+    ];
+    const total = items.length;
+    if (total === 0) {
+      msgEl.style.color = 'var(--red)';
+      msgEl.textContent = '⚠ 送信するデータがありません';
+      wrap.style.display = 'none';
+      return;
+    }
+
+    const CHUNK = 400; // Firestoreの1バッチ上限(500件)より余裕を持たせる
+    let done = 0, failed = 0;
+
+    for (let i = 0; i < items.length; i += CHUNK) {
+      const slice = items.slice(i, i + CHUNK);
+      try {
+        const batch = writeBatch(window._fbDb);
+        for (const it of slice) batch.set(doc(window._fbDb, it.col, it.id), it.data);
+        await batch.commit();
+        done += slice.length;
+      } catch(e) {
+        failed += slice.length;
+        console.warn('[keiba] バッチ送信失敗:', e.message);
+      }
+      const processed = done + failed;
+      const pct = Math.round((processed / total) * 100);
+      bar.style.width = pct + '%';
+      label.textContent = `${processed} / ${total} 件処理中（${pct}%）`;
+      msgEl.style.color = 'var(--accent2)';
+      msgEl.textContent = `送信中… ${processed} / ${total} 件`;
+    }
+
+    if (failed === 0) {
+      msgEl.style.color = 'var(--green)';
+      msgEl.textContent = `✓ 送信完了！（開催日${raceDays.length}件・馬${horses.length}頭、計${done}件）他の端末は再読み込みすると反映されます`;
+    } else {
+      msgEl.style.color = 'var(--red)';
+      msgEl.textContent = `⚠ 一部失敗しました（成功${done}件／失敗${failed}件）。通信環境をご確認のうえ、もう一度お試しください`;
+    }
   } catch(e) {
     msgEl.style.color = 'var(--red)';
     msgEl.textContent = '⚠ 送信に失敗しました: ' + e.message;
+    wrap.style.display = 'none';
   }
 }
 
