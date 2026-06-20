@@ -173143,6 +173143,7 @@ async function fbSaveRaceDay(day) {
     if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, setDoc } = window._fbFns;
     await setDoc(doc(window._fbDb, 'raceDays', day.id), day);
+    bumpSyncVersion(); // 他端末が次回起動時にこの変更を検知できるようにする
     return { ok:true };
   } catch(e) {
     console.warn('[keiba] Firestore raceDays保存失敗:', e.code || '', e.message);
@@ -173155,6 +173156,7 @@ async function fbSaveHorse(horse) {
     if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, setDoc } = window._fbFns;
     await setDoc(doc(window._fbDb, 'horses', horse.name), horse);
+    bumpSyncVersion();
     return { ok:true };
   } catch(e) {
     console.warn('[keiba] Firestore horses保存失敗:', e.code || '', e.message);
@@ -173167,11 +173169,26 @@ async function fbDeleteHorse(name) {
     if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, deleteDoc } = window._fbFns;
     await deleteDoc(doc(window._fbDb, 'horses', name));
+    bumpSyncVersion();
     return { ok:true };
   } catch(e) {
     console.warn('[keiba] Firestore horses削除失敗:', e.code || '', e.message);
     return { ok:false, code: e.code || '', message: e.message || String(e) };
   }
+}
+
+// 軽量な「最終更新版」マーカー。書き込みのたびにこれを更新し、起動時はまずこれだけを見て、
+// 変化が無ければ重いフル同期（馬3000頭超の全件取得）をスキップする（スマホでのメモリ枯渇・クラッシュ対策）。
+const SYNC_VERSION_LS_KEY = 'keiba-fs-sync-version';
+
+async function bumpSyncVersion() {
+  try {
+    if (!(await waitForFirebase(2000))) return;
+    const { doc, setDoc } = window._fbFns;
+    const v = String(Date.now());
+    await setDoc(doc(window._fbDb, 'meta', 'syncInfo'), { updatedAt: v });
+    localStorage.setItem(SYNC_VERSION_LS_KEY, v); // 自分が書いた変更なので、自分はもう最新版を知っている
+  } catch(e) { console.warn('[keiba] 同期バージョン更新失敗:', e.code || '', e.message); }
 }
 
 // アプリ起動時：Firestoreを正データとして取得し、IndexedDBキャッシュへ反映する。
@@ -173180,12 +173197,28 @@ async function fetchFirestoreData() {
   try {
     const ready = await waitForFirebase(5000);
     if (!ready) { console.log('[keiba] Firebase未準備のためFirestore同期をスキップ'); return; }
-    const { collection, getDocs } = window._fbFns;
-    const [daysSnap, horsesSnap] = await Promise.all([
-      getDocs(collection(window._fbDb, 'raceDays')),
-      getDocs(collection(window._fbDb, 'horses'))
-    ]);
-    const fsDays = [];   daysSnap.forEach(d => fsDays.push(d.data()));
+    const { doc, getDoc, collection, getDocs } = window._fbFns;
+
+    // ① まず小さなバージョン情報だけ確認（重い全件取得を毎回やらないため）
+    try {
+      const metaSnap = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
+      if (metaSnap.exists()) {
+        const remoteV = String(metaSnap.data().updatedAt || '');
+        const localV  = localStorage.getItem(SYNC_VERSION_LS_KEY) || '';
+        if (remoteV && remoteV === localV) {
+          console.log('[keiba] データに変更が無いためFirestoreフル同期をスキップしました');
+          return;
+        }
+      }
+    } catch(e) {
+      // metaが読めない場合（権限未設定・初回など）はフル同期にフォールバック
+      console.log('[keiba] 同期バージョンの確認に失敗。フル同期を試みます:', e.code || e.message);
+    }
+
+    // ② 変更があった場合のみ全件取得（スマホの瞬間メモリ消費を抑えるため並列ではなく順番に取得）
+    const daysSnap   = await getDocs(collection(window._fbDb, 'raceDays'));
+    const fsDays = []; daysSnap.forEach(d => fsDays.push(d.data()));
+    const horsesSnap = await getDocs(collection(window._fbDb, 'horses'));
     const fsHorses = []; horsesSnap.forEach(d => fsHorses.push(d.data()));
 
     // Firestoreがまだ空（移行前）の場合は何もしない＝ローカルのデータをそのまま使う
@@ -173205,6 +173238,12 @@ async function fetchFirestoreData() {
     const existingHorsesLocal = await idbGetAll('horses');
     const fsHorseNames = new Set(fsHorses.map(h => h.name));
     for (const h of existingHorsesLocal) { if (!fsHorseNames.has(h.name)) await idbDelete('horses', h.name); }
+
+    // 同期完了後、自分のバージョン記録も最新化（次回以降はスキップできるように）
+    try {
+      const metaSnap2 = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
+      if (metaSnap2.exists()) localStorage.setItem(SYNC_VERSION_LS_KEY, String(metaSnap2.data().updatedAt || ''));
+    } catch(e) {}
 
     console.log(`[keiba] Firestoreから最新データを同期しました（${fsDays.length}日分・${fsHorses.length}頭）`);
   } catch(e) {
@@ -175947,6 +175986,7 @@ async function migrateLocalDataToFirestore() {
     if (failed === 0) {
       msgEl.style.color = 'var(--green)';
       msgEl.textContent = `✓ 送信完了！（開催日${raceDays.length}件・馬${horses.length}頭、計${done}件）他の端末は再読み込みすると反映されます`;
+      await bumpSyncVersion();
     } else {
       msgEl.style.color = 'var(--red)';
       let hint = '';
