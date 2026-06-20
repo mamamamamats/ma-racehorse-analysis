@@ -410,6 +410,25 @@ body {
   letter-spacing: 1px;
 }
 
+/* 編集モード: 各ページからDBへ直接送信するボタン */
+.dbsend-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.dbsend-btn {
+  background: rgba(201,168,76,.10);
+  border: 1px solid var(--accent);
+  color: var(--accent2);
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11.5px;
+  letter-spacing: .5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.dbsend-btn:hover { background: rgba(201,168,76,.2); }
+.dbsend-btn:disabled { opacity: .5; cursor: default; }
+.dbsend-msg { font-size: 11px; letter-spacing: .3px; white-space: nowrap; }
+
 /* ===== HORSES VIEW ===== */
 .horses-layout {
   display: grid;
@@ -173121,29 +173140,38 @@ async function waitForFirebase(timeoutMs) {
 
 async function fbSaveRaceDay(day) {
   try {
-    if (!(await waitForFirebase())) return false;
+    if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, setDoc } = window._fbFns;
     await setDoc(doc(window._fbDb, 'raceDays', day.id), day);
-    return true;
-  } catch(e) { console.warn('[keiba] Firestore raceDays保存失敗:', e.message); return false; }
+    return { ok:true };
+  } catch(e) {
+    console.warn('[keiba] Firestore raceDays保存失敗:', e.code || '', e.message);
+    return { ok:false, code: e.code || '', message: e.message || String(e) };
+  }
 }
 
 async function fbSaveHorse(horse) {
   try {
-    if (!(await waitForFirebase())) return false;
+    if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, setDoc } = window._fbFns;
     await setDoc(doc(window._fbDb, 'horses', horse.name), horse);
-    return true;
-  } catch(e) { console.warn('[keiba] Firestore horses保存失敗:', e.message); return false; }
+    return { ok:true };
+  } catch(e) {
+    console.warn('[keiba] Firestore horses保存失敗:', e.code || '', e.message);
+    return { ok:false, code: e.code || '', message: e.message || String(e) };
+  }
 }
 
 async function fbDeleteHorse(name) {
   try {
-    if (!(await waitForFirebase())) return false;
+    if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, deleteDoc } = window._fbFns;
     await deleteDoc(doc(window._fbDb, 'horses', name));
-    return true;
-  } catch(e) { console.warn('[keiba] Firestore horses削除失敗:', e.message); return false; }
+    return { ok:true };
+  } catch(e) {
+    console.warn('[keiba] Firestore horses削除失敗:', e.code || '', e.message);
+    return { ok:false, code: e.code || '', message: e.message || String(e) };
+  }
 }
 
 // アプリ起動時：Firestoreを正データとして取得し、IndexedDBキャッシュへ反映する。
@@ -173860,7 +173888,10 @@ function renderWeekContent(day) {
               <div class="race-detail-title">${rNum}R ${race.name}</div>
               <div class="race-detail-meta">${venue.name}　${day.label}${race.track ? '　' + race.track : ''}</div>
             </div>
-            ${gradeLabel[race.grade] ? `<span class="race-grade-badge ${gradeClass[race.grade]}" style="font-size:12px;padding:4px 12px">${gradeLabel[race.grade]}</span>` : ''}
+            <div class="dbsend-wrap">
+              ${gradeLabel[race.grade] ? `<span class="race-grade-badge ${gradeClass[race.grade]}" style="font-size:12px;padding:4px 12px">${gradeLabel[race.grade]}</span>` : ''}
+              ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
+            </div>
           </div>
 
           ${horseGridHTML}
@@ -174662,6 +174693,7 @@ function renderHorseDetail() {
           <button onclick="returnFromHorse()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 8px 0 0;line-height:1" title="戻る">←</button>
           <h2>${h.name}</h2>
         </div>
+        ${isEditMode ? `<div class="dbsend-wrap"><button type="button" class="dbsend-btn" onclick="sendHorseToFirestoreBtn('${escHtml(h.name)}', this)">📤 この馬をDBへ送信</button><span class="dbsend-msg"></span></div>` : ''}
       </div>
 
       <div class="section-lbl">MEMO</div>
@@ -175221,6 +175253,7 @@ function renderHistoryMain() {
               <div class="race-detail-title">${rNum}R ${race.name}</div>
               <div class="race-detail-meta">${venue.name}　${day.label}${race.track ? '　' + race.track : ''}</div>
             </div>
+            ${isEditMode ? `<div class="dbsend-wrap"><button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span></div>` : ''}
           </div>
           ${horseGridHTML}
         </div>
@@ -175888,7 +175921,7 @@ async function migrateLocalDataToFirestore() {
     }
 
     const CHUNK = 400; // Firestoreの1バッチ上限(500件)より余裕を持たせる
-    let done = 0, failed = 0;
+    let done = 0, failed = 0, lastErrorCode = '', lastErrorMsg = '';
 
     for (let i = 0; i < items.length; i += CHUNK) {
       const slice = items.slice(i, i + CHUNK);
@@ -175899,7 +175932,9 @@ async function migrateLocalDataToFirestore() {
         done += slice.length;
       } catch(e) {
         failed += slice.length;
-        console.warn('[keiba] バッチ送信失敗:', e.message);
+        lastErrorCode = e.code || '';
+        lastErrorMsg = e.message || String(e);
+        console.warn('[keiba] バッチ送信失敗:', lastErrorCode, lastErrorMsg);
       }
       const processed = done + failed;
       const pct = Math.round((processed / total) * 100);
@@ -175914,7 +175949,13 @@ async function migrateLocalDataToFirestore() {
       msgEl.textContent = `✓ 送信完了！（開催日${raceDays.length}件・馬${horses.length}頭、計${done}件）他の端末は再読み込みすると反映されます`;
     } else {
       msgEl.style.color = 'var(--red)';
-      msgEl.textContent = `⚠ 一部失敗しました（成功${done}件／失敗${failed}件）。通信環境をご確認のうえ、もう一度お試しください`;
+      let hint = '';
+      if (lastErrorCode === 'permission-denied') {
+        hint = '（Firestoreのセキュリティルールで書き込みが拒否されています。Firebaseコンソールで raceDays / horses コレクションへの書き込み許可が必要です）';
+      } else if (lastErrorCode) {
+        hint = `（エラーコード: ${lastErrorCode}）`;
+      }
+      msgEl.textContent = `⚠ 一部失敗しました（成功${done}件／失敗${failed}件）${hint || ('：' + lastErrorMsg)}`;
     }
   } catch(e) {
     msgEl.style.color = 'var(--red)';
@@ -175926,6 +175967,43 @@ async function migrateLocalDataToFirestore() {
 function dowFromYMD(y, m, d) {
   const map = ['日','月','火','水','木','金','土'];
   return map[new Date(y, m - 1, d).getDay()];
+}
+
+// 編集モード: 各ページ（レース詳細・馬ページ）から直接DBへ送信するボタン
+async function sendDayToFirestoreBtn(dayId, btn) {
+  const day = raceDays.find(d => d.id === dayId);
+  const msgEl = btn.nextElementSibling;
+  if (!day) { if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ データが見つかりません'; } return; }
+  btn.disabled = true;
+  if (msgEl) { msgEl.style.color = 'var(--accent2)'; msgEl.textContent = '送信中…'; }
+  const result = await fbSaveRaceDay(day);
+  btn.disabled = false;
+  if (!msgEl) return;
+  if (result.ok) {
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = '✓ 送信しました';
+  } else {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = `⚠ 失敗: ${result.code || 'error'}${result.message ? '（' + result.message + '）' : ''}`;
+  }
+}
+
+async function sendHorseToFirestoreBtn(name, btn) {
+  const h = horses.find(x => x.name === name);
+  const msgEl = btn.nextElementSibling;
+  if (!h) { if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ データが見つかりません'; } return; }
+  btn.disabled = true;
+  if (msgEl) { msgEl.style.color = 'var(--accent2)'; msgEl.textContent = '送信中…'; }
+  const result = await fbSaveHorse(h);
+  btn.disabled = false;
+  if (!msgEl) return;
+  if (result.ok) {
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = '✓ 送信しました';
+  } else {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = `⚠ 失敗: ${result.code || 'error'}${result.message ? '（' + result.message + '）' : ''}`;
+  }
 }
 
 // 編集ビューの初期描画（開催日セレクト・馬名オートコンプリートを構築）
