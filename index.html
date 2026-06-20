@@ -173197,7 +173197,7 @@ async function fetchFirestoreData() {
   try {
     const ready = await waitForFirebase(5000);
     if (!ready) { console.log('[keiba] Firebase未準備のためFirestore同期をスキップ'); return; }
-    const { doc, getDoc, collection, getDocs } = window._fbFns;
+    const { doc, getDoc } = window._fbFns;
 
     // ① まず小さなバージョン情報だけ確認（重い全件取得を毎回やらないため）
     try {
@@ -173215,29 +173215,26 @@ async function fetchFirestoreData() {
       console.log('[keiba] 同期バージョンの確認に失敗。フル同期を試みます:', e.code || e.message);
     }
 
-    // ② 変更があった場合のみ全件取得（スマホの瞬間メモリ消費を抑えるため並列ではなく順番に取得）
-    const daysSnap   = await getDocs(collection(window._fbDb, 'raceDays'));
-    const fsDays = []; daysSnap.forEach(d => fsDays.push(d.data()));
-    const horsesSnap = await getDocs(collection(window._fbDb, 'horses'));
-    const fsHorses = []; horsesSnap.forEach(d => fsHorses.push(d.data()));
+    // ② 変更があった場合のみ全件取得。
+    //   スマホでのメモリ枯渇クラッシュ対策として、一気に全件取得するのではなく
+    //   ページ単位（少量ずつ）で取得→即座にIndexedDBへ書き込み→次のページ、を繰り返す。
+    //   各ページの間に一呼吸入れることで、ブラウザにメモリ解放（GC）の機会を与える。
+    const dayResult   = await syncCollectionPaginated('raceDays', 20);
+    const horseResult = await syncCollectionPaginated('horses', 250);
+    const dayIds      = dayResult.ids;
+    const horseNames  = horseResult.ids;
 
     // Firestoreがまだ空（移行前）の場合は何もしない＝ローカルのデータをそのまま使う
-    if (fsDays.length === 0 && fsHorses.length === 0) {
+    if (dayResult.count === 0 && horseResult.count === 0) {
       console.log('[keiba] Firestoreは空のためローカルキャッシュを使用します（編集モードの「Firestoreへ送信」で移行できます）');
       return;
     }
 
-    // Firestoreを正として、IndexedDBキャッシュを最新化（1トランザクションでまとめて）
-    await idbPutAll('raceDays', fsDays);
-    await idbPutAll('horses', fsHorses);
-
     // Firestore側で削除された日付・馬はローカルキャッシュからも削除
     const existingDays = await idbGetAll('raceDays');
-    const fsDayIds = new Set(fsDays.map(d => d.id));
-    for (const d of existingDays) { if (!fsDayIds.has(d.id)) await idbDelete('raceDays', d.id); }
+    for (const d of existingDays) { if (!dayIds.has(d.id)) await idbDelete('raceDays', d.id); }
     const existingHorsesLocal = await idbGetAll('horses');
-    const fsHorseNames = new Set(fsHorses.map(h => h.name));
-    for (const h of existingHorsesLocal) { if (!fsHorseNames.has(h.name)) await idbDelete('horses', h.name); }
+    for (const h of existingHorsesLocal) { if (!horseNames.has(h.name)) await idbDelete('horses', h.name); }
 
     // 同期完了後、自分のバージョン記録も最新化（次回以降はスキップできるように）
     try {
@@ -173245,10 +173242,34 @@ async function fetchFirestoreData() {
       if (metaSnap2.exists()) localStorage.setItem(SYNC_VERSION_LS_KEY, String(metaSnap2.data().updatedAt || ''));
     } catch(e) {}
 
-    console.log(`[keiba] Firestoreから最新データを同期しました（${fsDays.length}日分・${fsHorses.length}頭）`);
+    console.log(`[keiba] Firestoreから最新データを同期しました（${dayResult.count}日分・${horseResult.count}頭）`);
   } catch(e) {
     console.log('[keiba] Firestore同期をスキップ（オフライン等）:', e.message);
   }
+}
+
+// Firestoreの1コレクションを少量ずつ（pageSize件ずつ）取得し、取得の都度IndexedDBへ書き込む。
+// 一度に大量のドキュメントをメモリに保持しないため、低スペック端末でのクラッシュを防ぎやすい。
+async function syncCollectionPaginated(collectionName, pageSize) {
+  const { collection, query, orderBy, limit, startAfter, getDocs } = window._fbFns;
+  let lastDoc = null;
+  const ids = new Set();
+  let count = 0;
+  while (true) {
+    let q = lastDoc
+      ? query(collection(window._fbDb, collectionName), orderBy('__name__'), startAfter(lastDoc), limit(pageSize))
+      : query(collection(window._fbDb, collectionName), orderBy('__name__'), limit(pageSize));
+    const snap = await getDocs(q);
+    if (snap.empty) break;
+    const pageItems = [];
+    snap.forEach(d => { pageItems.push(d.data()); ids.add(d.id); });
+    await idbPutAll(collectionName, pageItems); // このページ分だけ即座に保存し、JSオブジェクトをすぐ手放せるようにする
+    count += pageItems.length;
+    lastDoc = snap.docs[snap.docs.length - 1];
+    if (snap.size < pageSize) break; // これが最終ページ
+    await new Promise(r => setTimeout(r, 0)); // ブラウザに一呼吸入れさせる（メモリ解放の機会）
+  }
+  return { ids, count };
 }
 
 // 馬1頭を保存
