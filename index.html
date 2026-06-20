@@ -147,6 +147,36 @@ body {
   max-width: 860px;
 }
 
+.sync-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: rgba(201,168,76,.08);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  letter-spacing: .5px;
+  color: var(--accent2);
+}
+.sync-notice-btn {
+  background: rgba(201,168,76,.18);
+  border: 1px solid var(--accent);
+  color: var(--accent2);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: .5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.sync-notice-btn:hover { background: rgba(201,168,76,.3); }
+.sync-notice-btn:disabled { opacity: .5; cursor: default; }
+
 .home-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -1421,6 +1451,8 @@ textarea.search-input { line-height: 1.7; }
           <h1>競馬予想ノート</h1>
           <p>RACE ANALYSIS &amp; HORSE DIAGNOSIS</p>
         </div>
+        <div id="syncNoticeBanner" style="display:none;width:100%;max-width:860px;margin-bottom:18px"></div>
+
         <div class="home-cards">
           <div class="home-card yellow" onclick="switchView('week')">
             <div class="card-icon">📅</div>
@@ -173537,6 +173569,9 @@ async function initApp() {
   // 初期レンダリング
   updateBreadcrumb();
   updateHomeStats();
+
+  // 画面表示には影響させず、裏で「他の端末で更新が無いか」だけ軽く確認する（1件読むだけ・重くない）
+  checkForRemoteUpdates();
 }
 
 // アプリ起動
@@ -176136,6 +176171,47 @@ async function pullAllFromFirestore() {
     msgEl.textContent = '⚠ 取得に失敗しました: ' + (e.message || e);
   } finally {
     setTimeout(() => { wrap.style.display = 'none'; }, 1500);
+  }
+}
+
+// ホーム画面に出す軽い通知：他の端末で更新があったかどうかだけを確認する（meta/syncInfoを1件読むだけ）。
+// 重い全件取得はしないので、アプリ起動のたびに呼んでも問題ない。
+async function checkForRemoteUpdates() {
+  try {
+    if (!(await waitForFirebase(3000))) return;
+    const { doc, getDoc } = window._fbFns;
+    const metaSnap = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
+    if (!metaSnap.exists()) return;
+    const remoteV = String(metaSnap.data().updatedAt || '');
+    const localV  = localStorage.getItem(SYNC_VERSION_LS_KEY) || '';
+    if (!remoteV || remoteV === localV) return; // 変更なし。何も表示しない
+
+    const banner = document.getElementById('syncNoticeBanner');
+    if (!banner) return;
+    banner.innerHTML = `
+      <div class="sync-notice">
+        <span>📡 他の端末で更新があった可能性があります。この端末の一覧（全頭診断・過去開催など）にはまだ反映されていません。</span>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <button type="button" class="sync-notice-btn" onclick="pullFromBannerClick(this)">🔄 取得する</button>
+          <button type="button" class="sync-notice-btn" style="background:transparent" onclick="document.getElementById('syncNoticeBanner').style.display='none'">後で</button>
+        </div>
+      </div>
+    `;
+    banner.style.display = 'block';
+  } catch(e) { console.log('[keiba] 更新確認をスキップ:', e.code || e.message); }
+}
+
+async function pullFromBannerClick(btn) {
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = '取得中…';
+  try {
+    await pullAllFromFirestore();
+    const banner = document.getElementById('syncNoticeBanner');
+    if (banner) banner.style.display = 'none';
+  } catch(e) {
+    btn.textContent = '⚠ 失敗。もう一度';
+    btn.disabled = false;
   }
 }
 
