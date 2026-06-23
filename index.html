@@ -149,10 +149,7 @@ body {
 
 .sync-notice {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
+  flex-direction: column;
   background: rgba(201,168,76,.08);
   border: 1px solid var(--accent);
   border-radius: 8px;
@@ -160,6 +157,13 @@ body {
   font-size: 12.5px;
   letter-spacing: .5px;
   color: var(--accent2);
+}
+.sync-notice-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 .sync-notice-btn {
   background: rgba(201,168,76,.18);
@@ -176123,36 +176127,38 @@ async function migrateLocalDataToFirestore() {
 // Firestoreから最新の一覧を手動で取得する（全件・少しずつ）。
 // アプリ起動時には自動実行しなくなったので、新しく追加されたレース日・馬を
 // 一覧（全頭診断・過去開催など）に反映させたい時にこのボタンで明示的に行う。
-async function pullAllFromFirestore() {
+async function pullAllFromFirestore(opts) {
+  opts = opts || {};
   const msgEl = document.getElementById('pullMsg');
-  const wrap = document.getElementById('pullProgressWrap');
-  const bar = document.getElementById('pullProgressBar');
+  const wrap  = document.getElementById('pullProgressWrap');
+  const bar   = document.getElementById('pullProgressBar');
   const label = document.getElementById('pullProgressLabel');
 
-  msgEl.style.color = 'var(--accent2)';
-  msgEl.textContent = '確認中…';
-  wrap.style.display = 'block';
-  bar.style.width = '0%';
-  label.textContent = '';
+  const setStatus = (text, pct) => {
+    if (msgEl)  { msgEl.style.color = 'var(--accent2)'; msgEl.textContent = text; }
+    if (label)  label.textContent = text;
+    if (bar && pct != null) bar.style.width = pct + '%';
+    if (opts.onUpdate) opts.onUpdate(text, pct);
+  };
+
+  if (wrap) wrap.style.display = 'block';
+  if (bar)  bar.style.width = '0%';
+  setStatus('確認中…', 0);
 
   try {
-    // ボタンを押した時は必ずフル取得させたいので、ローカルのバージョン記録を一旦クリア
     localStorage.removeItem(SYNC_VERSION_LS_KEY);
 
     let dayCount = 0, horseCount = 0;
     await fetchFirestoreData((col, count) => {
       if (col === 'raceDays') dayCount = count; else horseCount = count;
-      const total = dayCount + horseCount;
-      label.textContent = `開催日 ${dayCount}件・馬 ${horseCount}件 取得中…`;
-      bar.style.width = Math.min(95, Math.round(total / 30)) + '%'; // 目安表示（正確な全体件数は事前に不明なため）
-      msgEl.textContent = '取得中…';
+      const pct = Math.min(95, Math.round((dayCount + horseCount) / 30));
+      setStatus(`開催日 ${dayCount}件・馬 ${horseCount}件 取得中…`, pct);
     });
 
-    // IndexedDBへの反映が終わったので、メモリ上のデータも読み直して画面に反映
     raceDays = await idbGetAll('raceDays');
     horses   = await loadAllHorses();
     invalidateHorseCache();
-    bar.style.width = '100%';
+    setStatus('反映中…', 100);
 
     renderHorseList();
     renderHistoryDateList();
@@ -176164,13 +176170,15 @@ async function pullAllFromFirestore() {
     }
     if (currentView === 'history' && selectedHistoryDate) renderHistoryMain();
 
-    msgEl.style.color = 'var(--green)';
-    msgEl.textContent = `✓ 最新の一覧を取得しました（開催日${raceDays.length}件・馬${horses.length}頭）`;
+    const doneMsg = `✓ 最新の一覧を取得しました（開催日${raceDays.length}件・馬${horses.length}頭）`;
+    if (msgEl) { msgEl.style.color = 'var(--green)'; msgEl.textContent = doneMsg; }
+    if (opts.onDone) opts.onDone(doneMsg);
   } catch(e) {
-    msgEl.style.color = 'var(--red)';
-    msgEl.textContent = '⚠ 取得に失敗しました: ' + (e.message || e);
+    const errMsg = '⚠ 取得に失敗しました: ' + (e.message || e);
+    if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = errMsg; }
+    if (opts.onError) opts.onError(errMsg);
   } finally {
-    setTimeout(() => { wrap.style.display = 'none'; }, 1500);
+    if (wrap) setTimeout(() => { wrap.style.display = 'none'; }, 2000);
   }
 }
 
@@ -176184,16 +176192,24 @@ async function checkForRemoteUpdates() {
     if (!metaSnap.exists()) return;
     const remoteV = String(metaSnap.data().updatedAt || '');
     const localV  = localStorage.getItem(SYNC_VERSION_LS_KEY) || '';
-    if (!remoteV || remoteV === localV) return; // 変更なし。何も表示しない
+    if (!remoteV || remoteV === localV) return;
 
     const banner = document.getElementById('syncNoticeBanner');
     if (!banner) return;
     banner.innerHTML = `
       <div class="sync-notice">
-        <span>📡 他の端末で更新があった可能性があります。この端末の一覧（全頭診断・過去開催など）にはまだ反映されていません。</span>
-        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <button type="button" class="sync-notice-btn" onclick="pullFromBannerClick(this)">🔄 取得する</button>
-          <button type="button" class="sync-notice-btn" style="background:transparent" onclick="document.getElementById('syncNoticeBanner').style.display='none'">後で</button>
+        <div class="sync-notice-row">
+          <span>📡 他の端末で更新があった可能性があります。この端末の一覧（全頭診断・過去開催など）にはまだ反映されていません。</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+            <button type="button" class="sync-notice-btn" onclick="pullFromBannerClick(this)">🔄 取得する</button>
+            <button type="button" class="sync-notice-btn" style="background:transparent;border-color:transparent" onclick="document.getElementById('syncNoticeBanner').style.display='none'">後で</button>
+          </div>
+        </div>
+        <div id="bannerProgressWrap" style="display:none;margin-top:10px">
+          <div style="height:7px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
+            <div id="bannerProgressBar" style="height:100%;width:0%;background:var(--accent);transition:width .2s"></div>
+          </div>
+          <div id="bannerProgressLabel" style="font-size:11px;color:var(--accent2);margin-top:5px;letter-spacing:.5px"></div>
         </div>
       </div>
     `;
@@ -176203,16 +176219,30 @@ async function checkForRemoteUpdates() {
 
 async function pullFromBannerClick(btn) {
   btn.disabled = true;
-  const original = btn.textContent;
   btn.textContent = '取得中…';
-  try {
-    await pullAllFromFirestore();
-    const banner = document.getElementById('syncNoticeBanner');
-    if (banner) banner.style.display = 'none';
-  } catch(e) {
-    btn.textContent = '⚠ 失敗。もう一度';
-    btn.disabled = false;
-  }
+
+  const wrap  = document.getElementById('bannerProgressWrap');
+  const bar   = document.getElementById('bannerProgressBar');
+  const label = document.getElementById('bannerProgressLabel');
+  if (wrap) wrap.style.display = 'block';
+
+  let hadError = false;
+  await pullAllFromFirestore({
+    onUpdate: (text, pct) => {
+      if (label) { label.style.color = 'var(--accent2)'; label.textContent = text; }
+      if (bar && pct != null) bar.style.width = pct + '%';
+    },
+    onDone: () => {
+      const banner = document.getElementById('syncNoticeBanner');
+      if (banner) banner.style.display = 'none';
+    },
+    onError: (errMsg) => {
+      hadError = true;
+      if (label) { label.style.color = 'var(--red)'; label.textContent = errMsg; }
+      btn.textContent = '⚠ 失敗。もう一度';
+      btn.disabled = false;
+    }
+  });
 }
 
 function dowFromYMD(y, m, d) {
