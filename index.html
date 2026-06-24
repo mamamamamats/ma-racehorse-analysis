@@ -1652,6 +1652,14 @@ textarea.search-input { line-height: 1.7; }
             <label class="edit-field-label">新しい日付</label>
             <input type="date" id="editNewDate" class="search-input">
           </div>
+          <div class="edit-field" id="editChangeDateWrap" style="display:none">
+            <label class="edit-field-label">日付を修正</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="date" id="editChangeDate" class="search-input" style="flex:1">
+              <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;white-space:nowrap" onclick="applyDateChange()">✓ 日付を変更</button>
+              <span id="editChangeDateMsg" class="edit-msg"></span>
+            </div>
+          </div>
 
           <div class="edit-field">
             <label class="edit-field-label">競馬場</label>
@@ -176316,8 +176324,28 @@ function refreshHorseNameDatalist() {
 
 function onEditDayChange() {
   const val = document.getElementById('editDaySelect').value;
-  const wrap = document.getElementById('editNewDateWrap');
-  if (wrap) wrap.style.display = val === '__new__' ? 'block' : 'none';
+  const newWrap    = document.getElementById('editNewDateWrap');
+  const changeWrap = document.getElementById('editChangeDateWrap');
+  const changeInput = document.getElementById('editChangeDate');
+  const changeMsg  = document.getElementById('editChangeDateMsg');
+
+  if (val === '__new__') {
+    if (newWrap)    newWrap.style.display    = 'block';
+    if (changeWrap) changeWrap.style.display = 'none';
+  } else {
+    if (newWrap)    newWrap.style.display    = 'none';
+    if (changeWrap) changeWrap.style.display = 'block';
+    if (changeMsg)  changeMsg.textContent    = '';
+    // 選択中の日付をinputに初期セット
+    const day = raceDays.find(d => d.id === val);
+    if (day && changeInput) {
+      const parts = (day.date || '').split('/');
+      if (parts.length === 3) {
+        const [y, m, d] = parts.map(Number);
+        changeInput.value = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      }
+    }
+  }
   populateEditVenueSelect();
 }
 
@@ -176414,6 +176442,59 @@ function addEditHorseSlotRow(frame, num, name) {
 }
 
 // レースを保存（既存レースなら更新、新規なら作成）
+// 既存の開催日の日付（id/date/dayOfWeek/label）を変更する
+async function applyDateChange() {
+  const msgEl = document.getElementById('editChangeDateMsg');
+  msgEl.style.color = 'var(--red)';
+
+  const oldId = document.getElementById('editDaySelect').value;
+  if (!oldId || oldId === '__new__') { msgEl.textContent = '⚠ 開催日が選択されていません'; return; }
+
+  const dateVal = document.getElementById('editChangeDate').value;
+  if (!dateVal) { msgEl.textContent = '⚠ 新しい日付を入力してください'; return; }
+
+  const [y, m, d] = dateVal.split('-').map(Number);
+  const newId = `day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+  if (newId === oldId) { msgEl.textContent = '変更はありません'; msgEl.style.color = 'var(--muted)'; return; }
+  if (raceDays.find(d => d.id === newId)) { msgEl.textContent = '⚠ その日付はすでに存在しています'; return; }
+
+  const day = raceDays.find(d => d.id === oldId);
+  if (!day) { msgEl.textContent = '⚠ 開催日データが見つかりません'; return; }
+
+  // 日付メタ情報を更新
+  const dow = dowFromYMD(y, m, d);
+  day.id        = newId;
+  day.date      = `${y}/${m}/${d}`;
+  day.dayOfWeek = dow;
+  day.label     = `${m}月${d}日（${dow}）`;
+
+  // IndexedDB：古いIDを削除して新IDで保存
+  await idbDelete('raceDays', oldId);
+  await idbPut('raceDays', day);
+
+  // Firestore：古いドキュメントを削除して新しいIDで保存
+  try {
+    if (await waitForFirebase(3000)) {
+      const { doc, deleteDoc } = window._fbFns;
+      await deleteDoc(doc(window._fbDb, 'raceDays', oldId));
+    }
+  } catch(e) { console.warn('[keiba] 旧レース日Firestore削除失敗:', e.message); }
+  fbSaveRaceDay(day);
+
+  invalidateHorseCache();
+  updateHomeStats();
+
+  // フォームを新しい日付で再描画
+  renderEditView();
+  await new Promise(r => setTimeout(r, 50));
+  document.getElementById('editDaySelect').value = newId;
+  onEditDayChange();
+
+  const el = document.getElementById('editChangeDateMsg');
+  if (el) { el.style.color = 'var(--green)'; el.textContent = `✓ ${m}月${d}日（${dow}）に変更しました`; }
+}
+
 async function saveEditRace() {
   const msgEl = document.getElementById('editRaceMsg');
   msgEl.style.color = 'var(--red)';
