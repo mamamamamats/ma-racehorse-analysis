@@ -1714,6 +1714,16 @@ textarea.search-input { line-height: 1.7; }
             <button class="edit-btn-save" onclick="saveEditRace()">💾 レースを保存</button>
             <div class="edit-msg" id="editRaceMsg"></div>
           </div>
+
+          <!-- 既存レース選択時のみ表示：別の日付へ移動 -->
+          <div id="editRaceMoveWrap" style="display:none;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)">
+            <div class="edit-field-label" style="margin-bottom:10px;font-size:12px;color:var(--muted2);letter-spacing:1px">📅 このレースを別の日付へ移動</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="editRaceMoveTarget" class="search-input" style="flex:2;min-width:160px"></select>
+              <button type="button" class="edit-btn-save" style="padding:8px 16px;font-size:12px;white-space:nowrap" onclick="moveRaceToDay()">→ 移動する</button>
+            </div>
+            <div class="edit-msg" id="editRaceMoveMsg" style="margin-top:8px"></div>
+          </div>
         </div>
 
         <!-- ② 馬ページ作成 -->
@@ -176382,14 +176392,17 @@ function populateEditRaceSelect() {
 }
 
 function onEditRaceChange() {
-  const dayId = document.getElementById('editDaySelect').value;
+  const dayId    = document.getElementById('editDaySelect').value;
   const venueVal = document.getElementById('editVenueSelect').value;
-  const raceVal = document.getElementById('editRaceSelect').value;
-  const numInput = document.getElementById('editRaceNum');
-  const nameInput = document.getElementById('editRaceName');
-  const gradeSel = document.getElementById('editRaceGrade');
-  const trackInput = document.getElementById('editRaceTrack');
+  const raceVal  = document.getElementById('editRaceSelect').value;
+  const numInput      = document.getElementById('editRaceNum');
+  const nameInput     = document.getElementById('editRaceName');
+  const gradeSel      = document.getElementById('editRaceGrade');
+  const trackInput    = document.getElementById('editRaceTrack');
   const slotsContainer = document.getElementById('editHorseSlotsContainer');
+  const moveWrap      = document.getElementById('editRaceMoveWrap');
+  const moveTarget    = document.getElementById('editRaceMoveTarget');
+  const moveMsg       = document.getElementById('editRaceMoveMsg');
 
   let race = null;
   if (raceVal !== '__new__' && dayId !== '__new__' && venueVal !== '__new__') {
@@ -176402,19 +176415,32 @@ function onEditRaceChange() {
     numInput.value = race.r;
     numInput.disabled = true;
     nameInput.value = race.name || '';
-    gradeSel.value = race.grade || 'op';
+    gradeSel.value  = race.grade || 'op';
     trackInput.value = race.track || '';
     slotsContainer.innerHTML = '';
     (race.horses || []).forEach(h => addEditHorseSlotRow(h.frame, h.num, h.name));
     if (!race.horses || race.horses.length === 0) addEditHorseSlotRow();
+
+    // 移動UIを表示：移動先として「現在の日以外」のすべての開催日を列挙
+    if (moveWrap) moveWrap.style.display = 'block';
+    if (moveMsg)  moveMsg.textContent = '';
+    if (moveTarget) {
+      const sorted = [...raceDays]
+        .filter(d => d.id !== dayId)
+        .sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+      moveTarget.innerHTML = sorted.length
+        ? sorted.map(d => `<option value="${escHtml(d.id)}">${d.label}（${(d.venues||[]).map(v=>v.name).join('/')}）</option>`).join('')
+        : `<option value="">移動先の開催日がありません</option>`;
+    }
   } else {
     numInput.disabled = false;
-    numInput.value = '';
+    numInput.value  = '';
     nameInput.value = '';
-    gradeSel.value = 'op';
+    gradeSel.value  = 'op';
     trackInput.value = '';
     slotsContainer.innerHTML = '';
     addEditHorseSlotRow();
+    if (moveWrap) moveWrap.style.display = 'none';
   }
 }
 
@@ -176439,6 +176465,83 @@ function addEditHorseSlotRow(frame, num, name) {
     <button type="button" class="edit-btn-remove" onclick="this.parentElement.remove()">✕</button>
   `;
   container.appendChild(row);
+}
+
+// 特定のレースを別の開催日へ移動する
+async function moveRaceToDay() {
+  const msgEl = document.getElementById('editRaceMoveMsg');
+  msgEl.style.color = 'var(--red)';
+
+  const fromDayId  = document.getElementById('editDaySelect').value;
+  const venueVal   = document.getElementById('editVenueSelect').value;
+  const raceVal    = document.getElementById('editRaceSelect').value;
+  const toDayId    = document.getElementById('editRaceMoveTarget').value;
+
+  if (!toDayId || toDayId === fromDayId) { msgEl.textContent = '⚠ 移動先を選択してください'; return; }
+
+  const fromDay   = raceDays.find(d => d.id === fromDayId);
+  const fromVenue = fromDay && (fromDay.venues || []).find(v => v.name === venueVal);
+  const race      = fromVenue && fromVenue.races.find(r => r.r === parseInt(raceVal));
+  if (!race) { msgEl.textContent = '⚠ レースが見つかりません'; return; }
+
+  const toDay = raceDays.find(d => d.id === toDayId);
+  if (!toDay) { msgEl.textContent = '⚠ 移動先の開催日が見つかりません'; return; }
+
+  // 移動先の同じ競馬場に同じR番号が既にあるか確認
+  const toVenue   = (toDay.venues || []).find(v => v.name === venueVal);
+  const conflict  = toVenue && toVenue.races.find(r => r.r === race.r);
+  if (conflict) {
+    const ok = window.confirm(
+      `${toDay.label}の${venueVal}には既に${race.r}R「${conflict.name}」があります。\n上書きして移動しますか？`
+    );
+    if (!ok) { msgEl.style.color = 'var(--muted)'; msgEl.textContent = 'キャンセルしました'; return; }
+    // 上書き：既存のレースを削除
+    toVenue.races = toVenue.races.filter(r => r.r !== race.r);
+  }
+
+  // 移動元から削除
+  fromVenue.races = fromVenue.races.filter(r => r.r !== race.r);
+  // 競馬場が空になった場合は競馬場ごと削除
+  if (fromVenue.races.length === 0) {
+    fromDay.venues = fromDay.venues.filter(v => v.name !== venueVal);
+  }
+
+  // 移動先に追加（同じ競馬場があればそこへ、なければ新しく作る）
+  let destVenue = (toDay.venues || []).find(v => v.name === venueVal);
+  if (!destVenue) {
+    destVenue = { name: venueVal, races: [] };
+    toDay.venues = toDay.venues || [];
+    toDay.venues.push(destVenue);
+  }
+  destVenue.races.push(race);
+  destVenue.races.sort((a, b) => a.r - b.r);
+
+  // 保存
+  await idbPut('raceDays', fromDay);
+  await idbPut('raceDays', toDay);
+  fbSaveRaceDay(fromDay);
+  fbSaveRaceDay(toDay);
+  invalidateHorseCache();
+  updateHomeStats();
+
+  msgEl.style.color = 'var(--green)';
+  msgEl.textContent = `✓ ${race.r}R「${race.name}」を${toDay.label}へ移動しました`;
+
+  // フォームを移動先の日付・レースに切り替え
+  await renderEditView();
+  await new Promise(r => setTimeout(r, 50));
+  document.getElementById('editDaySelect').value = toDayId;
+  onEditDayChange();
+  await new Promise(r => setTimeout(r, 50));
+  if (document.getElementById('editVenueSelect').querySelector(`option[value="${venueVal}"]`)) {
+    document.getElementById('editVenueSelect').value = venueVal;
+    onEditVenueChange();
+    await new Promise(r => setTimeout(r, 50));
+  }
+  if (document.getElementById('editRaceSelect').querySelector(`option[value="${race.r}"]`)) {
+    document.getElementById('editRaceSelect').value = String(race.r);
+    onEditRaceChange();
+  }
 }
 
 // レースを保存（既存レースなら更新、新規なら作成）
