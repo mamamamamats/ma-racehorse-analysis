@@ -173649,10 +173649,13 @@ async function initApp() {
   updateHomeStats();
 
   // 同期が進行中ならその続きを実行、そうでなければ「更新があるか」だけ軽く確認する
-  if (localStorage.getItem(SYNC_PROGRESS_KEY)) {
-    resumeFirestoreSyncIfNeeded(); // 非同期・非ブロッキング
-  } else {
-    checkForRemoteUpdates();
+  // どちらもFirestoreの読み取りを伴うため、編集モード（?edit）のみで実行する
+  if (isEditMode) {
+    if (localStorage.getItem(SYNC_PROGRESS_KEY)) {
+      resumeFirestoreSyncIfNeeded();
+    } else {
+      checkForRemoteUpdates();
+    }
   }
 }
 
@@ -176223,6 +176226,8 @@ async function pullAllFromFirestore(opts) {
 // ホーム画面に出す軽い通知：他の端末で更新があったかどうかだけを確認する（meta/syncInfoを1件読むだけ）。
 // 重い全件取得はしないので、アプリ起動のたびに呼んでも問題ない。
 async function checkForRemoteUpdates() {
+  // Firestoreの読み取り回数節約のため、バナー表示は編集モード（?edit）のみ
+  if (!isEditMode) return;
   try {
     if (!(await waitForFirebase(3000))) return;
     const { doc, getDoc } = window._fbFns;
@@ -176242,12 +176247,6 @@ async function checkForRemoteUpdates() {
             <button type="button" class="sync-notice-btn" onclick="pullFromBannerClick(this)">🔄 取得する</button>
             <button type="button" class="sync-notice-btn" style="background:transparent;border-color:transparent" onclick="document.getElementById('syncNoticeBanner').style.display='none'">後で</button>
           </div>
-        </div>
-        <div id="bannerProgressWrap" style="display:none;margin-top:10px">
-          <div style="height:7px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
-            <div id="bannerProgressBar" style="height:100%;width:0%;background:var(--accent);transition:width .2s"></div>
-          </div>
-          <div id="bannerProgressLabel" style="font-size:11px;color:var(--accent2);margin-top:5px;letter-spacing:.5px"></div>
         </div>
       </div>
     `;
