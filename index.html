@@ -173288,21 +173288,13 @@ async function fetchFirestoreData(onProgress) {
     //   ページ単位（少量ずつ）で取得→即座にIndexedDBへ書き込み→次のページ、を繰り返す。
     //   各ページの間に一呼吸入れることで、ブラウザにメモリ解放（GC）の機会を与える。
     const dayResult   = await syncCollectionPaginated('raceDays', 20, onProgress);
-    const horseResult = await syncCollectionPaginated('horses', 250, onProgress);
-    const dayIds      = dayResult.ids;
-    const horseNames  = horseResult.ids;
+    const horseResult = await syncCollectionPaginated('horses', 80, onProgress);
 
     // Firestoreがまだ空（移行前）の場合は何もしない＝ローカルのデータをそのまま使う
     if (dayResult.count === 0 && horseResult.count === 0) {
       console.log('[keiba] Firestoreは空のためローカルキャッシュを使用します（編集モードの「Firestoreへ送信」で移行できます）');
       return;
     }
-
-    // Firestore側で削除された日付・馬はローカルキャッシュからも削除
-    const existingDays = await idbGetAll('raceDays');
-    for (const d of existingDays) { if (!dayIds.has(d.id)) await idbDelete('raceDays', d.id); }
-    const existingHorsesLocal = await idbGetAll('horses');
-    for (const h of existingHorsesLocal) { if (!horseNames.has(h.name)) await idbDelete('horses', h.name); }
 
     // 同期完了後、自分のバージョン記録も最新化（次回以降はスキップできるように）
     try {
@@ -173321,7 +173313,6 @@ async function fetchFirestoreData(onProgress) {
 async function syncCollectionPaginated(collectionName, pageSize, onProgress) {
   const { collection, query, orderBy, limit, startAfter, getDocs } = window._fbFns;
   let lastDoc = null;
-  const ids = new Set();
   let count = 0;
   while (true) {
     let q = lastDoc
@@ -173329,16 +173320,19 @@ async function syncCollectionPaginated(collectionName, pageSize, onProgress) {
       : query(collection(window._fbDb, collectionName), orderBy('__name__'), limit(pageSize));
     const snap = await getDocs(q);
     if (snap.empty) break;
+    // データをすぐIDBに書き込み、参照を手放してGCに回収させる
     const pageItems = [];
-    snap.forEach(d => { pageItems.push(d.data()); ids.add(d.id); });
-    await idbPutAll(collectionName, pageItems); // このページ分だけ即座に保存し、JSオブジェクトをすぐ手放せるようにする
+    snap.forEach(d => pageItems.push(d.data()));
+    await idbPutAll(collectionName, pageItems);
     count += pageItems.length;
-    if (onProgress) { try { onProgress(collectionName, count); } catch(e) {} }
     lastDoc = snap.docs[snap.docs.length - 1];
-    if (snap.size < pageSize) break; // これが最終ページ
-    await new Promise(r => setTimeout(r, 0)); // ブラウザに一呼吸入れさせる（メモリ解放の機会）
+    const finished = snap.size < pageSize;
+    if (onProgress) { try { onProgress(collectionName, count); } catch(e) {} }
+    if (finished) break;
+    // 次のページを取りに行く前に50ms休んでブラウザにメモリ解放の機会を与える
+    await new Promise(r => setTimeout(r, 50));
   }
-  return { ids, count };
+  return { count };
 }
 
 // ===== ページを開いた時だけ、その1件だけを個別に最新化する（軽量・非同期） =====
