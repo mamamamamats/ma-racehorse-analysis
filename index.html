@@ -173436,10 +173436,10 @@ async function lazyRefreshDay(dayId) {
   } catch(e) { console.log('[keiba] 開催日データの個別更新をスキップ:', e.code || e.message); }
 }
 
-// 馬1頭を保存
+// 馬1頭を保存（IndexedDBとFirestoreの両方にawaitで確実に書き込む）
 async function saveHorse(horse) {
-  try { await idbPut('horses', horse); } catch(e) { console.warn('馬保存失敗:', horse.name, e); }
-  fbSaveHorse(horse); // Firestoreへも反映（失敗してもローカル保存は維持される）
+  try { await idbPut('horses', horse); } catch(e) { console.warn('馬保存失敗(IDB):', horse.name, e); }
+  try { await fbSaveHorse(horse); } catch(e) { console.warn('馬保存失敗(Firestore):', horse.name, e); }
 }
 
 // 全馬をロード
@@ -173450,7 +173450,7 @@ async function loadAllHorses() {
 // 馬を削除
 async function deleteHorse(name) {
   try { await idbDelete('horses', name); } catch(e) {}
-  fbDeleteHorse(name); // Firestoreからも削除
+  await fbDeleteHorse(name); // Firestoreからも削除
   const idx = horses.findIndex(h => h.name === name);
   if (idx >= 0) horses.splice(idx, 1);
   invalidateHorseCache();
@@ -175830,7 +175830,7 @@ async function importDayPage(title, text) {
   }
   // dayObjの変更をIndexedDBに保存
   await idbPut('raceDays', dayObj);
-  fbSaveRaceDay(dayObj);
+  await fbSaveRaceDay(dayObj);
 }
 
 // ---- RACE PAGE ----
@@ -176523,8 +176523,8 @@ async function moveRaceToDay() {
   // 保存
   await idbPut('raceDays', fromDay);
   await idbPut('raceDays', toDay);
-  fbSaveRaceDay(fromDay);
-  fbSaveRaceDay(toDay);
+  await fbSaveRaceDay(fromDay);
+  await fbSaveRaceDay(toDay);
   invalidateHorseCache();
   updateHomeStats();
 
@@ -176587,7 +176587,7 @@ async function applyDateChange() {
       await deleteDoc(doc(window._fbDb, 'raceDays', oldId));
     }
   } catch(e) { console.warn('[keiba] 旧レース日Firestore削除失敗:', e.message); }
-  fbSaveRaceDay(day);
+  await fbSaveRaceDay(day);
 
   invalidateHorseCache();
   updateHomeStats();
@@ -176668,7 +176668,7 @@ async function saveEditRace() {
   if (horsesArr.length) race.horses = horsesArr;
 
   await idbPut('raceDays', day);
-  fbSaveRaceDay(day); // Firestoreへも反映（他端末は再読み込みで自動取得）
+  await fbSaveRaceDay(day); // Firestoreへも反映
   invalidateHorseCache();
   updateHomeStats();
 
