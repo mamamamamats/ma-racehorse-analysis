@@ -173280,6 +173280,7 @@ async function startFirestoreSync() {
 
 // initApp終了後に呼ぶ。同期が途中なら続きを実行する。
 async function resumeFirestoreSyncIfNeeded() {
+  if (!isEditMode) { localStorage.removeItem(SYNC_PROGRESS_KEY); return; }
   const raw = localStorage.getItem(SYNC_PROGRESS_KEY);
   if (!raw) return;
   let prog;
@@ -175577,6 +175578,12 @@ const importSection = document.getElementById('importSection');
 if (importSection) importSection.style.display = isEditMode ? 'block' : 'none';
 const navEditTab = document.getElementById('navEditTab');
 if (navEditTab) navEditTab.style.display = isEditMode ? 'flex' : 'none';
+// 非editモードではDB同期バナーを完全に隠し、進行中の同期状態もリセット
+if (!isEditMode) {
+  localStorage.removeItem(SYNC_PROGRESS_KEY);
+  const _b = document.getElementById('syncNoticeBanner');
+  if (_b) _b.style.display = 'none';
+}
 
 // ============================================================
 //  NOTION IMPORT
