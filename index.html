@@ -173980,7 +173980,7 @@ function renderWeek() {
 
   // 日付未選択 → 土日カードを横並びで表示
   if (!selectedDate) {
-    const sorted = days.sort((a, b) => new Date(a.date.replace(/\//g,'-')) - new Date(b.date.replace(/\//g,'-')));
+    const sorted = days.sort((a, b) => dateToNum(a.date) - dateToNum(b.date));
     wc.innerHTML = `
       <div class="fade-in">
         <div style="font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:20px">今週のレース</div>
@@ -175129,6 +175129,15 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// "2025/1/5" → 20250105 のような数値に変換（SafariとChromeで new Date("2025-1-5") の挙動が異なるため、
+// ゼロ埋めした形式に変換して安全に比較する）
+function dateToNum(dateStr) {
+  if (!dateStr) return 0;
+  const p = String(dateStr).split('/');
+  if (p.length !== 3) return 0;
+  return parseInt(p[0]) * 10000 + parseInt(p[1]) * 100 + parseInt(p[2]);
+}
+
 // 認証モーダル
 function showAuthModal() {
   if (document.getElementById('authModalOverlay')) return;
@@ -175320,7 +175329,7 @@ function renderHistoryDateList() {
   const years = Object.keys(byYear).sort((a, b) => b - a);
 
   el.innerHTML = years.map(year => {
-    const days = byYear[year].sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+    const days = byYear[year].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
     return `
       <div style="padding:10px 18px 4px;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">${year}年</div>
       ${days.map(d => `
@@ -175355,7 +175364,7 @@ function renderHistoryMain() {
     }
     const years = Object.keys(byYear).sort((a, b) => b - a);
     el.innerHTML = years.map(year => {
-      const days = byYear[year].sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+      const days = byYear[year].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
       const first  = days.filter(d => d._month >= 7 && d._month <= 12);
       const second = days.filter(d => d._month >= 1 && d._month <= 6);
       const makeCards = list => list.map(d => `
@@ -176169,28 +176178,17 @@ async function pullAllFromFirestore(opts) {
     let dayCount = 0, horseCount = 0;
     await fetchFirestoreData((col, count) => {
       if (col === 'raceDays') dayCount = count; else horseCount = count;
-      const pct = Math.min(95, Math.round((dayCount + horseCount) / 30));
+      const pct = Math.min(92, Math.round((dayCount + horseCount) / 30));
       setStatus(`開催日 ${dayCount}件・馬 ${horseCount}件 取得中…`, pct);
     });
 
-    raceDays = await idbGetAll('raceDays');
-    horses   = await loadAllHorses();
-    invalidateHorseCache();
-    setStatus('反映中…', 100);
-
-    renderHorseList();
-    renderHistoryDateList();
-    renderHistory();
-    updateHomeStats();
-    if (currentView === 'week' && selectedDate) {
-      const day = raceDays.find(d => d.id === selectedDate);
-      if (day) renderWeekContent(day);
-    }
-    if (currentView === 'history' && selectedHistoryDate) renderHistoryMain();
-
-    const doneMsg = `✓ 最新の一覧を取得しました（開催日${raceDays.length}件・馬${horses.length}頭）`;
-    if (msgEl) { msgEl.style.color = 'var(--green)'; msgEl.textContent = doneMsg; }
-    if (opts.onDone) opts.onDone(doneMsg);
+    // IndexedDBへの書き込みが完了したのでそちらが正になっている。
+    // 一気にメモリ上へ展開するとスマホがクラッシュするため、ページをリロードして
+    // initApp経由でIndexedDBから読み直す（軽い・安全）。
+    setStatus('✓ 取得完了。再読み込みします…', 100);
+    if (opts.onDone) opts.onDone('✓ 取得完了。再読み込み中…');
+    await new Promise(r => setTimeout(r, 800)); // メッセージを一瞬見せてからリロード
+    location.reload();
   } catch(e) {
     const errMsg = '⚠ 取得に失敗しました: ' + (e.message || e);
     if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = errMsg; }
@@ -176251,8 +176249,7 @@ async function pullFromBannerClick(btn) {
       if (bar && pct != null) bar.style.width = pct + '%';
     },
     onDone: () => {
-      const banner = document.getElementById('syncNoticeBanner');
-      if (banner) banner.style.display = 'none';
+      // location.reload()が走るのでバナー消去は不要。onDoneは念のため残す。
     },
     onError: (errMsg) => {
       hadError = true;
@@ -176313,7 +176310,7 @@ function renderEditView() {
 
   const daySel = document.getElementById('editDaySelect');
   if (daySel) {
-    const sorted = [...raceDays].sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+    const sorted = [...raceDays].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
     daySel.innerHTML = sorted.map(d =>
       `<option value="${d.id}">${d.label}（${(d.venues||[]).map(v=>v.name).join('/') || '—'}）</option>`
     ).join('') + `<option value="__new__">＋ 新しい日付を追加</option>`;
@@ -176427,7 +176424,7 @@ function onEditRaceChange() {
     if (moveTarget) {
       const sorted = [...raceDays]
         .filter(d => d.id !== dayId)
-        .sort((a, b) => new Date(b.date.replace(/\//g,'-')) - new Date(a.date.replace(/\//g,'-')));
+        .sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
       moveTarget.innerHTML = sorted.length
         ? sorted.map(d => `<option value="${escHtml(d.id)}">${d.label}（${(d.venues||[]).map(v=>v.name).join('/')}）</option>`).join('')
         : `<option value="">移動先の開催日がありません</option>`;
