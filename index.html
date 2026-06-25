@@ -1629,14 +1629,8 @@ textarea.search-input { line-height: 1.7; }
           <div style="height:1px;background:var(--border);margin:18px 0"></div>
 
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-            <button class="edit-btn-save" onclick="pullAllFromFirestore()">🔄 Firestoreから最新の一覧を取得</button>
-            <div class="edit-msg" id="pullMsg"></div>
-          </div>
-          <div id="pullProgressWrap" style="display:none;margin-top:12px">
-            <div style="height:8px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
-              <div id="pullProgressBar" style="height:100%;width:0%;background:var(--accent);transition:width .15s"></div>
-            </div>
-            <div id="pullProgressLabel" style="font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.5px"></div>
+            <button class="edit-btn-save" onclick="startFirestoreSync()">🔄 Firestoreから最新の一覧を取得</button>
+            <div style="font-size:11px;color:var(--muted);letter-spacing:.5px">ボタンを押すと取得を開始します。リロードを繰り返しながら少しずつ取得するので、ホーム画面で進捗が確認できます。</div>
           </div>
         </div>
 
@@ -173261,78 +173255,146 @@ async function bumpSyncVersion() {
 
 // アプリ起動時：Firestoreを正データとして取得し、IndexedDBキャッシュへ反映する。
 // オフライン等で取得できない場合は何もせず、既存のIndexedDBキャッシュをそのまま使う。
-async function fetchFirestoreData(onProgress) {
+// ===== Firestoreフル同期（リロードまたぎ方式） =====
+// 馬3600頭超をメモリに溜めてクラッシュするのを防ぐため、
+// 「少量取得→IDB保存→リロード→続き取得→リロード…」を繰り返す。
+// 進捗はlocalStorageに保存するのでリロードをまたいで継続できる。
+
+const SYNC_PROGRESS_KEY = 'keiba-sync-progress';
+const SYNC_HORSE_BATCH  = 60; // 1回のリロードで取得する馬の件数（少ないほど安全）
+const SYNC_DAY_BATCH    = 20;
+
+// 同期セッションを開始（「取得する」ボタンを押した時）
+async function startFirestoreSync() {
+  localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify({
+    phase: 'days',   // 'days' → 'horses' → 'done'
+    lastId: null,    // ページネーション用：前回の最後のID
+    daysDone: 0,
+    horsesDone: 0,
+    total: null,
+    startedAt: Date.now()
+  }));
+  localStorage.removeItem(SYNC_VERSION_LS_KEY);
+  location.reload();
+}
+
+// initApp終了後に呼ぶ。同期が途中なら続きを実行する。
+async function resumeFirestoreSyncIfNeeded() {
+  const raw = localStorage.getItem(SYNC_PROGRESS_KEY);
+  if (!raw) return;
+  let prog;
+  try { prog = JSON.parse(raw); } catch(e) { localStorage.removeItem(SYNC_PROGRESS_KEY); return; }
+  if (prog.phase === 'done') { localStorage.removeItem(SYNC_PROGRESS_KEY); return; }
+
+  // 進捗バナーをホームに表示
+  showSyncProgressBanner(prog);
+
+  // 少し待ってから取得開始（DOMが落ち着いてから）
+  await new Promise(r => setTimeout(r, 300));
+
+  const ready = await waitForFirebase(5000);
+  if (!ready) {
+    localStorage.removeItem(SYNC_PROGRESS_KEY);
+    showSyncProgressBanner(null, '⚠ Firebaseに接続できませんでした');
+    return;
+  }
+
   try {
-    const ready = await waitForFirebase(5000);
-    if (!ready) { console.log('[keiba] Firebase未準備のためFirestore同期をスキップ'); return; }
-    const { doc, getDoc } = window._fbFns;
+    const { collection, query, orderBy, limit, startAfter, getDocs, getDoc, doc } = window._fbFns;
 
-    // ① まず小さなバージョン情報だけ確認（重い全件取得を毎回やらないため）
-    try {
-      const metaSnap = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
-      if (metaSnap.exists()) {
-        const remoteV = String(metaSnap.data().updatedAt || '');
-        const localV  = localStorage.getItem(SYNC_VERSION_LS_KEY) || '';
-        if (remoteV && remoteV === localV) {
-          console.log('[keiba] データに変更が無いためFirestoreフル同期をスキップしました');
-          return;
+    if (prog.phase === 'days') {
+      updateSyncProgressBanner(`開催日を取得中…`);
+      // 開催日は件数が少ないので1回で全部取れる
+      let q = query(collection(window._fbDb, 'days'), orderBy('__name__'), limit(SYNC_DAY_BATCH));
+      if (prog.lastId) {
+        // startAfterにはDocumentSnapshotが必要なので、lastIdを使ってgetDocしてカーソルを復元
+        const lastSnap = await getDoc(doc(window._fbDb, 'raceDays', prog.lastId));
+        if (lastSnap.exists()) {
+          q = query(collection(window._fbDb, 'raceDays'), orderBy('__name__'), startAfter(lastSnap), limit(SYNC_DAY_BATCH));
         }
+      } else {
+        q = query(collection(window._fbDb, 'raceDays'), orderBy('__name__'), limit(SYNC_DAY_BATCH));
       }
-    } catch(e) {
-      // metaが読めない場合（権限未設定・初回など）はフル同期にフォールバック
-      console.log('[keiba] 同期バージョンの確認に失敗。フル同期を試みます:', e.code || e.message);
+      const snap = await getDocs(q);
+      const items = []; snap.forEach(d => items.push(d.data()));
+      if (items.length > 0) await idbPutAll('raceDays', items);
+      prog.daysDone += items.length;
+      if (snap.size < SYNC_DAY_BATCH) {
+        // 開催日完了→馬フェーズへ
+        prog.phase   = 'horses';
+        prog.lastId  = null;
+      } else {
+        prog.lastId  = snap.docs[snap.docs.length - 1].id;
+      }
+      localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify(prog));
+      location.reload();
+
+    } else if (prog.phase === 'horses') {
+      updateSyncProgressBanner(`馬データを取得中… ${prog.horsesDone}頭完了`);
+      let q;
+      if (prog.lastId) {
+        const lastSnap = await getDoc(doc(window._fbDb, 'horses', prog.lastId));
+        if (lastSnap.exists()) {
+          q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), startAfter(lastSnap), limit(SYNC_HORSE_BATCH));
+        } else {
+          q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), limit(SYNC_HORSE_BATCH));
+        }
+      } else {
+        q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), limit(SYNC_HORSE_BATCH));
+      }
+      const snap = await getDocs(q);
+      const items = []; snap.forEach(d => items.push(d.data()));
+      if (items.length > 0) await idbPutAll('horses', items);
+      prog.horsesDone += items.length;
+      if (snap.size < SYNC_HORSE_BATCH) {
+        // 全頭完了
+        prog.phase = 'done';
+        // バージョン記録を更新して次回はスキップできるように
+        try {
+          const metaSnap = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
+          if (metaSnap.exists()) localStorage.setItem(SYNC_VERSION_LS_KEY, String(metaSnap.data().updatedAt || ''));
+        } catch(e) {}
+        localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify(prog));
+      } else {
+        prog.lastId = snap.docs[snap.docs.length - 1].id;
+        localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify(prog));
+      }
+      location.reload();
     }
-
-    // ② 変更があった場合のみ全件取得。
-    //   スマホでのメモリ枯渇クラッシュ対策として、一気に全件取得するのではなく
-    //   ページ単位（少量ずつ）で取得→即座にIndexedDBへ書き込み→次のページ、を繰り返す。
-    //   各ページの間に一呼吸入れることで、ブラウザにメモリ解放（GC）の機会を与える。
-    const dayResult   = await syncCollectionPaginated('raceDays', 20, onProgress);
-    const horseResult = await syncCollectionPaginated('horses', 80, onProgress);
-
-    // Firestoreがまだ空（移行前）の場合は何もしない＝ローカルのデータをそのまま使う
-    if (dayResult.count === 0 && horseResult.count === 0) {
-      console.log('[keiba] Firestoreは空のためローカルキャッシュを使用します（編集モードの「Firestoreへ送信」で移行できます）');
-      return;
-    }
-
-    // 同期完了後、自分のバージョン記録も最新化（次回以降はスキップできるように）
-    try {
-      const metaSnap2 = await getDoc(doc(window._fbDb, 'meta', 'syncInfo'));
-      if (metaSnap2.exists()) localStorage.setItem(SYNC_VERSION_LS_KEY, String(metaSnap2.data().updatedAt || ''));
-    } catch(e) {}
-
-    console.log(`[keiba] Firestoreから最新データを同期しました（${dayResult.count}日分・${horseResult.count}頭）`);
   } catch(e) {
-    console.log('[keiba] Firestore同期をスキップ（オフライン等）:', e.message);
+    console.warn('[keiba] 同期中にエラー:', e.code || e.message);
+    showSyncProgressBanner(null, `⚠ 取得中にエラーが発生しました（${e.code || e.message}）。もう一度お試しください。`);
+    localStorage.removeItem(SYNC_PROGRESS_KEY);
   }
 }
 
-// Firestoreの1コレクションを少量ずつ（pageSize件ずつ）取得し、取得の都度IndexedDBへ書き込む。
-// 一度に大量のドキュメントをメモリに保持しないため、低スペック端末でのクラッシュを防ぎやすい。
-async function syncCollectionPaginated(collectionName, pageSize, onProgress) {
-  const { collection, query, orderBy, limit, startAfter, getDocs } = window._fbFns;
-  let lastDoc = null;
-  let count = 0;
-  while (true) {
-    let q = lastDoc
-      ? query(collection(window._fbDb, collectionName), orderBy('__name__'), startAfter(lastDoc), limit(pageSize))
-      : query(collection(window._fbDb, collectionName), orderBy('__name__'), limit(pageSize));
-    const snap = await getDocs(q);
-    if (snap.empty) break;
-    // データをすぐIDBに書き込み、参照を手放してGCに回収させる
-    const pageItems = [];
-    snap.forEach(d => pageItems.push(d.data()));
-    await idbPutAll(collectionName, pageItems);
-    count += pageItems.length;
-    lastDoc = snap.docs[snap.docs.length - 1];
-    const finished = snap.size < pageSize;
-    if (onProgress) { try { onProgress(collectionName, count); } catch(e) {} }
-    if (finished) break;
-    // 次のページを取りに行く前に50ms休んでブラウザにメモリ解放の機会を与える
-    await new Promise(r => setTimeout(r, 50));
+function showSyncProgressBanner(prog, errorMsg) {
+  const banner = document.getElementById('syncNoticeBanner');
+  if (!banner) return;
+  if (errorMsg) {
+    banner.innerHTML = `<div class="sync-notice"><div class="sync-notice-row"><span>⚠ ${errorMsg}</span></div></div>`;
+    banner.style.display = 'block';
+    return;
   }
-  return { count };
+  const phaseName = prog.phase === 'days' ? '開催日' : prog.phase === 'horses' ? '馬データ' : '完了';
+  const doneCount = prog.phase === 'horses' ? `${prog.horsesDone}頭完了` : '';
+  banner.innerHTML = `
+    <div class="sync-notice">
+      <div class="sync-notice-row">
+        <span>🔄 データ取得中（${phaseName}${doneCount ? ' ' + doneCount : ''}）… リロードをくり返しながら少しずつ取得しています</span>
+      </div>
+      <div style="height:7px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden;margin-top:10px">
+        <div id="syncReloadBar" style="height:100%;width:${Math.min(95, Math.round((prog.horsesDone||0)/36))}%;background:var(--accent);transition:width .3s"></div>
+      </div>
+      <div style="font-size:11px;color:var(--accent2);margin-top:5px;letter-spacing:.5px">開催日 ${prog.daysDone||0}件・馬 ${prog.horsesDone||0}頭 取得済み</div>
+    </div>
+  `;
+  banner.style.display = 'block';
+}
+
+function updateSyncProgressBanner(text) {
+  const el = document.getElementById('syncNoticeBanner');
+  if (el) { const lbl = el.querySelector('[style*="font-size:11px"]'); if (lbl) lbl.textContent = text; }
 }
 
 // ===== ページを開いた時だけ、その1件だけを個別に最新化する（軽量・非同期） =====
@@ -173586,8 +173648,12 @@ async function initApp() {
   updateBreadcrumb();
   updateHomeStats();
 
-  // 画面表示には影響させず、裏で「他の端末で更新が無いか」だけ軽く確認する（1件読むだけ・重くない）
-  checkForRemoteUpdates();
+  // 同期が進行中ならその続きを実行、そうでなければ「更新があるか」だけ軽く確認する
+  if (localStorage.getItem(SYNC_PROGRESS_KEY)) {
+    resumeFirestoreSyncIfNeeded(); // 非同期・非ブロッキング
+  } else {
+    checkForRemoteUpdates();
+  }
 }
 
 // アプリ起動
@@ -176149,47 +176215,9 @@ async function migrateLocalDataToFirestore() {
 // アプリ起動時には自動実行しなくなったので、新しく追加されたレース日・馬を
 // 一覧（全頭診断・過去開催など）に反映させたい時にこのボタンで明示的に行う。
 async function pullAllFromFirestore(opts) {
-  opts = opts || {};
-  const msgEl = document.getElementById('pullMsg');
-  const wrap  = document.getElementById('pullProgressWrap');
-  const bar   = document.getElementById('pullProgressBar');
-  const label = document.getElementById('pullProgressLabel');
-
-  const setStatus = (text, pct) => {
-    if (msgEl)  { msgEl.style.color = 'var(--accent2)'; msgEl.textContent = text; }
-    if (label)  label.textContent = text;
-    if (bar && pct != null) bar.style.width = pct + '%';
-    if (opts.onUpdate) opts.onUpdate(text, pct);
-  };
-
-  if (wrap) wrap.style.display = 'block';
-  if (bar)  bar.style.width = '0%';
-  setStatus('確認中…', 0);
-
-  try {
-    localStorage.removeItem(SYNC_VERSION_LS_KEY);
-
-    let dayCount = 0, horseCount = 0;
-    await fetchFirestoreData((col, count) => {
-      if (col === 'raceDays') dayCount = count; else horseCount = count;
-      const pct = Math.min(92, Math.round((dayCount + horseCount) / 30));
-      setStatus(`開催日 ${dayCount}件・馬 ${horseCount}件 取得中…`, pct);
-    });
-
-    // IndexedDBへの書き込みが完了したのでそちらが正になっている。
-    // 一気にメモリ上へ展開するとスマホがクラッシュするため、ページをリロードして
-    // initApp経由でIndexedDBから読み直す（軽い・安全）。
-    setStatus('✓ 取得完了。再読み込みします…', 100);
-    if (opts.onDone) opts.onDone('✓ 取得完了。再読み込み中…');
-    await new Promise(r => setTimeout(r, 800)); // メッセージを一瞬見せてからリロード
-    location.reload();
-  } catch(e) {
-    const errMsg = '⚠ 取得に失敗しました: ' + (e.message || e);
-    if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = errMsg; }
-    if (opts.onError) opts.onError(errMsg);
-  } finally {
-    if (wrap) setTimeout(() => { wrap.style.display = 'none'; }, 2000);
-  }
+  // 新方式：リロードまたぎで少量ずつ取得するためstartFirestoreSyncを呼ぶだけ
+  // optsはバナー側との互換性のために残しているが、この実装では使わない
+  await startFirestoreSync();
 }
 
 // ホーム画面に出す軽い通知：他の端末で更新があったかどうかだけを確認する（meta/syncInfoを1件読むだけ）。
@@ -176229,29 +176257,8 @@ async function checkForRemoteUpdates() {
 
 async function pullFromBannerClick(btn) {
   btn.disabled = true;
-  btn.textContent = '取得中…';
-
-  const wrap  = document.getElementById('bannerProgressWrap');
-  const bar   = document.getElementById('bannerProgressBar');
-  const label = document.getElementById('bannerProgressLabel');
-  if (wrap) wrap.style.display = 'block';
-
-  let hadError = false;
-  await pullAllFromFirestore({
-    onUpdate: (text, pct) => {
-      if (label) { label.style.color = 'var(--accent2)'; label.textContent = text; }
-      if (bar && pct != null) bar.style.width = pct + '%';
-    },
-    onDone: () => {
-      // location.reload()が走るのでバナー消去は不要。onDoneは念のため残す。
-    },
-    onError: (errMsg) => {
-      hadError = true;
-      if (label) { label.style.color = 'var(--red)'; label.textContent = errMsg; }
-      btn.textContent = '⚠ 失敗。もう一度';
-      btn.disabled = false;
-    }
-  });
+  btn.textContent = '準備中…';
+  await startFirestoreSync(); // リロードが走るのでここ以降は実行されない
 }
 
 function dowFromYMD(y, m, d) {
