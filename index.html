@@ -702,6 +702,76 @@ body {
 .result-reorder-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent2); }
 .result-reorder-btn:disabled { opacity: .25; cursor: default; }
 
+/* 編集モード: 近走評価カードのインライン編集フォーム */
+.result-edit-form {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 6px 6px 6px;
+}
+.result-edit-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  letter-spacing: .5px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.result-edit-btn:hover { border-color: var(--accent); color: var(--accent2); }
+.result-edit-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* 編集モード: DB取得オプション */
+.sync-opt-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sync-opt-tab {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: .5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.sync-opt-tab:hover { border-color: var(--accent); color: var(--accent2); }
+.sync-opt-tab.active { background: rgba(201,168,76,.15); border-color: var(--accent); color: var(--accent2); font-weight: 700; }
+.sync-select-list {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card2);
+  margin-bottom: 10px;
+}
+.sync-select-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(37,42,58,.5);
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--text);
+  transition: background .1s;
+}
+.sync-select-item:last-child { border-bottom: none; }
+.sync-select-item:hover { background: rgba(201,168,76,.06); }
+.sync-select-item input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+
 /* MEMO */
 .memo-box {
   background: var(--card);
@@ -1628,9 +1698,52 @@ textarea.search-input { line-height: 1.7; }
 
           <div style="height:1px;background:var(--border);margin:18px 0"></div>
 
-          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-            <button class="edit-btn-save" onclick="startFirestoreSync()">🔄 Firestoreから最新の一覧を取得</button>
-            <div style="font-size:11px;color:var(--muted);letter-spacing:.5px">ボタンを押すと取得を開始します。リロードを繰り返しながら少しずつ取得するので、ホーム画面で進捗が確認できます。</div>
+          <div style="font-size:12px;color:var(--muted2);letter-spacing:.5px;margin-bottom:10px">🔄 Firestoreから取得する対象を選んでください</div>
+          <div class="sync-opt-tabs">
+            <button type="button" class="sync-opt-tab active" onclick="setSyncOpt(this,'all-horses')">🐴 馬全部</button>
+            <button type="button" class="sync-opt-tab" onclick="setSyncOpt(this,'all-days')">📅 過去開催全部</button>
+            <button type="button" class="sync-opt-tab" onclick="setSyncOpt(this,'sel-horses')">🐴 馬を選択</button>
+            <button type="button" class="sync-opt-tab" onclick="setSyncOpt(this,'sel-days')">📅 開催日を選択</button>
+          </div>
+
+          <!-- 馬選択リスト -->
+          <div id="syncSelHorsesWrap" style="display:none">
+            <div style="display:flex;gap:8px;margin-bottom:6px">
+              <input type="text" id="syncHorseSearch" class="search-input" placeholder="馬名で絞り込み" oninput="filterSyncHorseList()" style="flex:1">
+              <button type="button" class="result-edit-btn" onclick="toggleAllSyncItems('syncHorseList',true)">全選択</button>
+              <button type="button" class="result-edit-btn" onclick="toggleAllSyncItems('syncHorseList',false)">全解除</button>
+            </div>
+            <div class="sync-select-list" id="syncHorseList"></div>
+          </div>
+
+          <!-- 開催日選択リスト -->
+          <div id="syncSelDaysWrap" style="display:none">
+            <!-- この端末にない日付を直接指定して取得 -->
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:10px">
+              <div class="edit-field-label" style="margin-bottom:6px">この端末にない日付を直接指定して取得</div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <input type="date" id="syncManualDate" class="search-input" style="flex:1;min-width:140px">
+                <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;white-space:nowrap" onclick="syncManualDate()">📥 この日付を取得</button>
+                <span class="edit-msg" id="syncManualDateMsg"></span>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:.5px">この端末に存在する開催日から選択：</div>
+            <div style="display:flex;gap:8px;margin-bottom:6px">
+              <button type="button" class="result-edit-btn" onclick="toggleAllSyncItems('syncDayList',true)">全選択</button>
+              <button type="button" class="result-edit-btn" onclick="toggleAllSyncItems('syncDayList',false)">全解除</button>
+            </div>
+            <div class="sync-select-list" id="syncDayList"></div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">
+            <button class="edit-btn-save" onclick="startSelectiveSync()">🔄 取得する</button>
+            <div class="edit-msg" id="selectiveSyncMsg"></div>
+          </div>
+          <div id="selectiveSyncProgressWrap" style="display:none;margin-top:10px">
+            <div style="height:7px;border-radius:4px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
+              <div id="selectiveSyncBar" style="height:100%;width:0%;background:var(--accent);transition:width .2s"></div>
+            </div>
+            <div id="selectiveSyncLabel" style="font-size:11px;color:var(--accent2);margin-top:5px;letter-spacing:.5px"></div>
           </div>
         </div>
 
@@ -174765,10 +174878,35 @@ function renderHorseDetail() {
     good:'eval-good', mid:'eval-mid', bad:'eval-bad' };
 
   const racesHTML = h.races.length ? h.races.map((r, idx) => {
+    const safeN  = escHtml(r.name    || '');
+    const safeT  = escHtml(r.track   || '');
+    const safeC  = escHtml(r.comment || '');
+    const ev     = r.eval || 'B';
     const reorderControls = isEditMode ? `
       <div class="result-reorder">
         <button type="button" class="result-reorder-btn" onclick="moveHorseRaceEntry(${idx},-1)" ${idx===0 ? 'disabled' : ''} title="上へ（新しい方へ）">▲</button>
         <button type="button" class="result-reorder-btn" onclick="moveHorseRaceEntry(${idx},1)" ${idx===h.races.length-1 ? 'disabled' : ''} title="下へ（古い方へ）">▼</button>
+      </div>` : '';
+    const editControls = isEditMode ? `
+      <div style="display:flex;gap:6px;margin-left:auto;flex-shrink:0">
+        <button type="button" class="result-edit-btn" onclick="toggleResultEditForm(this)">✏️ 編集</button>
+        <button type="button" class="result-edit-btn del" onclick="deleteHorseRaceEntry(${idx})">🗑 削除</button>
+      </div>` : '';
+    const editForm = isEditMode ? `
+      <div class="result-edit-form" style="display:none">
+        <div class="edit-row" style="gap:6px;margin-bottom:6px">
+          <input type="text" class="re-name search-input" value="${safeN}" placeholder="レース名" style="flex:2">
+          <input type="text" class="re-track search-input" value="${safeT}" placeholder="コース" style="flex:1.4">
+          <select class="re-eval search-input" style="max-width:64px">
+            ${['S','A','B','C','D','F'].map(e=>`<option value="${e}"${e===ev?' selected':''}>${e}</option>`).join('')}
+          </select>
+        </div>
+        <textarea class="re-comment search-input" style="min-height:46px;resize:vertical;margin-bottom:6px" placeholder="コメント">${safeC}</textarea>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" class="edit-btn-save" style="padding:5px 14px;font-size:12px" onclick="saveResultEditForm(this,${idx})">💾 保存</button>
+          <button type="button" class="result-edit-btn" onclick="toggleResultEditForm(this.closest('.result-edit-form').previousElementSibling.querySelector('.result-edit-btn'))">キャンセル</button>
+          <span class="re-msg edit-msg"></span>
+        </div>
       </div>` : '';
     return `
     <div class="result-card">
@@ -174779,8 +174917,10 @@ function renderHorseDetail() {
           ${r.eval==='good'?'高評価':r.eval==='mid'?'中評価':r.eval==='bad'?'低評価':evalLabel[r.eval]||r.eval||'C'}
         </span>
         <div class="result-track">${r.track}</div>
+        ${editControls}
       </div>
       <div class="result-comment">${r.comment}</div>
+      ${editForm}
     </div>
   `;
   }).join('') : `<div style="color:var(--muted);font-size:13px;padding:16px 0;letter-spacing:1px">近走データがありません</div>`;
@@ -174985,6 +175125,45 @@ async function moveHorseRaceEntry(index, direction) {
   renderHorseDetail();
 }
 
+// 編集フォームの表示/非表示を切り替える（✏️ 編集ボタンを押した時）
+function toggleResultEditForm(btn) {
+  const card = btn.closest('.result-card');
+  const form = card.querySelector('.result-edit-form');
+  if (!form) return;
+  const isOpen = form.style.display !== 'none';
+  form.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '✏️ 編集' : '✖ 閉じる';
+}
+
+// 近走評価カードのインライン編集を保存する
+async function saveResultEditForm(saveBtn, index) {
+  const h = selectedHorse;
+  if (!h || !h.races || !h.races[index]) return;
+  const form = saveBtn.closest('.result-edit-form');
+  const msgEl = form.querySelector('.re-msg');
+  const name    = form.querySelector('.re-name').value.trim();
+  if (!name) { msgEl.style.color='var(--red)'; msgEl.textContent='⚠ レース名を入力してください'; return; }
+  const track   = form.querySelector('.re-track').value.trim();
+  const evalVal = form.querySelector('.re-eval').value;
+  const comment = form.querySelector('.re-comment').value.trim();
+  h.races[index] = { name, track, eval: evalVal, comment };
+  msgEl.style.color='var(--accent2)'; msgEl.textContent='保存中…';
+  await saveHorse(h);
+  invalidateHorseCache();
+  renderHorseDetail();
+}
+
+// 近走評価を1件削除する（確認あり）
+async function deleteHorseRaceEntry(index) {
+  const h = selectedHorse;
+  if (!h || !h.races || !h.races[index]) return;
+  const r = h.races[index];
+  if (!window.confirm(`「${r.name}」の評価を削除しますか？`)) return;
+  h.races.splice(index, 1);
+  await saveHorse(h);
+  invalidateHorseCache();
+  renderHorseDetail();
+}
 
 // ================= FIREBASE PUBLIC MEMOS =================
 let _publicMemoHorseName = null;
@@ -176329,6 +176508,186 @@ function renderEditView() {
   if (horseRacesContainer && horseRacesContainer.children.length === 0) {
     addEditHorseRaceRow();
   }
+
+  // 同期オプションのリストを初期化
+  buildSyncHorseList();
+  buildSyncDayList();
+}
+
+let currentSyncOpt = 'all-horses';
+
+function setSyncOpt(btn, opt) {
+  currentSyncOpt = opt;
+  document.querySelectorAll('.sync-opt-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('syncSelHorsesWrap').style.display = opt === 'sel-horses' ? 'block' : 'none';
+  document.getElementById('syncSelDaysWrap').style.display   = opt === 'sel-days'   ? 'block' : 'none';
+  // タブ切り替えのたびに最新のデータで一覧を再構築（新しく追加した分も反映）
+  if (opt === 'sel-horses') buildSyncHorseList();
+  if (opt === 'sel-days')   buildSyncDayList();
+}
+
+function buildSyncHorseList() {
+  const list = document.getElementById('syncHorseList');
+  if (!list) return;
+  const sorted = [...horses].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+  list.innerHTML = sorted.map(h => `
+    <label class="sync-select-item">
+      <input type="checkbox" value="${escHtml(h.name)}" class="sync-horse-cb">
+      <span>${escHtml(h.name)}</span>
+    </label>`).join('');
+}
+
+function buildSyncDayList() {
+  const list = document.getElementById('syncDayList');
+  if (!list) return;
+  const sorted = [...raceDays].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
+  list.innerHTML = sorted.map(d => `
+    <label class="sync-select-item">
+      <input type="checkbox" value="${escHtml(d.id)}" class="sync-day-cb">
+      <span>${escHtml(d.label)}（${(d.venues||[]).map(v=>v.name).join('/')}）</span>
+    </label>`).join('');
+}
+
+function filterSyncHorseList() {
+  const q = (document.getElementById('syncHorseSearch').value || '').trim();
+  document.querySelectorAll('#syncHorseList .sync-select-item').forEach(item => {
+    const name = item.querySelector('span').textContent;
+    item.style.display = (!q || name.includes(q)) ? 'flex' : 'none';
+  });
+}
+
+// 日付ピッカーで指定した日付をFirestoreから直接取得（この端末に存在しない開催日向け）
+async function syncManualDate() {
+  const msgEl = document.getElementById('syncManualDateMsg');
+  const dateVal = document.getElementById('syncManualDate').value;
+  if (!dateVal) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ 日付を選択してください'; return; }
+
+  const [y, m, d] = dateVal.split('-').map(Number);
+  const dayId = `day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+  msgEl.style.color = 'var(--accent2)'; msgEl.textContent = '取得中…';
+
+  const ready = await waitForFirebase(5000);
+  if (!ready) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ Firebaseに接続できませんでした'; return; }
+
+  try {
+    const { doc, getDoc } = window._fbFns;
+    const snap = await getDoc(doc(window._fbDb, 'raceDays', dayId));
+    if (!snap.exists()) {
+      msgEl.style.color = 'var(--red)';
+      msgEl.textContent = `⚠ ${m}月${d}日のデータがFirestoreに存在しません`;
+      return;
+    }
+    const fresh = snap.data();
+    await idbPut('raceDays', fresh);
+    const idx = raceDays.findIndex(day => day.id === dayId);
+    if (idx >= 0) raceDays[idx] = fresh; else raceDays.push(fresh);
+    invalidateHorseCache();
+    updateHomeStats();
+    renderHistoryDateList();
+    // 取得できたのでチェックリストも更新して自動チェック
+    buildSyncDayList();
+    const cb = document.querySelector(`#syncDayList input[value="${dayId}"]`);
+    if (cb) { cb.checked = true; cb.closest('.sync-select-item').style.background = 'rgba(201,168,76,.08)'; }
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）を取得しました`;
+  } catch(e) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = `⚠ 取得失敗: ${e.code || e.message}`;
+  }
+}
+
+function toggleAllSyncItems(listId, checked) {
+  document.querySelectorAll(`#${listId} input[type=checkbox]`).forEach(cb => {
+    if (cb.closest('.sync-select-item').style.display !== 'none') cb.checked = checked;
+  });
+}
+
+async function startSelectiveSync() {
+  const msgEl  = document.getElementById('selectiveSyncMsg');
+  const wrap   = document.getElementById('selectiveSyncProgressWrap');
+  const bar    = document.getElementById('selectiveSyncBar');
+  const label  = document.getElementById('selectiveSyncLabel');
+  msgEl.style.color = 'var(--accent2)'; msgEl.textContent = '開始中…';
+  wrap.style.display = 'block'; bar.style.width = '0%'; label.textContent = '';
+
+  if (currentSyncOpt === 'all-horses' || currentSyncOpt === 'all-days') {
+    // 全件はリロードまたぎ方式で取得
+    const prog = {
+      phase:      currentSyncOpt === 'all-horses' ? 'horses' : 'days',
+      lastId:     null,
+      daysDone:   0,
+      horsesDone: 0,
+      startedAt:  Date.now()
+    };
+    if (currentSyncOpt === 'all-days') prog.phase = 'days';
+    msgEl.textContent = 'リロードしながら取得します…';
+    await new Promise(r => setTimeout(r, 600));
+    localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify(prog));
+    localStorage.removeItem(SYNC_VERSION_LS_KEY);
+    location.reload();
+    return;
+  }
+
+  // 個別選択：getDocで1件ずつ取得（件数が少ないのでリロード不要）
+  const ready = await waitForFirebase(5000);
+  if (!ready) {
+    msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ Firebaseに接続できませんでした';
+    wrap.style.display = 'none'; return;
+  }
+  const { doc, getDoc } = window._fbFns;
+
+  if (currentSyncOpt === 'sel-horses') {
+    const checked = [...document.querySelectorAll('#syncHorseList .sync-horse-cb:checked')].map(cb => cb.value);
+    if (!checked.length) { msgEl.style.color='var(--red)'; msgEl.textContent='⚠ 馬を1頭以上選択してください'; wrap.style.display='none'; return; }
+    let done = 0;
+    for (const name of checked) {
+      try {
+        const snap = await getDoc(doc(window._fbDb, 'horses', name));
+        if (snap.exists()) {
+          const fresh = snap.data();
+          await idbPut('horses', fresh);
+          const idx = horses.findIndex(h => h.name === name);
+          if (idx >= 0) horses[idx] = fresh; else horses.push(fresh);
+        }
+      } catch(e) { console.warn('[keiba] 馬取得失敗:', name, e.message); }
+      done++;
+      const pct = Math.round(done / checked.length * 100);
+      bar.style.width = pct + '%';
+      label.textContent = `${done} / ${checked.length} 頭取得中…`;
+      msgEl.textContent = `取得中… ${done}/${checked.length}`;
+    }
+    invalidateHorseCache(); renderHorseList(); updateHomeStats();
+    msgEl.style.color = 'var(--green)'; msgEl.textContent = `✓ ${done}頭を最新化しました`;
+    label.textContent = `完了（${done}頭）`;
+
+  } else if (currentSyncOpt === 'sel-days') {
+    const checked = [...document.querySelectorAll('#syncDayList .sync-day-cb:checked')].map(cb => cb.value);
+    if (!checked.length) { msgEl.style.color='var(--red)'; msgEl.textContent='⚠ 開催日を1件以上選択してください'; wrap.style.display='none'; return; }
+    let done = 0;
+    for (const dayId of checked) {
+      try {
+        const snap = await getDoc(doc(window._fbDb, 'raceDays', dayId));
+        if (snap.exists()) {
+          const fresh = snap.data();
+          await idbPut('raceDays', fresh);
+          const idx = raceDays.findIndex(d => d.id === dayId);
+          if (idx >= 0) raceDays[idx] = fresh; else raceDays.push(fresh);
+        }
+      } catch(e) { console.warn('[keiba] 開催日取得失敗:', dayId, e.message); }
+      done++;
+      const pct = Math.round(done / checked.length * 100);
+      bar.style.width = pct + '%';
+      label.textContent = `${done} / ${checked.length} 件取得中…`;
+      msgEl.textContent = `取得中… ${done}/${checked.length}`;
+    }
+    invalidateHorseCache(); renderHistoryDateList(); updateHomeStats();
+    msgEl.style.color = 'var(--green)'; msgEl.textContent = `✓ ${done}件の開催日を最新化しました`;
+    label.textContent = `完了（${done}件）`;
+  }
+
+  setTimeout(() => { wrap.style.display = 'none'; }, 2000);
 }
 
 function refreshHorseNameDatalist() {
