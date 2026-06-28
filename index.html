@@ -1723,6 +1723,10 @@ textarea.search-input { line-height: 1.7; }
               <div class="edit-field-label" style="margin-bottom:6px">この端末にない日付を直接指定して取得</div>
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <input type="date" id="syncManualDate" class="search-input" style="flex:1;min-width:140px">
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted2);cursor:pointer;white-space:nowrap">
+                  <input type="checkbox" id="syncManualWithHorses" style="accent-color:var(--accent);width:14px;height:14px">
+                  出走馬のデータも取得
+                </label>
                 <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;white-space:nowrap" onclick="syncManualDate()">📥 この日付を取得</button>
                 <span class="edit-msg" id="syncManualDateMsg"></span>
               </div>
@@ -1737,6 +1741,10 @@ textarea.search-input { line-height: 1.7; }
 
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">
             <button class="edit-btn-save" onclick="startSelectiveSync()">🔄 取得する</button>
+            <label id="syncWithHorsesToggleWrap" style="display:none;align-items:center;gap:5px;font-size:12px;color:var(--muted2);cursor:pointer">
+              <input type="checkbox" id="syncDaysWithHorses" style="accent-color:var(--accent);width:14px;height:14px">
+              出走馬のデータも取得
+            </label>
             <div class="edit-msg" id="selectiveSyncMsg"></div>
           </div>
           <div id="selectiveSyncProgressWrap" style="display:none;margin-top:10px">
@@ -176522,6 +176530,9 @@ function setSyncOpt(btn, opt) {
   btn.classList.add('active');
   document.getElementById('syncSelHorsesWrap').style.display = opt === 'sel-horses' ? 'block' : 'none';
   document.getElementById('syncSelDaysWrap').style.display   = opt === 'sel-days'   ? 'block' : 'none';
+  // 「出走馬のデータも取得」チェックは開催日選択時のみ表示
+  const withHorsesWrap = document.getElementById('syncWithHorsesToggleWrap');
+  if (withHorsesWrap) withHorsesWrap.style.display = opt === 'sel-days' ? 'flex' : 'none';
   // タブ切り替えのたびに最新のデータで一覧を再構築（新しく追加した分も反映）
   if (opt === 'sel-horses') buildSyncHorseList();
   if (opt === 'sel-days')   buildSyncDayList();
@@ -176559,8 +176570,9 @@ function filterSyncHorseList() {
 
 // 日付ピッカーで指定した日付をFirestoreから直接取得（この端末に存在しない開催日向け）
 async function syncManualDate() {
-  const msgEl = document.getElementById('syncManualDateMsg');
+  const msgEl   = document.getElementById('syncManualDateMsg');
   const dateVal = document.getElementById('syncManualDate').value;
+  const withHorses = document.getElementById('syncManualWithHorses').checked;
   if (!dateVal) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ 日付を選択してください'; return; }
 
   const [y, m, d] = dateVal.split('-').map(Number);
@@ -176586,10 +176598,21 @@ async function syncManualDate() {
     invalidateHorseCache();
     updateHomeStats();
     renderHistoryDateList();
-    // 取得できたのでチェックリストも更新して自動チェック
     buildSyncDayList();
     const cb = document.querySelector(`#syncDayList input[value="${dayId}"]`);
-    if (cb) { cb.checked = true; cb.closest('.sync-select-item').style.background = 'rgba(201,168,76,.08)'; }
+    if (cb) { cb.checked = true; }
+
+    // 出走馬のデータも取得
+    if (withHorses) {
+      const horseNames = extractHorseNamesFromDay(fresh);
+      if (horseNames.length) {
+        msgEl.textContent = `開催日取得済み。出走馬 ${horseNames.length}頭を取得中…`;
+        const fetched = await fetchHorsesByNames(horseNames);
+        msgEl.style.color = 'var(--green)';
+        msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）＋出走馬 ${fetched}頭を取得しました`;
+        return;
+      }
+    }
     msgEl.style.color = 'var(--green)';
     msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）を取得しました`;
   } catch(e) {
@@ -176604,6 +176627,41 @@ function toggleAllSyncItems(listId, checked) {
   });
 }
 
+// 指定した開催日データから出走馬名一覧を抽出する
+function extractHorseNamesFromDay(day) {
+  const names = new Set();
+  for (const venue of (day.venues || [])) {
+    for (const race of (venue.races || [])) {
+      for (const h of (race.horses || [])) {
+        if (h.name && h.name.trim()) names.add(h.name.trim());
+      }
+    }
+  }
+  return [...names];
+}
+
+// 馬名リストをFirestoreから取得してIDB・メモリに反映する（件数が少ない時用）
+async function fetchHorsesByNames(names) {
+  const { doc, getDoc } = window._fbFns;
+  let fetched = 0;
+  for (const name of names) {
+    try {
+      const snap = await getDoc(doc(window._fbDb, 'horses', name));
+      if (snap.exists()) {
+        const fresh = snap.data();
+        await idbPut('horses', fresh);
+        const idx = horses.findIndex(h => h.name === name);
+        if (idx >= 0) horses[idx] = fresh; else horses.push(fresh);
+        fetched++;
+      }
+    } catch(e) { console.warn('[keiba] 馬取得失敗:', name, e.message); }
+  }
+  invalidateHorseCache();
+  renderHorseList();
+  updateHomeStats();
+  return fetched;
+}
+
 async function startSelectiveSync() {
   const msgEl  = document.getElementById('selectiveSyncMsg');
   const wrap   = document.getElementById('selectiveSyncProgressWrap');
@@ -176613,7 +176671,6 @@ async function startSelectiveSync() {
   wrap.style.display = 'block'; bar.style.width = '0%'; label.textContent = '';
 
   if (currentSyncOpt === 'all-horses' || currentSyncOpt === 'all-days') {
-    // 全件はリロードまたぎ方式で取得
     const prog = {
       phase:      currentSyncOpt === 'all-horses' ? 'horses' : 'days',
       lastId:     null,
@@ -176621,7 +176678,6 @@ async function startSelectiveSync() {
       horsesDone: 0,
       startedAt:  Date.now()
     };
-    if (currentSyncOpt === 'all-days') prog.phase = 'days';
     msgEl.textContent = 'リロードしながら取得します…';
     await new Promise(r => setTimeout(r, 600));
     localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify(prog));
@@ -176630,7 +176686,6 @@ async function startSelectiveSync() {
     return;
   }
 
-  // 個別選択：getDocで1件ずつ取得（件数が少ないのでリロード不要）
   const ready = await waitForFirebase(5000);
   if (!ready) {
     msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ Firebaseに接続できませんでした';
@@ -176653,8 +176708,7 @@ async function startSelectiveSync() {
         }
       } catch(e) { console.warn('[keiba] 馬取得失敗:', name, e.message); }
       done++;
-      const pct = Math.round(done / checked.length * 100);
-      bar.style.width = pct + '%';
+      bar.style.width = Math.round(done / checked.length * 100) + '%';
       label.textContent = `${done} / ${checked.length} 頭取得中…`;
       msgEl.textContent = `取得中… ${done}/${checked.length}`;
     }
@@ -176665,7 +176719,10 @@ async function startSelectiveSync() {
   } else if (currentSyncOpt === 'sel-days') {
     const checked = [...document.querySelectorAll('#syncDayList .sync-day-cb:checked')].map(cb => cb.value);
     if (!checked.length) { msgEl.style.color='var(--red)'; msgEl.textContent='⚠ 開催日を1件以上選択してください'; wrap.style.display='none'; return; }
+    const withHorses = document.getElementById('syncDaysWithHorses').checked;
+
     let done = 0;
+    const allHorseNames = new Set();
     for (const dayId of checked) {
       try {
         const snap = await getDoc(doc(window._fbDb, 'raceDays', dayId));
@@ -176674,17 +176731,40 @@ async function startSelectiveSync() {
           await idbPut('raceDays', fresh);
           const idx = raceDays.findIndex(d => d.id === dayId);
           if (idx >= 0) raceDays[idx] = fresh; else raceDays.push(fresh);
+          if (withHorses) extractHorseNamesFromDay(fresh).forEach(n => allHorseNames.add(n));
         }
       } catch(e) { console.warn('[keiba] 開催日取得失敗:', dayId, e.message); }
       done++;
-      const pct = Math.round(done / checked.length * 100);
-      bar.style.width = pct + '%';
-      label.textContent = `${done} / ${checked.length} 件取得中…`;
+      const phasePct = Math.round(done / checked.length * (withHorses ? 60 : 100));
+      bar.style.width = phasePct + '%';
+      label.textContent = `開催日 ${done} / ${checked.length} 件取得中…`;
       msgEl.textContent = `取得中… ${done}/${checked.length}`;
     }
+
+    if (withHorses && allHorseNames.size > 0) {
+      label.textContent = `開催日完了。出走馬 ${allHorseNames.size}頭を取得中…`;
+      let hDone = 0;
+      for (const name of allHorseNames) {
+        try {
+          const snap = await getDoc(doc(window._fbDb, 'horses', name));
+          if (snap.exists()) {
+            const fresh = snap.data();
+            await idbPut('horses', fresh);
+            const idx = horses.findIndex(h => h.name === name);
+            if (idx >= 0) horses[idx] = fresh; else horses.push(fresh);
+          }
+        } catch(e) { console.warn('[keiba] 馬取得失敗:', name, e.message); }
+        hDone++;
+        bar.style.width = Math.round(60 + hDone / allHorseNames.size * 40) + '%';
+        label.textContent = `出走馬 ${hDone} / ${allHorseNames.size} 頭取得中…`;
+      }
+      invalidateHorseCache(); renderHorseList();
+    }
+
     invalidateHorseCache(); renderHistoryDateList(); updateHomeStats();
-    msgEl.style.color = 'var(--green)'; msgEl.textContent = `✓ ${done}件の開催日を最新化しました`;
-    label.textContent = `完了（${done}件）`;
+    const horseSuffix = withHorses ? `・出走馬 ${allHorseNames.size}頭` : '';
+    msgEl.style.color = 'var(--green)'; msgEl.textContent = `✓ ${done}件の開催日${horseSuffix}を最新化しました`;
+    label.textContent = `完了（開催日${done}件${horseSuffix}）`;
   }
 
   setTimeout(() => { wrap.style.display = 'none'; }, 2000);
