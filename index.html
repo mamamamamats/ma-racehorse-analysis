@@ -173364,6 +173364,9 @@ async function fbDeleteHorse(name) {
 // 変化が無ければ重いフル同期（馬3000頭超の全件取得）をスキップする（スマホでのメモリ枯渇・クラッシュ対策）。
 const SYNC_VERSION_LS_KEY = 'keiba-fs-sync-version';
 
+// editモード判定（URLに?editが含まれるか）—どこからでも参照できるようスクリプト冒頭で宣言
+const isEditMode = location.search.includes('edit');
+
 async function bumpSyncVersion() {
   try {
     if (!(await waitForFirebase(2000))) return;
@@ -173524,6 +173527,7 @@ function updateSyncProgressBanner(text) {
 // その対象1件だけFirestoreに確認しに行く。重くないので毎回呼んでも問題ない。
 
 async function lazyRefreshHorse(name) {
+  if (!isEditMode) return; // 一般ユーザーはFirestoreにアクセスしない
   try {
     if (!(await waitForFirebase(3000))) return;
     const { doc, getDoc } = window._fbFns;
@@ -173542,6 +173546,7 @@ async function lazyRefreshHorse(name) {
 }
 
 async function lazyRefreshDay(dayId) {
+  if (!isEditMode) return; // 一般ユーザーはFirestoreにアクセスしない
   try {
     if (!(await waitForFirebase(3000))) return;
     const { doc, getDoc } = window._fbFns;
@@ -173571,7 +173576,7 @@ async function loadAllHorses() {
 // 馬を削除
 async function deleteHorse(name) {
   try { await idbDelete('horses', name); } catch(e) {}
-  await fbDeleteHorse(name); // Firestoreからも削除
+  if (isEditMode) await fbDeleteHorse(name); // editモードのみFirestoreからも削除
   const idx = horses.findIndex(h => h.name === name);
   if (idx >= 0) horses.splice(idx, 1);
   invalidateHorseCache();
@@ -173611,9 +173616,12 @@ async function initApp() {
   // IndexedDBを開く
   db = await openDB();
 
-  // ※以前はここで毎回Firestoreから全件を取得していたが、スマホでのクラッシュの原因になっていたため廃止。
-  // 代わりに、各ページ（馬ページ・レース日ページ）を開いた時にその1件だけを個別に最新化する方式に変更（下記 lazyRefreshHorse / lazyRefreshDay）。
-  // 全件をまとめて最新化したい場合は、編集モードの「🔄 Firestoreから最新の一覧を取得」ボタンを使う（手動・任意のタイミングで実行）。
+  // データソースの切り替え：
+  //   一般ユーザー（通常URL）→ GitHubのJSONを起動時に取得（Firestoreアクセスなし・無料枠を消費しない）
+  //   編集者（?edit）        → Firestoreで読み書き（GitHubのJSONは使わない）
+  if (!isEditMode) {
+    await fetchGitHubData(); // GitHubのJSONを取得してIndexedDBを更新
+  }
 
   // raceDaysをロード
   const savedDays   = await idbGetAll('raceDays');
@@ -173770,8 +173778,7 @@ async function initApp() {
   updateBreadcrumb();
   updateHomeStats();
 
-  // 同期が進行中ならその続きを実行、そうでなければ「更新があるか」だけ軽く確認する
-  // どちらもFirestoreの読み取りを伴うため、編集モード（?edit）のみで実行する
+  // editモードのみ：Firestoreの更新確認・同期再開
   if (isEditMode) {
     if (localStorage.getItem(SYNC_PROGRESS_KEY)) {
       resumeFirestoreSyncIfNeeded();
@@ -173941,6 +173948,7 @@ async function _fetchPayload() {
 }
 
 async function fetchGitHubData() {
+  if (isEditMode) return; // editモードはFirestoreを正として使うのでGitHub JSONは読まない
   try {
     const payload = await _fetchPayload();
     if (!payload || !payload.raceDays || !payload.horses) return;
@@ -175760,7 +175768,7 @@ function updateHomeStats() {
 }
 
 // Edit mode: show import zone only when ?edit is in URL
-const isEditMode = location.search.includes('edit');
+// isEditModeはスクリプト冒頭で宣言済み
 const importSection = document.getElementById('importSection');
 if (importSection) importSection.style.display = isEditMode ? 'block' : 'none';
 const navEditTab = document.getElementById('navEditTab');
