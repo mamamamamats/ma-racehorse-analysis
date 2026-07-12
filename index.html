@@ -446,6 +446,24 @@ body {
 
 /* 編集モード: 各ページからDBへ直接送信するボタン */
 .dbsend-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* 回顧済みボタン */
+.reviewed-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: .5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.reviewed-btn:hover { border-color: var(--green); color: var(--green); }
+.reviewed-btn.done { background: rgba(82,196,138,.15); border-color: var(--green); color: var(--green); font-weight: 700; }
 .dbsend-btn {
   background: rgba(201,168,76,.10);
   border: 1px solid var(--accent);
@@ -726,6 +744,32 @@ body {
 }
 .result-edit-btn:hover { border-color: var(--accent); color: var(--accent2); }
 .result-edit-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* コメントテンプレート選択UI */
+.comment-tmpl-wrap {
+  margin-bottom: 5px;
+}
+.comment-tmpl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.comment-tmpl-tag {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  letter-spacing: .3px;
+  cursor: pointer;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.comment-tmpl-tag:hover { border-color: var(--accent); color: var(--accent2); background: rgba(201,168,76,.08); }
+.comment-tmpl-tag.active { border-color: var(--accent); color: var(--accent2); background: rgba(201,168,76,.15); }
 
 /* 編集モード: DB取得オプション */
 .sync-opt-tabs {
@@ -1875,6 +1919,7 @@ textarea.search-input { line-height: 1.7; }
           <div style="margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
             <button class="edit-btn-save" onclick="saveEditHorse()">💾 馬ページを保存</button>
             <button type="button" class="btn-back" onclick="resetEditHorseForm()">クリア</button>
+            <button type="button" class="btn-back" onclick="showCommentTmplManager()" style="border-color:var(--accent);color:var(--accent2)">💬 テンプレート管理</button>
             <div class="edit-msg" id="editHorseMsg"></div>
           </div>
         </div>
@@ -174255,6 +174300,7 @@ function renderWeekContent(day) {
             </div>
             <div class="dbsend-wrap">
               ${gradeLabel[race.grade] ? `<span class="race-grade-badge ${gradeClass[race.grade]}" style="font-size:12px;padding:4px 12px">${gradeLabel[race.grade]}</span>` : ''}
+              ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}
               ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
             </div>
           </div>
@@ -175149,6 +175195,11 @@ function toggleResultEditForm(btn) {
   const isOpen = form.style.display !== 'none';
   form.style.display = isOpen ? 'none' : 'block';
   btn.textContent = isOpen ? '✏️ 編集' : '✖ 閉じる';
+  // フォームを開いた時にテンプレートタグを追加（1回だけ）
+  if (!isOpen && !form.querySelector('.comment-tmpl-wrap')) {
+    const ta = form.querySelector('textarea');
+    if (ta) renderCommentTemplateTags(form, ta);
+  }
 }
 
 // 近走評価カードのインライン編集を保存する
@@ -175696,7 +175747,10 @@ function renderHistoryMain() {
               <div class="race-detail-title">${rNum}R ${race.name}</div>
               <div class="race-detail-meta">${venue.name}　${day.label}${race.track ? '　' + race.track : ''}</div>
             </div>
-            ${isEditMode ? `<div class="dbsend-wrap"><button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span></div>` : ''}
+            <div class="dbsend-wrap">
+              ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}
+              ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
+            </div>
           </div>
           ${horseGridHTML}
         </div>
@@ -176462,9 +176516,162 @@ async function pullFromBannerClick(btn) {
   await startFirestoreSync(); // リロードが走るのでここ以降は実行されない
 }
 
+// ============================================================
+//  コメントテンプレート管理
+// ============================================================
+const COMMENT_TMPL_KEY = 'keiba-comment-templates';
+
+const DEFAULT_COMMENT_TEMPLATES = [
+  '先行して粘りを見せた',
+  '中団から末脚を発揮',
+  '後方から大外を回り追い込み',
+  '出遅れ響いた',
+  '不利があり度外視可',
+  '展開が向かなかった',
+  '内で詰まり力を出せず',
+  '砂を被り嫌気',
+  '距離が長かった',
+  '距離が短かった',
+  '重馬場が応えた',
+  '好走パターンにはまった',
+  '休み明けで余裕残し',
+  'ゲートが悪かった',
+];
+
+function loadCommentTemplates() {
+  try {
+    const saved = localStorage.getItem(COMMENT_TMPL_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return [...DEFAULT_COMMENT_TEMPLATES];
+}
+
+function saveCommentTemplates(templates) {
+  try { localStorage.setItem(COMMENT_TMPL_KEY, JSON.stringify(templates)); } catch(e) {}
+}
+
+// コメント欄の上にテンプレートタグを描画する
+// textareaEl: 対象のtextarea要素
+function renderCommentTemplateTags(containerEl, textareaEl) {
+  const templates = loadCommentTemplates();
+  if (!templates.length) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'comment-tmpl-wrap';
+  const tagsDiv = document.createElement('div');
+  tagsDiv.className = 'comment-tmpl-tags';
+  templates.forEach(tmpl => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'comment-tmpl-tag';
+    btn.textContent = tmpl;
+    btn.onclick = () => {
+      const cur = textareaEl.value;
+      // すでに含まれていたらトグル（削除）
+      if (cur.includes(tmpl)) {
+        textareaEl.value = cur.replace(tmpl, '').replace(/^[。、\n]+|[。、\n]+$/g, '').trim();
+        btn.classList.remove('active');
+      } else {
+        // 末尾に追加（既存テキストがあれば「。」区切り）
+        textareaEl.value = cur ? cur.trimEnd() + '。' + tmpl : tmpl;
+        btn.classList.add('active');
+      }
+      textareaEl.focus();
+    };
+    tagsDiv.appendChild(btn);
+  });
+  wrap.appendChild(tagsDiv);
+  containerEl.insertBefore(wrap, textareaEl);
+}
+
+// テンプレート管理用モーダルを表示
+function showCommentTmplManager() {
+  if (document.getElementById('commentTmplModal')) return;
+  const templates = loadCommentTemplates();
+  const overlay = document.createElement('div');
+  overlay.id = 'commentTmplModal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:24px;width:100%;max-width:500px;max-height:80vh;overflow-y:auto">
+      <div style="font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--accent2);letter-spacing:1.5px;margin-bottom:16px">💬 コメントテンプレート管理</div>
+      <div id="tmplList" style="margin-bottom:14px"></div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input type="text" id="tmplNewInput" class="search-input" placeholder="新しいテンプレートを入力" style="flex:1">
+        <button type="button" class="edit-btn-save" style="padding:8px 14px;font-size:12px;white-space:nowrap" onclick="addCommentTemplate()">＋ 追加</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button type="button" class="btn-back" onclick="resetCommentTemplates()">デフォルトに戻す</button>
+        <button type="button" class="edit-btn-save" onclick="document.getElementById('commentTmplModal').remove()">閉じる</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  renderTmplList();
+}
+
+function renderTmplList() {
+  const list = document.getElementById('tmplList');
+  if (!list) return;
+  const templates = loadCommentTemplates();
+  if (!templates.length) { list.innerHTML = '<div style="color:var(--muted);font-size:12px">テンプレートがありません</div>'; return; }
+  list.innerHTML = templates.map((t, i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(37,42,58,.5)">
+      <span style="flex:1;font-size:13px;color:var(--text)">${escHtml(t)}</span>
+      <button type="button" class="edit-btn-remove" onclick="moveCommentTemplate(${i},-1)" ${i===0?'disabled':''} title="上へ">▲</button>
+      <button type="button" class="edit-btn-remove" onclick="moveCommentTemplate(${i},1)" ${i===templates.length-1?'disabled':''} title="下へ">▼</button>
+      <button type="button" class="edit-btn-remove" onclick="deleteCommentTemplate(${i})" title="削除" style="color:var(--red);border-color:var(--red)">✕</button>
+    </div>`).join('');
+}
+
+function addCommentTemplate() {
+  const input = document.getElementById('tmplNewInput');
+  const val = input.value.trim();
+  if (!val) return;
+  const templates = loadCommentTemplates();
+  if (!templates.includes(val)) { templates.push(val); saveCommentTemplates(templates); }
+  input.value = '';
+  renderTmplList();
+}
+
+function deleteCommentTemplate(index) {
+  const templates = loadCommentTemplates();
+  templates.splice(index, 1);
+  saveCommentTemplates(templates);
+  renderTmplList();
+}
+
+function moveCommentTemplate(index, direction) {
+  const templates = loadCommentTemplates();
+  const newIdx = index + direction;
+  if (newIdx < 0 || newIdx >= templates.length) return;
+  [templates[index], templates[newIdx]] = [templates[newIdx], templates[index]];
+  saveCommentTemplates(templates);
+  renderTmplList();
+}
+
+function resetCommentTemplates() {
+  if (!confirm('デフォルトのテンプレートに戻しますか？現在のテンプレートは失われます。')) return;
+  saveCommentTemplates([...DEFAULT_COMMENT_TEMPLATES]);
+  renderTmplList();
+}
+
 function dowFromYMD(y, m, d) {
   const map = ['日','月','火','水','木','金','土'];
   return map[new Date(y, m - 1, d).getDay()];
+}
+
+// 回顧済みフラグをトグルして保存する
+async function toggleReviewed(dayId, venueName, rNum, btn) {
+  const day   = raceDays.find(d => d.id === dayId);
+  const venue = day && (day.venues || []).find(v => v.name === venueName);
+  const race  = venue && venue.races.find(r => r.r === rNum);
+  if (!race) return;
+
+  race.reviewed = !race.reviewed;
+  btn.classList.toggle('done', race.reviewed);
+  btn.textContent = race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする';
+
+  await idbPut('raceDays', day);
+  await fbSaveRaceDay(day);
 }
 
 // 編集モード: 各ページ（レース詳細・馬ページ）から直接DBへ送信するボタン
@@ -177185,6 +177392,9 @@ function addEditHorseRaceRow(name, track, evalVal, comment) {
     <textarea class="hr-comment search-input" style="min-height:50px;resize:vertical" placeholder="コメント（レース内容の振り返り）">${escHtml(comment||'')}</textarea>
   `;
   container.appendChild(row);
+  // コメントテンプレートタグを追加
+  const ta = row.querySelector('.hr-comment');
+  if (ta) renderCommentTemplateTags(row, ta);
 }
 
 function resetEditHorseForm() {
@@ -177253,6 +177463,11 @@ function toggleRhcForm(toggleEl) {
   const willOpen = form.style.display === 'none' || !form.style.display;
   form.style.display = willOpen ? 'block' : 'none';
   toggleEl.classList.toggle('open', willOpen);
+  // フォームを開いた時にコメントテンプレートタグを追加（1回だけ）
+  if (willOpen && !form.querySelector('.comment-tmpl-wrap')) {
+    const ta = form.querySelector('textarea');
+    if (ta) renderCommentTemplateTags(form, ta);
+  }
 }
 
 // 簡易トースト通知（成功/エラーを一瞬だけ表示）
