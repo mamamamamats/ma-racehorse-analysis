@@ -1865,6 +1865,12 @@ textarea.search-input { line-height: 1.7; }
 
           <div class="edit-field" style="margin-top:18px">
             <label class="edit-field-label">出走馬（枠・馬番・馬名）</label>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+              <label class="edit-field-label" style="margin:0;white-space:nowrap">頭数</label>
+              <input type="number" id="editHorseCount" class="search-input" min="1" max="18" placeholder="例: 16" style="width:80px">
+              <button type="button" class="edit-btn-save" style="padding:7px 16px;font-size:12px;white-space:nowrap" onclick="generateHorseSlots()">枠番を自動で振る</button>
+              <span style="font-size:11px;color:var(--muted);letter-spacing:.3px">※既存の入力は上書きされます</span>
+            </div>
             <div id="editHorseSlotsContainer"></div>
             <button type="button" class="edit-btn-add" onclick="addEditHorseSlotRow()">＋ 馬を追加</button>
           </div>
@@ -176652,6 +176658,70 @@ function resetCommentTemplates() {
   if (!confirm('デフォルトのテンプレートに戻しますか？現在のテンプレートは失われます。')) return;
   saveCommentTemplates([...DEFAULT_COMMENT_TEMPLATES]);
   renderTmplList();
+}
+
+// JRA公式の枠番割り当てロジック
+// 頭数ごとに各枠に何頭入るかを定義（1枠〜8枠の頭数配列）
+function calcJraFrames(numHorses) {
+  // JRAの正式な枠番割り当て表（1〜18頭）
+  const TABLE = {
+     1: [1,0,0,0,0,0,0,0],
+     2: [1,1,0,0,0,0,0,0],
+     3: [1,1,1,0,0,0,0,0],
+     4: [1,1,1,1,0,0,0,0],
+     5: [1,1,1,1,1,0,0,0],
+     6: [1,1,1,1,1,1,0,0],
+     7: [1,1,1,1,1,1,1,0],
+     8: [1,1,1,1,1,1,1,1],
+     9: [1,1,1,1,1,1,1,2],
+    10: [1,1,1,1,1,1,2,2],
+    11: [1,1,1,1,1,2,2,2],
+    12: [1,1,1,1,2,2,2,2],
+    13: [1,1,1,2,2,2,2,2],
+    14: [1,1,2,2,2,2,2,2],
+    15: [1,2,2,2,2,2,2,2],
+    16: [2,2,2,2,2,2,2,2],
+    17: [2,2,2,2,2,2,2,3],
+    18: [2,2,2,2,2,2,3,3],
+  };
+  return TABLE[numHorses] || TABLE[18];
+}
+
+// 頭数から馬番→枠番のマッピングを生成して返す（馬番1始まりの配列）
+function buildFrameMap(numHorses) {
+  const n = Math.min(18, Math.max(1, numHorses));
+  const perFrame = calcJraFrames(n);
+  const map = []; // index=馬番-1、value=枠番
+  let num = 0;
+  for (let frame = 1; frame <= 8; frame++) {
+    for (let i = 0; i < perFrame[frame - 1]; i++) {
+      map[num++] = frame;
+    }
+  }
+  return map;
+}
+
+// 頭数入力欄を元に出走馬スロットを自動生成する
+function generateHorseSlots() {
+  const n = parseInt(document.getElementById('editHorseCount').value);
+  if (!n || n < 1 || n > 18) {
+    showToast('⚠ 頭数は1〜18で入力してください', true); return;
+  }
+  const container = document.getElementById('editHorseSlotsContainer');
+  // 既存の馬名を馬番順に保持して引き継ぐ
+  const existingNames = {};
+  container.querySelectorAll('.horse-slot-row').forEach(row => {
+    const num = parseInt(row.querySelector('.slot-num').value);
+    const name = row.querySelector('.slot-name').value.trim();
+    if (num) existingNames[num] = name;
+  });
+  container.innerHTML = '';
+  const frameMap = buildFrameMap(n);
+  for (let i = 0; i < n; i++) {
+    const num = i + 1;
+    const frame = frameMap[i];
+    addEditHorseSlotRow(frame, num, existingNames[num] || '');
+  }
 }
 
 function dowFromYMD(y, m, d) {
