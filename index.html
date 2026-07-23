@@ -1024,6 +1024,103 @@ body {
   transform: translateY(-2px);
 }
 
+/* 今週の注目馬 */
+.spotlight-section {
+  margin-top: 28px;
+}
+.spotlight-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent2);
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spotlight-venue-group {
+  margin-bottom: 20px;
+}
+.spotlight-venue-label {
+  font-size: 12px;
+  color: var(--muted2);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+.spotlight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all .12s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.spotlight-card:hover { border-color: rgba(201,168,76,.35); background: rgba(201,168,76,.03); }
+.spotlight-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .5px;
+  flex-shrink: 0;
+}
+.spotlight-card-reason {
+  font-size: 11.5px;
+  color: var(--muted2);
+  letter-spacing: .3px;
+  line-height: 1.6;
+  flex: 1;
+}
+.spotlight-score-bar {
+  display: flex;
+  gap: 3px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.spotlight-score-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.spotlight-empty {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 10px 0;
+  letter-spacing: .5px;
+}
+
+/* 出馬表下の適性トグル */
+.aptitude-toggle {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.aptitude-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  padding: 7px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: .5px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.aptitude-toggle-btn:hover { border-color: var(--accent); color: var(--accent2); }
+.aptitude-toggle-btn.open { border-color: var(--accent); color: var(--accent2); background: rgba(201,168,76,.06); }
+.aptitude-content { display: none; margin-top: 14px; }
+.aptitude-content.open { display: block; }
+
 .history-card-date {
   font-size: 14px;
   font-weight: 700;
@@ -174201,10 +174298,325 @@ function getThisWeekDates() {
   return [fmt(sat), fmt(sun)];
 }
 
-function renderDateList() {
-  // 後方互換のため残す（renderWeekから呼ばれる場合もある）
-  renderWeek();
+// 近走の track フィールドから競馬場名を抽出する
+// 例: "函館芝2000" → "函館", "中山ダート1200稍重" → "中山"
+function extractVenueFromTrack(track) {
+  if (!track) return null;
+  const VENUES = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  for (const v of VENUES) { if (track.startsWith(v)) return v; }
+  return null;
 }
+
+// eval値を数値スコアに変換（高いほど良い）
+function evalToScore(ev) {
+  const map = { S:6, A:5, B:4, C:3, D:2, F:1, good:5, mid:4, bad:3 };
+  return map[ev] ?? 3;
+}
+
+// 適性計算専用スコア（S=6, A=4, B=3, C=2, D=0, F=除外）
+function aptScore(ev) {
+  const map = { S:6, A:4, B:3, C:2, D:0, good:4, mid:3, bad:2 };
+  return map[ev] ?? null; // Fまたは不明はnull（除外）
+}
+
+function aptAvg(races) {
+  const scored = races.map(r => aptScore(r.eval)).filter(v => v !== null);
+  if (scored.length === 0) return null;
+  return scored.reduce((a, b) => a + b, 0) / scored.length;
+}
+
+// 今週の注目馬セクションのHTMLを構築する
+function buildSpotlightSection(days) {
+  // 評価色（ピップ用）
+  const pipColor = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+  function normEval(ev) {
+    if (['S','A','B','C','D','F'].includes(ev)) return ev;
+    if (ev === 'good') return 'A'; if (ev === 'mid') return 'B'; if (ev === 'bad') return 'C';
+    return 'C';
+  }
+
+  // 今週の各競馬場に出走する馬と競馬場の対応を収集
+  const venueHorseMap = {}; // { venueName: [{horseName, raceName}] }
+  for (const day of days) {
+    for (const venue of (day.venues || [])) {
+      if (!venueHorseMap[venue.name]) venueHorseMap[venue.name] = [];
+      for (const race of (venue.races || [])) {
+        for (const h of (race.horses || [])) {
+          if (h.name && h.name.trim()) {
+            venueHorseMap[venue.name].push({ name: h.name.trim(), raceName: race.name });
+          }
+        }
+      }
+    }
+  }
+
+  const venueNames = Object.keys(venueHorseMap);
+  if (venueNames.length === 0) return '';
+
+  // 各競馬場ごとに注目馬を計算
+  let hasAny = false;
+  const venueBlocks = venueNames.map(venueName => {
+    const entries = venueHorseMap[venueName];
+    // 重複馬名を除去
+    const seen = new Set();
+    const candidates = [];
+    for (const e of entries) {
+      if (seen.has(e.name)) continue;
+      seen.add(e.name);
+      const h = horses.find(x => x.name === e.name);
+      if (!h || !h.races || h.races.length < 2) continue; // データが少なすぎる馬はスキップ
+
+      // この競馬場での近走とそれ以外に分ける
+      const atVenue = h.races.filter(r => extractVenueFromTrack(r.track) === venueName);
+      const elsewhere = h.races.filter(r => extractVenueFromTrack(r.track) !== venueName && extractVenueFromTrack(r.track) !== null);
+
+      if (atVenue.length === 0) continue; // この競馬場でのデータがない馬はスキップ
+
+      const avgAt = atVenue.reduce((s, r) => s + evalToScore(r.eval), 0) / atVenue.length;
+      const avgElse = elsewhere.length > 0
+        ? elsewhere.reduce((s, r) => s + evalToScore(r.eval), 0) / elsewhere.length
+        : null;
+
+      // 条件：この競馬場での平均がB相当(4)以上 かつ 他より0.5以上高い（または他でのデータがない場合はA以上）
+      const meetsVenueThreshold = avgAt >= 4.0;
+      const beatElsewhere = avgElse === null ? avgAt >= 5.0 : (avgAt - avgElse) >= 0.5;
+      if (!meetsVenueThreshold || !beatElsewhere) continue;
+
+      candidates.push({
+        name: e.name,
+        raceName: e.raceName,
+        atVenue, elsewhere, avgAt, avgElse,
+        diff: avgElse !== null ? avgAt - avgElse : null,
+      });
+    }
+
+    if (candidates.length === 0) return '';
+    hasAny = true;
+
+    // スコア差が大きい順にソート、最大5頭
+    candidates.sort((a, b) => (b.diff ?? b.avgAt) - (a.diff ?? a.avgAt));
+    const top = candidates.slice(0, 5);
+
+    const cards = top.map(c => {
+      const atPips = c.atVenue.slice(0, 6).map(r =>
+        `<div class="spotlight-score-pip" style="background:${pipColor[normEval(r.eval)] || '#888'}" title="${normEval(r.eval)}"></div>`
+      ).join('');
+      const elsePips = c.elsewhere.slice(0, 6).map(r =>
+        `<div class="spotlight-score-pip" style="background:${pipColor[normEval(r.eval)] || '#888'};opacity:.5" title="${normEval(r.eval)}"></div>`
+      ).join('');
+
+      const reasonParts = [];
+      const avgLabel = v => v >= 5.5 ? 'S/A中心' : v >= 4.5 ? 'A/B中心' : v >= 3.5 ? 'B中心' : 'C中心';
+      reasonParts.push(`${venueName}: ${avgLabel(c.avgAt)}（${c.atVenue.length}走）`);
+      if (c.avgElse !== null && c.elsewhere.length > 0) {
+        reasonParts.push(`他場: ${avgLabel(c.avgElse)}（${c.elsewhere.length}走）`);
+      }
+
+      return `
+        <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')">
+          <div>
+            <div class="spotlight-card-name">${escHtml(c.name)}</div>
+            <div style="font-size:10.5px;color:var(--muted);margin-top:1px">${escHtml(c.raceName)}</div>
+          </div>
+          <div style="flex:1">
+            <div class="spotlight-card-reason">${reasonParts.join('　／　')}</div>
+            <div style="display:flex;gap:8px;margin-top:5px;align-items:center;flex-wrap:wrap">
+              <div style="font-size:10px;color:var(--muted);white-space:nowrap">${venueName}</div>
+              <div class="spotlight-score-bar">${atPips}</div>
+              ${c.elsewhere.length > 0 ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap">他場</div><div class="spotlight-score-bar">${elsePips}</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="spotlight-venue-group">
+        <div class="spotlight-venue-label">🏟 ${venueName}</div>
+        ${cards}
+      </div>`;
+  }).join('');
+
+  if (!hasAny) {
+    return `
+      <div class="spotlight-section">
+        <div class="spotlight-title">⭐ 今週の注目馬（場適性）</div>
+        <div class="spotlight-empty">今週の出走馬に場適性データが十分な馬がいません</div>
+      </div>`;
+  }
+
+  return `
+    <div class="spotlight-section">
+      <div class="spotlight-title">⭐ 今週の注目馬（場適性）</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.3px;line-height:1.7">
+        出走する競馬場での評価が他場より高い馬をリスト化しています。カードをタップで馬ページを開きます。
+      </div>
+      ${venueBlocks}
+    </div>`;
+}
+
+
+
+// 近走の track フィールドから距離（m単位の数値）を抽出する
+// 例: "函館芝2000" → 2000, "ダート1200" → 1200, "芝1600" → 1600, "東京芝2000 3歳限定" → 2000
+function extractDistanceFromTrack(track) {
+  if (!track) return null;
+  const m = track.match(/(\d{3,4})/);
+  return m ? parseInt(m[1]) : null;
+}
+
+// 距離帯のラベルを返す（200m刻みでグループ化）
+function distanceBandLabel(dist) {
+  if (!dist) return null;
+  if (dist <= 1200) return '短距離（〜1200m）';
+  if (dist <= 1400) return 'マイル前（1400m）';
+  if (dist <= 1600) return 'マイル（1600m）';
+  if (dist <= 1800) return '中距離（1800m）';
+  if (dist <= 2000) return '中距離（2000m）';
+  if (dist <= 2200) return '中長距離（2200m）';
+  if (dist <= 2400) return '長距離（2400m）';
+  return '長距離（2400m超）';
+}
+
+// 距離帯グループキーを返す（マッチング用）
+function distanceBandKey(dist) {
+  if (!dist) return null;
+  if (dist <= 1200) return 'sprint';
+  if (dist <= 1400) return 'm1400';
+  if (dist <= 1600) return 'mile';
+  if (dist <= 1800) return 'm1800';
+  if (dist <= 2000) return 'm2000';
+  if (dist <= 2200) return 'm2200';
+  if (dist <= 2400) return 'm2400';
+  return 'long';
+}
+
+// 距離適性の注目馬セクション
+function buildDistanceSpotlightSection(days) {
+  const pipColor = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+  function normEval(ev) {
+    if (['S','A','B','C','D','F'].includes(ev)) return ev;
+    if (ev === 'good') return 'A'; if (ev === 'mid') return 'B'; if (ev === 'bad') return 'C';
+    return 'C';
+  }
+
+  // 今週の競馬場×レース×距離をまとめる
+  const raceEntries = []; // { venueName, raceName, dist, bandKey, horseName }
+  for (const day of days) {
+    for (const venue of (day.venues || [])) {
+      for (const race of (venue.races || [])) {
+        const dist = extractDistanceFromTrack(race.track);
+        if (!dist) continue;
+        const bandKey = distanceBandKey(dist);
+        for (const h of (race.horses || [])) {
+          if (h.name && h.name.trim()) {
+            raceEntries.push({ venueName: venue.name, raceName: race.name, dist, bandKey, horseName: h.name.trim() });
+          }
+        }
+      }
+    }
+  }
+
+  if (raceEntries.length === 0) return '';
+
+  // バンドキーごとに候補をグループ化して評価
+  const bandGroups = {}; // { bandKey: { label, dist, candidates[] } }
+  const seenHorseInBand = {}; // 重複除去用
+
+  for (const entry of raceEntries) {
+    const key = `${entry.bandKey}-${entry.horseName}`;
+    if (seenHorseInBand[key]) continue;
+    seenHorseInBand[key] = true;
+
+    const h = horses.find(x => x.name === entry.horseName);
+    if (!h || !h.races || h.races.length < 2) continue;
+
+    const atBand = h.races.filter(r => distanceBandKey(extractDistanceFromTrack(r.track)) === entry.bandKey);
+    const elsewhere = h.races.filter(r => {
+      const bk = distanceBandKey(extractDistanceFromTrack(r.track));
+      return bk !== null && bk !== entry.bandKey;
+    });
+
+    if (atBand.length === 0) continue;
+
+    const avgAt = atBand.reduce((s, r) => s + evalToScore(r.eval), 0) / atBand.length;
+    const avgElse = elsewhere.length > 0
+      ? elsewhere.reduce((s, r) => s + evalToScore(r.eval), 0) / elsewhere.length
+      : null;
+
+    const meetsThreshold = avgAt >= 4.0;
+    const beatElsewhere = avgElse === null ? avgAt >= 5.0 : (avgAt - avgElse) >= 0.5;
+    if (!meetsThreshold || !beatElsewhere) continue;
+
+    if (!bandGroups[entry.bandKey]) {
+      bandGroups[entry.bandKey] = { label: distanceBandLabel(entry.dist), dist: entry.dist, candidates: [] };
+    }
+    bandGroups[entry.bandKey].candidates.push({
+      name: entry.horseName, raceName: entry.raceName, venueName: entry.venueName,
+      atBand, elsewhere, avgAt, avgElse,
+      diff: avgElse !== null ? avgAt - avgElse : null,
+    });
+  }
+
+  const bandKeys = Object.keys(bandGroups).sort((a, b) => bandGroups[a].dist - bandGroups[b].dist);
+  if (bandKeys.length === 0) {
+    return `
+      <div class="spotlight-section">
+        <div class="spotlight-title">📏 今週の注目馬（距離適性）</div>
+        <div class="spotlight-empty">今週の出走馬に距離適性データが十分な馬がいません</div>
+      </div>`;
+  }
+
+  const venueBlocks = bandKeys.map(key => {
+    const group = bandGroups[key];
+    group.candidates.sort((a, b) => (b.diff ?? b.avgAt) - (a.diff ?? a.avgAt));
+    const top = group.candidates.slice(0, 5);
+    const avgLabel = v => v >= 5.5 ? 'S/A中心' : v >= 4.5 ? 'A/B中心' : v >= 3.5 ? 'B中心' : 'C中心';
+
+    const cards = top.map(c => {
+      const atPips = c.atBand.slice(0, 6).map(r =>
+        `<div class="spotlight-score-pip" style="background:${pipColor[normEval(r.eval)] || '#888'}" title="${normEval(r.eval)}"></div>`
+      ).join('');
+      const elsePips = c.elsewhere.slice(0, 6).map(r =>
+        `<div class="spotlight-score-pip" style="background:${pipColor[normEval(r.eval)] || '#888'};opacity:.5" title="${normEval(r.eval)}"></div>`
+      ).join('');
+      const reasonParts = [`この距離帯: ${avgLabel(c.avgAt)}（${c.atBand.length}走）`];
+      if (c.avgElse !== null && c.elsewhere.length > 0) {
+        reasonParts.push(`他距離帯: ${avgLabel(c.avgElse)}（${c.elsewhere.length}走）`);
+      }
+      return `
+        <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')">
+          <div>
+            <div class="spotlight-card-name">${escHtml(c.name)}</div>
+            <div style="font-size:10.5px;color:var(--muted);margin-top:1px">${escHtml(c.venueName)} ${escHtml(c.raceName)}</div>
+          </div>
+          <div style="flex:1">
+            <div class="spotlight-card-reason">${reasonParts.join('　／　')}</div>
+            <div style="display:flex;gap:8px;margin-top:5px;align-items:center;flex-wrap:wrap">
+              <div style="font-size:10px;color:var(--muted);white-space:nowrap">この距離</div>
+              <div class="spotlight-score-bar">${atPips}</div>
+              ${c.elsewhere.length > 0 ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap">他距離</div><div class="spotlight-score-bar">${elsePips}</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="spotlight-venue-group">
+        <div class="spotlight-venue-label">📏 ${group.label}</div>
+        ${cards}
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="spotlight-section">
+      <div class="spotlight-title">📏 今週の注目馬（距離適性）</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.3px;line-height:1.7">
+        今週走る距離帯での評価が他距離より高い馬をリスト化しています。カードをタップで馬ページを開きます。
+      </div>
+      ${venueBlocks}
+    </div>`;
+}
+
 
 function renderWeek() {
   const wc = document.getElementById('weekContent');
@@ -174222,7 +174634,7 @@ function renderWeek() {
     return;
   }
 
-  // 日付未選択 → 土日カードを横並びで表示
+  // 日付未選択 → 土日カードを横並びで表示 ＋ 注目馬
   if (!selectedDate) {
     const sorted = days.sort((a, b) => dateToNum(a.date) - dateToNum(b.date));
     wc.innerHTML = `
@@ -174312,6 +174724,7 @@ function renderWeekContent(day) {
           </div>
 
           ${horseGridHTML}
+          ${buildRaceAptitudeHTML(race, venue.name)}
         </div>
       `;
     }
@@ -175626,6 +176039,175 @@ function renderHistory() {
   renderHistoryMain();
 }
 
+// ===== レース詳細内の場適性・距離適性 =====
+// 特定のレースの出走馬に対して場適性・距離適性を計算してHTMLを返す
+function buildRaceAptitudeHTML(race, venueName) {
+  const pipColor = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+  function normEval(ev) {
+    if (['S','A','B','C','D','F'].includes(ev)) return ev;
+    if (ev === 'good') return 'A'; if (ev === 'mid') return 'B'; if (ev === 'bad') return 'C';
+    return 'C';
+  }
+  const avgLabel = v => v >= 5.5 ? 'S/A中心' : v >= 4.5 ? 'A/B中心' : v >= 3.5 ? 'B中心' : v >= 2.5 ? 'C中心' : 'D/F中心';
+  const raceDist    = extractDistanceFromTrack(race.track);
+  const raceBandKey = raceDist ? distanceBandKey(raceDist) : null;
+  const distLabel   = raceDist ? distanceBandLabel(raceDist) : null;
+
+  const horseList = (race.horses || []).filter(h => h.name && h.name.trim());
+  if (horseList.length === 0) return '';
+
+  // ---- 場適性：この競馬場での実績がある馬だけ計算 ----
+  const venueScores = [];
+  // ---- 距離適性：この距離帯での実績がある馬だけ計算 ----
+  const distScores  = [];
+
+  for (const h of horseList) {
+    const name = h.name.trim();
+    const gh = horses.find(x => x.name === name);
+    if (!gh || !gh.races || gh.races.length === 0) continue;
+
+    // 場適性（この競馬場での実績がある馬のみ）
+    const atVenue   = gh.races.filter(r => extractVenueFromTrack(r.track) === venueName);
+    if (atVenue.length > 0) {
+      const avgAt = aptAvg(atVenue);
+      if (avgAt !== null) {
+        const elseVenue = gh.races.filter(r => { const v = extractVenueFromTrack(r.track); return v !== null && v !== venueName; });
+        const avgElse   = aptAvg(elseVenue);
+        const diff      = avgElse !== null ? avgAt - avgElse : null;
+        venueScores.push({ name, num: h.num, avgAt, avgElse, diff, count: atVenue.length });
+      }
+    }
+
+    // 距離適性（この距離帯での実績がある馬のみ）
+    if (raceBandKey) {
+      const atBand   = gh.races.filter(r => distanceBandKey(extractDistanceFromTrack(r.track)) === raceBandKey);
+      if (atBand.length > 0) {
+        const avgAt = aptAvg(atBand);
+        if (avgAt !== null) {
+          const elseBand = gh.races.filter(r => { const bk = distanceBandKey(extractDistanceFromTrack(r.track)); return bk !== null && bk !== raceBandKey; });
+          const avgElse  = aptAvg(elseBand);
+          const diff     = avgElse !== null ? avgAt - avgElse : null;
+          distScores.push({ name, num: h.num, avgAt, avgElse, diff, count: atBand.length });
+        }
+      }
+    }
+  }
+
+  // avgAt降順でソート
+  venueScores.sort((a, b) => b.avgAt - a.avgAt);
+  distScores.sort((a, b) => b.avgAt - a.avgAt);
+
+  // 直近3走の調子ランキング（馬ページのある全出走馬対象）
+  const formScores = [];
+  for (const h of horseList) {
+    const name = h.name.trim();
+    const gh = horses.find(x => x.name === name);
+    if (!gh || !gh.races || gh.races.length === 0) continue;
+    const recent = gh.races.slice(0, 3);
+    const avg = aptAvg(recent);
+    if (avg !== null) formScores.push({ name, num: h.num, avg, count: recent.length, races: recent });
+  }
+  formScores.sort((a, b) => b.avg - a.avg);
+
+  // スコアに応じた色（3以上=暖色系、3未満=寒色系、SABCカラーに合わせる）
+  function scoreColor(v) {
+    if (v >= 5) return '#ffd700'; // S/A寄り → ゴールド
+    if (v >= 4) return '#52c48a'; // A/B寄り → 緑
+    if (v >= 3) return '#7ec87e'; // B → 緑(淡)
+    if (v >= 2) return '#5c9ae0'; // C → 青
+    return '#e09650';             // D → 橙
+  }
+
+  // isVenue: true=場適性, false=距離適性（「その他の競馬場」or「その他の距離」の切り替え用）
+  function makeCard(c, isVenue) {
+    const col = scoreColor(c.avgAt);
+    const highlight = c.avgAt >= 3.0;
+    const elseLabel = isVenue ? 'その他の競馬場' : 'その他の距離';
+    const elseText = c.avgElse !== null
+      ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>`
+      : '';
+    const diffText = c.diff !== null
+      ? `<span style="color:${c.diff >= 0 ? 'var(--green)' : 'var(--red)'};font-size:11.5px;font-weight:700">${c.diff >= 0 ? '▲' : '▼'}${Math.abs(c.diff).toFixed(1)}</span>`
+      : `<span style="font-size:11px;color:var(--muted)">—</span>`;
+    const countLabel = c.count >= 3
+      ? `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${c.count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`
+      : `<span style="font-size:10.5px;color:var(--muted)">${c.count}走</span>`;
+    return `
+      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
+        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
+          ${countLabel}
+          <span style="flex:1"></span>
+          ${elseText}
+          ${diffText}
+        </div>
+      </div>`;
+  }
+
+  function makeFormCard(c) {
+    const col = scoreColor(c.avg);
+    const highlight = c.avg >= 3.0;
+    const pips = c.races.map(r => {
+      const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+      const ev = (['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good' ? 'A' : r.eval==='mid' ? 'B' : 'C');
+      return `<div class="spotlight-score-pip" style="background:${pipCol[ev]||'#888'}" title="${ev}"></div>`;
+    }).join('');
+    const countLabel = `<span style="font-size:10.5px;color:var(--muted)">直近${c.count}走</span>`;
+    return `
+      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
+        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:14px;font-weight:700;color:${col}">${c.avg.toFixed(1)}</span>
+          <div class="spotlight-score-bar">${pips}</div>
+          ${countLabel}
+        </div>
+      </div>`;
+  }
+
+  // 3.0以上を最大5頭、該当なければTOP3
+  function pickCandidates(arr, scoreKey) {
+    const above = arr.filter(c => c[scoreKey] >= 3.0).slice(0, 5);
+    return above.length > 0 ? above : arr.slice(0, 3);
+  }
+
+  const noDataMsg = `<div class="spotlight-empty">対象馬なし</div>`;
+  const venueList = pickCandidates(venueScores, 'avgAt');
+  const distList  = pickCandidates(distScores,  'avgAt');
+  const formList  = pickCandidates(formScores,  'avg');
+  const venueHTML = venueList.length ? venueList.map(c => makeCard(c, true)).join('')  : noDataMsg;
+  const distHTML  = distList.length  ? distList.map(c => makeCard(c, false)).join('')  : noDataMsg;
+  const formHTML  = formList.length  ? formList.map(makeFormCard).join('')              : noDataMsg;
+
+  const id = `apt-${Math.random().toString(36).slice(2,7)}`;
+  return `
+    <div class="aptitude-toggle">
+      <button type="button" class="aptitude-toggle-btn" id="aptBtn-${id}" onclick="toggleAptitude('${id}')">
+        <span id="aptArrow-${id}">▶</span> 場適性・距離適性・直近調子 TOP5
+      </button>
+      <div class="aptitude-content" id="aptContent-${id}">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　3以上=黄緑系 / 3未満=青橙系　▲▼は他場/他距離との差</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-bottom:8px">🏟 ${escHtml(venueName)}適性 TOP5</div>
+        ${venueHTML}
+        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-top:18px;margin-bottom:8px">📏 ${distLabel ? escHtml(distLabel) : '距離'}適性 TOP5</div>
+        ${distHTML}
+        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-top:18px;margin-bottom:8px">🔥 直近の調子 TOP5（直近3走平均）</div>
+        ${formHTML}
+      </div>
+    </div>`;
+}
+
+function toggleAptitude(id) {
+  const btn     = document.getElementById(`aptBtn-${id}`);
+  const content = document.getElementById(`aptContent-${id}`);
+  const arrow   = document.getElementById(`aptArrow-${id}`);
+  const isOpen  = content.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  arrow.textContent = isOpen ? '▼' : '▶';
+}
+
 function renderHistoryDateList() {
   const el = document.getElementById('historyDateList');
   const past = getPastDays();
@@ -175759,6 +176341,7 @@ function renderHistoryMain() {
             </div>
           </div>
           ${horseGridHTML}
+          ${buildRaceAptitudeHTML(race, venue.name)}
         </div>
       `;
     }
