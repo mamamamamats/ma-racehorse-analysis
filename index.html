@@ -1559,12 +1559,30 @@ textarea.search-input { line-height: 1.7; }
   .public-memo-login-btn { font-size: 11px !important; padding: 6px 12px !important; }
   .public-memo-write textarea { font-size: 16px !important; } /* iOS自動ズーム防止 */
   .search-input { font-size: 16px !important; } /* iOS自動ズーム防止 */
+
+  /* 場適性・距離適性・直近調子カード（スマホ用：2段組レイアウト） */
+  .spotlight-card {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 10px 10px !important;
+  }
+  .spotlight-card > div:last-child {
+    /* スコア・比較・差分行をフル幅に */
+    width: 100% !important;
+    flex: none !important;
+  }
 }
 
 @media (max-width: 480px) {
   .horse-row-grid-cards { grid-template-columns: repeat(2, 1fr) !important; }
   .race-horses-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .nav-tab { padding: 10px 10px; font-size: 10px; }
+}
+
+@media (max-width: 768px) {
+  /* 適性グリッド：スマホ・タブレットでは1列縦並び */
+  .apt-grid { grid-template-columns: 1fr !important; }
+  .aptitude-toggle-btn { width: 100% !important; box-sizing: border-box; }
 }
 </style>
 <!-- Firebase SDK -->
@@ -176121,7 +176139,7 @@ function buildRaceAptitudeHTML(race, venueName) {
   // isVenue: true=場適性, false=距離適性（「その他の競馬場」or「その他の距離」の切り替え用）
   function makeCard(c, isVenue) {
     const col = scoreColor(c.avgAt);
-    const highlight = c.avgAt >= 3.0;
+    const highlight = c.avgAt >= 3.0 && c.count >= 3;
     const elseLabel = isVenue ? 'その他の競馬場' : 'その他の距離';
     const elseText = c.avgElse !== null
       ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>`
@@ -176148,7 +176166,7 @@ function buildRaceAptitudeHTML(race, venueName) {
 
   function makeFormCard(c) {
     const col = scoreColor(c.avg);
-    const highlight = c.avg >= 3.0;
+    const highlight = c.avg >= 3.0 && c.count >= 3;
     const pips = c.races.map(r => {
       const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
       const ev = (['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good' ? 'A' : r.eval==='mid' ? 'B' : 'C');
@@ -176173,33 +176191,246 @@ function buildRaceAptitudeHTML(race, venueName) {
     return above.length > 0 ? above : arr.slice(0, 3);
   }
 
+  // 走数ラベル（3走以上かつ3.0点以上のみ「高適性！」）
+  function countLabel(count, score) {
+    if (count >= 3 && score >= 3.0) {
+      return `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`;
+    }
+    return `<span style="font-size:10.5px;color:var(--muted)">${count}走</span>`;
+  }
+
+  // makeCardをcountLabel対応に更新
+  function makeCardFinal(c, isVenue) {
+    const col = scoreColor(c.avgAt);
+    const highlight = c.avgAt >= 3.0 && c.count >= 3;
+    const elseLabel = isVenue ? 'その他の競馬場' : 'その他の距離';
+    const elseText = c.avgElse !== null
+      ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>`
+      : '';
+    const diffText = c.diff !== null
+      ? `<span style="color:${c.diff >= 0 ? 'var(--green)' : 'var(--red)'};font-size:11.5px;font-weight:700">${c.diff >= 0 ? '▲' : '▼'}${Math.abs(c.diff).toFixed(1)}</span>`
+      : `<span style="font-size:11px;color:var(--muted)">—</span>`;
+    return `
+      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
+        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
+          ${countLabel(c.count, c.avgAt)}
+          <span style="flex:1"></span>
+          ${elseText}
+          ${diffText}
+        </div>
+      </div>`;
+  }
+
+  function makeFormCardFinal(c) {
+    const col = scoreColor(c.avg);
+    const highlight = c.avg >= 3.0 && c.count >= 3;
+    const pips = c.races.map(r => {
+      const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+      const ev = (['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good' ? 'A' : r.eval==='mid' ? 'B' : 'C');
+      return `<div class="spotlight-score-pip" style="background:${pipCol[ev]||'#888'}" title="${ev}"></div>`;
+    }).join('');
+    return `
+      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
+        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:14px;font-weight:700;color:${col}">${c.avg.toFixed(1)}</span>
+          <div class="spotlight-score-bar">${pips}</div>
+          <span style="font-size:10.5px;color:var(--muted)">直近${c.count}走</span>
+        </div>
+      </div>`;
+  }
+
+  // ---- 馬場適性の計算 ----
+  // trackから馬場状態を抽出: 稍重・重・不良
+  const TRACK_CONDITIONS = ['不良', '稍重', '重']; // 稍重を重より先にチェック（重が稍重に含まれるため）
+  function extractTrackCondition(track) {
+    if (!track) return null;
+    for (const cond of TRACK_CONDITIONS) { if (track.includes(cond)) return cond; }
+    return '良'; // 何も付いていなければ良馬場
+  }
+
+  // 馬場ごとのスコア集計（全馬場）
+  function calcTrackCondScores(condList) {
+    const results = [];
+    for (const h of horseList) {
+      const name = h.name.trim();
+      const gh = horses.find(x => x.name === name);
+      if (!gh || !gh.races || gh.races.length === 0) continue;
+      const atCond   = gh.races.filter(r => condList.includes(extractTrackCondition(r.track)));
+      if (atCond.length === 0) continue;
+      const avgAt = aptAvg(atCond);
+      if (avgAt === null) continue;
+      const elseCond = gh.races.filter(r => !condList.includes(extractTrackCondition(r.track)));
+      const avgElse  = aptAvg(elseCond);
+      const diff     = avgElse !== null ? avgAt - avgElse : null;
+      results.push({ name, num: h.num, avgAt, avgElse, diff, count: atCond.length });
+    }
+    return results.sort((a, b) => b.avgAt - a.avgAt);
+  }
+
+  // デフォルト（重・不良）のスコアを計算
+  const defaultConds = ['重', '不良'];
+  const trackCondScores = calcTrackCondScores(defaultConds);
+  const trackCondList   = pickCandidates(trackCondScores, 'avgAt');
+  const trackCondHTML   = trackCondList.length
+    ? trackCondList.map(c => makeCardFinal(c, false)).join('')
+    : `<div class="spotlight-empty">対象馬なし</div>`;
+
+  // recalcTrackCond用にhorseListをキャッシュ（チェック変更時に再計算できるよう）
+  const cacheId = `apt-${Math.random().toString(36).slice(2,7)}`;
+  window._aptTrackCache = window._aptTrackCache || {};
+  window._aptTrackCache[cacheId] = { horseList };
+
   const noDataMsg = `<div class="spotlight-empty">対象馬なし</div>`;
   const venueList = pickCandidates(venueScores, 'avgAt');
   const distList  = pickCandidates(distScores,  'avgAt');
   const formList  = pickCandidates(formScores,  'avg');
-  const venueHTML = venueList.length ? venueList.map(c => makeCard(c, true)).join('')  : noDataMsg;
-  const distHTML  = distList.length  ? distList.map(c => makeCard(c, false)).join('')  : noDataMsg;
-  const formHTML  = formList.length  ? formList.map(makeFormCard).join('')              : noDataMsg;
+  const venueHTML = venueList.length ? venueList.map(c => makeCardFinal(c, true)).join('')  : noDataMsg;
+  const distHTML  = distList.length  ? distList.map(c => makeCardFinal(c, false)).join('')  : noDataMsg;
+  const formHTML  = formList.length  ? formList.map(makeFormCardFinal).join('')              : noDataMsg;
 
-  const id = `apt-${Math.random().toString(36).slice(2,7)}`;
+  const id = cacheId;
+  const hint = `<div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　黄枠=3.0以上　3走以上&3.0以上→高適性！</div>`;
+  const trackHint = `<div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　黄枠=3.0以上</div>`;
+
+  // ボタンとコンテンツを縦にペアにして、横2列グリッドで並べる
+  // → 全部開いても「何のランキングか」が一目でわかる
   return `
     <div class="aptitude-toggle">
-      <button type="button" class="aptitude-toggle-btn" id="aptBtn-${id}" onclick="toggleAptitude('${id}')">
-        <span id="aptArrow-${id}">▶</span> 場適性・距離適性・直近調子 TOP5
-      </button>
-      <div class="aptitude-content" id="aptContent-${id}">
-        <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　3以上=黄緑系 / 3未満=青橙系　▲▼は他場/他距離との差</div>
-        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-bottom:8px">🏟 ${escHtml(venueName)}適性 TOP5</div>
-        ${venueHTML}
-        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-top:18px;margin-bottom:8px">📏 ${distLabel ? escHtml(distLabel) : '距離'}適性 TOP5</div>
-        ${distHTML}
-        <div style="font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-top:18px;margin-bottom:8px">🔥 直近の調子 TOP5（直近3走平均）</div>
-        ${formHTML}
+      <div class="apt-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
+
+        <div>
+          <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
+            id="aptBtn-v-${id}" onclick="toggleAptitudeSingle('v-${id}')">
+            <span id="aptArrow-v-${id}">▶</span> 🏟 ${escHtml(venueName)}適性
+          </button>
+          <div class="aptitude-content" id="aptContent-v-${id}">
+            ${hint}${venueHTML}
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
+            id="aptBtn-d-${id}" onclick="toggleAptitudeSingle('d-${id}')">
+            <span id="aptArrow-d-${id}">▶</span> 📏 ${distLabel ? escHtml(distLabel) : '距離'}適性
+          </button>
+          <div class="aptitude-content" id="aptContent-d-${id}">
+            ${hint}${distHTML}
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
+            id="aptBtn-f-${id}" onclick="toggleAptitudeSingle('f-${id}')">
+            <span id="aptArrow-f-${id}">▶</span> 🔥 直近の調子
+          </button>
+          <div class="aptitude-content" id="aptContent-f-${id}">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">直近3走の平均スコア（F除外）　黄枠=3.0以上</div>
+            ${formHTML}
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
+            id="aptBtn-t-${id}" onclick="toggleAptitudeSingle('t-${id}')">
+            <span id="aptArrow-t-${id}">▶</span> 🌧 馬場適性
+          </button>
+          <div class="aptitude-content" id="aptContent-t-${id}">
+            ${trackHint}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
+              <span style="font-size:11px;color:var(--muted2);letter-spacing:.5px">馬場：</span>
+              ${['良', '稍重', '重', '不良'].map(c => `
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;color:var(--text)">
+                  <input type="checkbox" value="${c}" ${defaultConds.includes(c) ? 'checked' : ''}
+                    style="accent-color:var(--accent);width:14px;height:14px"
+                    onchange="recalcTrackCond('${id}')">
+                  ${c}
+                </label>`).join('')}
+            </div>
+            <div id="trackCondResult-${id}">${trackCondHTML}</div>
+          </div>
+        </div>
+
       </div>
     </div>`;
 }
 
-function toggleAptitude(id) {
+// 馬場適性：チェックボックス変更時に再計算してその場で描画
+function recalcTrackCond(id) {
+  const container = document.getElementById(`aptContent-t-${id}`);
+  if (!container) return;
+  const checked = [...container.querySelectorAll('input[type=checkbox]:checked')].map(cb => cb.value);
+  const result  = document.getElementById(`trackCondResult-${id}`);
+  if (!result) return;
+
+  if (checked.length === 0) {
+    result.innerHTML = '<div class="spotlight-empty">馬場を1つ以上選択してください</div>';
+    return;
+  }
+
+  const cache = window._aptTrackCache && window._aptTrackCache[id];
+  if (!cache) { result.innerHTML = '<div class="spotlight-empty">データなし</div>'; return; }
+
+  const TRACK_CONDITIONS = ['不良', '稍重', '重']; // 稍重を重より先にチェック
+  function extractTC(track) {
+    if (!track) return null;
+    for (const cond of TRACK_CONDITIONS) { if (track.includes(cond)) return cond; }
+    return '良';
+  }
+  function aptSc(ev) { const m = { S:6, A:4, B:3, C:2, D:0, good:4, mid:3, bad:2 }; return m[ev] ?? null; }
+  function aptAv(races) {
+    const sc = races.map(r => aptSc(r.eval)).filter(v => v !== null);
+    return sc.length ? sc.reduce((a,b)=>a+b,0)/sc.length : null;
+  }
+  function scCol(v) {
+    if (v >= 5) return '#ffd700'; if (v >= 4) return '#52c48a';
+    if (v >= 3) return '#7ec87e'; if (v >= 2) return '#5c9ae0'; return '#e09650';
+  }
+
+  const results = [];
+  for (const h of cache.horseList) {
+    const name = h.name.trim();
+    const gh = horses.find(x => x.name === name); // グローバル horses を直接参照
+    if (!gh || !gh.races || gh.races.length === 0) continue;
+    const atCond   = gh.races.filter(r => checked.includes(extractTC(r.track)));
+    if (atCond.length === 0) continue;
+    const avgAt    = aptAv(atCond);
+    if (avgAt === null) continue;
+    const elseCond = gh.races.filter(r => !checked.includes(extractTC(r.track)));
+    const avgElse  = aptAv(elseCond);
+    results.push({ name, num: h.num, avgAt, avgElse, diff: avgElse !== null ? avgAt - avgElse : null, count: atCond.length });
+  }
+  results.sort((a, b) => b.avgAt - a.avgAt);
+  const above = results.filter(c => c.avgAt >= 3.0).slice(0, 5);
+  const list  = above.length ? above : results.slice(0, 3);
+
+  if (!list.length) { result.innerHTML = '<div class="spotlight-empty">対象馬なし</div>'; return; }
+
+  result.innerHTML = list.map(c => {
+    const col      = scCol(c.avgAt);
+    const hi       = c.avgAt >= 3.0 && c.count >= 3;
+    const elseText = c.avgElse !== null ? `<span style="font-size:11px;color:var(--muted)">その他の馬場 ${c.avgElse.toFixed(1)}</span>` : '';
+    const diffText = c.diff !== null ? `<span style="color:${c.diff>=0?'var(--green)':'var(--red)'};font-size:11.5px;font-weight:700">${c.diff>=0?'▲':'▼'}${Math.abs(c.diff).toFixed(1)}</span>` : '';
+    const cntLabel = c.count >= 3 && c.avgAt >= 3.0
+      ? `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${c.count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`
+      : `<span style="font-size:10.5px;color:var(--muted)">${c.count}走</span>`;
+    return `
+      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${hi?'border-color:var(--accent);background:rgba(201,168,76,.06);':''}">
+        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
+          ${cntLabel}<span style="flex:1"></span>${elseText}${diffText}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleAptitudeSingle(id) {
   const btn     = document.getElementById(`aptBtn-${id}`);
   const content = document.getElementById(`aptContent-${id}`);
   const arrow   = document.getElementById(`aptArrow-${id}`);
