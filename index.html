@@ -1498,30 +1498,44 @@ textarea.search-input { line-height: 1.7; }
 
   /* 今週・過去開催 */
   .week-layout { display: flex !important; flex-direction: column !important; height: auto !important; min-height: calc(100vh - 100px); }
-  .week-sidebar {
-    border-right: none !important; border-bottom: 1px solid var(--border);
-    display: flex !important; flex-direction: row !important;
-    overflow-x: auto !important; overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    padding: 8px 10px !important; gap: 6px;
-    flex-shrink: 0; align-items: center;
-    height: 52px !important; max-height: 52px !important;
-  }
-  .week-sidebar::-webkit-scrollbar { display: none; }
-  .week-sidebar .sidebar-section { display: contents !important; }
-  .week-sidebar .sidebar-section-label { display: none !important; }
-  .week-sidebar .date-item,
-  .week-sidebar .venue-item {
-    padding: 5px 12px !important; border-radius: 20px !important;
-    border: 1px solid var(--border) !important;
-    font-size: 11px !important; white-space: nowrap !important; flex-shrink: 0 !important;
-  }
-  .week-sidebar .date-item-sub { display: none !important; }
-  .week-sidebar .date-item.active { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
-  .week-sidebar .venue-item.active { background: var(--accent2) !important; color: var(--bg) !important; border-color: var(--accent2) !important; }
-  /* 今週のレース（サイドバーなし構成） */
-  #view-week .week-content { padding: 16px 12px !important; }
+
+  /* サイドバー（日付・競馬場リスト）：スマホでは完全に非表示 */
+  .week-sidebar { display: none !important; }
+
   .week-content { padding: 16px 12px !important; flex: 1; }
+  #view-week .week-content { padding: 16px 12px !important; }
+
+  /* レース選択リスト：縦並び→横スクロールのピル形式 */
+  .race-list-grid {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px !important;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+  }
+  .race-list-grid::-webkit-scrollbar { display: none; }
+  .race-row {
+    flex-shrink: 0 !important;
+    padding: 8px 12px !important;
+    border-radius: 20px !important;
+    min-width: auto !important;
+    gap: 6px !important;
+  }
+  .race-row.active {
+    border-color: var(--accent) !important;
+    background: rgba(201,168,76,.1) !important;
+  }
+  .race-name-sub { display: none !important; }
+  .race-grade-badge { display: none !important; }
+  .race-name-main { font-size: 12px !important; white-space: nowrap; }
+  .race-num-badge { font-size: 11px !important; width: auto !important; }
+
+  /* レースの出馬表ヘッダー */
+  .race-detail-header { flex-wrap: wrap !important; gap: 8px !important; }
+  .race-detail-title { font-size: 15px !important; }
 
   /* 全頭診断 */
   .horses-layout { display: flex !important; flex-direction: column !important; height: auto !important; min-height: calc(100vh - 100px); }
