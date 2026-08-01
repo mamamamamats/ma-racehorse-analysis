@@ -175657,6 +175657,7 @@ async function saveResultEditForm(saveBtn, index) {
   const track   = form.querySelector('.re-track').value.trim();
   const evalVal = form.querySelector('.re-eval').value;
   const comment = form.querySelector('.re-comment').value.trim();
+  addCommentHistory(comment);
   h.races[index] = { name, track, eval: evalVal, comment };
   msgEl.style.color='var(--accent2)'; msgEl.textContent='保存中…';
   await saveHorse(h);
@@ -177383,34 +177384,63 @@ function saveCommentTemplates(templates) {
 
 // コメント欄の上にテンプレートタグを描画する
 // textareaEl: 対象のtextarea要素
+const COMMENT_HISTORY_KEY = 'keiba-comment-history';
+const COMMENT_HISTORY_MAX = 10;
+
+function loadCommentHistory() {
+  try {
+    const saved = localStorage.getItem(COMMENT_HISTORY_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch(e) { return []; }
+}
+
+function addCommentHistory(text) {
+  if (!text || !text.trim()) return;
+  // 最初の一文だけ残す（。！？で区切り）
+  const firstSentence = (text.trim().split(/[。！？\n]/)[0] || '').trim();
+  if (!firstSentence) return;
+  const history = loadCommentHistory().filter(h => h !== firstSentence);
+  history.unshift(firstSentence);
+  try { localStorage.setItem(COMMENT_HISTORY_KEY, JSON.stringify(history.slice(0, COMMENT_HISTORY_MAX))); } catch(e) {}
+}
+
 function renderCommentTemplateTags(containerEl, textareaEl) {
-  const templates = loadCommentTemplates();
-  if (!templates.length) return;
+  const history = loadCommentHistory();
+  if (!history.length) return;
+
   const wrap = document.createElement('div');
   wrap.className = 'comment-tmpl-wrap';
-  const tagsDiv = document.createElement('div');
-  tagsDiv.className = 'comment-tmpl-tags';
-  templates.forEach(tmpl => {
+
+  function makeTag(text) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'comment-tmpl-tag';
-    btn.textContent = tmpl;
+    btn.style.cssText = 'border-style:dashed;color:var(--muted2)';
+    btn.textContent = text.length > 20 ? text.slice(0, 20) + '…' : text;
+    btn.title = text;
     btn.onclick = () => {
       const cur = textareaEl.value;
-      // すでに含まれていたらトグル（削除）
-      if (cur.includes(tmpl)) {
-        textareaEl.value = cur.replace(tmpl, '').replace(/^[。、\n]+|[。、\n]+$/g, '').trim();
+      if (cur.includes(text)) {
+        textareaEl.value = cur.replace(text, '').replace(/^[。、\n]+|[。、\n]+$/g, '').trim();
         btn.classList.remove('active');
       } else {
-        // 末尾に追加（既存テキストがあれば「。」区切り）
-        textareaEl.value = cur ? cur.trimEnd() + '。' + tmpl : tmpl;
+        textareaEl.value = cur ? cur.trimEnd() + '。' + text : text;
         btn.classList.add('active');
       }
       textareaEl.focus();
     };
-    tagsDiv.appendChild(btn);
-  });
-  wrap.appendChild(tagsDiv);
+    return btn;
+  }
+
+  const histLabel = document.createElement('div');
+  histLabel.style.cssText = 'font-size:10px;color:var(--muted);letter-spacing:.5px;margin-bottom:4px;margin-top:2px';
+  histLabel.textContent = '🕐 最近使った';
+  wrap.appendChild(histLabel);
+  const histDiv = document.createElement('div');
+  histDiv.className = 'comment-tmpl-tags';
+  history.forEach(h => histDiv.appendChild(makeTag(h)));
+  wrap.appendChild(histDiv);
+
   containerEl.insertBefore(wrap, textareaEl);
 }
 
@@ -178323,7 +178353,7 @@ async function saveEditHorse() {
     const track = row.querySelector('.hr-track').value.trim();
     const evalVal = row.querySelector('.hr-eval').value;
     const comment = row.querySelector('.hr-comment').value.trim();
-    if (rName) races.push({ name: rName, track, eval: evalVal, comment });
+    if (rName) { addCommentHistory(comment); races.push({ name: rName, track, eval: evalVal, comment }); }
   });
 
   let h = horses.find(x => x.name === name);
@@ -178412,7 +178442,7 @@ async function saveRhcInlineRace(btn) {
   const track = form.querySelector('.rhc-add-track').value.trim();
   const evalVal = form.querySelector('.rhc-add-eval').value;
   const comment = form.querySelector('.rhc-add-comment').value.trim();
-
+  addCommentHistory(comment);
   h.races = h.races || [];
   h.races.unshift({ name: raceName, track, eval: evalVal, comment }); // 最新走を先頭に追加
 
@@ -178441,11 +178471,13 @@ async function createHorsePageInline(btn) {
   const rName = form.querySelector('.rhc-new-rname').value.trim();
   const races = [];
   if (rName) {
+    const c = form.querySelector('.rhc-new-rcomment').value.trim();
+    addCommentHistory(c);
     races.push({
       name: rName,
       track: form.querySelector('.rhc-new-rtrack').value.trim(),
       eval: form.querySelector('.rhc-new-reval').value,
-      comment: form.querySelector('.rhc-new-rcomment').value.trim()
+      comment: c
     });
   }
 
