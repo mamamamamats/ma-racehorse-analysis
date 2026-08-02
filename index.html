@@ -176067,63 +176067,96 @@ function renderHistory() {
 
 // ===== レース詳細内の場適性・距離適性 =====
 // 特定のレースの出走馬に対して場適性・距離適性を計算してHTMLを返す
+function scoreColor(v) {
+  if (v >= 5) return '#ffd700'; if (v >= 4) return '#52c48a';
+  if (v >= 3) return '#7ec87e'; if (v >= 2) return '#5c9ae0'; return '#e09650';
+}
+
+function pickCandidates(arr, scoreKey) {
+  const above = arr.filter(c => c[scoreKey] >= 3.0).slice(0, 5);
+  return above.length > 0 ? above : arr.slice(0, 3);
+}
+
+function makeCardFinal(c, isVenue) {
+  const col = scoreColor(c.avgAt);
+  const highlight = c.avgAt >= 3.0 && c.count >= 3;
+  const elseLabel = isVenue ? 'その他の競馬場' : 'その他';
+  const elseText = c.avgElse !== null
+    ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>` : '';
+  const diffText = c.diff !== null
+    ? `<span style="color:${c.diff>=0?'var(--green)':'var(--red)'};font-size:11.5px;font-weight:700">${c.diff>=0?'▲':'▼'}${Math.abs(c.diff).toFixed(1)}</span>`
+    : `<span style="font-size:11px;color:var(--muted)">—</span>`;
+  const cntLabel = c.count >= 3 && c.avgAt >= 3.0
+    ? `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${c.count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`
+    : `<span style="font-size:10.5px;color:var(--muted)">${c.count}走</span>`;
+  return `
+    <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight?'border-color:var(--accent);background:rgba(201,168,76,.06);':''}">
+      <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+      <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+      <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
+        ${cntLabel}<span style="flex:1"></span>${elseText}${diffText}
+      </div>
+    </div>`;
+}
+
+function makeFormCardFinal(c) {
+  const col = scoreColor(c.avg);
+  const highlight = c.avg >= 3.0 && c.count >= 3;
+  const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
+  const pips = c.races.map(r => {
+    const ev = ['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good'?'A':r.eval==='mid'?'B':'C';
+    return `<div class="spotlight-score-pip" style="background:${pipCol[ev]||'#888'}" title="${ev}"></div>`;
+  }).join('');
+  return `
+    <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight?'border-color:var(--accent);background:rgba(201,168,76,.06);':''}">
+      <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
+      <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
+      <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:14px;font-weight:700;color:${col}">${c.avg.toFixed(1)}</span>
+        <div class="spotlight-score-bar">${pips}</div>
+        <span style="font-size:10.5px;color:var(--muted)">直近${c.count}走</span>
+      </div>
+    </div>`;
+}
+
 function buildRaceAptitudeHTML(race, venueName) {
-  const pipColor = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
-  function normEval(ev) {
-    if (['S','A','B','C','D','F'].includes(ev)) return ev;
-    if (ev === 'good') return 'A'; if (ev === 'mid') return 'B'; if (ev === 'bad') return 'C';
-    return 'C';
+  const raceDist = extractDistanceFromTrack(race.track);
+
+  function extractSurface(track) {
+    if (!track) return null;
+    if (track.includes('ダート') || /ダ\d/.test(track)) return 'ダート';
+    if (track.includes('芝')) return '芝';
+    return null;
   }
-  const avgLabel = v => v >= 5.5 ? 'S/A中心' : v >= 4.5 ? 'A/B中心' : v >= 3.5 ? 'B中心' : v >= 2.5 ? 'C中心' : 'D/F中心';
-  const raceDist    = extractDistanceFromTrack(race.track);
-  const raceBandKey = raceDist ? distanceBandKey(raceDist) : null;
-  const distLabel   = raceDist ? distanceBandLabel(raceDist) : null;
+  const raceSurface = extractSurface(race.track);
 
   const horseList = (race.horses || []).filter(h => h.name && h.name.trim());
   if (horseList.length === 0) return '';
 
-  // ---- 場適性：この競馬場での実績がある馬だけ計算 ----
+  // ---- 場適性：競馬場×芝/ダートで区別 ----
   const venueScores = [];
-  // ---- 距離適性：この距離帯での実績がある馬だけ計算 ----
-  const distScores  = [];
-
   for (const h of horseList) {
     const name = h.name.trim();
     const gh = horses.find(x => x.name === name);
     if (!gh || !gh.races || gh.races.length === 0) continue;
-
-    // 場適性（この競馬場での実績がある馬のみ）
-    const atVenue   = gh.races.filter(r => extractVenueFromTrack(r.track) === venueName);
-    if (atVenue.length > 0) {
-      const avgAt = aptAvg(atVenue);
-      if (avgAt !== null) {
-        const elseVenue = gh.races.filter(r => { const v = extractVenueFromTrack(r.track); return v !== null && v !== venueName; });
-        const avgElse   = aptAvg(elseVenue);
-        const diff      = avgElse !== null ? avgAt - avgElse : null;
-        venueScores.push({ name, num: h.num, avgAt, avgElse, diff, count: atVenue.length });
-      }
-    }
-
-    // 距離適性（この距離帯での実績がある馬のみ）
-    if (raceBandKey) {
-      const atBand   = gh.races.filter(r => distanceBandKey(extractDistanceFromTrack(r.track)) === raceBandKey);
-      if (atBand.length > 0) {
-        const avgAt = aptAvg(atBand);
-        if (avgAt !== null) {
-          const elseBand = gh.races.filter(r => { const bk = distanceBandKey(extractDistanceFromTrack(r.track)); return bk !== null && bk !== raceBandKey; });
-          const avgElse  = aptAvg(elseBand);
-          const diff     = avgElse !== null ? avgAt - avgElse : null;
-          distScores.push({ name, num: h.num, avgAt, avgElse, diff, count: atBand.length });
-        }
-      }
-    }
+    const atVenue = gh.races.filter(r =>
+      extractVenueFromTrack(r.track) === venueName &&
+      (raceSurface === null || extractSurface(r.track) === raceSurface)
+    );
+    if (atVenue.length === 0) continue;
+    const avgAt = aptAvg(atVenue);
+    if (avgAt === null) continue;
+    const elseVenue = gh.races.filter(r => {
+      const v = extractVenueFromTrack(r.track);
+      return v !== null && (v !== venueName || extractSurface(r.track) !== raceSurface);
+    });
+    const avgElse = aptAvg(elseVenue);
+    venueScores.push({ name, num: h.num, avgAt, avgElse, diff: avgElse !== null ? avgAt - avgElse : null, count: atVenue.length });
   }
-
-  // avgAt降順でソート
   venueScores.sort((a, b) => b.avgAt - a.avgAt);
-  distScores.sort((a, b) => b.avgAt - a.avgAt);
 
-  // 直近3走の調子ランキング（馬ページのある全出走馬対象）
+  // ---- 直近3走の調子 ----
   const formScores = [];
   for (const h of horseList) {
     const name = h.name.trim();
@@ -176135,178 +176168,84 @@ function buildRaceAptitudeHTML(race, venueName) {
   }
   formScores.sort((a, b) => b.avg - a.avg);
 
-  // スコアに応じた色（3以上=暖色系、3未満=寒色系、SABCカラーに合わせる）
-  function scoreColor(v) {
-    if (v >= 5) return '#ffd700'; // S/A寄り → ゴールド
-    if (v >= 4) return '#52c48a'; // A/B寄り → 緑
-    if (v >= 3) return '#7ec87e'; // B → 緑(淡)
-    if (v >= 2) return '#5c9ae0'; // C → 青
-    return '#e09650';             // D → 橙
-  }
-
-  // isVenue: true=場適性, false=距離適性（「その他の競馬場」or「その他の距離」の切り替え用）
-  function makeCard(c, isVenue) {
-    const col = scoreColor(c.avgAt);
-    const highlight = c.avgAt >= 3.0 && c.count >= 3;
-    const elseLabel = isVenue ? 'その他の競馬場' : 'その他の距離';
-    const elseText = c.avgElse !== null
-      ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>`
-      : '';
-    const diffText = c.diff !== null
-      ? `<span style="color:${c.diff >= 0 ? 'var(--green)' : 'var(--red)'};font-size:11.5px;font-weight:700">${c.diff >= 0 ? '▲' : '▼'}${Math.abs(c.diff).toFixed(1)}</span>`
-      : `<span style="font-size:11px;color:var(--muted)">—</span>`;
-    const countLabel = c.count >= 3
-      ? `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${c.count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`
-      : `<span style="font-size:10.5px;color:var(--muted)">${c.count}走</span>`;
-    return `
-      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
-        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
-        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
-        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
-          ${countLabel}
-          <span style="flex:1"></span>
-          ${elseText}
-          ${diffText}
-        </div>
-      </div>`;
-  }
-
-  function makeFormCard(c) {
-    const col = scoreColor(c.avg);
-    const highlight = c.avg >= 3.0 && c.count >= 3;
-    const pips = c.races.map(r => {
-      const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
-      const ev = (['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good' ? 'A' : r.eval==='mid' ? 'B' : 'C');
-      return `<div class="spotlight-score-pip" style="background:${pipCol[ev]||'#888'}" title="${ev}"></div>`;
-    }).join('');
-    const countLabel = `<span style="font-size:10.5px;color:var(--muted)">直近${c.count}走</span>`;
-    return `
-      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
-        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
-        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
-        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:14px;font-weight:700;color:${col}">${c.avg.toFixed(1)}</span>
-          <div class="spotlight-score-bar">${pips}</div>
-          ${countLabel}
-        </div>
-      </div>`;
-  }
-
-  // 3.0以上を最大5頭、該当なければTOP3
-  function pickCandidates(arr, scoreKey) {
-    const above = arr.filter(c => c[scoreKey] >= 3.0).slice(0, 5);
-    return above.length > 0 ? above : arr.slice(0, 3);
-  }
-
-  // 走数ラベル（3走以上かつ3.0点以上のみ「高適性！」）
-  function countLabel(count, score) {
-    if (count >= 3 && score >= 3.0) {
-      return `<span style="font-size:10.5px;color:var(--accent2);font-weight:700">${count}走</span><span style="font-size:10px;color:var(--accent2);margin-left:3px">高適性！</span>`;
-    }
-    return `<span style="font-size:10.5px;color:var(--muted)">${count}走</span>`;
-  }
-
-  // makeCardをcountLabel対応に更新
-  function makeCardFinal(c, isVenue) {
-    const col = scoreColor(c.avgAt);
-    const highlight = c.avgAt >= 3.0 && c.count >= 3;
-    const elseLabel = isVenue ? 'その他の競馬場' : 'その他の距離';
-    const elseText = c.avgElse !== null
-      ? `<span style="font-size:11px;color:var(--muted)">${elseLabel} ${c.avgElse.toFixed(1)}</span>`
-      : '';
-    const diffText = c.diff !== null
-      ? `<span style="color:${c.diff >= 0 ? 'var(--green)' : 'var(--red)'};font-size:11.5px;font-weight:700">${c.diff >= 0 ? '▲' : '▼'}${Math.abs(c.diff).toFixed(1)}</span>`
-      : `<span style="font-size:11px;color:var(--muted)">—</span>`;
-    return `
-      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
-        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
-        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
-        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:14px;font-weight:700;color:${col}">${c.avgAt.toFixed(1)}</span>
-          ${countLabel(c.count, c.avgAt)}
-          <span style="flex:1"></span>
-          ${elseText}
-          ${diffText}
-        </div>
-      </div>`;
-  }
-
-  function makeFormCardFinal(c) {
-    const col = scoreColor(c.avg);
-    const highlight = c.avg >= 3.0 && c.count >= 3;
-    const pips = c.races.map(r => {
-      const pipCol = { S:'#ffd700', A:'#52c48a', B:'#7ec87e', C:'#5c9ae0', D:'#e09650', F:'#888' };
-      const ev = (['S','A','B','C','D','F'].includes(r.eval) ? r.eval : r.eval==='good' ? 'A' : r.eval==='mid' ? 'B' : 'C');
-      return `<div class="spotlight-score-pip" style="background:${pipCol[ev]||'#888'}" title="${ev}"></div>`;
-    }).join('');
-    return `
-      <div class="spotlight-card" onclick="jumpToHorse('${escHtml(c.name)}')" style="${highlight ? 'border-color:var(--accent);background:rgba(201,168,76,.06);' : ''}">
-        <div style="flex-shrink:0;font-size:12px;color:var(--muted2);min-width:22px;text-align:center">${c.num||''}</div>
-        <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--text);min-width:90px">${escHtml(c.name)}</div>
-        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:14px;font-weight:700;color:${col}">${c.avg.toFixed(1)}</span>
-          <div class="spotlight-score-bar">${pips}</div>
-          <span style="font-size:10.5px;color:var(--muted)">直近${c.count}走</span>
-        </div>
-      </div>`;
-  }
-
-  // ---- 馬場適性の計算 ----
-  // trackから馬場状態を抽出: 稍重・重・不良
-  const TRACK_CONDITIONS = ['不良', '稍重', '重']; // 稍重を重より先にチェック（重が稍重に含まれるため）
+  // ---- 馬場適性 ----
+  const TRACK_CONDITIONS = ['不良', '稍重', '重'];
   function extractTrackCondition(track) {
     if (!track) return null;
     for (const cond of TRACK_CONDITIONS) { if (track.includes(cond)) return cond; }
-    return '良'; // 何も付いていなければ良馬場
+    return '良';
   }
-
-  // 馬場ごとのスコア集計（全馬場）
   function calcTrackCondScores(condList) {
     const results = [];
     for (const h of horseList) {
       const name = h.name.trim();
       const gh = horses.find(x => x.name === name);
       if (!gh || !gh.races || gh.races.length === 0) continue;
-      const atCond   = gh.races.filter(r => condList.includes(extractTrackCondition(r.track)));
+      const atCond  = gh.races.filter(r => condList.includes(extractTrackCondition(r.track)));
       if (atCond.length === 0) continue;
-      const avgAt = aptAvg(atCond);
+      const avgAt   = aptAvg(atCond);
       if (avgAt === null) continue;
       const elseCond = gh.races.filter(r => !condList.includes(extractTrackCondition(r.track)));
       const avgElse  = aptAvg(elseCond);
-      const diff     = avgElse !== null ? avgAt - avgElse : null;
-      results.push({ name, num: h.num, avgAt, avgElse, diff, count: atCond.length });
+      results.push({ name, num: h.num, avgAt, avgElse, diff: avgElse !== null ? avgAt - avgElse : null, count: atCond.length });
     }
     return results.sort((a, b) => b.avgAt - a.avgAt);
   }
 
-  // デフォルト（重・不良）のスコアを計算
-  const defaultConds = ['重', '不良'];
-  const trackCondScores = calcTrackCondScores(defaultConds);
-  const trackCondList   = pickCandidates(trackCondScores, 'avgAt');
-  const trackCondHTML   = trackCondList.length
-    ? trackCondList.map(c => makeCardFinal(c, false)).join('')
-    : `<div class="spotlight-empty">対象馬なし</div>`;
+  // ---- 距離適性（チェックボックス選択式）----
+  const ALL_DISTANCES = [1000,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,3000,3200];
+  function calcDistScores(distList, surfaces) {
+    const results = [];
+    for (const h of horseList) {
+      const name = h.name.trim();
+      const gh = horses.find(x => x.name === name);
+      if (!gh || !gh.races || gh.races.length === 0) continue;
+      const atDist = gh.races.filter(r =>
+        distList.includes(extractDistanceFromTrack(r.track)) &&
+        (surfaces.length === 0 || surfaces.includes(extractSurface(r.track)))
+      );
+      if (atDist.length === 0) continue;
+      const avgAt = aptAvg(atDist);
+      if (avgAt === null) continue;
+      const elseDist = gh.races.filter(r =>
+        !distList.includes(extractDistanceFromTrack(r.track)) ||
+        (surfaces.length > 0 && !surfaces.includes(extractSurface(r.track)))
+      );
+      const avgElse = aptAvg(elseDist);
+      results.push({ name, num: h.num, avgAt, avgElse, diff: avgElse !== null ? avgAt - avgElse : null, count: atDist.length });
+    }
+    return results.sort((a, b) => b.avgAt - a.avgAt);
+  }
 
-  // recalcTrackCond用にhorseListをキャッシュ（チェック変更時に再計算できるよう）
+  const defaultConds  = ['重', '不良'];
+  const defaultDists  = raceDist ? [raceDist] : [];
+  const defaultSurfs  = raceSurface ? [raceSurface] : [];
+  const trackList     = pickCandidates(calcTrackCondScores(defaultConds), 'avgAt');
+  const distInitList  = pickCandidates(calcDistScores(defaultDists, defaultSurfs), 'avgAt');
+
   const cacheId = `apt-${Math.random().toString(36).slice(2,7)}`;
-  window._aptTrackCache = window._aptTrackCache || {};
-  window._aptTrackCache[cacheId] = { horseList };
-
-  const noDataMsg = `<div class="spotlight-empty">対象馬なし</div>`;
-  const venueList = pickCandidates(venueScores, 'avgAt');
-  const distList  = pickCandidates(distScores,  'avgAt');
-  const formList  = pickCandidates(formScores,  'avg');
-  const venueHTML = venueList.length ? venueList.map(c => makeCardFinal(c, true)).join('')  : noDataMsg;
-  const distHTML  = distList.length  ? distList.map(c => makeCardFinal(c, false)).join('')  : noDataMsg;
-  const formHTML  = formList.length  ? formList.map(makeFormCardFinal).join('')              : noDataMsg;
+  window._aptCache = window._aptCache || {};
+  window._aptCache[cacheId] = { horseList, raceSurface, extractSurface, calcDistScores, ALL_DISTANCES, pickCandidates };
 
   const id = cacheId;
-  const hint = `<div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　黄枠=3.0以上　3走以上&3.0以上→高適性！</div>`;
-  const trackHint = `<div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">スコア: S=6, A=4, B=3, C=2, D=0, F=除外　黄枠=3.0以上</div>`;
+  const noData = `<div class="spotlight-empty">対象馬なし</div>`;
+  const hint   = `<div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">スコア: S=6,A=4,B=3,C=2,D=0,F=除外　黄枠=3.0以上&3走以上→高適性！</div>`;
 
-  // ボタンとコンテンツを縦にペアにして、横2列グリッドで並べる
-  // → 全部開いても「何のランキングか」が一目でわかる
+  const vLbl = raceSurface ? `${venueName}（${raceSurface}）` : venueName;
+  const venueList = pickCandidates(venueScores, 'avgAt');
+  const formList  = pickCandidates(formScores, 'avg');
+
+  const surfChecks = ['芝','ダート'].map(s => `
+    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;color:var(--text)">
+      <input type="checkbox" name="ds" value="${s}" ${defaultSurfs.includes(s)?'checked':''}
+        style="accent-color:var(--accent);width:13px;height:13px" onchange="recalcDistCond('${id}')"> ${s}
+    </label>`).join('');
+  const distChecks = ALL_DISTANCES.map(d => `
+    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;color:var(--text)">
+      <input type="checkbox" name="dd" value="${d}" ${defaultDists.includes(d)?'checked':''}
+        style="accent-color:var(--accent);width:13px;height:13px" onchange="recalcDistCond('${id}')"> ${d}
+    </label>`).join('');
+
   return `
     <div class="aptitude-toggle">
       <div class="apt-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
@@ -176314,20 +176253,29 @@ function buildRaceAptitudeHTML(race, venueName) {
         <div>
           <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
             id="aptBtn-v-${id}" onclick="toggleAptitudeSingle('v-${id}')">
-            <span id="aptArrow-v-${id}">▶</span> 🏟 ${escHtml(venueName)}適性
+            <span id="aptArrow-v-${id}">▶</span> 🏟 ${escHtml(vLbl)}適性
           </button>
           <div class="aptitude-content" id="aptContent-v-${id}">
-            ${hint}${venueHTML}
+            ${hint}${venueList.length ? venueList.map(c=>makeCardFinal(c,true)).join('') : noData}
           </div>
         </div>
 
         <div>
           <button type="button" class="aptitude-toggle-btn" style="width:100%;justify-content:flex-start;margin-bottom:4px"
             id="aptBtn-d-${id}" onclick="toggleAptitudeSingle('d-${id}')">
-            <span id="aptArrow-d-${id}">▶</span> 📏 ${distLabel ? escHtml(distLabel) : '距離'}適性
+            <span id="aptArrow-d-${id}">▶</span> 📏 距離適性
           </button>
           <div class="aptitude-content" id="aptContent-d-${id}">
-            ${hint}${distHTML}
+            ${hint}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-start">
+              <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                <span style="font-size:11px;color:var(--muted2)">馬場：</span>${surfChecks}
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                <span style="font-size:11px;color:var(--muted2)">距離：</span>${distChecks}
+              </div>
+            </div>
+            <div id="distResult-${id}">${distInitList.length ? distInitList.map(c=>makeCardFinal(c,false)).join('') : noData}</div>
           </div>
         </div>
 
@@ -176337,8 +176285,8 @@ function buildRaceAptitudeHTML(race, venueName) {
             <span id="aptArrow-f-${id}">▶</span> 🔥 直近の調子
           </button>
           <div class="aptitude-content" id="aptContent-f-${id}">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">直近3走の平均スコア（F除外）　黄枠=3.0以上</div>
-            ${formHTML}
+            <div style="font-size:10px;color:var(--muted);margin-bottom:8px">直近3走の平均スコア（F除外）　黄枠=3.0以上&3走以上</div>
+            ${formList.length ? formList.map(makeFormCardFinal).join('') : noData}
           </div>
         </div>
 
@@ -176348,18 +176296,16 @@ function buildRaceAptitudeHTML(race, venueName) {
             <span id="aptArrow-t-${id}">▶</span> 🌧 馬場適性
           </button>
           <div class="aptitude-content" id="aptContent-t-${id}">
-            ${trackHint}
+            ${hint}
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
-              <span style="font-size:11px;color:var(--muted2);letter-spacing:.5px">馬場：</span>
-              ${['良', '稍重', '重', '不良'].map(c => `
+              <span style="font-size:11px;color:var(--muted2)">馬場：</span>
+              ${['良','稍重','重','不良'].map(c=>`
                 <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;color:var(--text)">
-                  <input type="checkbox" value="${c}" ${defaultConds.includes(c) ? 'checked' : ''}
-                    style="accent-color:var(--accent);width:14px;height:14px"
-                    onchange="recalcTrackCond('${id}')">
-                  ${c}
+                  <input type="checkbox" value="${c}" ${defaultConds.includes(c)?'checked':''}
+                    style="accent-color:var(--accent);width:14px;height:14px" onchange="recalcTrackCond('${id}')"> ${c}
                 </label>`).join('')}
             </div>
-            <div id="trackCondResult-${id}">${trackCondHTML}</div>
+            <div id="trackCondResult-${id}">${trackList.length ? trackList.map(c=>makeCardFinal(c,false)).join('') : noData}</div>
           </div>
         </div>
 
@@ -176367,7 +176313,21 @@ function buildRaceAptitudeHTML(race, venueName) {
     </div>`;
 }
 
-// 馬場適性：チェックボックス変更時に再計算してその場で描画
+// 距離適性：チェック変更時に再計算
+function recalcDistCond(id) {
+  const cont   = document.getElementById(`aptContent-d-${id}`);
+  const result = document.getElementById(`distResult-${id}`);
+  if (!cont || !result) return;
+  const surfs = [...cont.querySelectorAll('input[name="ds"]:checked')].map(cb => cb.value);
+  const dists = [...cont.querySelectorAll('input[name="dd"]:checked')].map(cb => parseInt(cb.value));
+  const cache = window._aptCache && window._aptCache[id];
+  if (!cache) { result.innerHTML = '<div class="spotlight-empty">データなし</div>'; return; }
+  if (dists.length === 0) { result.innerHTML = '<div class="spotlight-empty">距離を1つ以上選択してください</div>'; return; }
+  const scores = cache.calcDistScores(dists, surfs);
+  const list   = cache.pickCandidates(scores, 'avgAt');
+  result.innerHTML = list.length ? list.map(c => makeCardFinal(c, false)).join('') : '<div class="spotlight-empty">対象馬なし</div>';
+}
+
 function recalcTrackCond(id) {
   const container = document.getElementById(`aptContent-t-${id}`);
   if (!container) return;
