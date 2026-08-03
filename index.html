@@ -176073,7 +176073,7 @@ function scoreColor(v) {
 }
 
 function pickCandidates(arr, scoreKey) {
-  const above = arr.filter(c => c[scoreKey] >= 3.0).slice(0, 5);
+  const above = arr.filter(c => c[scoreKey] >= 3.0);
   return above.length > 0 ? above : arr.slice(0, 3);
 }
 
@@ -176340,7 +176340,7 @@ function recalcTrackCond(id) {
     return;
   }
 
-  const cache = window._aptTrackCache && window._aptTrackCache[id];
+  const cache = window._aptCache && window._aptCache[id];
   if (!cache) { result.innerHTML = '<div class="spotlight-empty">データなし</div>'; return; }
 
   const TRACK_CONDITIONS = ['不良', '稍重', '重']; // 稍重を重より先にチェック
