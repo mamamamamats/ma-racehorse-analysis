@@ -176416,6 +176416,12 @@ function renderHistoryDateList() {
     return;
   }
 
+  // その日の全レースが回顧済みかどうか
+  function isAllReviewed(day) {
+    const races = (day.venues || []).flatMap(v => v.races || []);
+    return races.length > 0 && races.every(r => r.reviewed);
+  }
+
   // 年ごとにグループ化・降順
   const byYear = {};
   for (const d of past) {
@@ -176429,15 +176435,23 @@ function renderHistoryDateList() {
     const days = byYear[year].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
     return `
       <div style="padding:10px 18px 4px;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">${year}年</div>
-      ${days.map(d => `
-        <div class="date-item ${selectedHistoryDate === d.id ? 'active' : ''}" onclick="selectHistoryDate('${d.id}')">
-          <div>
-            <div class="date-item-main">${d.label}</div>
-            <div class="date-item-sub">${(d.venues||[]).map(v=>v.name).join(' · ') || '—'}</div>
+      ${days.map(d => {
+        const reviewed = isAllReviewed(d);
+        const reviewedBadge = isEditMode && reviewed
+          ? `<span style="font-size:10px;color:var(--green);letter-spacing:.5px;margin-left:4px">✅</span>`
+          : '';
+        return `
+          <div class="date-item ${selectedHistoryDate === d.id ? 'active' : ''}" onclick="selectHistoryDate('${d.id}')">
+            <div style="display:flex;align-items:center;gap:2px">
+              <div>
+                <div class="date-item-main">${d.label}${reviewedBadge}</div>
+                <div class="date-item-sub">${(d.venues||[]).map(v=>v.name).join(' · ') || '—'}</div>
+              </div>
+            </div>
+            <div class="date-badge">${(d.venues||[]).reduce((a,v)=>a+(v.races||[]).length,0)}R</div>
           </div>
-          <div class="date-badge">${(d.venues||[]).reduce((a,v)=>a+(v.races||[]).length,0)}R</div>
-        </div>
-      `).join('')}
+        `;
+      }).join('')}
     `;
   }).join('');
 }
@@ -176464,13 +176478,16 @@ function renderHistoryMain() {
       const days = byYear[year].sort((a, b) => dateToNum(b.date) - dateToNum(a.date));
       const first  = days.filter(d => d._month >= 7 && d._month <= 12);
       const second = days.filter(d => d._month >= 1 && d._month <= 6);
-      const makeCards = list => list.map(d => `
+      const makeCards = list => list.map(d => {
+        const races = (d.venues||[]).flatMap(v => v.races||[]);
+        const reviewed = isEditMode && races.length > 0 && races.every(r => r.reviewed);
+        return `
         <div class="history-card" onclick="selectHistoryDate('${d.id}')">
-          <div class="history-card-date">${d.date}</div>
+          <div class="history-card-date">${d.date}${reviewed ? ' <span style="font-size:12px">✅</span>' : ''}</div>
           <div class="history-card-venues">${(d.venues||[]).map(v => v.name).join(' · ') || '—'}</div>
           <div class="history-card-count">計${(d.venues||[]).reduce((a, v) => a + (v.races||[]).length, 0)}レース</div>
         </div>
-      `).join('');
+      `}).join('');
       const halfBlock = (label, list) => list.length === 0 ? '' : `
         <div class="half-year-block">
           <div class="half-year-label">${label}</div>
