@@ -176522,10 +176522,15 @@ function renderHistoryMain() {
     const key = `race-${day.id}-${venue.name}-${r.r}`;
     const hasMemo = memos[key+'-flow'] || memos[key+'-pred'] || memos[key+'-result'];
     const isActive = selectedHistoryRace === key;
+    const reviewedBadge = isEditMode && r.reviewed
+      ? `<span style="font-size:11px;color:var(--green);margin-left:4px;flex-shrink:0">✅</span>` : '';
     return `
       <div class="race-row ${isActive ? 'active' : ''}" onclick="selectHistoryRace('${day.id}','${venue.name}',${r.r})">
         <div class="race-num-badge">${r.r}R</div>
-        <div style="flex:1"><div class="race-name-main">${r.name}</div></div>
+        <div style="flex:1;display:flex;align-items:center">
+          <div class="race-name-main">${r.name}</div>
+          ${reviewedBadge}
+        </div>
         <div class="memo-indicator ${hasMemo ? 'has-memo' : ''}"></div>
       </div>
     `;
