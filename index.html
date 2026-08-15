@@ -1945,6 +1945,14 @@ textarea.search-input { line-height: 1.7; }
             <label class="edit-field-label">新しい競馬場名</label>
             <input type="text" id="editNewVenueName" class="search-input" placeholder="例: 中山">
           </div>
+          <div class="edit-field" id="editRenameVenueWrap" style="display:none">
+            <label class="edit-field-label">競馬場名を変更</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="text" id="editRenameVenueName" class="search-input" style="flex:1" placeholder="新しい競馬場名">
+              <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;white-space:nowrap" onclick="renameEditVenue()">✓ 競馬場名を変更</button>
+              <span id="editRenameVenueMsg" class="edit-msg"></span>
+            </div>
+          </div>
 
           <div class="edit-field">
             <label class="edit-field-label">レース（既存のレースを選ぶと出走馬を追記・編集できます）</label>
@@ -177937,8 +177945,54 @@ function populateEditVenueSelect() {
 function onEditVenueChange() {
   const val = document.getElementById('editVenueSelect').value;
   const wrap = document.getElementById('editNewVenueWrap');
+  const renameWrap = document.getElementById('editRenameVenueWrap');
+  const renameInput = document.getElementById('editRenameVenueName');
+  const renameMsg = document.getElementById('editRenameVenueMsg');
   if (wrap) wrap.style.display = val === '__new__' ? 'block' : 'none';
+  if (renameWrap) renameWrap.style.display = (val && val !== '__new__') ? 'block' : 'none';
+  if (renameInput) renameInput.value = val !== '__new__' ? val : '';
+  if (renameMsg) renameMsg.textContent = '';
   populateEditRaceSelect();
+}
+
+// 選択中の競馬場名を変更（現在の開催日の競馬場名だけを変更）
+async function renameEditVenue() {
+  const msgEl = document.getElementById('editRenameVenueMsg');
+  const dayId = document.getElementById('editDaySelect').value;
+  const oldName = document.getElementById('editVenueSelect').value;
+  const newName = document.getElementById('editRenameVenueName').value.trim();
+
+  if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = ''; }
+  if (!dayId || dayId === '__new__') { if (msgEl) msgEl.textContent = '⚠ 既存の開催日を選択してください'; return; }
+  if (!oldName || oldName === '__new__') { if (msgEl) msgEl.textContent = '⚠ 変更する競馬場を選択してください'; return; }
+  if (!newName) { if (msgEl) msgEl.textContent = '⚠ 新しい競馬場名を入力してください'; return; }
+  if (newName === oldName) { if (msgEl) { msgEl.style.color = 'var(--muted)'; msgEl.textContent = '変更はありません'; } return; }
+
+  const day = raceDays.find(d => d.id === dayId);
+  if (!day) { if (msgEl) msgEl.textContent = '⚠ 開催日データが見つかりません'; return; }
+  const venues = day.venues || [];
+  const venue = venues.find(v => v.name === oldName);
+  if (!venue) { if (msgEl) msgEl.textContent = '⚠ 競馬場データが見つかりません'; return; }
+  if (venues.some(v => v.name === newName)) { if (msgEl) msgEl.textContent = '⚠ その競馬場名は既に存在します'; return; }
+
+  venue.name = newName;
+  await idbPut('raceDays', day);
+  await fbSaveRaceDay(day);
+  invalidateHorseCache();
+  updateHomeStats();
+
+  renderEditView();
+  await new Promise(r => setTimeout(r, 50));
+  document.getElementById('editDaySelect').value = dayId;
+  onEditDayChange();
+  await new Promise(r => setTimeout(r, 50));
+  document.getElementById('editVenueSelect').value = newName;
+  onEditVenueChange();
+
+  if (msgEl) {
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = `✓ 「${oldName}」を「${newName}」に変更しました`;
+  }
 }
 
 function populateEditRaceSelect() {
