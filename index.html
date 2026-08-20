@@ -1586,7 +1586,32 @@ textarea.search-input { line-height: 1.7; }
   .apt-grid { grid-template-columns: 1fr !important; }
   .aptitude-toggle-btn { width: 100% !important; box-sizing: border-box; }
 }
-</style>
+
+/* ===== AI予想アシスタント ===== */
+.ai-predict-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(214,167,84,.55);background:linear-gradient(135deg,rgba(214,167,84,.16),rgba(214,167,84,.05));color:var(--accent2);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;}
+.ai-predict-btn:hover{transform:translateY(-1px);background:rgba(214,167,84,.22)}
+.ai-predict-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(4px)}
+.ai-predict-modal{width:min(760px,100%);max-height:min(88vh,900px);background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden}
+.ai-predict-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border)}
+.ai-predict-title{font-family:'Noto Serif JP',serif;font-weight:700;color:var(--accent2);font-size:17px}
+.ai-predict-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.ai-predict-close{border:0;background:transparent;color:var(--muted);font-size:22px;cursor:pointer;padding:3px 7px}
+.ai-predict-body{padding:16px;overflow:auto}
+.ai-predict-intro{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.75;margin-bottom:12px}
+.ai-predict-question{display:flex;gap:7px;margin-top:10px}
+.ai-predict-question input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);outline:none;font-size:12px}
+.ai-predict-question button{border:0;border-radius:8px;background:var(--accent);color:#fff;padding:0 15px;font-weight:700;cursor:pointer}
+.ai-predict-answer{font-size:12px;line-height:1.85}
+.ai-predict-answer h4{color:var(--accent2);margin:15px 0 7px;font-size:13px}
+.ai-predict-rank{display:grid;grid-template-columns:38px 1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--card2);margin:6px 0}
+.ai-predict-rank .num{font-weight:800;color:var(--accent2);font-size:15px}
+.ai-predict-rank .score{font-weight:800}
+.ai-predict-tag{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 7px;font-size:10px;color:var(--muted);margin:2px 3px 2px 0}
+.ai-predict-note{font-size:11px;color:var(--muted);background:rgba(128,128,128,.08);border-radius:8px;padding:9px 11px;margin-top:9px}
+.ai-predict-chat{border-top:1px solid var(--border);padding:11px 14px}
+@media(max-width:600px){.ai-predict-overlay{padding:0}.ai-predict-modal{height:100%;max-height:100%;border-radius:0}.ai-predict-body{padding:12px}}
+
+.ai-predict-reset{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer;margin-left:auto}.ai-predict-body{overflow-y:auto;scroll-behavior:smooth}</style>
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -174748,6 +174773,7 @@ function renderWeekContent(day) {
               ${gradeLabel[race.grade] ? `<span class="race-grade-badge ${gradeClass[race.grade]}" style="font-size:12px;padding:4px 12px">${gradeLabel[race.grade]}</span>` : ''}
               ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}
               ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
+              <button type="button" class="ai-predict-btn" onclick="event.stopPropagation(); openAIPredictor('${day.id}','${escHtml(venue.name)}',${rNum})">🧠 AIアシスタント予想</button>
             </div>
           </div>
 
@@ -174873,7 +174899,7 @@ function buildHorseGrid(race, day, venue) {
       const overall = getOverallEval(gh.races);
       const overallBadge = overall ? evalBadge(overall, '11px') : '';
 
-      // 直近4走：レース名 + コース + 評価バッジ
+      // 直近3走：レース名 + コース + 評価バッジ
       const recent2 = gh.races.slice(0, 4);
       const recentItemsHTML = recent2.map(r => {
         const badge = evalBadge(r.eval, '10px');
@@ -176567,6 +176593,7 @@ function renderHistoryMain() {
             <div class="dbsend-wrap">
               ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}
               ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
+              <button type="button" class="ai-predict-btn" onclick="event.stopPropagation(); openAIPredictor('${day.id}','${escHtml(venue.name)}',${rNum})">🧠 AIアシスタント予想</button>
             </div>
           </div>
           ${horseGridHTML}
@@ -178531,5 +178558,339 @@ async function createHorsePageInline(btn) {
 
 <!-- JSZip for zip support -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+// ===== AI予想アシスタント（現在のアプリ内データだけで分析） =====
+// AI予想内の表示用エスケープ（既存のescHtmlを利用）
+function aiEsc(s){ return escHtml(String(s ?? '')); }
+function aiNormEval(ev){
+  return ({good:'A',mid:'B',bad:'C'})[ev] || (['S','A','B','C','D','F'].includes(ev)?ev:'C');
+}
+function aiEvalScore(ev){ return ({S:6,A:5,B:4,C:3,D:1,F:0})[aiNormEval(ev)] ?? 3; }
+function aiRacePosition(h){
+  const txt=[h.shortNote||'',...(h.races||[]).slice(0,5).map(r=>r.comment||'')].join(' ');
+  const has=w=>txt.includes(w);
+  if(has('逃げ')||has('逃げた')||has('ハナ')) return '逃げ・先行';
+  if(has('先行')||has('好位')||has('2番手')||has('3番手')||has('番手')) return '先行・好位';
+  if(has('中団')||has('中団前')||has('好中団')) return '中団';
+  if(has('後方')||has('最後方')||has('後ろから')) return '差し・追込';
+  return '位置取り不明';
+}
+function aiStart(h){
+  const txt=[h.shortNote||'',...(h.races||[]).slice(0,5).map(r=>r.comment||'')].join(' ');
+  if(/スタート.*(悪|遅|後手|出遅|苦手)|出遅|出負け|後手/.test(txt)) return 'スタート不安';
+  if(/スタート.*(良|速)|好スタート|スタートよく/.test(txt)) return 'スタート良好';
+  return 'スタート不明';
+}
+function aiRecentAvg(h){
+  const rs=(h.races||[]).slice(0,3).map(r=>aiEvalScore(r.eval)).filter(v=>v>0);
+  return rs.length?rs.reduce((a,b)=>a+b,0)/rs.length:null;
+}
+function aiTrackStats(h,venue,dist,surface){
+  const rs=(h.races||[]).filter(r=>{
+    const t=String(r.track||'');
+    const venueOk=!venue||t.includes(venue);
+    const distOk=!dist||t.includes(String(dist));
+    const surfaceOk=!surface||t.includes(surface);
+    return venueOk && distOk && surfaceOk;
+  });
+  const sc=rs.map(r=>aiEvalScore(r.eval)).filter(v=>v>0);
+  return {count:rs.length,avg:sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null};
+}
+function aiSurface(race){
+  const t=String(race.track||'');
+  if(t.includes('ダート')) return 'ダート';
+  if(t.includes('芝')) return '芝';
+  return '';
+}
+function aiDistance(race){
+  const m=String(race.track||'').match(/(\d{3,4})m?/);
+  return m?m[1]:'';
+}
+function aiBuildRaceData(day,venue,race){
+  const rows=[];
+  const surface=aiSurface(race), dist=aiDistance(race);
+  for(const rh of (race.horses||[])){
+    const h=horses.find(x=>x.name===rh.name);
+    if(!h) { rows.push({name:rh.name,num:rh.num,frame:rh.frame||0,known:false,score:0,pos:'不明',start:'不明',comment:''}); continue; }
+    const recent=aiRecentAvg(h);
+    const overall=(h.races||[]).map(r=>aiEvalScore(r.eval)).filter(v=>v>0);
+    const overallAvg=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
+    // 今回と同じ「競馬場×芝/ダート×距離」の実績を優先。ここを予想の重要材料として扱う。
+    const cond=aiTrackStats(h,venue.name,dist,surface);
+    let score=0;
+    if(overallAvg!==null) score+=overallAvg*0.38;
+    if(recent!==null) score+=recent*0.32;
+    // 条件適性は実績数によって信頼度に傾斜を付ける。
+    // 3走以上 > 2走 > 1走。1走だけの好スコアを過大評価しない。
+    const condReliability = cond.count>=3 ? 1.00 : cond.count===2 ? 0.92 : cond.count===1 ? 0.82 : 0;
+    if(cond.avg!==null) score+=cond.avg*0.30*condReliability;
+    const pos=aiRacePosition(h), start=aiStart(h);
+    const comments=(h.races||[]).slice(0,3).map(r=>r.comment).filter(Boolean);
+    rows.push({name:h.name,num:rh.num,frame:rh.frame||0,known:true,score,pos,start,recent,overallAvg,cond,comments,shortNote:h.shortNote||''});
+  }
+  // 今回条件で高適性と判定できる馬が何頭いるかを把握。
+  // 複数ではなく「この馬だけ」が高適性なら、穴候補として特別に評価する。
+  const highCond=rows.filter(x=>x.known && x.cond?.avg!==null && x.cond?.avg!==undefined && x.cond.avg>=4.0);
+  rows.forEach(x=>{
+    x.uniqueHighCondition = x.known && x.cond?.avg>=4.0 && highCond.length===1;
+    x.conditionReliability = x.cond?.count>=3 ? '高' : x.cond?.count===2 ? '中' : x.cond?.count===1 ? '低' : 'なし';
+    // 今回条件で唯一の高適性馬は、説明だけでなく順位にも反映。
+    // 裏付けが多いほど強く加点：3走以上 > 2走 > 1走。
+    if(x.uniqueHighCondition){
+      x.uniqueHighBonus = x.cond.count>=3 ? 0.55 : x.cond.count===2 ? 0.38 : 0.22;
+      x.score += x.uniqueHighBonus;
+    } else x.uniqueHighBonus = 0;
+  });
+  return rows;
+}
+function aiFieldContext(all,c){
+  const others=all.filter(x=>x.known&&x.num!==c.num);
+  const fastNear=others.filter(x=>x.start==='スタート良好' && (x.pos==='逃げ・先行'||x.pos==='先行・好位'));
+  const slowNear=others.filter(x=>x.start!=='スタート良好' && (x.pos==='逃げ・先行'||x.pos==='先行・好位'));
+  const sameFront=others.filter(x=>(x.pos==='逃げ・先行'||x.pos==='先行・好位') && Math.abs(Number(x.num||0)-Number(c.num||0))<=2);
+  return {fastNear,slowNear,sameFront};
+}
+function aiExplainRow(c,venue,race,all,mark){
+  const surface=aiSurface(race)||'今回条件';
+  const dist=aiDistance(race);
+  const ctx=aiFieldContext(all,c);
+  const score=Math.max(0,Math.min(100,Math.round((c.score||0)*20)));
+  const reasons=[];
+  const conditionLabel=`${venue.name}${surface}${dist?dist+'m':''}`;
+  const others=all.filter(x=>x.known&&x.num!==c.num);
+  const ranked=[...all].filter(x=>x.known).sort((a,b)=>(b.score||0)-(a.score||0));
+  const rank=ranked.findIndex(x=>x.num===c.num)+1;
+
+  // ① 数値面：総合点と、その内訳を必ず具体的に示す。
+  const numericParts=[];
+  if(c.overallAvg!==null && c.overallAvg!==undefined) numericParts.push(`全体評価${c.overallAvg.toFixed(1)}`);
+  if(c.recent!==null && c.recent!==undefined) numericParts.push(`直近3走${c.recent.toFixed(1)}`);
+  if(c.cond?.avg!==null && c.cond?.avg!==undefined) numericParts.push(`${surface}適性${c.cond.avg.toFixed(1)}（${c.cond.count}走）`);
+  if(numericParts.length){
+    const compare=rank>0?`出走馬の中でも総合${score}点・${rank}番手の評価`:`総合${score}点`;
+    reasons.push(`評価の内訳は${numericParts.join('、')}で、${compare}です`);
+  }
+
+  // ② 数字から読み取れる具体的な内容：脚質・近走の安定感など。
+  const content=[];
+  if(c.recent!==null && c.recent!==undefined){
+    if(c.recent>=4.5) content.push(`直近3走も${c.recent.toFixed(1)}と高く、近走内容が安定しています`);
+    else if(c.recent>=4.0) content.push(`直近3走は${c.recent.toFixed(1)}で、大きく崩れていない点を評価しています`);
+    else if(c.recent<=3.0 && (c.pos==='逃げ・先行'||c.pos==='先行・好位')) content.push(`直近3走は${c.recent.toFixed(1)}と目立ちませんが、${c.pos}で運べるため好位を取って粘り込む形を狙えるタイプです`);
+    else if(c.recent<=3.0 && c.pos==='中団') content.push(`直近3走は${c.recent.toFixed(1)}と目立ちませんが、中団から運べるため展開次第で末脚を生かせるタイプです`);
+    else if(c.recent<=3.0 && c.pos==='差し・追込') content.push(`直近3走は${c.recent.toFixed(1)}と目立ちませんが、差し・追込型なので前が流れれば末脚を生かせる余地があります`);
+  }
+  if(c.pos==='逃げ・先行' || c.pos==='先行・好位'){
+    if(c.start==='スタート良好') content.push(`先行・好位型でスタートも良好とみられ、前目の位置を確保しやすいのが強みです`);
+    else if(c.start==='スタート不安') content.push(`先行・好位型で、スタートを決められれば前目を取れる脚質があり、能力と条件適性を評価しています`);
+  }else if(c.pos==='差し・追込'){
+    content.push(`差し・追込型で、前が流れた場合に末脚を生かせるタイプです`);
+  }
+  if(content.length) reasons.push(content[0]);
+
+  // ③ 特筆材料：唯一の高適性馬なら必ず強く評価。なければ無理に書かない。
+  if(c.uniqueHighCondition){
+    reasons.push(`今回の${conditionLabel}で高適性（${c.cond.avg.toFixed(1)}）と出ているのがこの馬だけで、近走や総合点だけでは買いづらくても条件替わりの穴候補として特別に評価しています`);
+  }else if(c.cond?.avg!==null && c.cond?.avg!==undefined && c.cond.avg>=4.0){
+    const trust=c.cond.count>=3?'3走以上の実績があり、':c.cond.count===2?'2走の実績があり、':'1走のみなので慎重に見ますが、';
+    reasons.push(`${conditionLabel}の適性は${c.cond.avg.toFixed(1)}で、${trust}今回条件への適性を評価材料にしています`);
+  }
+
+  // 最低2つ、最大3つ。内容の重複を避ける。
+  const uniq=[];
+  for(const r of reasons){ if(r && !uniq.some(u=>u===r)) uniq.push(r); }
+  while(uniq.length<2){
+    if(c.overallAvg!==null && c.overallAvg!==undefined && !uniq.some(r=>r.includes('全体評価'))){
+      uniq.push(`全体評価は${c.overallAvg.toFixed(1)}で、過去の内容まで含めた能力面にも一定の裏付けがあります`);
+    }else if(c.cond?.avg!==null && c.cond?.avg!==undefined && !uniq.some(r=>r.includes('適性'))){
+      uniq.push(`${conditionLabel}の適性${c.cond.avg.toFixed(1)}を今回条件の評価材料として重視しています`);
+    }else{
+      uniq.push(`${c.pos||'位置取り不明'}という脚質面も含めて今回のメンバーで比較しています`);
+    }
+  }
+  const reason=uniq.slice(0,3).join('。')+'。';
+  const tags=[];
+  if(c.cond?.avg!==null && c.cond?.avg!==undefined) tags.push(`${surface}適性 ${c.cond.avg.toFixed(1)}・${c.cond.count}走`);
+  if(c.recent!==null && c.recent!==undefined) tags.push(`直近3走 ${c.recent.toFixed(1)}`);
+  tags.push(c.pos);
+  return `<div class="ai-predict-rank"><div class="num" style="font-size:20px;color:var(--accent2);font-weight:800;width:36px">${mark}</div><div style="flex:1"><div style="font-weight:700">${c.num}番 ${aiEsc(c.name)} <span class="ai-predict-tag" style="margin-left:6px">総合 ${score}点</span></div><div>${tags.map(t=>`<span class="ai-predict-tag">${aiEsc(t)}</span>`).join('')}</div><div style="margin-top:6px;line-height:1.65">${aiEsc(reason)}</div></div></div>`;
+}
+function aiMakePrediction(day,venue,race){
+  const all=aiBuildRaceData(day,venue,race);
+  const known=all.filter(x=>x.known).sort((a,b)=>(b.score||0)-(a.score||0));
+  const top=known.slice(0,5);
+  const surface=aiSurface(race), dist=aiDistance(race);
+  const leaders=known.filter(x=>x.pos==='逃げ・先行'||x.pos==='先行・好位');
+  let flow='';
+  if(leaders.length>=3){
+    const names=leaders.slice(0,5).map(x=>`${x.num}番${x.name}`).join('、');
+    const fast=leaders.filter(x=>x.start==='スタート良好');
+    flow=`前に行きそうなのは${names}。このうち${fast.length?fast.map(x=>`${x.num}番${x.name}`).join('、'):'複数頭'}はスタートが良好とみられ、序盤の位置争いが激しくなる可能性があります。`;
+  } else if(leaders.length===1){
+    flow=`前に行きそうなのは${leaders[0].num}番${leaders[0].name}で、明確な先行候補が少ないため、スタートを決めれば比較的スムーズに先行できる可能性があります。`;
+  } else {
+    flow='脚質情報を十分に読み取れる馬が少なく、展開は不確定要素が大きいとみます。';
+  }
+  let out=`<div class="ai-predict-answer"><div class="ai-predict-intro"><b>${aiEsc(day.label)} ${aiEsc(venue.name)} ${race.r}R ${aiEsc(race.name)}</b><br>${aiEsc((surface||'')+(dist?' '+dist+'m':'' )||race.track||'コース情報あり')}<br><span style="color:var(--muted)">※出走前の予想として、アプリ内の能力・近走・今回と同じ競馬場/芝ダート/距離の適性・脚質・スタート傾向を組み合わせています。</span></div>`;
+  out+=`<h4>🏇 印と根拠</h4>`;
+  if(top.length){
+    const marks=['◎','○','▲','△','☆'];
+    top.forEach((c,i)=>{ out+=aiExplainRow(c,venue,race,known,marks[i]); });
+  } else out+='<div class="ai-predict-note">このレースの出走馬と全頭診断の紐付けデータが不足しています。</div>';
+  out+=`<h4>🧭 展開イメージ</h4><div>${aiEsc(flow)}</div>`;
+  out+=`<div class="ai-predict-note">総合点は能力・近走・今回と同じ競馬場/芝ダート/距離の適性を組み合わせた比較用スコアです。競馬場適性は今回の条件に一致するものを優先し、展開や位置取りは現在のデータから推測した候補です。</div></div>`;
+  return out;
+}
+let aiPredictionState = null;
+function resetAIChat(){
+  const b=document.getElementById('aiPredictBody');
+  if(b && aiPredictionState) b.innerHTML=aiPredictionState.initialHtml;
+  const q=document.getElementById('aiPredictQuestion'); if(q) q.value='';
+}
+function scrollAIChat(){
+  const b=document.getElementById('aiPredictBody'); if(b) setTimeout(()=>b.scrollTo({top:b.scrollHeight,behavior:'smooth'}),30);
+}
+function openAIPredictor(dayId,venueName,rNum){
+  const day=raceDays.find(d=>d.id===dayId); const venue=day?.venues?.find(v=>v.name===venueName); const race=venue?.races?.find(r=>r.r===rNum);
+  if(!day||!venue||!race) return;
+  const old=document.getElementById('aiPredictOverlay'); if(old) old.remove();
+  const overlay=document.createElement('div'); overlay.id='aiPredictOverlay'; overlay.className='ai-predict-overlay';
+  overlay.innerHTML=`<div class="ai-predict-modal"><div class="ai-predict-head"><div><div class="ai-predict-title">🧠 AIアシスタント予想</div><div class="ai-predict-sub">${aiEsc(day.label)} ${aiEsc(venue.name)} ${rNum}R ${aiEsc(race.name)}</div></div><button class="ai-predict-reset" onclick="resetAIChat()">↺ リセット</button><button class="ai-predict-close" onclick="closeAIPredictor()">×</button></div><div class="ai-predict-body" id="aiPredictBody">${aiMakePrediction(day,venue,race)}</div><div class="ai-predict-chat"><div class="ai-predict-question"><input id="aiPredictQuestion" placeholder="例：内枠なら評価が上がる馬は？ / 展開を詳しく" onkeydown="if(event.key==='Enter')askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})"><button onclick="askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})">聞く</button></div></div></div>`;
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeAIPredictor()});
+  document.body.appendChild(overlay);
+  const b=document.getElementById('aiPredictBody'); aiPredictionState={initialHtml:b?b.innerHTML:''};
+}
+function closeAIPredictor(){document.getElementById('aiPredictOverlay')?.remove();}
+function aiQuestionReasons(x,venue,race,all){
+  const surface=aiSurface(race)||'今回条件', dist=aiDistance(race);
+  const label=`${venue.name}${surface}${dist?dist+'m':''}`;
+  const ranked=all.filter(y=>y.known).sort((a,b)=>(b.score||0)-(a.score||0));
+  const rank=ranked.findIndex(y=>y.num===x.num)+1;
+  const high=all.filter(y=>y.known&&y.cond?.avg!==null&&y.cond?.avg!==undefined&&y.cond.avg>=4.0);
+  const arr=[];
+  const nums=[];
+  if(x.overallAvg!=null) nums.push(`全体評価${x.overallAvg.toFixed(1)}`);
+  if(x.recent!=null) nums.push(`直近3走${x.recent.toFixed(1)}`);
+  if(x.cond?.avg!=null) nums.push(`${surface}適性${x.cond.avg.toFixed(1)}（${x.cond.count}走）`);
+  if(nums.length) arr.push(`① 評価の内訳は${nums.join('、')}で、総合${Math.max(0,Math.min(100,Math.round((x.score||0)*20)))}点・出走馬中${rank>0?rank+'番手':'上位'}です`);
+  if(x.recent!=null){
+    if(x.recent>=4.0) arr.push(`② 直近3走は${x.recent.toFixed(1)}で大きく崩れておらず、${x.pos||'現在の脚質'}も含めて近況の安定感があります`);
+    else if(x.pos==='逃げ・先行'||x.pos==='先行・好位') arr.push(`② 直近3走は${x.recent.toFixed(1)}と目立ちませんが、${x.pos}で運べるため好位を取って粘り込む形を狙える点を評価しています`);
+    else if(x.pos==='差し・追込') arr.push(`② 直近3走は${x.recent.toFixed(1)}と目立ちませんが、差し・追込型なので前が流れたときに末脚を生かせる点を残しています`);
+    else arr.push(`② 直近3走は${x.recent.toFixed(1)}で突出しませんが、${x.pos||'脚質情報'}も含めて今回のメンバーで比較しています`);
+  }
+  if(x.uniqueHighCondition) arr.push(`③ 今回の${label}で高適性と出ているのがこの馬だけで、近走や総合点だけなら買いづらくても条件適性を理由に穴候補として特別に評価しています`);
+  else if(x.cond?.avg>=4.0) {
+    const trust=x.cond.count>=3?'3走以上':x.cond.count===2?'2走':'1走';
+    arr.push(`③ ${label}の適性は${x.cond.avg.toFixed(1)}で、${trust}の実績を根拠に今回条件への適性を評価しています`);
+  }
+  const out=[]; for(const r of arr) if(!out.includes(r)) out.push(r);
+  return out.slice(0,3);
+}
+function aiIsNotSelectedQuestion(q){
+  return /選ばれなかった|選ばれてない|選ばれなかったの|選ばない|選んでない|印.*(入ら|つか|ない)|消し|買わない|外した|外れて/.test(q);
+}
+function aiQuestionReasons(x,venue,race,all,mode){
+  const surface=aiSurface(race)||'今回条件', dist=aiDistance(race);
+  const label=`${venue.name}${surface}${dist?dist+'m':''}`;
+  const ranked=all.filter(y=>y.known).sort((a,b)=>(b.score||0)-(a.score||0));
+  const rank=ranked.findIndex(y=>y.num===x.num)+1;
+  const high=all.filter(y=>y.known&&y.cond?.avg!==null&&y.cond?.avg!==undefined&&y.cond.avg>=4.0);
+  const initialTop=ranked.slice(0,5);
+  const arr=[];
+  const nums=[];
+  if(x.overallAvg!=null) nums.push(`全体評価${x.overallAvg.toFixed(1)}`);
+  if(x.recent!=null) nums.push(`直近3走${x.recent.toFixed(1)}`);
+  if(x.cond?.avg!=null) nums.push(`${surface}適性${x.cond.avg.toFixed(1)}（${x.cond.count}走）`);
+  const score=Math.max(0,Math.min(100,Math.round((x.score||0)*20)));
+  if(mode==='not-selected'){
+    if(nums.length) arr.push(`① 評価の内訳は${nums.join('、')}で、総合${score}点・出走馬中${rank>0?rank+'番手':'下位'}です。初回予想の印は上位5頭までなので、この馬はそのボーダーより下でした`);
+    // 選ばれなかった理由は「何が足りなかったか」を具体化する。単なる総合評価では終わらせない。
+    const topCut=initialTop[4];
+    const gaps=[];
+    if(x.recent!=null && topCut?.recent!=null && x.recent < topCut.recent-0.3) gaps.push(`直近3走は${x.recent.toFixed(1)}で、印のボーダー付近の${topCut.recent.toFixed(1)}より低い`);
+    if(x.overallAvg!=null && topCut?.overallAvg!=null && x.overallAvg < topCut.overallAvg-0.3) gaps.push(`全体評価も${x.overallAvg.toFixed(1)}で、ボーダー付近の馬より評価が下`);
+    if(x.cond?.avg!=null && topCut?.cond?.avg!=null && x.cond.avg < topCut.cond.avg-0.3) gaps.push(`今回条件の適性も${x.cond.avg.toFixed(1)}で、印に入った馬より見劣る`);
+    if(gaps.length) arr.push(`② ${gaps.slice(0,2).join('。')}ため、総合点だけでなく直近内容・今回条件適性の比較で印の外になりました`);
+    else if(x.pos==='逃げ・先行'||x.pos==='先行・好位') arr.push(`② ${x.pos}で運べる点はプラスですが、今回の印候補と比べると近走評価または今回条件の適性で決め手に欠けました`);
+    else if(x.pos==='差し・追込') arr.push(`② ${x.pos}で末脚を生かす余地はありますが、今回の印候補と比べて近走または条件面での上積み材料が弱く、印を回しませんでした`);
+    else arr.push(`② 脚質面だけでは評価を押し上げる材料が十分ではなく、今回の印候補と比べて明確な上積み材料を作れませんでした`);
+    // 唯一の高適性は「選ばなかった理由」より優先して特筆。これは穴候補として残すべき例外。
+    if(x.uniqueHighCondition){
+      arr.push(`③ ${label}で3走以上の実績から高適性と出ているのがこの馬だけなので、総合点では印の外でも、この条件適性は特筆材料です。人気が低ければ穴候補として押さえる余地があります`);
+    } else if(x.cond?.avg>=4.0){
+      const trust=x.cond.count>=3?'3走以上の実績':x.cond.count===2?'2走の実績':'1走のみの実績';
+      arr.push(`③ ${label}の適性は${x.cond.avg.toFixed(1)}で${trust}があります。ただし実績数が少ないほど信頼度は下げて見ています`);
+    }
+  }else{
+    if(nums.length) arr.push(`① 評価の内訳は${nums.join('、')}で、総合${score}点・出走馬中${rank>0?rank+'番手':'上位'}です`);
+    const content=[];
+    if(x.recent!=null){
+      if(x.recent>=4.0) content.push(`直近3走は${x.recent.toFixed(1)}と安定しており、近走内容が大きく崩れていません`);
+      else if(x.pos==='逃げ・先行'||x.pos==='先行・好位') content.push(`直近3走は${x.recent.toFixed(1)}と目立ちませんが、${x.pos}で運べるため好位を取って粘り込む形を狙える点を評価しています`);
+      else if(x.pos==='差し・追込') content.push(`直近3走は${x.recent.toFixed(1)}と目立ちませんが、${x.pos}なので前が流れたときに末脚を生かせる点を評価しています`);
+      else content.push(`直近3走は${x.recent.toFixed(1)}で突出しませんが、${x.pos||'脚質情報'}も含めて評価しています`);
+    }
+    if(content.length) arr.push(`② ${content[0]}`);
+    if(x.uniqueHighCondition){
+      arr.push(`③ 今回の${label}で3走以上の実績から高適性と出ているのがこの馬だけで、他馬にはない条件適性を特別に評価しています`);
+    }else if(x.cond?.avg>=4.0){
+      const trust=x.cond.count>=3?'3走以上の実績があり信頼度も高め':x.cond.count===2?'2走の実績があり一定の裏付け': '1走のみなので慎重に見ます';
+      arr.push(`③ ${label}の適性は${x.cond.avg.toFixed(1)}で、${trust}、今回条件への適性を評価しています`);
+    }
+  }
+  const out=[]; for(const r of arr) if(r && !out.includes(r)) out.push(r);
+  while(out.length<2){ out.push(`② 今回の出走馬との比較で、${x.pos||'脚質'}や条件適性を含めて評価しています`); }
+  return out.slice(0,3);
+}
+function askAIPredictor(dayId,venueName,rNum){
+  const q=(document.getElementById('aiPredictQuestion')?.value||'').trim();
+  const day=raceDays.find(d=>d.id===dayId), venue=day?.venues?.find(v=>v.name===venueName), race=venue?.races?.find(r=>r.r===rNum);
+  if(!q||!day||!venue||!race)return;
+  const all=aiBuildRaceData(day,venue,race);
+  // 初回予想の順位を固定。質問ごとに新しい印を作らない。
+  const ranked=all.filter(x=>x.known).sort((a,b)=>(b.score||0)-(a.score||0));
+  const initialTop=ranked.slice(0,5);
+  let ans='';
+  const nameHit=all.find(x=>x.known && q.includes(x.name));
+  const notSelected=aiIsNotSelectedQuestion(q);
+  if(nameHit && notSelected){
+    const isSelected=initialTop.some(x=>x.num===nameHit.num);
+    const reasons=aiQuestionReasons(nameHit,venue,race,all,'not-selected');
+    if(isSelected){
+      ans=`<h4>🔎 ${nameHit.num}番 ${aiEsc(nameHit.name)}について</h4><div>この馬は初回予想では印に入っています。選ばれなかった理由ではなく、「なぜこの馬を選んだ？」と聞いてもらえれば採用理由を説明します。</div>`;
+    }else{
+      ans=`<h4>🔎 ${nameHit.num}番 ${aiEsc(nameHit.name)}を選ばなかった理由</h4><div><b>初回予想では印を付けていない馬です。</b></div><div>${reasons.map(r=>`<div style="margin:8px 0">${aiEsc(r)}</div>`).join('')}</div><div class="ai-predict-note">なお、今回条件で特筆できる材料がある場合は、「選ばなかった理由」と「それでも穴・紐候補として残す理由」を分けて説明しています。</div>`;
+    }
+  }else if(nameHit && /なぜ|なんで|理由|根拠|詳しく|選ん/.test(q)){
+    const isSelected=initialTop.some(x=>x.num===nameHit.num);
+    const mode=isSelected?'selected':'not-selected';
+    const reasons=aiQuestionReasons(nameHit,venue,race,all,mode);
+    ans=isSelected
+      ? `<h4>🔎 ${nameHit.num}番 ${aiEsc(nameHit.name)}を選んだ理由</h4><div>${reasons.map(r=>`<div style="margin:8px 0">${aiEsc(r)}</div>`).join('')}</div>`
+      : `<h4>🔎 ${nameHit.num}番 ${aiEsc(nameHit.name)}を選ばなかった理由</h4><div><b>初回予想では印を付けていない馬です。</b></div><div>${reasons.map(r=>`<div style="margin:8px 0">${aiEsc(r)}</div>`).join('')}</div>`;
+  }else if(/本命|◎/.test(q) && !nameHit){
+    const c=initialTop[0];
+    ans=`<h4>◎ 初回予想の本命</h4><div>${c?`${c.num}番 ${aiEsc(c.name)}です。質問のたびに新しく本命を選び直すのではなく、最初の予想で付けた◎をそのまま基準にしています。`: '初回予想を取得できません。'}</div>`;
+  }else if(/対抗|○/.test(q) && !nameHit){
+    const c=initialTop[1]; ans=`<h4>○ 初回予想の対抗</h4><div>${c?`${c.num}番 ${aiEsc(c.name)}です。`: '初回予想を取得できません。'}</div>`;
+  }else if(/単穴|▲/.test(q) && !nameHit){
+    const c=initialTop[2]; ans=`<h4>▲ 初回予想の単穴</h4><div>${c?`${c.num}番 ${aiEsc(c.name)}です。`: '初回予想を取得できません。'}</div>`;
+  }else if(/適性|競馬場|芝|ダート|コース/.test(q)){
+    const surface=aiSurface(race); ans=`<h4>🏇 初回予想で重視した今回条件の適性</h4>${initialTop.map(x=>`<div style="margin:7px 0"><b>${x.num}番 ${aiEsc(x.name)}</b>：${x.cond?.avg!==null?`${aiEsc(venue.name)}・${aiEsc(surface||'今回条件')}・${aiEsc(aiDistance(race))}mの適性${x.cond.avg.toFixed(1)}（${x.cond.count}走）。`: '今回条件に一致する適性データが不足。'}</div>`).join('')}`;
+  }else if(/展開|位置|逃げ|先行|差し|追込|枠/.test(q)){
+    const leaders=all.filter(x=>x.known&&(x.pos==='逃げ・先行'||x.pos==='先行・好位')); const chasers=all.filter(x=>x.known&&x.pos==='差し・追込');
+    ans=`<h4>🧭 展開・位置取り</h4><div>前に行きそう：${leaders.map(x=>`${x.num}番${x.name}`).join('、')||'情報不足'}<br>差し・追込候補：${chasers.map(x=>`${x.num}番${x.name}`).join('、')||'情報不足'}</div><div class="ai-predict-note">展開の見立ては初回予想の補足情報で、印を付け直すものではありません。</div>`;
+  }else{
+    ans=`<h4>🔎 初回予想について詳しく聞けます</h4><div>「○○をなぜ選んだ？」「○○の根拠を詳しく」「○○をなぜ選ばなかった？」「◎と○の違いは？」のように聞いてください。初回予想の印を基準に説明します。</div>`;
+  }
+  const body=document.getElementById('aiPredictBody');
+  body.insertAdjacentHTML('beforeend',`<div class="ai-chat-user" style="margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--border);color:var(--muted)">あなた：${aiEsc(q)}</div>${ans}`);
+  document.getElementById('aiPredictQuestion').value='';
+  scrollAIChat();
+}
+</script>
+
 </body>
 </html>
