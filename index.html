@@ -178648,13 +178648,13 @@ function aiSurface(race){ return aiExtractSurface(race?.track||''); }
 function aiDistance(race){ return aiExtractDistance(race?.track||''); }
 let aiPredictStyle='custom';
 let aiSurfaceFilterEnabled=false;
-let aiCustomWeights={overall:3,venue:3,distance:3,condition:3};
+let aiCustomWeights={overall:3,venue:3,distance:3,condition:3,form:3};
 let aiConditionMode='good';
 let aiPredictionContext=null;
 function aiGetWeights(){
   const v=aiCustomWeights;
-  const sum=Math.max(1,Number(v.overall||0)+Number(v.venue||0)+Number(v.distance||0)+Number(v.condition||0));
-  return {overall:Number(v.overall||0)/sum,venue:Number(v.venue||0)/sum,distance:Number(v.distance||0)/sum,condition:Number(v.condition||0)/sum};
+  const sum=Math.max(1,Number(v.overall||0)+Number(v.venue||0)+Number(v.distance||0)+Number(v.condition||0)+Number(v.form||0));
+  return {overall:Number(v.overall||0)/sum,venue:Number(v.venue||0)/sum,distance:Number(v.distance||0)/sum,condition:Number(v.condition||0)/sum,form:Number(v.form||0)/sum};
 }
 function aiStyleLabel(){ return 'カスタム'; }
 function setAIPredictStyle(style){
@@ -178696,7 +178696,8 @@ function aiWeightPanel(){
     ['overall','総合評価','過去のS〜D評価を数値化した全体的な能力'],
     ['venue','競馬場適性','今回の競馬場＋芝/ダートでの実績'],
     ['distance','距離適性','今回の距離＋芝/ダートでの実績'],
-    ['condition','馬場適性','今回と同じ芝/ダートで、選択した馬場状態の実績']
+    ['condition','馬場適性','今回と同じ芝/ダートで、選択した馬場状態の実績'],
+    ['form','直近の調子','出馬表下の「直近の調子スコアランキング」と同じ直近3走平均スコア']
   ];
   const stars=v=>'★'.repeat(Number(v)||0)+'☆'.repeat(6-(Number(v)||0));
   const surface=aiPredictionContext ? aiSurface(aiPredictionContext[2]) : '';
@@ -178720,7 +178721,7 @@ function aiWeightPanel(){
       <button type="button" class="ai-style-btn ${aiSurfaceFilterEnabled?'active':''}" onclick="aiSetSurfaceFilter(${!aiSurfaceFilterEnabled})">${aiSurfaceFilterEnabled?'ON':'OFF'}</button>
     </div>
   </div>`;
-  return `<div class="ai-style-panel"><div class="ai-style-tabs"><button class="ai-style-btn active">⚙ カスタム予想</button></div><div class="ai-weight-help"><b>重視度を0〜6で設定</b><br><span>0＝完全に無視　3＝標準　6＝最重要。数字は馬の点数ではなく、その要素を予想順位にどれだけ効かせるかを表します。</span></div><div class="ai-weight-grid">${rows.map(([k,l,d])=>`<label title="${d}"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${l}</span><b id="aiW_${k}_v" style="min-width:72px;text-align:right">${stars(aiCustomWeights[k])}</b></div><input type="range" min="0" max="6" step="1" value="${aiCustomWeights[k]}" oninput="aiSetCustomWeight('${k}',this.value)"><small style="display:block;color:var(--muted);font-size:10px;margin-top:2px">${d}</small></label>`).join('')}</div>${conditionPicker}${surfaceFilter}<div class="ai-style-note">現在：<b>カスタム予想</b> ／ 総合評価・競馬場適性・距離適性・馬場適性の4項目で予想します。${aiSurfaceFilterEnabled?` ${opposite}の過去レースはスコア計算から除外中です。`:''}</div></div>`;
+  return `<div class="ai-style-panel"><div class="ai-style-tabs"><button class="ai-style-btn active">⚙ カスタム予想</button></div><div class="ai-weight-help"><b>重視度を0〜6で設定</b><br><span>0＝完全に無視　3＝標準　6＝最重要。数字は馬の点数ではなく、その要素を予想順位にどれだけ効かせるかを表します。</span></div><div class="ai-weight-grid">${rows.map(([k,l,d])=>`<label title="${d}"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${l}</span><b id="aiW_${k}_v" style="min-width:72px;text-align:right">${stars(aiCustomWeights[k])}</b></div><input type="range" min="0" max="6" step="1" value="${aiCustomWeights[k]}" oninput="aiSetCustomWeight('${k}',this.value)"><small style="display:block;color:var(--muted);font-size:10px;margin-top:2px">${d}</small></label>`).join('')}</div>${conditionPicker}${surfaceFilter}<div class="ai-style-note">現在：<b>カスタム予想</b> ／ 総合評価・競馬場適性・距離適性・馬場適性・直近の調子の5項目で予想します。${aiSurfaceFilterEnabled?` ${opposite}の過去レースはスコア計算から除外中です。`:''}</div></div>`;
 }
 function aiBuildRaceData(day,venue,race){
   const rows=[];
@@ -178736,13 +178737,17 @@ function aiBuildRaceData(day,venue,race){
     const venueStats=aiTrackStats(h,venue.name,'',surface);
     const distanceStats=aiTrackStats(h,'',dist,surface);
     const conditionStats=aiConditionStats(h,'','',surface,aiConditionMode);
+    // 直近の調子は出馬表下の「直近の調子スコアランキング」と同じ計算（直近3走のaptAvg）を使用。
+    const formRaces=(h.races||[]).slice(0,3);
+    const formAvg=aptAvg(formRaces);
+    const formCount=formRaces.filter(r=>aptScore(r.eval)!==null).length;
     // 同条件（競馬場×芝/ダート×距離）は根拠文用。予想の競馬場適性とは別物。
     const cond=aiTrackStats(h,venue.name,dist,surface);
     let score=0, weightSum=0;
-    const parts=[['overall',overallAvg,w.overall],['venue',venueStats.avg,w.venue],['distance',distanceStats.avg,w.distance],['condition',conditionStats.avg,w.condition]];
+    const parts=[['overall',overallAvg,w.overall],['venue',venueStats.avg,w.venue],['distance',distanceStats.avg,w.distance],['condition',conditionStats.avg,w.condition],['form',formAvg,w.form]];
     for(const [,v,ww] of parts){ if(v!==null&&v!==undefined&&ww>0){ score+=v*ww; weightSum+=ww; } }
     score=weightSum>0 ? score/weightSum : null;
-    rows.push({name:h.name,num:rh.num,frame:rh.frame||0,known:true,score,overallAvg,cond,venueStats,distanceStats,conditionStats,comments:scoringRaces.slice(0,5).map(r=>r.comment).filter(Boolean),shortNote:h.shortNote||'',races:scoringRaces,allRaces:(h.races||[]),surface});
+    rows.push({name:h.name,num:rh.num,frame:rh.frame||0,known:true,score,overallAvg,formAvg,formCount,cond,venueStats,distanceStats,conditionStats,comments:scoringRaces.slice(0,5).map(r=>r.comment).filter(Boolean),shortNote:h.shortNote||'',races:scoringRaces,allRaces:(h.races||[]),surface});
   }
 
   // 高適性はランキングと完全統一：3走以上・平均3.0以上。
@@ -178792,8 +178797,8 @@ function aiFeatureSentences(c,venue,race,all){
   const condLabel=aiConditionMode==='good'?'良馬場':aiConditionMode==='yielding'?'稍重':'重・不良';
   const enabled=Object.entries(aiCustomWeights).filter(([,v])=>Number(v)>0).map(([k])=>k);
   const others=all.filter(x=>x.known&&x.num!==c.num);
-  const val=(obj,key)=> key==='overall'?obj.overallAvg:key==='venue'?obj.venueStats?.avg:key==='distance'?obj.distanceStats?.avg:key==='condition'?obj.conditionStats?.avg:null;
-  const labelMap={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性'};
+  const val=(obj,key)=> key==='overall'?obj.overallAvg:key==='venue'?obj.venueStats?.avg:key==='distance'?obj.distanceStats?.avg:key==='condition'?obj.conditionStats?.avg:key==='form'?obj.formAvg:null;
+  const labelMap={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性',form:'直近の調子'};
 
   // 「なぜこの馬を推奨するのか」を、今回の予想で有効な項目について他馬と比較して明示する。
   const comparisons=[];
@@ -178882,12 +178887,13 @@ function aiScoreLabels(c){
   add('競馬場適性',c.venueStats?.avg,c.venueStats?.count);
   add('距離適性',c.distanceStats?.avg,c.distanceStats?.count);
   add('馬場適性',c.conditionStats?.avg,c.conditionStats?.count);
+  add('直近の調子',c.formAvg,c.formCount);
   return parts;
 }
 function aiExplainRow(c,venue,race,all,mark){
   const weightKeys=Object.entries(aiCustomWeights).filter(([,v])=>Number(v)>0).map(([k])=>k);
-  const labels={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性'};
-  const scoreMap={overall:c.overallAvg,venue:c.venueStats?.avg,distance:c.distanceStats?.avg,condition:c.conditionStats?.avg};
+  const labels={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性',form:'直近の調子'};
+  const scoreMap={overall:c.overallAvg,venue:c.venueStats?.avg,distance:c.distanceStats?.avg,condition:c.conditionStats?.avg,form:c.formAvg};
   const scores=weightKeys.filter(k=>scoreMap[k]!==null&&scoreMap[k]!==undefined).map(k=>`${labels[k]} ${scoreMap[k].toFixed(1)}`).join(' ／ ');
   const features=aiFeatureSentences(c,venue,race,all);
   const title='カスタム評価';
@@ -178916,7 +178922,7 @@ function aiMakePrediction(day,venue,race){
     top.forEach((c,i)=>{ out+=aiExplainRow(c,venue,race,known,marks[i]); });
   } else out+='<div class="ai-predict-note">このレースの出走馬と全頭診断の紐付けデータが不足しています。</div>';
   out+=`<h4>🧭 展開イメージ</h4><div>${aiEsc(flow)}</div>`;
-  out+=`<div class="ai-predict-note">予想スコアはカスタムの重みで算出しています。競馬場・距離・馬場の各適性は、重視している項目について3走以上かつ3.0以上なら強く評価し、さらに唯一なら追加ボーナスを加えています。馬場適性は選択した馬場状態（良・稍重・重不良）の実績を別に評価します。カスタムで重み0にした項目は完全に無視します。</div></div>`;
+  out+=`<div class="ai-predict-note">予想スコアはカスタムの重みで算出しています。直近の調子は出馬表下の「直近の調子スコアランキング」と同じ直近3走平均スコアを使用します。競馬場・距離・馬場の各適性は、重視している項目について3走以上かつ3.0以上なら強く評価し、さらに唯一なら追加ボーナスを加えています。馬場適性は選択した馬場状態（良・稍重・重不良）の実績を別に評価します。カスタムで重み0にした項目は完全に無視します。</div></div>`;
   return out;
 }
 let aiPredictionState = null;
