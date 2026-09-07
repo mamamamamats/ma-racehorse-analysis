@@ -1622,7 +1622,7 @@ textarea.search-input { line-height: 1.7; }
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBx-2zCZdjcZ549aT1_Sh2pXCVLbfFdPVI",
@@ -1644,7 +1644,7 @@ textarea.search-input { line-height: 1.7; }
     sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink,
     signOut, onAuthStateChanged,
     doc, setDoc, getDoc, collection, query, orderBy, limit,
-    startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch
+    startAfter, getDocs, deleteDoc, serverTimestamp, writeBatch, runTransaction
   };
 
   // メールリンクからのサインイン処理
@@ -175663,10 +175663,17 @@ async function moveHorseRaceEntry(index, direction) {
   if (!h || !h.races) return;
   const newIndex = index + direction;
   if (newIndex < 0 || newIndex >= h.races.length) return;
-  const tmp = h.races[index];
-  h.races[index] = h.races[newIndex];
-  h.races[newIndex] = tmp;
-  await saveHorse(h);
+  const original = {...h.races[index]};
+  const target = {...h.races[newIndex]};
+  const result = await saveHorseRaceChange(h.name, { type:'move', original, target });
+  if (!result.ok) {
+    alert(result.code === 'race-conflict'
+      ? '他の端末で近走情報が更新されています。最新データを読み直してから、もう一度操作してください。'
+      : `保存に失敗しました。\n${result.message}`);
+    if (result.code === 'race-conflict') await lazyRefreshHorse(h.name);
+    return;
+  }
+  applySavedHorseToCurrentState(result.horse);
   invalidateHorseCache();
   renderHorseDetail();
 }
@@ -175686,10 +175693,99 @@ function toggleResultEditForm(btn) {
   }
 }
 
+// ============================================================
+// 近走情報の競合防止保存
+//
+// 古い端末が持っている horse オブジェクト全体を setDoc すると、
+// 別端末で追加された最新の近走まで巻き戻してしまう可能性がある。
+// 近走の編集・削除・追加・並び替えは、Firestore の最新データを
+// transaction 内で取得してから「その操作だけ」を適用する。
+// ============================================================
+function raceFingerprint(r) {
+  if (!r) return '';
+  return JSON.stringify([r.name || '', r.track || '', r.eval || '', r.comment || '']);
+}
+
+async function saveHorseRaceChange(horseName, change) {
+  try {
+    if (!(await waitForFirebase())) {
+      return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
+    }
+    const { doc, runTransaction } = window._fbFns;
+    const ref = doc(window._fbDb, 'horses', horseName);
+    let finalHorse = null;
+
+    await runTransaction(window._fbDb, async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists()) throw new Error('horse-not-found');
+
+      const latest = snap.data() || {};
+      const races = Array.isArray(latest.races) ? latest.races.map(r => ({...r})) : [];
+      let changed = false;
+
+      if (change.type === 'update') {
+        const idx = races.findIndex(r => raceFingerprint(r) === raceFingerprint(change.original));
+        if (idx < 0) throw new Error('race-conflict');
+        races[idx] = {...change.updated};
+        changed = true;
+      } else if (change.type === 'delete') {
+        const idx = races.findIndex(r => raceFingerprint(r) === raceFingerprint(change.original));
+        if (idx < 0) throw new Error('race-conflict');
+        races.splice(idx, 1);
+        changed = true;
+      } else if (change.type === 'add') {
+        const exists = races.some(r => raceFingerprint(r) === raceFingerprint(change.race));
+        if (!exists) {
+          races.unshift({...change.race});
+          changed = true;
+        }
+      } else if (change.type === 'move') {
+        const from = races.findIndex(r => raceFingerprint(r) === raceFingerprint(change.original));
+        const to = races.findIndex(r => raceFingerprint(r) === raceFingerprint(change.target));
+        if (from < 0 || to < 0 || from === to) throw new Error('race-conflict');
+        const tmp = races[from];
+        races[from] = races[to];
+        races[to] = tmp;
+        changed = true;
+      }
+
+      if (!changed) {
+        finalHorse = latest;
+        return;
+      }
+
+      const merged = {...latest, races};
+      tx.set(ref, merged);
+      finalHorse = merged;
+    });
+
+    if (!finalHorse) return { ok:false, code:'unknown', message:'保存結果を取得できませんでした' };
+    if (typeof bumpSyncVersion === 'function') bumpSyncVersion();
+    await idbPut('horses', finalHorse);
+    return { ok:true, horse:finalHorse };
+  } catch(e) {
+    const code = e && e.message === 'race-conflict' ? 'race-conflict' : (e.code || e.message || '');
+    const message = e && e.message === 'race-conflict'
+      ? '他の端末で近走情報が更新されています。最新データを読み直してから保存してください。'
+      : (e.message || String(e));
+    console.warn('[keiba] 近走情報の競合を検出/保存失敗:', code, message);
+    return { ok:false, code, message };
+  }
+}
+
+function applySavedHorseToCurrentState(horse) {
+  if (!horse || !horse.name) return;
+  const idx = horses.findIndex(x => x.name === horse.name);
+  if (idx >= 0) horses[idx] = horse;
+  else horses.push(horse);
+  if (selectedHorse && selectedHorse.name === horse.name) selectedHorse = horse;
+}
+
 // 近走評価カードのインライン編集を保存する
 async function saveResultEditForm(saveBtn, index) {
   const h = selectedHorse;
   if (!h || !h.races || !h.races[index]) return;
+  const original = {...h.races[index]};
   const form = saveBtn.closest('.result-edit-form');
   const msgEl = form.querySelector('.re-msg');
   const name    = form.querySelector('.re-name').value.trim();
@@ -175697,10 +175793,19 @@ async function saveResultEditForm(saveBtn, index) {
   const track   = form.querySelector('.re-track').value.trim();
   const evalVal = form.querySelector('.re-eval').value;
   const comment = form.querySelector('.re-comment').value.trim();
+  const updated = { name, track, eval: evalVal, comment };
   addCommentHistory(comment);
-  h.races[index] = { name, track, eval: evalVal, comment };
-  msgEl.style.color='var(--accent2)'; msgEl.textContent='保存中…';
-  await saveHorse(h);
+  msgEl.style.color='var(--accent2)'; msgEl.textContent='最新データを確認して保存中…';
+
+  const result = await saveHorseRaceChange(h.name, { type:'update', original, updated });
+  if (!result.ok) {
+    msgEl.style.color='var(--red)';
+    msgEl.textContent = result.code === 'race-conflict' ? '⚠ 他の端末で更新済みです。画面を再読み込みしてください' : `⚠ 保存失敗: ${result.message}`;
+    if (result.code === 'race-conflict') await lazyRefreshHorse(h.name);
+    return;
+  }
+
+  applySavedHorseToCurrentState(result.horse);
   invalidateHorseCache();
   renderHorseDetail();
 }
@@ -175709,10 +175814,19 @@ async function saveResultEditForm(saveBtn, index) {
 async function deleteHorseRaceEntry(index) {
   const h = selectedHorse;
   if (!h || !h.races || !h.races[index]) return;
-  const r = h.races[index];
-  if (!window.confirm(`「${r.name}」の評価を削除しますか？`)) return;
-  h.races.splice(index, 1);
-  await saveHorse(h);
+  const original = {...h.races[index]};
+  if (!window.confirm(`「${original.name}」の評価を削除しますか？`)) return;
+
+  const result = await saveHorseRaceChange(h.name, { type:'delete', original });
+  if (!result.ok) {
+    alert(result.code === 'race-conflict'
+      ? '他の端末でこの近走情報が更新されています。最新データを読み直してから、もう一度操作してください。'
+      : `保存に失敗しました。\n${result.message}`);
+    if (result.code === 'race-conflict') await lazyRefreshHorse(h.name);
+    return;
+  }
+
+  applySavedHorseToCurrentState(result.horse);
   invalidateHorseCache();
   renderHorseDetail();
 }
@@ -178512,10 +178626,15 @@ async function saveRhcInlineRace(btn) {
   const evalVal = form.querySelector('.rhc-add-eval').value;
   const comment = form.querySelector('.rhc-add-comment').value.trim();
   addCommentHistory(comment);
-  h.races = h.races || [];
-  h.races.unshift({ name: raceName, track, eval: evalVal, comment }); // 最新走を先頭に追加
-
-  await saveHorse(h);
+  const newRace = { name: raceName, track, eval: evalVal, comment };
+  const result = await saveHorseRaceChange(name, { type:'add', race:newRace });
+  if (!result.ok) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = result.code === 'race-conflict' ? '⚠ 最新データと競合しました。画面を再読み込みしてください' : `⚠ 保存失敗: ${result.message}`;
+    if (result.code === 'race-conflict') await lazyRefreshHorse(name);
+    return;
+  }
+  applySavedHorseToCurrentState(result.horse);
   invalidateHorseCache();
   updateHomeStats();
   showToast(`✓「${name}」に近走を追加しました`);
