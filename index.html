@@ -173788,21 +173788,46 @@ function updateSyncProgressBanner(text) {
 // その対象1件だけFirestoreに確認しに行く。重くないので毎回呼んでも問題ない。
 
 async function lazyRefreshHorse(name) {
-  if (!isEditMode) return; // 一般ユーザーはFirestoreにアクセスしない
+  if (!isEditMode) return; // 現行仕様：Firestoreの個別確認は編集モードで行う
   try {
     if (!(await waitForFirebase(3000))) return;
     const { doc, getDoc } = window._fbFns;
     const snap = await getDoc(doc(window._fbDb, 'horses', name));
+
+    // Firestoreに削除済みフラグが立っている場合は、ローカルキャッシュを
+    // そのまま残さず削除済みとして扱う。削除済みページを開いている間は
+    // 「削除済み」と表示し、ページを離れた時点で通常一覧には戻さない。
+    if (snap.exists() && snap.data()?.deleted === true) {
+      const freshDeleted = { ...(snap.data() || {}), name, deleted:true };
+      addDeletedHorseName(name);
+      try { await idbDelete('horses', name); } catch(e) {}
+      const idx = horses.findIndex(h => h.name === name);
+      if (idx >= 0) horses.splice(idx, 1);
+      invalidateHorseCache();
+
+      if (selectedHorse && selectedHorse.name === name) {
+        // ページを離れるまで削除済み状態を表示するため、一時的にselectedHorseへ保持
+        selectedHorse = freshDeleted;
+        renderHorseDetail();
+      }
+      renderHorseList();
+      return;
+    }
+
+    // Firestore上に現役データがあれば、従来どおり最新情報を取得して
+    // IndexedDBキャッシュも更新する。削除済みフラグは解除される。
     if (!snap.exists()) return;
-    const fresh = snap.data();
+    const fresh = { ...(snap.data() || {}), name, deleted:false, deletedAt:null };
+    removeDeletedHorseName(name);
     const idx = horses.findIndex(h => h.name === name);
     if (idx >= 0) horses[idx] = fresh; else horses.push(fresh);
     await idbPut('horses', fresh);
-    // 今まさにこの馬のページを見ている場合だけ再描画（他のページに移動済みなら何もしない）
+    invalidateHorseCache();
     if (selectedHorse && selectedHorse.name === name) {
       selectedHorse = fresh;
       renderHorseDetail();
     }
+    renderHorseList();
   } catch(e) { console.log('[keiba] 馬データの個別更新をスキップ:', e.code || e.message); }
 }
 
@@ -175476,6 +175501,26 @@ function renderHorseDetail() {
   const el = document.getElementById('horseDetailEl');
   const h = selectedHorse;
   if (!h) { showHorseRowGrid(); return; }
+
+  // Firestoreで削除済みと判定されたページは、キャッシュに残っていた
+  // 古い詳細情報を見せず、削除済みであることを明示する。
+  if (h.deleted === true) {
+    el.innerHTML = `
+      <div class="horse-detail-header">
+        <div class="horse-detail-title">
+          <button onclick="returnFromHorse()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 8px 0 0;line-height:1" title="戻る">←</button>
+          <h2>${escHtml(h.name)}</h2>
+        </div>
+      </div>
+      <div style="margin-top:24px;padding:24px;border:1px solid var(--border);border-radius:12px;text-align:center">
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">🗑 この馬は削除されています</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7">
+          Firestoreの最新情報で削除済みであることを確認しました。<br>
+          このページを離れると、馬一覧・検索結果には表示されません。
+        </div>
+      </div>`;
+    return;
+  }
 
   const memoKey = `horse-${h.name}`;
   const memo = memos[memoKey] || '';
