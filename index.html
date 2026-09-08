@@ -173546,7 +173546,10 @@ async function fbSaveHorse(horse) {
   try {
     if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
     const { doc, setDoc } = window._fbFns;
-    await setDoc(doc(window._fbDb, 'horses', horse.name), horse);
+    // 保存時は必ず「現役」に戻す。削除済みの同名馬を新規登録した場合も、
+    // 旧データを復活させるのではなく、フォームから作った新しいデータとして扱う。
+    const data = { ...horse, deleted:false, deletedAt:null };
+    await setDoc(doc(window._fbDb, 'horses', horse.name), data);
     bumpSyncVersion();
     return { ok:true };
   } catch(e) {
@@ -173558,8 +173561,13 @@ async function fbSaveHorse(horse) {
 async function fbDeleteHorse(name) {
   try {
     if (!(await waitForFirebase())) return { ok:false, code:'unavailable', message:'Firebaseに接続できませんでした' };
-    const { doc, deleteDoc } = window._fbFns;
-    await deleteDoc(doc(window._fbDb, 'horses', name));
+    const { doc, getDoc, setDoc } = window._fbFns;
+    const ref = doc(window._fbDb, 'horses', name);
+    const snap = await getDoc(ref);
+    // 完全削除ではなく削除フラグを残す。別端末に古いIndexedDBが残っていても、
+    // 次回同期時に「削除済み」と判定できるようにする。
+    const current = snap.exists() ? (snap.data() || {}) : { name };
+    await setDoc(ref, { ...current, name, deleted:true, deletedAt:new Date().toISOString() });
     bumpSyncVersion();
     return { ok:true };
   } catch(e) {
@@ -173693,13 +173701,22 @@ async function resumeFirestoreSyncIfNeeded() {
       const snap = await getDocs(q);
       const items = []; snap.forEach(d => items.push(d.data()));
       if (items.length > 0) {
-        await idbPutAll('horses', items);
-        // 今回の完全同期でFirestoreに実在した馬名を記録する。
-        // リロードをまたいでも残し、最後にIDB側の古い馬を一掃する。
+        // 削除済みフラグの馬はIndexedDBへ保存せず、既存のローカルデータも消す。
+        // ただし「Firestoreに存在した馬」としてはseenに記録しないので、旧データが残っていても最後に一掃される。
+        for (const h of items) {
+          if (!h || !h.name) continue;
+          if (h.deleted === true) {
+            try { await idbDelete('horses', h.name); } catch(e) {}
+            addDeletedHorseName(h.name);
+          } else {
+            try { await idbPut('horses', h); } catch(e) {}
+          }
+        }
+        // 今回の完全同期でFirestoreに「現役」として実在した馬名を記録する。
         let seen = [];
         try { seen = JSON.parse(localStorage.getItem(SYNC_SEEN_HORSES_KEY) || '[]'); } catch(e) {}
         const seenSet = new Set(seen);
-        for (const h of items) if (h && h.name) seenSet.add(h.name);
+        for (const h of items) if (h && h.name && h.deleted !== true) seenSet.add(h.name);
         localStorage.setItem(SYNC_SEEN_HORSES_KEY, JSON.stringify([...seenSet]));
       }
       prog.horsesDone += items.length;
@@ -173925,7 +173942,7 @@ async function initApp() {
   if (savedDays.length > 0) {
     raceDays = savedDays;
     const deletedHorseNames = getDeletedHorseNames();
-    horses   = (savedHorses.length > 0 ? savedHorses : [..._INITIAL_HORSES]).filter(h => h && !deletedHorseNames.has(h.name));
+    horses   = (savedHorses.length > 0 ? savedHorses : [..._INITIAL_HORSES]).filter(h => h && h.deleted !== true && !deletedHorseNames.has(h.name));
 
     // _INITIAL_RACE_DAYS の race.horses・track を補完
     for (const initDay of _INITIAL_RACE_DAYS) {
@@ -173949,14 +173966,14 @@ async function initApp() {
 
     // _INITIAL_HORSES の馬を補完
     for (const initHorse of _INITIAL_HORSES) {
-      if (!deletedHorseNames.has(initHorse.name) && !horses.find(h => h.name === initHorse.name)) {
+      if (!deletedHorseNames.has(initHorse.name) && initHorse.deleted !== true && !horses.find(h => h.name === initHorse.name)) {
         horses.push(initHorse);
         await idbPut('horses', initHorse);
       }
     }
   } else {
     raceDays = [..._INITIAL_RACE_DAYS];
-    horses   = [..._INITIAL_HORSES].filter(h => h && !getDeletedHorseNames().has(h.name));
+    horses   = [..._INITIAL_HORSES].filter(h => h && h.deleted !== true && !getDeletedHorseNames().has(h.name));
     for (const day of raceDays) await idbPut('raceDays', day);
     for (const h of horses)    await idbPut('horses', h);
   }
@@ -174221,7 +174238,7 @@ async function fetchGitHubData() {
     // horsesは既存にないものだけ追加、あるものはraces等を上書き
     const deletedHorseNames = getDeletedHorseNames();
     for (const h of payload.horses) {
-      if (!h || deletedHorseNames.has(h.name)) continue;
+      if (!h || h.deleted === true || deletedHorseNames.has(h.name)) continue;
       const existing = existingHorses.find(e => e.name === h.name);
       if (!existing) {
         await idbPut('horses', h);
@@ -178585,11 +178602,13 @@ async function renameHorseEverywhere(oldName, newName) {
       return { ok:false, code:'not-found', message:`Firestoreに「${oldName}」の馬ページが見つかりませんでした` };
     }
     const newSnap = await getDoc(newRef);
-    if (newSnap.exists()) {
+    // 同名の「削除済み」ドキュメントが残っている場合は、旧データを復活させず、
+    // 今回の名前変更元データから新しい馬ページとして作り直せるようにする。
+    if (newSnap.exists() && newSnap.data()?.deleted !== true) {
       return { ok:false, code:'already-exists', message:`「${newName}」という馬ページは既に存在します。別名に変更してください。` };
     }
 
-    const latestHorse = { ...(oldSnap.data() || {}), name:newName };
+    const latestHorse = { ...(oldSnap.data() || {}), name:newName, deleted:false, deletedAt:null };
     await setDoc(newRef, latestHorse);
     await deleteDoc(oldRef);
 
@@ -178636,12 +178655,14 @@ async function deleteHorseEverywhere(horseName) {
   }
 
   try {
-    const { doc, deleteDoc, collection, getDocs, writeBatch } = window._fbFns;
+    const { doc, getDoc, setDoc, collection, getDocs, writeBatch } = window._fbFns;
     const horseRef = doc(window._fbDb, 'horses', horseName);
 
-    // 馬ページ本体を削除。未存在でもdeleteDocは安全に実行できるため、
-    // Firestore側に既に無い場合でもローカルの削除処理まで進める。
-    await deleteDoc(horseRef);
+    // 完全削除ではなくFirestoreに削除済みフラグを残す。
+    // 別端末が古いIndexedDBを持っていても、同期時に削除を検知できる。
+    const horseSnap = await getDoc(horseRef);
+    const current = horseSnap.exists() ? (horseSnap.data() || {}) : { name:horseName };
+    await setDoc(horseRef, { ...current, name:horseName, deleted:true, deletedAt:new Date().toISOString() });
 
     // レース一覧に残っている出走馬情報からも旧馬名を削除する。
     // これを行わないと、レース画面から削除済み馬のページが表示されることがある。
