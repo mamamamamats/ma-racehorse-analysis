@@ -2080,6 +2080,7 @@ textarea.search-input { line-height: 1.7; }
 
           <div style="margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
             <button class="edit-btn-save" onclick="saveEditHorse()">💾 馬ページを保存</button>
+            <button type="button" class="btn-back" onclick="deleteEditHorse()" style="border-color:var(--red);color:var(--red)">🗑 馬ページを削除</button>
             <button type="button" class="btn-back" onclick="resetEditHorseForm()">クリア</button>
             <button type="button" class="btn-back" onclick="showCommentTmplManager()" style="border-color:var(--accent);color:var(--accent2)">💬 テンプレート管理</button>
             <div class="edit-msg" id="editHorseMsg"></div>
@@ -173592,11 +173593,26 @@ async function bumpSyncVersion() {
 // 進捗はlocalStorageに保存するのでリロードをまたいで継続できる。
 
 const SYNC_PROGRESS_KEY = 'keiba-sync-progress';
+const SYNC_SEEN_HORSES_KEY = 'keiba-sync-seen-horses';
+// ユーザーが明示的に削除した馬名。埋め込み初期データ/GitHubデータから再追加されないようにする。
+const DELETED_HORSE_NAMES_KEY = 'keiba-deleted-horse-names';
+function getDeletedHorseNames() {
+  try { return new Set(JSON.parse(localStorage.getItem(DELETED_HORSE_NAMES_KEY) || '[]')); } catch(e) { return new Set(); }
+}
+function addDeletedHorseName(name) {
+  const set = getDeletedHorseNames(); set.add(name);
+  localStorage.setItem(DELETED_HORSE_NAMES_KEY, JSON.stringify([...set]));
+}
+function removeDeletedHorseName(name) {
+  const set = getDeletedHorseNames(); set.delete(name);
+  localStorage.setItem(DELETED_HORSE_NAMES_KEY, JSON.stringify([...set]));
+}
 const SYNC_HORSE_BATCH  = 60; // 1回のリロードで取得する馬の件数（少ないほど安全）
 const SYNC_DAY_BATCH    = 20;
 
 // 同期セッションを開始（「取得する」ボタンを押した時）
 async function startFirestoreSync() {
+  localStorage.removeItem(SYNC_SEEN_HORSES_KEY);
   localStorage.setItem(SYNC_PROGRESS_KEY, JSON.stringify({
     phase: 'days',   // 'days' → 'horses' → 'done'
     lastId: null,    // ページネーション用：前回の最後のID
@@ -173676,9 +173692,30 @@ async function resumeFirestoreSyncIfNeeded() {
       }
       const snap = await getDocs(q);
       const items = []; snap.forEach(d => items.push(d.data()));
-      if (items.length > 0) await idbPutAll('horses', items);
+      if (items.length > 0) {
+        await idbPutAll('horses', items);
+        // 今回の完全同期でFirestoreに実在した馬名を記録する。
+        // リロードをまたいでも残し、最後にIDB側の古い馬を一掃する。
+        let seen = [];
+        try { seen = JSON.parse(localStorage.getItem(SYNC_SEEN_HORSES_KEY) || '[]'); } catch(e) {}
+        const seenSet = new Set(seen);
+        for (const h of items) if (h && h.name) seenSet.add(h.name);
+        localStorage.setItem(SYNC_SEEN_HORSES_KEY, JSON.stringify([...seenSet]));
+      }
       prog.horsesDone += items.length;
       if (snap.size < SYNC_HORSE_BATCH) {
+        // 全頭完了：Firestoreに存在しない古い馬をIndexedDBから削除。
+        // これがないと、Firestoreから削除した馬がローカル検索に復活する。
+        try {
+          const seen = new Set(JSON.parse(localStorage.getItem(SYNC_SEEN_HORSES_KEY) || '[]'));
+          const localHorses = await idbGetAll('horses');
+          for (const h of localHorses) {
+            if (h && h.name && !seen.has(h.name)) {
+              try { await idbDelete('horses', h.name); } catch(e) {}
+            }
+          }
+        } catch(e) { console.warn('[keiba] 同期後の古い馬データ削除失敗:', e.message); }
+        localStorage.removeItem(SYNC_SEEN_HORSES_KEY);
         // 全頭完了
         prog.phase = 'done';
         // バージョン記録を更新して次回はスキップできるように
@@ -173783,6 +173820,10 @@ async function loadAllHorses() {
 // 馬を削除
 async function deleteHorse(name) {
   try { await idbDelete('horses', name); } catch(e) {}
+  try {
+    const seen = JSON.parse(localStorage.getItem(SYNC_SEEN_HORSES_KEY) || '[]');
+    localStorage.setItem(SYNC_SEEN_HORSES_KEY, JSON.stringify(seen.filter(n => n !== name)));
+  } catch(e) {}
   if (isEditMode) await fbDeleteHorse(name); // editモードのみFirestoreからも削除
   const idx = horses.findIndex(h => h.name === name);
   if (idx >= 0) horses.splice(idx, 1);
@@ -173883,7 +173924,8 @@ async function initApp() {
 
   if (savedDays.length > 0) {
     raceDays = savedDays;
-    horses   = savedHorses.length > 0 ? savedHorses : [..._INITIAL_HORSES];
+    const deletedHorseNames = getDeletedHorseNames();
+    horses   = (savedHorses.length > 0 ? savedHorses : [..._INITIAL_HORSES]).filter(h => h && !deletedHorseNames.has(h.name));
 
     // _INITIAL_RACE_DAYS の race.horses・track を補完
     for (const initDay of _INITIAL_RACE_DAYS) {
@@ -173907,14 +173949,14 @@ async function initApp() {
 
     // _INITIAL_HORSES の馬を補完
     for (const initHorse of _INITIAL_HORSES) {
-      if (!horses.find(h => h.name === initHorse.name)) {
+      if (!deletedHorseNames.has(initHorse.name) && !horses.find(h => h.name === initHorse.name)) {
         horses.push(initHorse);
         await idbPut('horses', initHorse);
       }
     }
   } else {
     raceDays = [..._INITIAL_RACE_DAYS];
-    horses   = [..._INITIAL_HORSES];
+    horses   = [..._INITIAL_HORSES].filter(h => h && !getDeletedHorseNames().has(h.name));
     for (const day of raceDays) await idbPut('raceDays', day);
     for (const h of horses)    await idbPut('horses', h);
   }
@@ -174177,7 +174219,9 @@ async function fetchGitHubData() {
     }
 
     // horsesは既存にないものだけ追加、あるものはraces等を上書き
+    const deletedHorseNames = getDeletedHorseNames();
     for (const h of payload.horses) {
+      if (!h || deletedHorseNames.has(h.name)) continue;
       const existing = existingHorses.find(e => e.name === h.name);
       if (!existing) {
         await idbPut('horses', h);
@@ -174192,7 +174236,7 @@ async function fetchGitHubData() {
     }
 
     // GitHubのJSONにない馬はIndexedDBから削除（削除操作を反映するため）
-    const payloadNames = new Set(payload.horses.map(h => h.name));
+    const payloadNames = new Set(payload.horses.map(h => h.name).filter(name => !deletedHorseNames.has(name)));
     for (const h of existingHorses) {
       if (!payloadNames.has(h.name)) {
         try { await idbDelete('horses', h.name); } catch(e) {}
@@ -178448,6 +178492,8 @@ async function saveEditRace() {
 }
 
 // --- 馬ページ作成・編集 ---
+// 編集開始時の馬名を保持。馬名変更時はFirestoreのドキュメントIDも変更する必要がある。
+let editHorseOriginalName = null;
 
 function onEditHorseNameInput() {
   const name = document.getElementById('editHorseName').value.trim();
@@ -178472,6 +178518,8 @@ function normalizeEvalForEdit(ev) {
 function loadEditHorseForEdit(name) {
   const h = horses.find(x => x.name === name);
   if (!h) return;
+  editHorseOriginalName = h.name;
+  document.getElementById('editHorseName').value = h.name;
   document.getElementById('editHorseFrame').value = h.frame || '';
   document.getElementById('editHorseNum').value = h.num || '';
   document.getElementById('editHorseShortNote').value = h.shortNote || '';
@@ -178506,6 +178554,7 @@ function addEditHorseRaceRow(name, track, evalVal, comment) {
 }
 
 function resetEditHorseForm() {
+  editHorseOriginalName = null;
   document.getElementById('editHorseName').value = '';
   document.getElementById('editHorseFrame').value = '';
   document.getElementById('editHorseNum').value = '';
@@ -178516,6 +178565,165 @@ function resetEditHorseForm() {
   addEditHorseRaceRow();
   const msgEl = document.getElementById('editHorseMsg');
   if (msgEl) msgEl.textContent = '';
+}
+
+async function renameHorseEverywhere(oldName, newName) {
+  if (!oldName || !newName || oldName === newName) return { ok:true };
+  if (!(await waitForFirebase(5000))) {
+    return { ok:false, code:'unavailable', message:'Firebaseに接続できないため、馬名変更を保存できませんでした' };
+  }
+
+  try {
+    const { doc, getDoc, setDoc, deleteDoc, collection, getDocs, writeBatch } = window._fbFns;
+    const oldRef = doc(window._fbDb, 'horses', oldName);
+    const newRef = doc(window._fbDb, 'horses', newName);
+
+    // 最新の旧馬名データをFirestoreから取得してから名前だけ変更する。
+    // 古い端末のローカルデータで最新の近走評価等を上書きしない。
+    const oldSnap = await getDoc(oldRef);
+    if (!oldSnap.exists()) {
+      return { ok:false, code:'not-found', message:`Firestoreに「${oldName}」の馬ページが見つかりませんでした` };
+    }
+    const newSnap = await getDoc(newRef);
+    if (newSnap.exists()) {
+      return { ok:false, code:'already-exists', message:`「${newName}」という馬ページは既に存在します。別名に変更してください。` };
+    }
+
+    const latestHorse = { ...(oldSnap.data() || {}), name:newName };
+    await setDoc(newRef, latestHorse);
+    await deleteDoc(oldRef);
+
+    // レース一覧の出走馬名も旧名→新名へ変更し、レースから馬ページを開ける状態を維持する。
+    const daySnap = await getDocs(collection(window._fbDb, 'raceDays'));
+    const affectedDays = [];
+    daySnap.forEach(ds => {
+      const day = ds.data();
+      let changed = false;
+      for (const venue of (day.venues || [])) {
+        for (const race of (venue.races || [])) {
+          for (const rh of (race.horses || [])) {
+            if (rh && rh.name === oldName) {
+              rh.name = newName;
+              changed = true;
+            }
+          }
+        }
+      }
+      if (changed) affectedDays.push(day);
+    });
+
+    // Firestore batchは500件未満で分割して安全に書き込む。
+    for (let i = 0; i < affectedDays.length; i += 400) {
+      const batch = writeBatch(window._fbDb);
+      for (const day of affectedDays.slice(i, i + 400)) {
+        batch.set(doc(window._fbDb, 'raceDays', day.id), day);
+      }
+      await batch.commit();
+    }
+
+    bumpSyncVersion();
+    return { ok:true, horse:latestHorse, affectedDays };
+  } catch(e) {
+    console.warn('[keiba] 馬名変更失敗:', e.code || '', e.message || e);
+    return { ok:false, code:e.code || '', message:e.message || String(e) };
+  }
+}
+
+async function deleteHorseEverywhere(horseName) {
+  if (!horseName) return { ok:false, message:'削除する馬名がありません' };
+  if (!(await waitForFirebase(5000))) {
+    return { ok:false, message:'Firebaseに接続できないため、馬ページを削除できませんでした' };
+  }
+
+  try {
+    const { doc, deleteDoc, collection, getDocs, writeBatch } = window._fbFns;
+    const horseRef = doc(window._fbDb, 'horses', horseName);
+
+    // 馬ページ本体を削除。未存在でもdeleteDocは安全に実行できるため、
+    // Firestore側に既に無い場合でもローカルの削除処理まで進める。
+    await deleteDoc(horseRef);
+
+    // レース一覧に残っている出走馬情報からも旧馬名を削除する。
+    // これを行わないと、レース画面から削除済み馬のページが表示されることがある。
+    const daySnap = await getDocs(collection(window._fbDb, 'raceDays'));
+    const affectedDays = [];
+    daySnap.forEach(ds => {
+      const day = ds.data();
+      let changed = false;
+      for (const venue of (day.venues || [])) {
+        for (const race of (venue.races || [])) {
+          if (!Array.isArray(race.horses)) continue;
+          const before = race.horses.length;
+          race.horses = race.horses.filter(rh => !(rh && rh.name === horseName));
+          if (race.horses.length !== before) changed = true;
+        }
+      }
+      if (changed) affectedDays.push(day);
+    });
+
+    // Firestore batchは500件未満で分割。
+    for (let i = 0; i < affectedDays.length; i += 400) {
+      const batch = writeBatch(window._fbDb);
+      for (const day of affectedDays.slice(i, i + 400)) {
+        batch.set(doc(window._fbDb, 'raceDays', day.id), day);
+      }
+      await batch.commit();
+    }
+
+    bumpSyncVersion();
+    return { ok:true, affectedDays };
+  } catch(e) {
+    console.warn('[keiba] 馬ページ削除失敗:', e.code || '', e.message || e);
+    return { ok:false, code:e.code || '', message:e.message || String(e) };
+  }
+}
+
+async function deleteEditHorse() {
+  const msgEl = document.getElementById('editHorseMsg');
+  const name = (editHorseOriginalName || document.getElementById('editHorseName').value || '').trim();
+  if (!name) {
+    if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = '⚠ 削除する馬ページを読み込んでください'; }
+    return;
+  }
+  if (!confirm(`「${name}」の馬ページを削除します。\n\nFirestoreの馬データと、レース一覧の出走馬情報からも削除されます。\nこの操作は元に戻せません。\n\n本当に削除しますか？`)) return;
+  if (msgEl) { msgEl.style.color = 'var(--accent2)'; msgEl.textContent = '馬ページを削除中…'; }
+
+  const result = await deleteHorseEverywhere(name);
+  if (!result.ok) {
+    if (msgEl) { msgEl.style.color = 'var(--red)'; msgEl.textContent = `⚠ 削除に失敗しました: ${result.message}`; }
+    return;
+  }
+
+  addDeletedHorseName(name);
+  try { await idbDelete('horses', name); } catch(e) { console.warn('[keiba] 削除馬のローカルデータ削除失敗:', name, e); }
+  horses = horses.filter(x => x && x.name !== name);
+
+  for (const day of (result.affectedDays || [])) {
+    const localIdx = raceDays.findIndex(d => d.id === day.id);
+    if (localIdx >= 0) raceDays[localIdx] = day;
+    else raceDays.push(day);
+    try { await idbPut('raceDays', day); } catch(e) { console.warn('[keiba] raceDaysローカル更新失敗:', day.id, e); }
+  }
+
+  selectedHorse = null;
+  editHorseOriginalName = null;
+  invalidateHorseCache();
+  horseFilter = '';
+  resetEditHorseForm();
+
+  const detail = document.getElementById('horseDetailEl');
+  if (detail) detail.innerHTML = '';
+  const grid = document.getElementById('horseRowGrid');
+  if (grid) grid.innerHTML = '';
+
+  // 編集画面を閉じて全頭診断へ戻す。
+  switchView('horses');
+  renderHorseList();
+  showHorseRowGrid();
+  updateHomeStats();
+  refreshHorseNameDatalist();
+
+  if (msgEl) { msgEl.style.color = 'var(--green)'; msgEl.textContent = `✓「${name}」を削除しました`; }
 }
 
 async function saveEditHorse() {
@@ -178539,6 +178747,67 @@ async function saveEditHorse() {
     if (rName) { addCommentHistory(comment); races.push({ name: rName, track, eval: evalVal, comment }); }
   });
 
+  const originalName = editHorseOriginalName;
+  const isRename = !!originalName && originalName !== name;
+
+  // 馬名変更の場合は、まずFirestoreの最新データを名前変更してから、
+  // フォームで明示的に変更した基本項目・近走評価を反映する。
+  if (isRename) {
+    msgEl.style.color = 'var(--accent2)';
+    msgEl.textContent = '馬名を変更中…';
+
+    const renamed = await renameHorseEverywhere(originalName, name);
+    if (!renamed.ok) {
+      msgEl.style.color = 'var(--red)';
+      msgEl.textContent = `⚠ ${renamed.message}`;
+      return;
+    }
+
+    // 名前変更後の最新Firestoreデータをベースにフォーム内容を反映。
+    const latest = renamed.horse || { name };
+    const h = { ...latest, name };
+    if (frame) h.frame = frame;
+    if (num) h.num = num;
+    h.shortNote = shortNote;
+    h.races = races;
+
+    // 新しい名前は削除済み扱いを解除して保存。
+    removeDeletedHorseName(name);
+    // 新しい名前で保存。名前変更そのものは既に最新データをベースに行っている。
+    await saveHorse(h);
+    // IndexedDBにも旧馬名のレコードが残っていると、次回起動時に
+    // 旧名の馬ページが復活してしまうため、旧キーを必ず削除する。
+    try { await idbDelete('horses', originalName); } catch(e) {
+      console.warn('[keiba] 旧馬名のローカルデータ削除失敗:', originalName, e);
+    }
+
+    // ローカルの馬データも旧名→新名へ置換。
+    const oldIdx = horses.findIndex(x => x.name === originalName);
+    if (oldIdx >= 0) horses.splice(oldIdx, 1);
+    const newIdx = horses.findIndex(x => x.name === name);
+    if (newIdx >= 0) horses[newIdx] = h;
+    else horses.push(h);
+
+    // ローカルの開催日にも旧名が残らないように更新。
+    for (const day of (renamed.affectedDays || [])) {
+      const idx = raceDays.findIndex(d => d.id === day.id);
+      if (idx >= 0) raceDays[idx] = day;
+      else raceDays.push(day);
+      try { await idbPut('raceDays', day); } catch(e) {}
+    }
+
+    if (selectedHorse && selectedHorse.name === originalName) selectedHorse = h;
+    editHorseOriginalName = name;
+    invalidateHorseCache();
+    renderHorseList();
+    updateHomeStats();
+    refreshHorseNameDatalist();
+
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = `✓「${originalName}」を「${name}」に変更しました`;
+    return;
+  }
+
   let h = horses.find(x => x.name === name);
   const isNew = !h;
   if (!h) {
@@ -178550,7 +178819,9 @@ async function saveEditHorse() {
     h.shortNote = shortNote;
     h.races = races;
   }
+  removeDeletedHorseName(h.name);
   await saveHorse(h);
+  editHorseOriginalName = h.name;
   invalidateHorseCache();
   renderHorseList();
   updateHomeStats();
