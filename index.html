@@ -1593,6 +1593,32 @@ textarea.search-input { line-height: 1.7; }
 .ai-style-note{font-size:10.5px;color:var(--muted);margin-top:8px}.ai-weight-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.ai-weight-grid label{display:grid;grid-template-columns:105px 1fr 24px;gap:6px;align-items:center;font-size:10.5px;color:var(--muted)}.ai-weight-grid input{width:100%}.ai-weight-grid b{text-align:right;color:var(--accent2)}
 @media(max-width:600px){.ai-weight-grid{grid-template-columns:1fr}}
 
+/* ===== Phase 1: 分析・予想蓄積 ===== */
+.analysis-page{padding:28px 32px;max-width:1100px;margin:0 auto}
+.analysis-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px}
+.analysis-sub{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:22px}
+.analysis-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.analysis-card-title{font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:10px}
+.analysis-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.analysis-filter{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:8px 10px;font-size:12px}
+.analysis-prediction{border:1px solid var(--border);border-radius:10px;background:var(--card2);padding:12px;margin:8px 0;cursor:pointer;transition:border-color .15s}
+.analysis-prediction:hover{border-color:var(--accent)}
+.analysis-pred-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.analysis-pred-title{font-weight:700;color:var(--text)}
+.analysis-pred-meta{font-size:11px;color:var(--muted)}
+.analysis-marks{font-size:12px;line-height:1.8;margin-top:7px}
+.analysis-empty{padding:30px;text-align:center;color:var(--muted);font-size:12px}
+.analysis-detail{font-size:12px;line-height:1.8}
+.analysis-detail-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:10px 0}
+.analysis-weight{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.analysis-weight b{display:block;color:var(--accent2);font-size:15px}
+.analysis-horse-row{display:grid;grid-template-columns:40px 1.2fr repeat(6,minmax(55px,1fr));gap:6px;align-items:center;border-top:1px solid var(--border);padding:8px 0;font-size:11px}
+.analysis-horse-row:first-child{border-top:0}
+.analysis-table-head{color:var(--muted);font-weight:700}
+.analysis-back{background:transparent;border:1px solid var(--border);color:var(--muted2);border-radius:7px;padding:7px 12px;cursor:pointer}
+.analysis-record-btn{margin-top:12px;width:100%;border:1px solid var(--accent);background:rgba(201,168,76,.10);color:var(--accent2);border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.analysis-record-btn:hover{background:rgba(201,168,76,.18)}
+@media(max-width:700px){.analysis-page{padding:20px 12px}.analysis-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-horse-row{grid-template-columns:32px 1.5fr repeat(3,minmax(55px,1fr));overflow:auto}.analysis-horse-row .optional-factor{display:none}}
 /* ===== AI予想アシスタント ===== */
 .ai-predict-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(214,167,84,.55);background:linear-gradient(135deg,rgba(214,167,84,.16),rgba(214,167,84,.05));color:var(--accent2);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;}
 .ai-predict-btn:hover{transform:translateY(-1px);background:rgba(214,167,84,.22)}
@@ -1704,6 +1730,9 @@ textarea.search-input { line-height: 1.7; }
     </div>
     <div class="nav-tab" onclick="switchView('edit')" data-view="edit" id="navEditTab" style="display:none">
       <span class="tab-icon">✏️</span> 編集
+    </div>
+    <div class="nav-tab" onclick="switchView('analysis')" data-view="analysis" id="navAnalysisTab" style="display:none">
+      <span class="tab-icon">📊</span> 分析
     </div>
   </div>
 
@@ -1860,6 +1889,15 @@ textarea.search-input { line-height: 1.7; }
         <div class="week-content" id="historyContent">
           <div class="history-page" id="historyPage"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- 分析モード（?analysis のときのみナビに表示） -->
+    <div class="view" id="view-analysis">
+      <div class="analysis-page">
+        <div class="analysis-title">分析・予想蓄積</div>
+        <div class="analysis-sub">Phase 1：現在の予想を「その時点のレース条件・重み・各馬の評価」と一緒に保存します。ここではまだ結果分析や自動最適化は行いません。</div>
+        <div id="analysisMain"></div>
       </div>
     </div>
 
@@ -173582,6 +173620,7 @@ const SYNC_VERSION_LS_KEY = 'keiba-fs-sync-version';
 
 // editモード判定（URLに?editが含まれるか）—どこからでも参照できるようスクリプト冒頭で宣言
 const isEditMode = location.search.includes('edit');
+const isAnalysisMode = location.search.includes('analysis');
 
 async function bumpSyncVersion() {
   try {
@@ -174068,6 +174107,7 @@ async function initApp() {
   // 初期レンダリング
   updateBreadcrumb();
   updateHomeStats();
+  if (isAnalysisMode) switchView('analysis');
 
   // editモードのみ：Firestoreの更新確認・同期再開
   if (isEditMode) {
@@ -174414,11 +174454,12 @@ function switchView(v) {
   if (v === 'horses') { showHorseRowGrid(); renderHorseList(); }
   if (v === 'history') renderHistory();
   if (v === 'edit') renderEditView();
+  if (v === 'analysis') renderAnalysisView();
 }
 
 function updateBreadcrumb() {
   const bc = document.getElementById('breadcrumb');
-  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催', edit:'編集' };
+  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催', edit:'編集', analysis:'分析' };
   bc.innerHTML = `<span class="crumb" onclick="switchView('home')">ホーム</span>`;
   if (currentView !== 'home') {
     bc.innerHTML += `<span class="sep">/</span><span class="current">${labels[currentView]}</span>`;
@@ -176902,6 +176943,8 @@ const importSection = document.getElementById('importSection');
 if (importSection) importSection.style.display = isEditMode ? 'block' : 'none';
 const navEditTab = document.getElementById('navEditTab');
 if (navEditTab) navEditTab.style.display = isEditMode ? 'flex' : 'none';
+const navAnalysisTab = document.getElementById('navAnalysisTab');
+if (navAnalysisTab) navAnalysisTab.style.display = isAnalysisMode ? 'flex' : 'none';
 // 非editモードではDB同期バナーを完全に隠し、進行中の同期状態もリセット
 if (!isEditMode) {
   localStorage.removeItem(SYNC_PROGRESS_KEY);
@@ -179113,17 +179156,22 @@ function aiGetWeights(){
   return {overall:Number(v.overall||0)/sum,venue:Number(v.venue||0)/sum,distance:Number(v.distance||0)/sum,condition:Number(v.condition||0)/sum,form:Number(v.form||0)/sum};
 }
 function aiStyleLabel(){ return 'カスタム'; }
+function aiRenderPredictionBody(){
+  const body=document.getElementById('aiPredictBody');
+  if(!body || !aiPredictionContext) return;
+  body.innerHTML=aiMakePrediction(...aiPredictionContext)+`<button type="button" class="analysis-record-btn" onclick="saveCurrentPrediction()">💾 この予想を記録</button><div id="aiPredictionSaveMsg" style="font-size:11px;text-align:center;color:var(--muted);margin-top:6px;min-height:16px"></div>`;
+}
 function setAIPredictStyle(style){
   // 安定感重視・一発狙いは廃止。互換性のため関数だけ残し、常にカスタム予想に戻す。
   aiPredictStyle='custom';
   const body=document.getElementById('aiPredictBody');
-  if(aiPredictionContext&&body) body.innerHTML=aiMakePrediction(...aiPredictionContext);
+  if(aiPredictionContext) aiRenderPredictionBody();
 }
 function aiSetSurfaceFilter(enabled){
   aiSurfaceFilterEnabled=!!enabled;
   if(aiPredictionContext){
     const body=document.getElementById('aiPredictBody');
-    if(body) body.innerHTML=aiMakePrediction(...aiPredictionContext);
+    if(body) aiRenderPredictionBody();
   }
 }
 function aiScoringRaces(h,surface){
@@ -179137,14 +179185,14 @@ function aiSetCustomWeight(key,val){
   if(el){ const v=aiCustomWeights[key]; el.textContent='★'.repeat(v)+'☆'.repeat(6-v); }
   if(aiPredictStyle==='custom'&&aiPredictionContext){
     const body=document.getElementById('aiPredictBody');
-    if(body) body.innerHTML=aiMakePrediction(...aiPredictionContext);
+    if(body) aiRenderPredictionBody();
   }
 }
 function aiSetConditionMode(mode){
   aiConditionMode=(mode==='yielding'||mode==='heavy')?mode:'good';
   if(aiPredictionContext){
     const body=document.getElementById('aiPredictBody');
-    if(body) body.innerHTML=aiMakePrediction(...aiPredictionContext);
+    if(body) aiRenderPredictionBody();
   }
 }
 function aiWeightPanel(){
@@ -179355,6 +179403,148 @@ function aiExplainRow(c,venue,race,all,mark){
   const title='カスタム評価';
   return `<div class="ai-predict-rank"><div class="num" style="font-size:20px;color:var(--accent2);font-weight:800;width:36px">${mark}</div><div style="flex:1"><div style="font-weight:700">${c.num}番 ${aiEsc(c.name)} <span class="ai-predict-tag" style="margin-left:6px">${title}</span></div><div>${aiEsc(scores)}</div><div style="margin-top:6px;line-height:1.65">${aiEsc(features.join('。'))}。</div></div></div>`;
 }
+// ============================================================
+// Phase 1: 予想蓄積
+// 「予想した瞬間」の状態をスナップショットとしてFirestoreへ保存する。
+// 将来のスコア計算変更や馬ページ更新で過去の予想が変わらないよう、
+// 必要な入力値と出力値だけをコンパクトに記録する。
+// ============================================================
+function aiPredictionRaceSnapshot(day, venue, race){
+  const track=String(race?.track||'');
+  return {
+    date: day?.date || day?.label || '',
+    venue: venue?.name || '',
+    raceNumber: Number(race?.r || 0),
+    raceName: race?.name || '',
+    grade: race?.grade || race?.class || '',
+    surface: aiExtractSurface(track) || '',
+    distance: Number(aiExtractDistance(track)) || null,
+    trackCondition: aiGetTrackCondition(track),
+    track: track,
+    horseCount: Array.isArray(race?.horses) ? race.horses.length : 0
+  };
+}
+function aiPredictionFactorSnapshot(c){
+  return {
+    overall: c.overallAvg ?? null,
+    venue: c.venueStats?.avg ?? null,
+    distance: c.distanceStats?.avg ?? null,
+    condition: c.conditionStats?.avg ?? null,
+    form: c.formAvg ?? null
+  };
+}
+function aiPredictionRecentSnapshot(c){
+  const recent=(c.allRaces||[]).slice(0,3);
+  return {
+    grade: null,
+    score: c.formAvg ?? null,
+    text: c.shortNote || '',
+    races: recent.map(r=>({name:r.name||'',track:r.track||'',eval:r.eval||'',comment:r.comment||''}))
+  };
+}
+function aiBuildPredictionRecord(day,venue,race){
+  const all=aiBuildRaceData(day,venue,race);
+  const ranked=all.filter(x=>x.known&&x.score!==null&&x.score!==undefined&&Number.isFinite(x.score)).sort((a,b)=>b.score-a.score);
+  const marks=['◎','○','▲','△','☆'];
+  const rankByNum=new Map(ranked.map((x,i)=>[String(x.num),i+1]));
+  const markByNum=new Map(ranked.slice(0,5).map((x,i)=>[String(x.num),marks[i]]));
+  const horses=all.map(x=>({
+    num:x.num||0,
+    frame:x.frame||0,
+    name:x.name||'',
+    known:!!x.known,
+    rank:rankByNum.get(String(x.num))||null,
+    mark:markByNum.get(String(x.num))||'',
+    score:x.score ?? null,
+    factors:aiPredictionFactorSnapshot(x),
+    conditionMode:aiConditionMode,
+    recentForm:aiPredictionRecentSnapshot(x)
+  }));
+  const raceSnapshot=aiPredictionRaceSnapshot(day,venue,race);
+  const predictionId=`pred_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+  return {
+    predictionId,
+    schemaVersion:1,
+    engineVersion:'custom-ai-v1',
+    scoringVersion:'S6_A4_B3_C2_D0_F_REFERENCE',
+    createdAt:new Date().toISOString(),
+    createdByUid:window._fbCurrentUser?.uid || null,
+    method:{type:'custom',source:'user',version:1},
+    raceKey:`${day?.id||''}__${venue?.name||''}__${race?.r||0}`,
+    raceRef:{dayId:day?.id||'',venue:venue?.name||'',raceNumber:Number(race?.r||0)},
+    raceSnapshot,
+    weights:{...aiCustomWeights},
+    conditionMode:aiConditionMode,
+    surfaceFilterEnabled:!!aiSurfaceFilterEnabled,
+    horses,
+    top5:ranked.slice(0,5).map((x,i)=>({num:x.num||0,name:x.name||'',rank:i+1,mark:marks[i],score:x.score??null})),
+    status:'final'
+  };
+}
+async function saveCurrentPrediction(){
+  const msg=document.getElementById('aiPredictionSaveMsg');
+  const ctx=aiPredictionContext;
+  if(!ctx){ if(msg) msg.textContent='⚠ 予想情報を取得できません'; return; }
+  if(msg){ msg.style.color='var(--muted)'; msg.textContent='保存中…'; }
+  try{
+    if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
+    const {doc,setDoc,serverTimestamp}=window._fbFns;
+    const record=aiBuildPredictionRecord(...ctx);
+    record.createdAtServer=serverTimestamp();
+    await setDoc(doc(window._fbDb,'predictions',record.predictionId),record);
+    if(msg){ msg.style.color='var(--accent2)'; msg.textContent='✓ この予想を記録しました'; }
+    showToast('✓ 予想をFirestoreへ記録しました');
+  }catch(e){
+    console.error('[keiba] 予想記録失敗:',e);
+    if(msg){ msg.style.color='var(--red)'; msg.textContent='⚠ 予想は表示されていますが、記録できませんでした'; }
+  }
+}
+let analysisPredictionCache=[];
+let analysisSelectedPrediction=null;
+async function loadPredictionHistory(limitCount=20){
+  if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
+  const {collection,query,orderBy,limit,getDocs}=window._fbFns;
+  const q=query(collection(window._fbDb,'predictions'),orderBy('createdAt','desc'),limit(limitCount));
+  const snap=await getDocs(q);
+  return snap.docs.map(d=>d.data());
+}
+function analysisFormatDate(v){
+  if(!v) return '';
+  const d=new Date(v);
+  return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+function renderAnalysisView(){
+  const el=document.getElementById('analysisMain'); if(!el) return;
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 予想履歴</div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">直近20件を取得します。通常のレース閲覧では予想履歴を読み込みません。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を読み込む</button></div></div><div id="analysisHistory"></div>`;
+  loadAndRenderPredictionHistory();
+}
+async function loadAndRenderPredictionHistory(){
+  const el=document.getElementById('analysisHistory'); if(!el) return;
+  el.innerHTML='<div class="analysis-card analysis-empty">予想履歴を読み込んでいます…</div>';
+  try{
+    analysisPredictionCache=await loadPredictionHistory(20);
+    renderPredictionHistoryList();
+  }catch(e){
+    console.error(e);
+    el.innerHTML=`<div class="analysis-card analysis-empty">⚠ 履歴を取得できませんでした。${aiEsc(e.message||'Firestore接続エラー')}</div>`;
+  }
+}
+function renderPredictionHistoryList(){
+  const el=document.getElementById('analysisHistory'); if(!el) return;
+  if(!analysisPredictionCache.length){ el.innerHTML='<div class="analysis-card analysis-empty">まだ予想記録がありません。AI予想画面の「この予想を記録」から蓄積できます。</div>'; return; }
+  el.innerHTML=analysisPredictionCache.map((p,i)=>{
+    const r=p.raceSnapshot||{}; const top=(p.top5||[]).map(x=>`${x.mark}${x.num} ${aiEsc(x.name)}`).join(' ／ ');
+    return `<div class="analysis-prediction" onclick="showPredictionDetail(${i})"><div class="analysis-pred-head"><div class="analysis-pred-title">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-pred-meta">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')} ／ ${analysisFormatDate(p.createdAt)}</div></div><div class="analysis-marks">${top||'上位予想なし'}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">重み：総合${p.weights?.overall??0}・競馬場${p.weights?.venue??0}・距離${p.weights?.distance??0}・馬場${p.weights?.condition??0}・調子${p.weights?.form??0}</div></div>`;
+  }).join('');
+}
+function showPredictionDetail(i){
+  const p=analysisPredictionCache[i]; if(!p) return; analysisSelectedPrediction=p;
+  const el=document.getElementById('analysisHistory'); if(!el) return;
+  const r=p.raceSnapshot||{}, w=p.weights||{};
+  const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
+  el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>`;
+}
+
 function aiMakePrediction(day,venue,race){
   const all=aiBuildRaceData(day,venue,race);
   const known=all.filter(x=>x.known&&x.score!==null&&x.score!==undefined&&Number.isFinite(x.score)).sort((a,b)=>(b.score)-(a.score));
@@ -179397,7 +179587,7 @@ function openAIPredictor(dayId,venueName,rNum){
   aiSurfaceFilterEnabled=false;
   aiPredictStyle='custom';
   const overlay=document.createElement('div'); overlay.id='aiPredictOverlay'; aiPredictionContext=[day,venue,race]; overlay.className='ai-predict-overlay';
-  overlay.innerHTML=`<div class="ai-predict-modal"><div class="ai-predict-head"><div><div class="ai-predict-title">🧠 AIアシスタント予想</div><div class="ai-predict-sub">${aiEsc(day.label)} ${aiEsc(venue.name)} ${rNum}R ${aiEsc(race.name)}</div></div><button class="ai-predict-reset" onclick="resetAIChat()">↺ リセット</button><button class="ai-predict-close" onclick="closeAIPredictor()">×</button></div><div class="ai-predict-body" id="aiPredictBody">${aiMakePrediction(day,venue,race)}</div><div class="ai-predict-chat"><div class="ai-predict-question"><input id="aiPredictQuestion" placeholder="例：内枠なら評価が上がる馬は？ / 展開を詳しく" onkeydown="if(event.key==='Enter')askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})"><button onclick="askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})">聞く</button></div></div></div>`;
+  overlay.innerHTML=`<div class="ai-predict-modal"><div class="ai-predict-head"><div><div class="ai-predict-title">🧠 AIアシスタント予想</div><div class="ai-predict-sub">${aiEsc(day.label)} ${aiEsc(venue.name)} ${rNum}R ${aiEsc(race.name)}</div></div><button class="ai-predict-reset" onclick="resetAIChat()">↺ リセット</button><button class="ai-predict-close" onclick="closeAIPredictor()">×</button></div><div class="ai-predict-body" id="aiPredictBody">${aiMakePrediction(day,venue,race)}<button type="button" class="analysis-record-btn" onclick="saveCurrentPrediction()">💾 この予想を記録</button><div id="aiPredictionSaveMsg" style="font-size:11px;text-align:center;color:var(--muted);margin-top:6px;min-height:16px"></div></div><div class="ai-predict-chat"><div class="ai-predict-question"><input id="aiPredictQuestion" placeholder="例：内枠なら評価が上がる馬は？ / 展開を詳しく" onkeydown="if(event.key==='Enter')askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})"><button onclick="askAIPredictor('${dayId}','${escHtml(venueName)}',${rNum})">聞く</button></div></div></div>`;
   overlay.addEventListener('click',e=>{if(e.target===overlay)closeAIPredictor()});
   document.body.appendChild(overlay);
   const b=document.getElementById('aiPredictBody'); aiPredictionState={initialHtml:b?b.innerHTML:''};
