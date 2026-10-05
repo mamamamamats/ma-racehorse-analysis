@@ -1752,7 +1752,7 @@ textarea.search-input { line-height: 1.7; }
     <div class="nav-tab" onclick="switchView('edit')" data-view="edit" id="navEditTab" style="display:none">
       <span class="tab-icon">✏️</span> 編集
     </div>
-    <div class="nav-tab" onclick="switchView('analysis')" data-view="analysis" id="navAnalysisTab" style="display:none">
+    <div class="nav-tab" onclick="switchView('analysis')" data-view="analysis" id="navAnalysisTab" style="display:none" title="編集ページと同じデータを使う分析画面">
       <span class="tab-icon">📊</span> 分析
     </div>
   </div>
@@ -1913,16 +1913,16 @@ textarea.search-input { line-height: 1.7; }
       </div>
     </div>
 
-    <!-- 分析モード（?analysis のときのみナビに表示） -->
+    <!-- 分析：編集ページでは編集タブの横に常時表示 -->
     <div class="view" id="view-analysis">
       <div class="analysis-page">
         <div class="analysis-title">分析・予想蓄積</div>
-        <div class="analysis-sub">Phase 1：現在の予想を「その時点のレース条件・重み・各馬の評価」と一緒に保存します。ここではまだ結果分析や自動最適化は行いません。</div>
+        <div class="analysis-sub">編集ページと同じデータを参照して、予想・結果・回顧をraceIdで結び付けて分析します。分析画面だけ別のデータを持つことはありません。</div>
         <div id="analysisMain"></div>
       </div>
     </div>
 
-    <!-- 編集モード（?edit のときのみナビに表示） -->
+    <!-- 編集モード（?edit のとき表示） -->
     <div class="view" id="view-edit">
       <div class="edit-page">
         <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px">編集モード</div>
@@ -173641,7 +173641,10 @@ const SYNC_VERSION_LS_KEY = 'keiba-fs-sync-version';
 
 // editモード判定（URLに?editが含まれるか）—どこからでも参照できるようスクリプト冒頭で宣言
 const isEditMode = location.search.includes('edit');
-const isAnalysisMode = location.search.includes('analysis');
+// 編集ページでは分析タブも同じデータ環境で利用できるようにする。
+// ?analysis 単独でも分析画面は開けるが、?edit では編集タブと分析タブを同時表示する。
+const isAnalysisRoute = location.search.includes('analysis');
+const isAnalysisMode = isAnalysisRoute || isEditMode;
 
 async function bumpSyncVersion() {
   try {
@@ -174128,7 +174131,7 @@ async function initApp() {
   // 初期レンダリング
   updateBreadcrumb();
   updateHomeStats();
-  if (isAnalysisMode) switchView('analysis');
+  if (isAnalysisRoute) switchView('analysis');
 
   // editモードのみ：Firestoreの更新確認・同期再開
   if (isEditMode) {
