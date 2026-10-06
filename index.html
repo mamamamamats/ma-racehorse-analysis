@@ -179831,8 +179831,22 @@ async function saveCurrentPrediction(){
   if(msg){ msg.style.color='var(--muted)'; msg.textContent='保存中…'; }
   try{
     if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
-    const {doc,setDoc,serverTimestamp}=window._fbFns;
+    const {doc,setDoc,serverTimestamp,collection,query,where,limit,getDocs}=window._fbFns;
     const record=aiBuildPredictionRecord(...ctx);
+    // 1レース=1予想履歴。raceIdで既存記録を確認し、二重保存を防止する。
+    let existing=null;
+    try{
+      const q=query(collection(window._fbDb,'predictions'),where('raceId','==',record.raceId),limit(1));
+      const snap=await getDocs(q);
+      if(!snap.empty) existing=snap.docs[0];
+    }catch(checkErr){
+      console.warn('[keiba] 重複チェックに失敗しました:',checkErr);
+    }
+    if(existing){
+      if(msg){ msg.style.color='var(--accent2)'; msg.textContent='✓ このレースはすでに予想履歴に保存されています'; }
+      showToast('✓ このレースはすでに予想済みです');
+      return;
+    }
     record.createdAtServer=serverTimestamp();
     await setDoc(doc(window._fbDb,'predictions',record.predictionId),record);
     if(msg){ msg.style.color='var(--accent2)'; msg.textContent='✓ この予想を記録しました'; }
@@ -179942,6 +179956,7 @@ function calcFactorAnalysis(){
   const rows=keys.map(k=>{let corr=[],top3=0,n=0; for(const o of outs){const usable=o.horses.filter(h=>h.factors?.[k]!=null&&h.finish!=null); if(usable.length<3)continue; const c=analysisSpearman(usable.map(h=>Number(h.factors[k])),usable.map(h=>-Number(h.finish))); if(c!=null)corr.push(c); const best=usable.slice().sort((a,b)=>Number(b.factors[k])-Number(a.factors[k]))[0]; if(best?.finish<=3)top3++; n++;} return {key:k,label:labels[k],races:n,corr:corr.length?corr.reduce((a,b)=>a+b,0)/corr.length:null,top3:n?top3/n:null};}); return {outs,rows};
 }
 function renderFactorAnalysis(){
+  setAnalysisTabActive('factor');
   const el=document.getElementById('analysisHistory'); if(!el)return; const {outs,rows}=calcFactorAnalysis();
   el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🔎 Phase 4：要素別の当たり・外れ</div><div class=\"analysis-sub\">結果が完全入力された予想だけを対象に、各要素のスコアが実着順とどの程度整合したかをレース内で集計します。</div><table class=\"analysis-table\"><thead><tr><th>要素</th><th>対象レース</th><th>着順整合度</th><th>その要素1位馬の3着内率</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${r.races}</td><td>${r.corr==null?'—':r.corr.toFixed(3)}</td><td>${r.top3==null?'—':(r.top3*100).toFixed(1)+'%'}</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">整合度はレース内順位のSpearman相関。+1に近いほど「その要素の高評価馬ほど上位に来た」傾向、0付近は関係が弱いことを示します。因果関係を証明する指標ではありません。</div></div>`;
 }
@@ -179958,6 +179973,7 @@ function calcConditionRows(){
   return [...groups.values()].sort((a,b)=>b.n-a.n);
 }
 function renderConditionAnalysis(){
+  setAnalysisTabActive('condition');
   const el=document.getElementById('analysisHistory');if(!el)return; const rows=calcConditionRows();
   el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🗺 Phase 5：条件別の傾向</div><div class=\"analysis-sub\">結果が完全入力された予想を、競馬場・芝/ダート・距離帯・馬場条件ごとに分けて集計します。</div><table class=\"analysis-table\"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rows.map(g=>`<tr><td>${aiEsc(g.kind)}：${aiEsc(g.val)}</td><td>${g.n}</td><td>${g.n?(g.win/g.n*100).toFixed(1)+'%':'—'}</td><td>${g.n?(g.top3/g.n*100).toFixed(1)+'%':'—'}</td><td>${g.n?(g.top5/g.n*100).toFixed(1)+'%':'—'}</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">現段階では条件別傾向を「観察用」として表示。少数サンプルの数字をそのまま予想ロジックへ反映しません。</div></div>`;
 }
@@ -179977,15 +179993,38 @@ function optimizeWeights(){
   best.sort((x,y)=>(y.m.top3Rate-x.m.top3Rate)||(y.m.winRate-x.m.winRate)); return best.slice(0,10);
 }
 function renderWeightOptimization(){
+  setAnalysisTabActive('weight');
   const el=document.getElementById('analysisHistory');if(!el)return; const outs=buildCompletedOutcomes(); const best=optimizeWeights();
   el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🧠 Phase 6：重み学習（試算）</div><div class=\"analysis-sub\">保存済み予想の各要素スコアを使い、0/2/4/6の粗い重み候補を総当たりします。現在の予想設定を自動変更することはありません。</div>${!outs.length?'<div class="analysis-empty">結果付きの予想がまだありません。まずレース結果を入力してください。</div>':`<table class=\"analysis-table\"><thead><tr><th>順位</th><th>総合</th><th>場</th><th>距離</th><th>馬場</th><th>調子</th><th>対象</th><th>本命3着内</th><th>本命1着</th></tr></thead><tbody>${best.map((x,i)=>`<tr><td>${i+1}</td><td>${x.w.overall}</td><td>${x.w.venue}</td><td>${x.w.distance}</td><td>${x.w.condition}</td><td>${x.w.form}</td><td>${x.m.races}</td><td>${(x.m.top3Rate*100).toFixed(1)}%</td><td>${(x.m.winRate*100).toFixed(1)}%</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">これは「保存済みの各要素スコアだけ」を使った候補比較。現行予想の高適性ボーナス等は完全再現していないため、最終的な新重みとして即採用せず、Phase 6の学習候補として扱います。</div>`}</div>`;
 }
+function setAnalysisTabActive(tab){
+  document.querySelectorAll('.analysis-section-tab').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.tab===tab);
+  });
+}
+async function deletePredictionHistory(predictionId){
+  if(!predictionId) return;
+  if(!window.confirm('この予想履歴を削除しますか？\n削除すると分析対象からも外れます。')) return;
+  try{
+    if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
+    const {doc,deleteDoc}=window._fbFns;
+    await deleteDoc(doc(window._fbDb,'predictions',predictionId));
+    analysisPredictionCache=(analysisPredictionCache||[]).filter(p=>p.predictionId!==predictionId);
+    showToast('✓ 予想履歴を削除しました');
+    renderPredictionHistoryList();
+  }catch(e){
+    console.error('[keiba] 予想履歴削除失敗:',e);
+    showToast('⚠ 予想履歴の削除に失敗しました',true);
+  }
+}
+
 function renderAnalysisView(){
   const el=document.getElementById('analysisMain'); if(!el) return;
-  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="loadAndRenderPredictionHistory()">予想履歴</button><button class="analysis-section-tab" onclick="renderFactorAnalysis()">要素分析</button><button class="analysis-section-tab" onclick="renderConditionAnalysis()">条件別分析</button><button class="analysis-section-tab" onclick="renderWeightOptimization()">重み学習</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">分析は「🔄 履歴を読み込む」を押したときだけFirestoreから取得します。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を読み込む</button></div></div><div id="analysisHistory"></div>`;
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" data-tab="history" onclick="loadAndRenderPredictionHistory()">予想履歴</button><button class="analysis-section-tab" data-tab="factor" onclick="renderFactorAnalysis()">要素分析</button><button class="analysis-section-tab" data-tab="condition" onclick="renderConditionAnalysis()">条件別分析</button><button class="analysis-section-tab" data-tab="weight" onclick="renderWeightOptimization()">重み学習</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">分析は「🔄 履歴を読み込む」を押したときだけFirestoreから取得します。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を読み込む</button></div></div><div id="analysisHistory"></div>`;
   loadAndRenderPredictionHistory();
 }
 async function loadAndRenderPredictionHistory(){
+  setAnalysisTabActive('history');
   const el=document.getElementById('analysisHistory'); if(!el) return;
   el.innerHTML='<div class="analysis-card analysis-empty">予想履歴を読み込んでいます…</div>';
   try{
@@ -180001,7 +180040,7 @@ function renderPredictionHistoryList(){
   if(!analysisPredictionCache.length){ el.innerHTML='<div class="analysis-card analysis-empty">まだ予想記録がありません。AI予想画面の「この予想を記録」から蓄積できます。</div>'; return; }
   el.innerHTML=analysisPredictionCache.map((p,i)=>{
     const r=p.raceSnapshot||{}; const top=(p.top5||[]).map(x=>`${x.mark}${x.num} ${aiEsc(x.name)}`).join(' ／ '); const o=buildPredictionOutcome(p); const status=o?(o.complete?'✓ 結果あり':'△ 結果一部入力'):'— 結果未入力';
-    return `<div class="analysis-prediction" onclick="showPredictionDetail(${i})"><div class="analysis-pred-head"><div class="analysis-pred-title">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-pred-meta">${status} ／ ${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')} ／ ${analysisFormatDate(p.createdAt)}</div></div><div class="analysis-marks">${top||'上位予想なし'}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">重み：総合${p.weights?.overall??0}・競馬場${p.weights?.venue??0}・距離${p.weights?.distance??0}・馬場${p.weights?.condition??0}・調子${p.weights?.form??0}</div></div>`;
+    return `<div class="analysis-prediction" onclick="showPredictionDetail(${i})"><div class="analysis-pred-head"><div class="analysis-pred-title">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-pred-meta">${status} ／ ${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')} ／ ${analysisFormatDate(p.createdAt)}</div></div><div class="analysis-marks">${top||'上位予想なし'}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">重み：総合${p.weights?.overall??0}・競馬場${p.weights?.venue??0}・距離${p.weights?.distance??0}・馬場${p.weights?.condition??0}・調子${p.weights?.form??0}</div><div style="text-align:right;margin-top:8px"><button type="button" class="analysis-back" onclick="event.stopPropagation();deletePredictionHistory('${String(p.predictionId||'').replace(/'/g,"\\'")}')">🗑 削除</button></div></div>`;
   }).join('');
 }
 function showPredictionDetail(i){
@@ -180010,7 +180049,7 @@ function showPredictionDetail(i){
   const r=p.raceSnapshot||{}, w=p.weights||{}; const outcome=buildPredictionOutcome(p);
   const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/5</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">結果はレース画面の「📋 結果を入力」から保存できます。</div></div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div></div>`;
   const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
-  el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
+  el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><button class="analysis-back" style="margin-left:8px;border-color:var(--red);color:var(--red)" onclick="deletePredictionHistory('${String(p.predictionId||'').replace(/'/g,"\\'")}')">🗑 この履歴を削除</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
 }
 
 function aiMakePrediction(day,venue,race){
