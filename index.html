@@ -1646,6 +1646,10 @@ textarea.search-input { line-height: 1.7; }
 @media(max-width:600px){.ai-predict-overlay{padding:0}.ai-predict-modal{height:100%;max-height:100%;border-radius:0}.ai-predict-body{padding:12px}}
 
 .ai-predict-reset{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer;margin-left:auto}.ai-predict-body{overflow-y:auto;scroll-behavior:smooth}
+
+.analysis-filter-card{margin-bottom:14px}.analysis-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 12px}.analysis-filter-field{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--muted)}.analysis-filter-field select{width:100%;min-width:0}.analysis-filter-submit{border:1px solid var(--accent);background:rgba(201,168,76,.12);color:var(--accent2);border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer}.analysis-filter-submit:hover{background:rgba(201,168,76,.2)}
+@media(max-width:700px){.analysis-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 /* Phase 3-6: 結果・分析UI */
 .result-entry-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(92,166,255,.45);background:rgba(92,166,255,.08);color:#9ecbff;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer;}
 .result-entry-btn:hover{background:rgba(92,166,255,.15);border-color:#6aaeff}
@@ -1663,6 +1667,28 @@ textarea.search-input { line-height: 1.7; }
 .result-row{display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:12px}
 .result-pos-input{width:72px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px}
 @media(max-width:700px){.analysis-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-row{grid-template-columns:34px 1fr 70px 70px}}
+
+
+/* ===== LLM回顧分析・条件事象 ===== */
+.review-ai-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.review-ai-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.review-ai-select,.review-ai-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:10px;font:inherit;font-size:12px}
+.review-ai-textarea{min-height:180px;line-height:1.7;resize:vertical}
+.review-ai-btn{background:rgba(201,168,76,.1);border:1px solid var(--accent);color:var(--accent2);border-radius:7px;padding:8px 12px;cursor:pointer;font:inherit;font-size:11px}
+.review-ai-btn.secondary{border-color:var(--border);color:var(--muted2);background:var(--card)}
+.review-ai-btn:disabled{opacity:.45;cursor:not-allowed}
+.review-ai-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.review-ai-stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px}
+.review-ai-stat b{display:block;font-size:19px;color:var(--accent2);margin-top:4px}
+.review-ai-stat span{font-size:10px;color:var(--muted)}
+.review-ai-event{border:1px solid var(--border);border-radius:8px;padding:12px;margin:8px 0;background:var(--bg)}
+.review-ai-event-title{font-weight:700;color:var(--accent2);font-size:13px;margin-bottom:5px}
+.review-ai-pill{display:inline-block;border:1px solid var(--border);border-radius:12px;padding:2px 7px;margin:2px;font-size:10px;color:var(--muted2)}
+.review-ai-status{font-size:11px;line-height:1.7;color:var(--muted2);white-space:pre-wrap}
+.review-ai-rank{display:grid;grid-template-columns:30px minmax(0,1fr) 90px;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--border);font-size:12px}
+.review-ai-bar{height:6px;background:var(--border);border-radius:8px;overflow:hidden;margin-top:5px}
+.review-ai-bar>i{display:block;height:100%;background:var(--accent);border-radius:8px}
+@media(max-width:700px){.review-ai-toolbar{grid-template-columns:1fr}.review-ai-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.review-ai-rank{grid-template-columns:24px minmax(0,1fr) 70px}}
 
 </style>
 <!-- Firebase SDK -->
@@ -177970,6 +177996,38 @@ function openNewReviewModal(dayId, venueName, rNum) {
   modal.classList.add('open');
 }
 function closeNewReviewModal(){ const m=document.getElementById('newReviewModal'); if(m) m.classList.remove('open'); newReviewRaceContext=null; }
+// 新規回顧だけを登録時に軽量分類する。過去のh.racesは遡って変更しない。
+function classifyNewReviewComment(comment){
+  const s=String(comment||'').trim();
+  const categories=[];
+  const add=(key,label,terms)=>{if(terms.some(t=>s.includes(t)))categories.push({key,label});};
+  add('start','スタート・出遅れ',['出遅れ','スタートで遅','ゲートで遅','立ち遅れ','出負け','発馬で遅']);
+  add('trouble','不利・接触',['不利','接触','挟ま','ぶつか','寄られ','進路が','前が壁','壁にな','詰ま','包まれ','狭くな','妨害']);
+  add('pace','ペース・展開',['ハイペース','スローペース','ペースが速','ペースが遅','前残り','差し決着','展開が向','展開が厳','流れが速','流れが遅']);
+  add('position','位置取り・脚質',['逃げ','先行','好位','中団','後方','追い込み','位置取り']);
+  add('route','コース取り・距離ロス',['外を回','外々','大外','距離ロス','内を突','コーナーで膨','ロスが']);
+  add('finish','直線・末脚',['伸びた','伸びを欠','脚を使','末脚','失速','粘り','差を詰め','届かず','追い上げ']);
+  add('condition','馬場・適性',['馬場が合','道悪','重馬場','稍重','良馬場','芝が合','ダートが合']);
+  const finishMatch=extractExplicitFinishFromReview(s);
+  return {version:1,source:'local-rule-based',status:'preliminary',categories,hasPotentialTrouble:categories.some(x=>['start','trouble','pace','route'].includes(x.key)),detectedFinish:finishMatch?.finish??null,finishEvidence:finishMatch?.evidence||'',updatedAt:new Date().toISOString()};
+}
+// 着順は「今回3着」「結果は3着」など、対象馬自身の着順と明示された表現だけを候補にする。
+// 曖昧な「1着馬」「3着との差」などは自動採用しない。最終確定は結果入力画面で行う。
+function extractExplicitFinishFromReview(comment){
+  const s=String(comment||'');
+  const patterns=[
+    /(?:今回|本走|当レース|このレース(?:では|は)?|結果(?:は|が)?|着順(?:は|が|：|:)?)\s*[^0-9]{0,8}([1-9][0-9]?)着/,
+    /(?:今回|本走|当レース|このレース)[^。.!！?？\n]{0,24}?([1-9][0-9]?)着(?:に入線|で入線|に入った|となった|でした|に好走|でゴール)/,
+    /着順\s*[:：]?\s*([1-9][0-9]?)\b/
+  ];
+  const found=[];
+  for(const re of patterns){const m=s.match(re);if(m)found.push({finish:Number(m[1]),evidence:m[0]});}
+  const unique=[...new Set(found.map(x=>x.finish))];
+  if(unique.length!==1)return null;
+  const match=found.find(x=>x.finish===unique[0]);
+  return match?{finish:match.finish,evidence:match.evidence}:null;
+}
+
 async function saveNewReviewsForRace(){
   const ctx=newReviewRaceContext; if(!ctx) return;
   const rows=[...document.querySelectorAll('#newReviewRows .new-review-row')].filter(r=>r.querySelector('.new-review-enabled')?.checked);
@@ -177992,7 +178050,11 @@ async function saveNewReviewsForRace(){
         comment,
         raceId: ctx.raceId,
         raceRef: {...ctx.raceRef},
-        linkedAt: now
+        linkedAt: now,
+        // 新規登録分だけを識別する印。既存の近走評価・回顧は一括変更しない。
+        reviewSource: 'new-entry',
+        reviewCreatedAt: now,
+        reviewClassification: classifyNewReviewComment(comment)
       });
       addCommentHistory(comment);
       await saveHorse(h);
@@ -179853,24 +179915,26 @@ async function saveCurrentPrediction(){
   if(msg){ msg.style.color='var(--muted)'; msg.textContent='保存中…'; }
   try{
     if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
-    const {doc,setDoc,serverTimestamp,collection,query,where,getDocs,deleteDoc}=window._fbFns;
+    const {doc,setDoc,serverTimestamp,collection,query,where,getDocs}=window._fbFns;
     const record=aiBuildPredictionRecord(...ctx);
-    // 1レース=1予想履歴。既存の同一raceIdがあれば更新し、古い重複レコードは整理する。
     const q=query(collection(window._fbDb,'predictions'),where('raceId','==',record.raceId));
     const snap=await getDocs(q);
-    let targetId=`pred_by_race_${record.raceId}`;
-    if(!snap.empty){
-      targetId=snap.docs[0].id;
-      for(const d of snap.docs){ if(d.id!==targetId) await deleteDoc(d.ref); }
-    }
+    const sameWeights = snap.docs.find(d=>{
+      const old=d.data()?.weights||{};
+      return ['overall','venue','distance','condition','form'].every(k=>Number(old[k]||0)===Number(record.weights?.[k]||0));
+    });
+    // 同一レースでも重みが違えば別記録。同じ重みの連打だけは同じ記録を更新して二重登録を抑止。
+    const targetId=sameWeights ? sameWeights.id : record.predictionId;
     record.predictionId=targetId;
     record.createdAtServer=serverTimestamp();
-    await setDoc(doc(window._fbDb,'predictions',targetId),record);
-    if(msg){ msg.style.color='var(--accent2)'; msg.textContent=snap.empty?'✓ この予想を記録しました':'✓ このレースの予想を更新しました（重複なし）'; }
-    showToast(snap.empty?'✓ 予想をFirestoreへ記録しました':'✓ 同じレースの予想を更新しました');
+    record.updatedAt=new Date().toISOString();
+    await setDoc(doc(window._fbDb,'predictions',targetId),record,{merge:false});
+    if(msg){ msg.style.color='var(--accent2)'; msg.textContent=sameWeights?'✓ 同じ重みの予想を更新しました（重複なし）':'✓ この予想を個別に記録しました'; }
+    showToast(sameWeights?'✓ 同じ重みの予想を更新しました':'✓ 予想をFirestoreへ個別記録しました');
   }catch(e){
     console.error('[keiba] 予想記録失敗:',e);
     if(msg){ msg.style.color='var(--red)'; msg.textContent='⚠ 予想は表示されていますが、記録できませんでした'; }
+    showToast('⚠ 予想の保存に失敗しました',true);
   }
 }
 // ============================================================
@@ -179883,7 +179947,19 @@ function getRaceResultObject(race){
   const r=race?.result;
   return r && Array.isArray(r.horses) ? r : null;
 }
-function openRaceResultModal(dayId,venueName,rNum){
+async function openRaceResultModal(dayId,venueName,rNum){
+  // 別端末で保存された最新の結果を、入力画面を開くタイミングでFirestoreから取得する。
+  try{
+    if(await waitForFirebase(2500)){
+      const {doc,getDoc}=window._fbFns;
+      const snap=await getDoc(doc(window._fbDb,'raceDays',dayId));
+      if(snap.exists()){
+        const remote=snap.data();
+        const idx=(raceDays||[]).findIndex(d=>d.id===dayId);
+        if(idx>=0){ raceDays[idx]=remote; await idbPut('raceDays',remote); }
+      }
+    }
+  }catch(e){ console.warn('[keiba] 結果入力前の最新データ取得に失敗。ローカルデータを使用します:',e); }
   const {day,venue,race}=getRaceByRef(dayId,venueName,rNum);
   if(!day||!venue||!race) return;
   const horsesArr=Array.isArray(race.horses)?race.horses.filter(h=>h&&h.name):[];
@@ -179896,30 +179972,64 @@ function openRaceResultModal(dayId,venueName,rNum){
   }
   const result=getRaceResultObject(race);
   const byNum=new Map((result?.horses||[]).map(x=>[String(x.num),x]));
+  const targetRaceId=ensureRaceId(day,venue,race);
+  const detectedFinishes=new Map();
+  // 新規登録時に分類済みの回顧だけから着順候補を読む。既存回顧の再解析はしない。
+  for(const horse of (horses||[])){
+    const rr=(horse.races||[]).find(z=>z&&z.raceId===targetRaceId&&z.reviewSource==='new-entry'&&Number.isInteger(z.reviewClassification?.detectedFinish));
+    if(rr)detectedFinishes.set(horse.name,rr.reviewClassification.detectedFinish);
+  }
   const rows=horsesArr.map(h=>{
     const old=byNum.get(String(h.num));
-    return `<div class="result-row"><div>${escHtml(String(h.num||''))}</div><div><b>${escHtml(h.name||'')}</b></div><div><input class="result-pos-input race-result-pos" data-num="${Number(h.num)||0}" type="number" min="1" step="1" placeholder="着順" value="${old?.finish??''}"></div><div style="font-size:10px;color:var(--muted)">${old?.note?escHtml(old.note):''}</div></div>`;
+    const detected=detectedFinishes.get(h.name);
+    const finishValue=old?.finish??detected??'';
+    const note=old?.note||(old?.finish==null&&detected?`回顧文からの候補：${detected}着（要確認）`:'');
+    return `<div class="result-row"><div>${escHtml(String(h.num||''))}</div><div><b>${escHtml(h.name||'')}</b></div><div><input class="result-pos-input race-result-pos" data-num="${Number(h.num)||0}" type="number" min="1" step="1" placeholder="着順" value="${finishValue}"></div><div style="font-size:10px;color:var(--muted)">${escHtml(note)}</div></div>`;
   }).join('');
-  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順だけを入力してください。未入力馬は「結果未入力」として扱います。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
+  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順を確認して保存してください。回顧文から読み取れた着順候補は仮入力しています（要確認）。未入力馬は「結果未入力」として扱います。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
   modal.classList.add('open');
 }
 function closeRaceResultModal(){document.getElementById('raceResultModal')?.classList.remove('open');}
 async function saveRaceResult(dayId,venueName,rNum){
-  const {day,venue,race}=getRaceByRef(dayId,venueName,rNum); if(!day||!venue||!race) return;
   const rows=[...document.querySelectorAll('.race-result-pos')];
   const horses=rows.map(el=>({num:Number(el.dataset.num)||0,finish:el.value?Number(el.value):null})).filter(x=>x.num);
   const entered=horses.filter(x=>Number.isFinite(x.finish)&&x.finish>0);
   const dup=new Set(), dupFound=entered.some(x=>dup.has(x.finish)?true:(dup.add(x.finish),false));
   if(dupFound){showToast('⚠ 同じ着順が複数あります',true);return;}
-  race.result={schemaVersion:1,source:'manual',recordedAt:new Date().toISOString(),horses};
-  race.resultStatus=entered.length===race.horses.length?'complete':'partial';
-  ensureRaceId(day,venue,race);
   try{
-    await idbPut('raceDays',day);
-    const fb=await fbSaveRaceDay(day);
-    if(!fb.ok) throw new Error(fb.message||'Firestore保存失敗');
-    closeRaceResultModal(); renderWeekContent(day); showToast(`✓ ${entered.length}頭の結果を保存しました`);
-  }catch(e){console.error('[keiba] 結果保存失敗:',e);showToast('⚠ 結果の保存に失敗しました',true);}
+    if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
+    const {doc,getDoc,setDoc}=window._fbFns;
+    // まずクラウド上の最新開催日を取得し、結果だけをそのレースへ反映する。
+    // 古い端末の開催日データ全体で他の端末の編集を上書きしないため。
+    const remoteSnap=await getDoc(doc(window._fbDb,'raceDays',dayId));
+    let targetDay=remoteSnap.exists()?remoteSnap.data():null;
+    if(!targetDay) targetDay=(raceDays||[]).find(d=>d.id===dayId);
+    if(!targetDay) throw new Error('保存対象の開催日が見つかりません');
+    const targetVenue=(targetDay.venues||[]).find(v=>v.name===venueName);
+    const targetRace=(targetVenue?.races||[]).find(r=>Number(r.r)===Number(rNum));
+    if(!targetVenue||!targetRace) throw new Error('クラウド上に対象レースが見つかりません。先に端末間同期を行ってください');
+    targetRace.result={schemaVersion:1,source:'manual',recordedAt:new Date().toISOString(),horses};
+    targetRace.resultStatus=entered.length===(targetRace.horses||[]).length?'complete':'partial';
+    ensureRaceId(targetDay,targetVenue,targetRace);
+    await setDoc(doc(window._fbDb,'raceDays',dayId),targetDay);
+    await bumpSyncVersion();
+    await idbPut('raceDays',targetDay);
+    const localIdx=(raceDays||[]).findIndex(d=>d.id===dayId);
+    if(localIdx>=0) raceDays[localIdx]=targetDay;
+    closeRaceResultModal();
+    renderWeekContent(targetDay);
+    if(analysisSelectedPrediction){
+      const selectedRace=findRaceForPrediction(analysisSelectedPrediction);
+      if(selectedRace?.day?.id===dayId && selectedRace?.venue?.name===venueName && Number(selectedRace?.race?.r)===Number(rNum)){
+        const selectedIndex=analysisPredictionCache.findIndex(p=>(p._docId||p.predictionId)===(analysisSelectedPrediction._docId||analysisSelectedPrediction.predictionId));
+        if(selectedIndex>=0) showPredictionDetail(selectedIndex);
+      }
+    }
+    showToast(`✓ ${entered.length}頭の結果をFirestoreに保存しました。別端末は更新通知から取得できます`);
+  }catch(e){
+    console.error('[keiba] 結果保存失敗:',e);
+    showToast('⚠ 結果の保存に失敗しました: '+(e.message||'Firestoreエラー'),true);
+  }
 }
 function findRaceForPrediction(p){
   if(!p) return null;
@@ -179942,7 +180052,7 @@ let analysisSelectedPrediction=null;
 async function loadPredictionHistory(limitCount=20){
   if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
   const {collection,query,orderBy,limit,getDocs}=window._fbFns;
-  const q=query(collection(window._fbDb,'predictions'),orderBy('createdAt','desc'),limit(limitCount));
+  const q=query(collection(window._fbDb,'predictions'),orderBy('createdAt','desc'));
   const snap=await getDocs(q);
   return snap.docs.map(d=>({...d.data(), _docId:d.id}));
 }
@@ -179964,67 +180074,147 @@ function analysisSpearman(xs,ys){
   const rx=a.map(z=>rank(z[0])), ry=a.map(z=>rankY(z[1])); const n=a.length;
   let d2=0; for(let i=0;i<n;i++)d2+=(rx[i]-ry[i])**2; return 1-(6*d2)/(n*(n*n-1));
 }
+const analysisFilters={
+  history:{venue:'',surface:'',distance:'',trackCondition:''},
+  factors:{venue:'',surface:'',distance:'',trackCondition:''},
+  conditions:{venue:'',surface:'',distance:'',trackCondition:''},
+  weights:{venue:'',surface:'',distance:'',trackCondition:''}
+};
+const analysisFilterLabels={venue:'競馬場',surface:'芝／ダート',distance:'距離',trackCondition:'馬場'};
+const analysisVenueOptions=['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+const analysisDistanceOptions=[1000,1100,1150,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2800,3000,3200,3400,3600];
+function analysisSnapshot(p){return p?.raceSnapshot||p?.raceRef||{};}
+function analysisFilterOptions(field){
+  const vals=(analysisPredictionCache||[]).map(p=>analysisSnapshot(p)[field]).filter(v=>v!==null&&v!==undefined&&String(v)!=='').map(v=>field==='distance'?String(Number(v)):String(v));
+  if(field==='venue') return [...new Set([...analysisVenueOptions,...vals])].sort((a,b)=>analysisVenueOptions.indexOf(a)-analysisVenueOptions.indexOf(b));
+  if(field==='surface') return ['芝','ダート'];
+  if(field==='distance') return [...new Set([...analysisDistanceOptions.map(String),...vals])].map(Number).filter(Number.isFinite).sort((a,b)=>a-b).map(String);
+  if(field==='trackCondition') return ['良','稍重','重','不良'];
+  return [...new Set(vals)].sort();
+}
+function analysisFilterHTML(tab){
+  const f=analysisFilters[tab]||{};
+  const fields=['venue','surface','distance','trackCondition'];
+  return `<div class="analysis-card analysis-filter-card"><div class="analysis-card-title">🔎 条件フィルター</div><div class="analysis-filter-grid">${fields.map(field=>{
+    const options=analysisFilterOptions(field); const value=f[field]||'';
+    return `<label class="analysis-filter-field"><span>${analysisFilterLabels[field]}</span><select class="analysis-filter" id="analysis-filter-${tab}-${field}"><option value="">全て</option>${options.map(v=>`<option value="${aiEsc(String(v))}" ${String(value)===String(v)?'selected':''}>${aiEsc(String(v))}${field==='distance'?'m':''}</option>`).join('')}</select></label>`;
+  }).join('')}</div><button class="analysis-filter-submit" type="button" onclick="applyAnalysisFilter('${tab}')">${tab==='history'?'この条件で検索':'この条件で分析'}</button><div class="analysis-note">フィルターはこのタブ専用です。条件を選んでボタンを押すと結果が更新されます。</div></div>`;
+}
+function applyAnalysisFilter(tab){
+  if(!analysisFilters[tab])return;
+  for(const field of ['venue','surface','distance','trackCondition']){
+    analysisFilters[tab][field]=document.getElementById(`analysis-filter-${tab}-${field}`)?.value||'';
+  }
+  if(tab==='history') renderPredictionHistoryList();
+  else if(tab==='factors') renderFactorAnalysis();
+  else if(tab==='conditions') renderConditionAnalysis();
+  else if(tab==='weights') renderWeightOptimization();
+}
+function analysisMatchesFilter(p,filter){
+  const r=analysisSnapshot(p);
+  for(const field of ['venue','surface','distance','trackCondition']){
+    const selected=filter?.[field]||''; if(!selected)continue;
+    let actual=r[field];
+    if(field==='distance') actual=actual==null?'':String(Number(actual)); else actual=actual==null?'':String(actual);
+    if(actual!==String(selected))return false;
+  }
+  return true;
+}
+function analysisLearningWeight(o){
+  const treatment=o?.race?.race?.reviewAnalysis?.learningTreatment||'normal';
+  if(treatment==='exclude')return 0;
+  if(treatment==='downweight')return 0.35;
+  return 1;
+}
+function analysisFilterOutcomes(tab){
+  let out=buildCompletedOutcomes().filter(o=>analysisMatchesFilter(o.prediction,analysisFilters[tab]));
+  if(tab==='factors'||tab==='weights') out=out.filter(o=>analysisLearningWeight(o)>0);
+  return out;
+}
 function buildCompletedOutcomes(){
   const out=[]; for(const p of (analysisPredictionCache||[])){const o=buildPredictionOutcome(p);if(o&&o.complete)out.push(o);} return out;
 }
-function calcFactorAnalysis(){
-  const outs=buildCompletedOutcomes(), keys=['overall','venue','distance','condition','form'];
+function calcFactorAnalysis(outs){
+  outs=outs||analysisFilterOutcomes('factors');
+  const keys=['overall','venue','distance','condition','form'];
   const labels={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性',form:'直近の調子'};
-  const rows=keys.map(k=>{let corr=[],top3=0,n=0; for(const o of outs){const usable=o.horses.filter(h=>h.factors?.[k]!=null&&h.finish!=null); if(usable.length<3)continue; const c=analysisSpearman(usable.map(h=>Number(h.factors[k])),usable.map(h=>-Number(h.finish))); if(c!=null)corr.push(c); const best=usable.slice().sort((a,b)=>Number(b.factors[k])-Number(a.factors[k]))[0]; if(best?.finish<=3)top3++; n++;} return {key:k,label:labels[k],races:n,corr:corr.length?corr.reduce((a,b)=>a+b,0)/corr.length:null,top3:n?top3/n:null};}); return {outs,rows};
+  const rows=keys.map(k=>{
+    let corrSum=0,corrWeight=0,top3Weight=0,totalWeight=0,rawRaces=0;
+    for(const o of outs){
+      const usable=o.horses.filter(h=>h.factors?.[k]!=null&&h.finish!=null);
+      if(usable.length<3)continue;
+      const c=analysisSpearman(usable.map(h=>Number(h.factors[k])),usable.map(h=>-Number(h.finish)));
+      const w=analysisLearningWeight(o); if(w<=0)continue;
+      if(c!=null){corrSum+=c*w;corrWeight+=w;}
+      const best=usable.slice().sort((a,b)=>Number(b.factors[k])-Number(a.factors[k]))[0];
+      if(best?.finish<=3)top3Weight+=w;
+      totalWeight+=w;rawRaces++;
+    }
+    return {key:k,label:labels[k],races:rawRaces,effectiveRaces:totalWeight,corr:corrWeight?corrSum/corrWeight:null,top3:totalWeight?top3Weight/totalWeight:null};
+  });
+  return {outs,rows};
 }
 function renderFactorAnalysis(){
   setAnalysisSectionTab(1);
-  const el=document.getElementById('analysisHistory'); if(!el)return; const {outs,rows}=calcFactorAnalysis();
-  el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🔎 Phase 4：要素別の当たり・外れ</div><div class=\"analysis-sub\">結果が完全入力された予想だけを対象に、各要素のスコアが実着順とどの程度整合したかをレース内で集計します。</div><table class=\"analysis-table\"><thead><tr><th>要素</th><th>対象レース</th><th>着順整合度</th><th>その要素1位馬の3着内率</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${r.races}</td><td>${r.corr==null?'—':r.corr.toFixed(3)}</td><td>${r.top3==null?'—':(r.top3*100).toFixed(1)+'%'}</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">整合度はレース内順位のSpearman相関。+1に近いほど「その要素の高評価馬ほど上位に来た」傾向、0付近は関係が弱いことを示します。因果関係を証明する指標ではありません。</div></div>`;
+  const el=document.getElementById('analysisHistory'); if(!el)return;
+  const {outs,rows}=calcFactorAnalysis();
+  el.innerHTML=`${analysisFilterHTML('factors')}<div class="analysis-card"><div class="analysis-card-title">🔎 要素別の当たり・外れ</div><div class="analysis-sub">選択条件に一致し、結果が完全入力された予想 ${outs.length} 件を対象に、回顧分析の学習扱い（通常・弱める・除外）を反映して集計します。</div><table class="analysis-table"><thead><tr><th>要素</th><th>対象レース</th><th>着順整合度</th><th>その要素1位馬の3着内率</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td>${r.races}</td><td>${r.corr==null?'—':r.corr.toFixed(3)}</td><td>${r.top3==null?'—':(r.top3*100).toFixed(1)+'%'}</td></tr>`).join('')}</tbody></table><div class="analysis-note">整合度はレース内順位のSpearman相関。+1に近いほど「その要素の高評価馬ほど上位に来た」傾向、0付近は関係が弱いことを示します。相関計算に使えるデータが3頭未満のレースは除外します。学習扱いが「弱める」のレースは重み0.35で集計し、「除外」は要素分析・重み学習の対象から外します。</div></div>`;
 }
-// ============================================================
-// Phase 5: 条件別傾向分析
-// 仮説：全レース平均ではなく、競馬場/距離帯/馬場/芝ダートなど
-// 条件を分けることで「どの条件で何を重視すべきか」を見つける。
-// サンプル数が少ない条件は「参考値」として表示し、自動適用しない。
-// ============================================================
-function conditionDistanceBand(d){if(!Number.isFinite(Number(d)))return'距離不明'; const n=Number(d); return n<1400?'〜1399m':n<1800?'1400〜1799m':n<2200?'1800〜2199m':'2200m〜';}
-function calcConditionRows(){
-  const outs=buildCompletedOutcomes(); const groups=new Map();
-  for(const o of outs){const r=o.prediction.raceSnapshot||{}; const vals=[['競馬場',r.venue||'不明'],['芝/ダート',r.surface||'不明'],['距離帯',conditionDistanceBand(r.distance)],['馬場',r.trackCondition||'不明']]; for(const [kind,val] of vals){const key=kind+'|'+val; if(!groups.has(key))groups.set(key,{kind,val,n:0,top3:0,win:0,top5:0}); const g=groups.get(key); g.n++; if(o.topPick?.finish===1)g.win++; if(o.topPick?.finish<=3)g.top3++; if(o.top5.filter(h=>h.top3).length>=1)g.top5++;}}
-  return [...groups.values()].sort((a,b)=>b.n-a.n);
+function conditionLabel(r){return `${r.venue||'不明'}・${r.surface||'不明'}・${r.distance?`${r.distance}m`:'距離不明'}・${r.trackCondition||'不明'}`;}
+function calcConditionRows(outs){
+  outs=outs||analysisFilterOutcomes('conditions'); const groups=new Map();
+  for(const o of outs){const r=analysisSnapshot(o.prediction); const key=[r.venue||'不明',r.surface||'不明',r.distance??'不明',r.trackCondition||'不明'].join('|');
+    if(!groups.has(key))groups.set(key,{key,condition:conditionLabel(r),n:0,top3:0,win:0,top5:0});
+    const g=groups.get(key);g.n++;if(o.topPick?.finish===1)g.win++;if(o.topPick?.finish<=3)g.top3++;if(o.top5.some(h=>h.top3))g.top5++;
+  }
+  return [...groups.values()].sort((a,b)=>b.n-a.n||a.condition.localeCompare(b.condition,'ja'));
 }
+function analysisConditionMetrics(g){return {winRate:g.n?g.win/g.n:0,top3Rate:g.n?g.top3/g.n:0,top5Rate:g.n?g.top5/g.n:0};}
 function renderConditionAnalysis(){
   setAnalysisSectionTab(2);
-  const el=document.getElementById('analysisHistory');if(!el)return; const rows=calcConditionRows();
-  el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🗺 Phase 5：条件別の傾向</div><div class=\"analysis-sub\">結果が完全入力された予想を、競馬場・芝/ダート・距離帯・馬場条件ごとに分けて集計します。</div><table class=\"analysis-table\"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rows.map(g=>`<tr><td>${aiEsc(g.kind)}：${aiEsc(g.val)}</td><td>${g.n}</td><td>${g.n?(g.win/g.n*100).toFixed(1)+'%':'—'}</td><td>${g.n?(g.top3/g.n*100).toFixed(1)+'%':'—'}</td><td>${g.n?(g.top5/g.n*100).toFixed(1)+'%':'—'}</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">現段階では条件別傾向を「観察用」として表示。少数サンプルの数字をそのまま予想ロジックへ反映しません。</div></div>`;
+  const el=document.getElementById('analysisHistory');if(!el)return;
+  const outs=analysisFilterOutcomes('conditions'); const rows=calcConditionRows(outs);
+  const top10=rows.filter(g=>g.n>=3).map(g=>({...g,...analysisConditionMetrics(g)})).sort((a,b)=>b.top5Rate-a.top5Rate||b.top3Rate-a.top3Rate||b.winRate-a.winRate||b.n-a.n).slice(0,10);
+  const rowHTML=rows.map(g=>`<tr><td>${aiEsc(g.condition)}</td><td>${g.n}</td><td>${(g.win/g.n*100).toFixed(1)}%</td><td>${(g.top3/g.n*100).toFixed(1)}%</td><td>${(g.top5/g.n*100).toFixed(1)}%</td></tr>`).join('');
+  const topHTML=top10.map((g,i)=>`<tr><td>${i+1}</td><td>${aiEsc(g.condition)}</td><td>${g.n}</td><td>${(g.winRate*100).toFixed(1)}%</td><td>${(g.top3Rate*100).toFixed(1)}%</td><td>${(g.top5Rate*100).toFixed(1)}%</td></tr>`).join('');
+  el.innerHTML=`${analysisFilterHTML('conditions')}<div class="analysis-card"><div class="analysis-card-title">🗺 条件別分析</div><div class="analysis-sub">条件に一致する結果確定済み予想 ${outs.length} 件。距離は距離帯にまとめず、1400m・1600mのように完全一致で集計します。</div>${rows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rowHTML}</tbody></table>`:'<div class="analysis-empty">この条件に該当する結果付き予想はありません。</div>'}<div class="analysis-note">各率の分母は該当条件の結果確定済み予想数です。同じレースで異なる重みの予想を複数保存した場合は、それぞれ別の予想記録として集計します。</div></div><div class="analysis-card"><div class="analysis-card-title">🏆 現在のAI予想・得意条件ランキング TOP10</div><div class="analysis-sub">選択条件に該当する条件組合せを、予想5頭の3着内率を主指標にランキング。少数データによる過大評価を避けるため3予想以上の条件だけを掲載します。</div>${top10.length?`<table class="analysis-table"><thead><tr><th>順位</th><th>条件</th><th>予想数</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭3着内率</th></tr></thead><tbody>${topHTML}</tbody></table>`:'<div class="analysis-empty">ランキングを作成できる条件がまだありません（条件ごとに結果付き予想が3件以上必要です）。</div>'}</div>`;
 }
-// ============================================================
-// Phase 6: 重み学習（試算）
-// 仮説：S/A/B/C/D/Fの評価尺度は固定したまま、保存済みの5要素値に
-// 0〜6の重みを掛けて順位を作り直し、過去結果で成績が良かった組合せを
-// 「候補」として表示する。自動適用はしない。
-// ============================================================
 function scoreWithWeights(h,w){const vals=['overall','venue','distance','condition','form']; let s=0,ws=0; for(const k of vals){const v=h.factors?.[k]; const ww=Number(w[k])||0;if(v==null||ww<=0)continue;s+=Number(v)*ww;ws+=ww;}return ws?s/ws:null;}
-function evaluateWeightSet(outs,w){let races=0,top3=0,win=0; for(const o of outs){const usable=o.horses.filter(h=>scoreWithWeights(h,w)!=null&&h.finish!=null); if(!usable.length)continue; const ranked=usable.slice().sort((a,b)=>scoreWithWeights(b,w)-scoreWithWeights(a,w)); const top=ranked[0];races++;if(top.finish===1)win++;if(top.finish<=3)top3++;} return {races,win,top3,winRate:races?win/races:0,top3Rate:races?top3/races:0};}
-function optimizeWeights(){
-  const outs=buildCompletedOutcomes(); if(!outs.length)return [];
+function evaluateWeightSet(outs,w){let races=0,top3=0,win=0,effectiveRaces=0; for(const o of outs){const usable=o.horses.filter(h=>scoreWithWeights(h,w)!=null&&h.finish!=null); if(!usable.length)continue; const ranked=usable.slice().sort((a,b)=>scoreWithWeights(b,w)-scoreWithWeights(a,w)); const top=ranked[0],rw=analysisLearningWeight(o);if(rw<=0)continue;races++;effectiveRaces+=rw;if(top.finish===1)win+=rw;if(top.finish<=3)top3+=rw;} return {races,effectiveRaces,win,top3,winRate:effectiveRaces?win/effectiveRaces:0,top3Rate:effectiveRaces?top3/effectiveRaces:0};}
+function optimizeWeights(outs){
+  outs=outs||analysisFilterOutcomes('weights'); if(!outs.length)return [];
   const vals=[0,2,4,6], keys=['overall','venue','distance','condition','form']; let best=[];
-  // 総当たりは4^5=1024通り。ローカル計算なのでFirestore追加読み込みなし。
   for(const a of vals)for(const b of vals)for(const c of vals)for(const d of vals)for(const e of vals){const w={overall:a,venue:b,distance:c,condition:d,form:e};if(!Object.values(w).some(v=>v>0))continue;const m=evaluateWeightSet(outs,w);if(m.races<3)continue;best.push({w,m});}
   best.sort((x,y)=>(y.m.top3Rate-x.m.top3Rate)||(y.m.winRate-x.m.winRate)); return best.slice(0,10);
 }
 function renderWeightOptimization(){
   setAnalysisSectionTab(3);
-  const el=document.getElementById('analysisHistory');if(!el)return; const outs=buildCompletedOutcomes(); const best=optimizeWeights();
-  el.innerHTML=`<div class=\"analysis-card\"><button class=\"analysis-back\" onclick=\"renderAnalysisView()\">← 分析メニューへ</button><div class=\"analysis-card-title\">🧠 Phase 6：重み学習（試算）</div><div class=\"analysis-sub\">保存済み予想の各要素スコアを使い、0/2/4/6の粗い重み候補を総当たりします。現在の予想設定を自動変更することはありません。</div>${!outs.length?'<div class="analysis-empty">結果付きの予想がまだありません。まずレース結果を入力してください。</div>':`<table class=\"analysis-table\"><thead><tr><th>順位</th><th>総合</th><th>場</th><th>距離</th><th>馬場</th><th>調子</th><th>対象</th><th>本命3着内</th><th>本命1着</th></tr></thead><tbody>${best.map((x,i)=>`<tr><td>${i+1}</td><td>${x.w.overall}</td><td>${x.w.venue}</td><td>${x.w.distance}</td><td>${x.w.condition}</td><td>${x.w.form}</td><td>${x.m.races}</td><td>${(x.m.top3Rate*100).toFixed(1)}%</td><td>${(x.m.winRate*100).toFixed(1)}%</td></tr>`).join('')}</tbody></table><div class=\"analysis-note\">これは「保存済みの各要素スコアだけ」を使った候補比較。現行予想の高適性ボーナス等は完全再現していないため、最終的な新重みとして即採用せず、Phase 6の学習候補として扱います。</div>`}</div>`;
+  const el=document.getElementById('analysisHistory');if(!el)return;
+  const outs=analysisFilterOutcomes('weights'); const best=optimizeWeights(outs);
+  el.innerHTML=`${analysisFilterHTML('weights')}<div class="analysis-card"><div class="analysis-card-title">🧠 重み学習（候補試算）</div><div class="analysis-sub">選択条件に一致する結果確定済み予想 ${outs.length} 件を使い、回顧分析の学習扱いを反映して0／2／4／6の重み候補を比較します。現在の予想設定は自動変更しません。</div>${!outs.length?'<div class="analysis-empty">この条件に結果付き予想がありません。</div>':!best.length?'<div class="analysis-empty">重み候補を比較するには、少なくとも3件の予想で各要素のスコアと結果が必要です。</div>':`<table class="analysis-table"><thead><tr><th>順位</th><th>総合</th><th>場</th><th>距離</th><th>馬場</th><th>調子</th><th>対象予想</th><th>本命3着内</th><th>本命1着</th></tr></thead><tbody>${best.map((x,i)=>`<tr><td>${i+1}</td><td>${x.w.overall}</td><td>${x.w.venue}</td><td>${x.w.distance}</td><td>${x.w.condition}</td><td>${x.w.form}</td><td>${x.m.races}</td><td>${(x.m.top3Rate*100).toFixed(1)}%</td><td>${(x.m.winRate*100).toFixed(1)}%</td></tr>`).join('')}</tbody></table><div class="analysis-note">候補は保存済みの5要素スコアのみで比較しています。現行AIの高適性ボーナス等は完全再現していないため、候補は参考値であり自動適用しません。回顧扱い「弱める」は重み0.35、「除外」は対象外です。</div>`}</div>`;
 }
 function renderAnalysisView(){
   const el=document.getElementById('analysisMain'); if(!el) return;
-  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="loadAndRenderPredictionHistory()">予想履歴</button><button class="analysis-section-tab" onclick="renderFactorAnalysis()">要素分析</button><button class="analysis-section-tab" onclick="renderConditionAnalysis()">条件別分析</button><button class="analysis-section-tab" onclick="renderWeightOptimization()">重み学習</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">分析は「🔄 履歴を読み込む」を押したときだけFirestoreから取得します。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を読み込む</button></div></div><div id="analysisHistory"></div>`;
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="loadAndRenderPredictionHistory()">予想履歴</button><button class="analysis-section-tab" onclick="renderFactorAnalysis()">要素分析</button><button class="analysis-section-tab" onclick="renderConditionAnalysis()">条件別分析</button><button class="analysis-section-tab" onclick="renderWeightOptimization()">重み学習</button><button class="analysis-section-tab" onclick="renderReviewAIAnalysis()">回顧AI分析</button><button class="analysis-section-tab" onclick="renderReviewEventRanking()">事象ランキング</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">予想履歴を再取得すると、クラウド上の最新記録を読み込みます。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を再読み込み</button></div></div><div id="analysisHistory"></div>`;
   loadAndRenderPredictionHistory();
+}
+async function refreshPredictionRaceDays(predictions){
+  // 分析時に結果データだけはクラウドの最新開催日から再取得する。馬DB全件同期は行わない。
+  try{
+    if(!(await waitForFirebase(2500)))return;
+    const {doc,getDoc}=window._fbFns; const ids=[...new Set((predictions||[]).map(p=>p.raceRef?.dayId||String(p.raceKey||'').split('__')[0]).filter(Boolean))];
+    for(const id of ids){
+      try{const snap=await getDoc(doc(window._fbDb,'raceDays',id));if(!snap.exists())continue;const remote=snap.data();const idx=(raceDays||[]).findIndex(d=>d.id===id);if(idx>=0)raceDays[idx]=remote;else raceDays.push(remote);await idbPut('raceDays',remote);}catch(e){console.warn('[keiba] 分析用レース結果の更新をスキップ:',id,e);}
+    }
+  }catch(e){console.warn('[keiba] 分析用最新結果の取得に失敗:',e);}
 }
 async function loadAndRenderPredictionHistory(){
   setAnalysisSectionTab(0);
   const el=document.getElementById('analysisHistory'); if(!el) return;
   el.innerHTML='<div class="analysis-card analysis-empty">予想履歴を読み込んでいます…</div>';
   try{
-    analysisPredictionCache=await loadPredictionHistory(20);
+    analysisPredictionCache=await loadPredictionHistory();
+    await refreshPredictionRaceDays(analysisPredictionCache);
     renderPredictionHistoryList();
   }catch(e){
     console.error(e);
@@ -180056,12 +180246,16 @@ function setAnalysisSectionTab(index){
   const tabs=document.querySelectorAll('#analysisMain .analysis-section-tab');
   tabs.forEach((el,i)=>el.classList.toggle('active',i===index));
 }
-
 function renderPredictionHistoryList(){
   const el=document.getElementById('analysisHistory'); if(!el) return;
-  if(!analysisPredictionCache.length){ el.innerHTML='<div class="analysis-card analysis-empty">まだ予想記録がありません。AI予想画面の「この予想を記録」から蓄積できます。</div>'; return; }
-  el.innerHTML=analysisPredictionCache.map((p,i)=>{
-    const r=p.raceSnapshot||{}; const top=(p.top5||[]).map(x=>`${x.mark}${x.num} ${aiEsc(x.name)}`).join(' ／ '); const o=buildPredictionOutcome(p); const status=o?(o.complete?'✓ 結果あり':'△ 結果一部入力'):'— 結果未入力';
+  const filtered=analysisPredictionCache.map((p,i)=>({p,i})).filter(x=>analysisMatchesFilter(x.p,analysisFilters.history));
+  const completed=filtered.filter(x=>{const o=buildPredictionOutcome(x.p);return o&&o.complete;}).length;
+  const partial=filtered.filter(x=>{const o=buildPredictionOutcome(x.p);return o&&!o.complete;}).length;
+  const toolbar=`${analysisFilterHTML('history')}<div class="analysis-card"><div class="analysis-card-title">📚 予想履歴</div><div class="analysis-sub">該当予想：${filtered.length}件（結果完了 ${completed}件／一部入力 ${partial}件／未入力 ${filtered.length-completed-partial}件）</div></div>`;
+  if(!analysisPredictionCache.length){el.innerHTML=toolbar+'<div class="analysis-card analysis-empty">まだ予想記録がありません。AI予想画面の「この予想を記録」から蓄積できます。</div>';return;}
+  if(!filtered.length){el.innerHTML=toolbar+'<div class="analysis-card analysis-empty">指定条件に一致する予想履歴はありません。</div>';return;}
+  el.innerHTML=toolbar+filtered.map(({p,i})=>{
+    const r=p.raceSnapshot||{}; const top=(p.top5||[]).map(x=>`${x.mark||''}${x.num} ${aiEsc(x.name)}`).join(' ／ '); const o=buildPredictionOutcome(p); const status=o?(o.complete?'✓ 結果あり':'△ 結果一部入力'):'— 結果未入力';
     return `<div class="analysis-prediction" onclick="showPredictionDetail(${i})"><div class="analysis-pred-head"><div class="analysis-pred-title">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-pred-meta">${status} ／ ${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')} ／ ${analysisFormatDate(p.createdAt)}</div></div><div class="analysis-marks">${top||'上位予想なし'}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">重み：総合${p.weights?.overall??0}・競馬場${p.weights?.venue??0}・距離${p.weights?.distance??0}・馬場${p.weights?.condition??0}・調子${p.weights?.form??0}</div><button type="button" class="analysis-back" style="margin-top:8px;color:var(--red)" onclick="deletePredictionHistory(${i},event)">🗑 この履歴を削除</button></div>`;
   }).join('');
 }
@@ -180069,7 +180263,11 @@ function showPredictionDetail(i){
   const p=analysisPredictionCache[i]; if(!p) return; analysisSelectedPrediction=p;
   const el=document.getElementById('analysisHistory'); if(!el) return;
   const r=p.raceSnapshot||{}, w=p.weights||{}; const outcome=buildPredictionOutcome(p);
-  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/5</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">結果はレース画面の「📋 結果を入力」から保存できます。</div></div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div></div>`;
+  const resultRaceRef=findRaceForPrediction(p);
+  const resultEntryButton=resultRaceRef?.day&&resultRaceRef?.venue&&resultRaceRef?.race
+    ? `<button type="button" class="result-entry-btn" style="margin-top:10px" onclick="openRaceResultModal('${aiEsc(resultRaceRef.day.id)}','${aiEsc(resultRaceRef.venue.name)}',${Number(resultRaceRef.race.r)})">📋 ${outcome?'結果を確認・修正':'結果を入力'}</button>`
+    : `<div class="analysis-note">対応する開催レースが見つからないため、ここから結果入力を開けません。開催データとの紐づけを確認してください。</div>`;
+  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/5</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
   const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
   el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
 }
@@ -180098,6 +180296,7 @@ function aiMakePrediction(day,venue,race){
   } else out+='<div class="ai-predict-note">このレースの出走馬と全頭診断の紐付けデータが不足しています。</div>';
   out+=`<h4>🧭 展開イメージ</h4><div>${aiEsc(flow)}</div>`;
   out+=`<div class="ai-predict-note">予想スコアはカスタムの重みで算出しています。直近の調子は出馬表下の「直近の調子スコアランキング」と同じ直近3走平均スコアを使用します。競馬場・距離・馬場の各適性は、重視している項目について3走以上かつ3.0以上なら強く評価し、さらに唯一なら追加ボーナスを加えています。馬場適性は選択した馬場状態（良・稍重・重不良）の実績を別に評価します。カスタムで重み0にした項目は完全に無視します。</div></div>`;
+  out+=reviewAITrendContextHTML(day,venue,race);
   return out;
 }
 let aiPredictionState = null;
@@ -180250,6 +180449,237 @@ function askAIPredictor(dayId,venueName,rNum){
   document.getElementById('aiPredictQuestion').value='';
   scrollAIChat();
 }
+
+// ============================================================
+// Phase 1: 回顧文のLLM分析ワークスペース
+// ブラウザにAPIキーを埋め込まないため、分析プロンプトを作成し、
+// 外部LLMのJSON回答を確認してからrace.reviewAnalysisとして保存する。
+// ============================================================
+function reviewAIStableRaceId(day,venue,race){
+  // 読み取り・一覧表示では既存レースにIDを書き込まない。明示的な登録操作時だけensureRaceIdを使う。
+  return race?.raceId || `race_${day?.id||''}_${encodeURIComponent(String(venue?.name||''))}_${Number(race?.r||0)}`;
+}
+let reviewAISelectedRaceId = '';
+let reviewAIRaceSearch = '';
+const REVIEW_AI_INITIAL_OPTION_LIMIT = 100;
+function reviewAIGetRaces(){
+  // 旧実装は「全レースごとに全馬の全近走」を走査していたため、
+  // 大規模DBではレース数×馬数×近走数の処理になり、タブを開くと固まる。
+  // 先にレースIDを索引化し、馬の回顧は全データを1回だけ走査する。
+  const raceMeta=new Map();
+  for(const day of (raceDays||[])) for(const venue of (day.venues||[])) for(const race of (venue.races||[])){
+    const raceId=reviewAIStableRaceId(day,venue,race);
+    if(!raceMeta.has(raceId)) raceMeta.set(raceId,{day,venue,race,raceId,linked:[],result:null});
+  }
+  for(const h of (horses||[])){
+    for(const rr of (h.races||[])){
+      if(!rr || !rr.raceId) continue;
+      const comment=String(rr.comment||'').trim();
+      if(!comment) continue;
+      const meta=raceMeta.get(rr.raceId);
+      if(meta) meta.linked.push({horse:h.name,eval:rr.eval||'',comment,track:rr.track||'',reviewSource:rr.reviewSource||'',reviewClassification:rr.reviewClassification||null});
+    }
+  }
+  const rows=[];
+  for(const meta of raceMeta.values()){
+    meta.result=getRaceResultObject(meta.race);
+    if(meta.linked.length || meta.race.reviewAnalysis || meta.result) rows.push(meta);
+  }
+  return rows.sort((a,b)=>String(b.day.date||'').localeCompare(String(a.day.date||''))||Number(b.race.r||0)-Number(a.race.r||0));
+}
+function reviewAISelected(rows){
+  const list=Array.isArray(rows)?rows:reviewAIGetRaces();
+  return list.find(x=>x.raceId===reviewAISelectedRaceId)||list[0]||null;
+}
+function reviewAISetRaceSearch(value){reviewAIRaceSearch=String(value||'');renderReviewAIAnalysis();}
+function reviewAIContextLabel(x){
+  if(!x)return '';
+  return `${x.day.date||x.day.label||''} ${x.venue.name||''} ${x.race.r||''}R ${x.race.name||''}｜${x.race.track||'条件不明'}`;
+}
+function reviewAIBuildPrompt(x){
+  if(!x)return '';
+  const result=x.result?.horses||[];
+  const input={
+    task:'競馬の回顧を分析し、事実と推測を区別して構造化してください。能力の誤評価と、不利・展開による能力未発揮を同一視しないでください。',
+    race:{raceId:x.raceId,date:x.day.date||'',venue:x.venue.name||'',raceNumber:x.race.r||null,raceName:x.race.name||'',track:x.race.track||'',raceSnapshot:buildRaceRef(x.day,x.venue,x.race),result:result.map(h=>({num:h.num,name:h.name,finish:h.finish}))},
+    horseReviews:x.linked.map(r=>({horse:r.horse,evaluation:r.eval,track:r.track,comment:r.comment})),
+    outputSchema:{
+      summary:'レース全体の要約。根拠がなければ不明とする',
+      events:[{event:'発生事象を短い自然語で表現。固定カテゴリに無理に当てはめない',scope:'race|horse',horse:'該当馬。全体なら空文字',evidence:'根拠となる回顧文の要約または短い引用',inference:'そこから推論できること',confidence:0.0,affectsPrediction:'予想への影響の説明',learningTreatment:'normal|downweight|exclude_factor_learning',learningReason:'その扱いにする理由',conditionHypotheses:['検証したい条件仮説。確定事実とは書かない']}],
+      uncertainties:['情報不足・矛盾・要確認事項']
+    },
+    rules:[
+      '事実として書かれていないペースや不利を捏造しない',
+      'confidenceは0から1',
+      'learningTreatmentは予想要素の重み学習への扱いであり、条件特性分析からは原則除外しない',
+      '不利があったことだけでレース全体を無条件に除外しない',
+      'JSONオブジェクトのみ返す。Markdownコードフェンスは付けない'
+    ]
+  };
+  return JSON.stringify(input,null,2);
+}
+function renderReviewAIAnalysis(){
+  setAnalysisSectionTab(4);
+  const el=document.getElementById('analysisHistory'); if(!el)return;
+  const rows=reviewAIGetRaces();
+  if(!rows.length){
+    el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">🧠 回顧AI分析</div><div class="analysis-empty">分析対象の回顧が見つかりません。馬ページの近走評価にコメントを登録し、対象レースと紐づけてください。</div></div>`;
+    return;
+  }
+  const query=reviewAIRaceSearch.trim().toLocaleLowerCase();
+  const matchedRows=query?rows.filter(r=>`${reviewAIContextLabel(r)} ${r.raceId}`.toLocaleLowerCase().includes(query)):rows;
+  if(!reviewAISelectedRaceId || !rows.some(x=>x.raceId===reviewAISelectedRaceId)) reviewAISelectedRaceId=(matchedRows[0]||rows[0]).raceId;
+  let x=reviewAISelected(rows);
+  let optionRows=matchedRows.slice(0,REVIEW_AI_INITIAL_OPTION_LIMIT);
+  if(x&&!optionRows.some(r=>r.raceId===x.raceId)) optionRows=[x,...optionRows].slice(0,REVIEW_AI_INITIAL_OPTION_LIMIT);
+  const opts=optionRows.map(r=>`<option value="${aiEsc(r.raceId)}" ${r.raceId===x.raceId?'selected':''}>${aiEsc(reviewAIContextLabel(r))}（回顧${r.linked.length}件${r.race.reviewAnalysis?'・分析済み':''}）</option>`).join('');
+  const analysis=x.race.reviewAnalysis||null;
+  const reviewHTML=x.linked.length?x.linked.map(r=>`<div class="review-ai-event"><div class="review-ai-event-title">${aiEsc(r.horse)} ${r.eval?`<span class="review-ai-pill">評価 ${aiEsc(r.eval)}</span>`:''} ${r.reviewSource==='new-entry'?'<span class="review-ai-pill">新規入力</span>':''}</div><div class="review-ai-status">${aiEsc(r.comment)}</div>${r.reviewClassification?.categories?.length?`<div class="review-ai-status" style="margin-top:5px;color:var(--accent2)">自動分類（暫定）：${r.reviewClassification.categories.map(c=>aiEsc(c.label)).join('・')}</div>`:''}</div>`).join(''):'<div class="analysis-empty">このレースIDに紐づく馬ごとの回顧コメントはありません。レース結果のみで分析する場合は、結果も含めたプロンプトを生成できます。</div>';
+  const savedHTML=analysis?`<div class="analysis-card"><div class="analysis-card-title">保存済み分析 ${aiEsc(analysis.version||'v1')}</div><div class="review-ai-status">${aiEsc(analysis.summary||'要約なし')}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px"><label style="font-size:11px;color:var(--muted2)">要素分析・重み学習での扱い <select id="reviewAI-learning-treatment" class="review-ai-select" style="max-width:240px"><option value="normal" ${(analysis.learningTreatment||'normal')==='normal'?'selected':''}>通常どおり使う</option><option value="downweight" ${analysis.learningTreatment==='downweight'?'selected':''}>影響を弱める（0.35）</option><option value="exclude" ${analysis.learningTreatment==='exclude'?'selected':''}>要素分析・重み学習から除外</option></select></label><button class="review-ai-btn secondary" onclick="reviewAISaveLearningTreatment()">学習扱いを保存</button></div>${(analysis.events||[]).map((e,i)=>`<div class="review-ai-event"><div class="review-ai-event-title">${i+1}. ${aiEsc(e.event||'名称なし')} <span class="review-ai-pill">確信度 ${Math.round((Number(e.confidence)||0)*100)}%</span></div><div class="review-ai-status">根拠：${aiEsc(e.evidence||'なし')}<br>推論：${aiEsc(e.inference||'なし')}<br>学習扱い：${aiEsc(e.learningTreatment||'normal')} — ${aiEsc(e.learningReason||'')}</div></div>`).join('')}${(analysis.uncertainties||[]).length?`<div class="analysis-note">要確認：${(analysis.uncertainties||[]).map(aiEsc).join('／')}</div>`:''}<div class="analysis-note">保存日時：${aiEsc(analysis.updatedAt||'不明')}。分析はLLMの推論を含むため、根拠を確認してから条件ランキングに反映します。</div></div>`:'<div class="analysis-card analysis-empty">まだ分析結果は保存されていません。</div>';
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">🧠 回顧AI分析</div><div class="analysis-sub">回顧文をLLMで解釈し、事象・根拠・確信度・学習への扱いをJSONで受け取って保存します。APIキーをHTMLに埋め込まないため、ここではプロンプト作成と結果の取り込みを行います。</div><div class="review-ai-toolbar"><label style="font-size:11px;color:var(--muted2)">分析対象レース<select class="review-ai-select" id="reviewAI-race-select" onchange="reviewAIChangeRace(this.value)">${opts}</select></label><button class="review-ai-btn secondary" onclick="reviewAICopyPrompt()">① 分析プロンプトをコピー</button></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><input class="review-ai-select" style="min-width:220px;flex:1" value="${aiEsc(reviewAIRaceSearch)}" placeholder="レース名・競馬場・日付で検索（全対象）" onchange="reviewAISetRaceSearch(this.value)"><span class="analysis-note">対象 ${rows.length}件／現在の候補 ${matchedRows.length}件。初期表示は最大${REVIEW_AI_INITIAL_OPTION_LIMIT}件です。</span></div><div class="review-ai-grid" style="margin-top:12px"><div class="review-ai-stat"><span>紐づく回顧コメント</span><b>${x.linked.length}</b></div><div class="review-ai-stat"><span>結果登録</span><b>${x.result?'あり':'なし'}</b></div><div class="review-ai-stat"><span>保存済み事象</span><b>${analysis?(analysis.events||[]).length:0}</b></div></div><div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">対象データ</div>${reviewHTML}</div><div class="analysis-card"><div class="analysis-card-title">② LLMの回答JSONを貼り付け</div><textarea id="reviewAI-json" class="review-ai-textarea" placeholder='LLMが返したJSONをここに貼り付けます。例：{"summary":"...","events":[...],"uncertainties":[]}'>${analysis?aiEsc(JSON.stringify(analysis,null,2)):''}</textarea><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="review-ai-btn" onclick="reviewAISaveResult()">③ JSONを検証して保存</button><button class="review-ai-btn secondary" onclick="reviewAIClearInput()">入力をクリア</button><span id="reviewAI-message" class="review-ai-status"></span></div><div class="analysis-note">JSON形式が正しいか、eventsの各項目に事象名があるかを検証します。保存はraceDaysの対象レースに行います。編集モード（?edit）ではFirestoreにも同期しますが、通常モードではこの端末のIndexedDBのみです。</div></div>${savedHTML}`;
+}
+function reviewAIChangeRace(id){reviewAISelectedRaceId=id;renderReviewAIAnalysis();}
+async function reviewAICopyPrompt(){
+  const x=reviewAISelected(); if(!x)return;
+  const prompt=reviewAIBuildPrompt(x);
+  try{await navigator.clipboard.writeText(prompt);showToast('✓ 分析プロンプトをコピーしました');}
+  catch(e){const ta=document.getElementById('reviewAI-json');if(ta){ta.value=prompt;showToast('⚠ コピーできないため入力欄に表示しました',true);}}
+}
+function reviewAIClearInput(){const el=document.getElementById('reviewAI-json');if(el)el.value='';}
+async function reviewAISaveResult(){
+  const x=reviewAISelected(), input=document.getElementById('reviewAI-json'), msg=document.getElementById('reviewAI-message');
+  if(!x||!input)return;
+  let parsed;
+  try{parsed=JSON.parse(input.value);}catch(e){if(msg)msg.textContent='JSONの構文エラー：'+e.message;return;}
+  if(!parsed||typeof parsed!=='object'||!Array.isArray(parsed.events)){if(msg)msg.textContent='summaryとevents配列を含むJSONを入力してください。';return;}
+  for(let i=0;i<parsed.events.length;i++){
+    const e=parsed.events[i];
+    if(!e||typeof e!=='object'||!String(e.event||'').trim()){if(msg)msg.textContent=`events[${i}]にevent（事象名）がありません。`;return;}
+    const c=Number(e.confidence);
+    if(e.confidence!==undefined&&(!Number.isFinite(c)||c<0||c>1)){if(msg)msg.textContent=`events[${i}]のconfidenceは0〜1で入力してください。`;return;}
+    if(!['normal','downweight','exclude_factor_learning'].includes(e.learningTreatment||'normal')){if(msg)msg.textContent=`events[${i}]のlearningTreatmentが不正です。`;return;}
+  }
+  const now=new Date().toISOString();
+  x.race.reviewAnalysis={version:'v1',raceId:x.raceId,summary:String(parsed.summary||''),events:parsed.events.map(e=>({...e,confidence:e.confidence==null?null:Number(e.confidence),learningTreatment:e.learningTreatment||'normal'})),uncertainties:Array.isArray(parsed.uncertainties)?parsed.uncertainties.map(String):[],updatedAt:now,source:'llm-user-reviewed'};
+  try{
+    await idbPut('raceDays',x.day);
+    if(typeof isEditMode!=='undefined'&&isEditMode){
+      const res=await fbSaveRaceDay(x.day);
+      if(!res?.ok)throw new Error(res?.message||'Firestore保存に失敗しました');
+    }
+    if(msg)msg.textContent='保存しました。';
+    showToast('✓ 回顧分析を保存しました');
+    renderReviewAIAnalysis();
+  }catch(e){console.error('[reviewAI] 保存失敗',e);if(msg)msg.textContent='保存エラー：'+(e.message||e);showToast('⚠ 回顧分析の保存に失敗しました',true);}
+}
+
+
+async function reviewAISaveLearningTreatment(){
+  const x=reviewAISelected(), sel=document.getElementById('reviewAI-learning-treatment');
+  if(!x||!x.race.reviewAnalysis||!sel)return;
+  const v=sel.value;
+  if(!['normal','downweight','exclude'].includes(v))return;
+  x.race.reviewAnalysis.learningTreatment=v;
+  x.race.reviewAnalysis.learningTreatmentUpdatedAt=new Date().toISOString();
+  try{
+    await idbPut('raceDays',x.day);
+    if(typeof isEditMode!=='undefined'&&isEditMode){const res=await fbSaveRaceDay(x.day);if(!res?.ok)throw new Error(res?.message||'Firestore保存に失敗しました');}
+    showToast('✓ 学習扱いを保存しました');renderReviewAIAnalysis();
+  }catch(e){console.error('[reviewAI] 学習扱い保存失敗',e);showToast('⚠ 学習扱いを保存できませんでした',true);}
+}
+
+// ============================================================
+// Phase 2: 回顧から抽出した事象の全体・条件別ランキング
+// 集計単位は重複予想を避けたraceId。LLM推論の確信度は併記する。
+// ============================================================
+function reviewAIAnalyzedRaces(){
+  const out=[];
+  for(const day of (raceDays||[]))for(const venue of(day.venues||[]))for(const race of(venue.races||[])){
+    const a=race.reviewAnalysis;
+    if(!a||!Array.isArray(a.events))continue;
+    const raceId=reviewAIStableRaceId(day,venue,race), ref=buildRaceRef(day,venue,race);
+    out.push({raceId,day,venue,race,analysis:a,ref});
+  }
+  return out;
+}
+function reviewAINormalizeEventName(name){
+  return String(name||'').trim().replace(/\s+/g,'').replace(/[。、，,！!？?「」『』（）()・]/g,'').toLowerCase();
+}
+function reviewAICollectEvents(){
+  const rows=[];
+  for(const r of reviewAIAnalyzedRaces())for(const e of r.analysis.events||[]){
+    if(!String(e.event||'').trim())continue;
+    rows.push({raceId:r.raceId,date:r.day.date||'',venue:r.venue.name||'',raceName:r.race.name||'',track:r.race.track||'',surface:r.ref.surface||'',distance:r.ref.distance||null,trackCondition:r.ref.trackCondition||'',event:String(e.event).trim(),eventKey:reviewAINormalizeEventName(e.event),scope:e.scope||'race',horse:e.horse||'',evidence:e.evidence||'',inference:e.inference||'',confidence:Number.isFinite(Number(e.confidence))?Number(e.confidence):null,learningTreatment:e.learningTreatment||'normal',conditionHypotheses:Array.isArray(e.conditionHypotheses)?e.conditionHypotheses:[]});
+  }
+  return rows;
+}
+function reviewAIEventStats(events){
+  const map=new Map();
+  for(const e of events){
+    const k=e.eventKey;
+    if(!map.has(k))map.set(k,{key:k,event:e.event,races:new Set(),mentions:0,confidences:[],conditions:new Map(),evidence:[]});
+    const x=map.get(k);x.races.add(e.raceId);x.mentions++;
+    if(e.confidence!=null)x.confidences.push(e.confidence);
+    const cond=`${e.venue||'不明'}・${e.surface||'不明'}・${e.distance?e.distance+'m':'距離不明'}`;
+    if(!x.conditions.has(cond))x.conditions.set(cond,new Set());x.conditions.get(cond).add(e.raceId);
+    if(e.evidence&&x.evidence.length<3&&!x.evidence.includes(e.evidence))x.evidence.push(e.evidence);
+  }
+  return [...map.values()].map(x=>({...x,raceCount:x.races.size,avgConfidence:x.confidences.length?x.confidences.reduce((a,b)=>a+b,0)/x.confidences.length:null,conditions:[...x.conditions.entries()].map(([condition,ids])=>({condition,count:ids.size})).sort((a,b)=>b.count-a.count)})).sort((a,b)=>b.raceCount-a.raceCount||b.mentions-a.mentions||a.event.localeCompare(b.event,'ja'));
+}
+function reviewAIConditionStats(events){
+  const map=new Map();
+  for(const e of events){
+    const condition=`${e.venue||'不明'}・${e.surface||'不明'}・${e.distance?e.distance+'m':'距離不明'}・${e.trackCondition||'馬場不明'}`;
+    const k=condition+'|'+e.eventKey;
+    if(!map.has(k))map.set(k,{condition,event:e.event,eventKey:e.eventKey,races:new Set(),confidences:[]});
+    const x=map.get(k);x.races.add(e.raceId);if(e.confidence!=null)x.confidences.push(e.confidence);
+  }
+  return [...map.values()].map(x=>({...x,raceCount:x.races.size,avgConfidence:x.confidences.length?x.confidences.reduce((a,b)=>a+b,0)/x.confidences.length:null})).sort((a,b)=>b.raceCount-a.raceCount||(b.avgConfidence||0)-(a.avgConfidence||0));
+}
+function renderReviewEventRanking(){
+  setAnalysisSectionTab(5);
+  const el=document.getElementById('analysisHistory');if(!el)return;
+  const races=reviewAIAnalyzedRaces(), events=reviewAICollectEvents(), global=reviewAIEventStats(events), byCond=reviewAIConditionStats(events);
+  const minRaces=Math.max(1,Number(document.getElementById('reviewAI-rank-min')?.value||1));
+  const globalRows=global.filter(x=>x.raceCount>=minRaces);
+  const condRows=byCond.filter(x=>x.raceCount>=minRaces).slice(0,100);
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📈 回顧から見つかった事象ランキング</div><div class="analysis-sub">LLMが保存した事象をraceId単位で集計します。同じレースの予想履歴が複数あっても、発生レース数は1件として数えます。表記が異なる似た事象はまだ自動統合せず、今後の改善候補として残します。</div><div class="review-ai-grid"><div class="review-ai-stat"><span>分析済みレース</span><b>${races.length}</b></div><div class="review-ai-stat"><span>抽出事象の記録</span><b>${events.length}</b></div><div class="review-ai-stat"><span>事象名の種類</span><b>${global.length}</b></div></div><label style="display:block;margin-top:12px;font-size:11px;color:var(--muted2)">ランキングに表示する最低発生レース数 <select id="reviewAI-rank-min" class="review-ai-select" style="max-width:220px" onchange="renderReviewEventRanking()">${[1,2,3,5,10].map(n=>`<option value="${n}" ${n===minRaces?'selected':''}>${n}レース以上</option>`).join('')}</select></label></div><div class="analysis-card"><div class="analysis-card-title">🌐 全体ランキング</div>${globalRows.length?globalRows.map((x,i)=>`<div class="review-ai-rank"><b>${i+1}</b><div><b>${aiEsc(x.event)}</b><div class="analysis-note">${x.mentions}件の記録／平均確信度 ${x.avgConfidence==null?'不明':Math.round(x.avgConfidence*100)+'%'}${x.conditions.length?'<br>多い条件：'+x.conditions.slice(0,2).map(c=>aiEsc(c.condition)+`（${c.count}）`).join('、'):''}${x.evidence.length?'<br>根拠例：'+x.evidence.map(aiEsc).join(' ／ '):''}</div><div class="review-ai-bar"><i style="width:${Math.min(100,x.raceCount/Math.max(1,global[0]?.raceCount||1)*100)}%"></i></div></div><span>${x.raceCount}レース</span></div>`).join(''):'<div class="analysis-empty">この発生件数の事象はありません。</div>'}<div class="analysis-note">これは回顧が記録された範囲での頻度です。全レースの発生率ではなく、未記録レースが多い場合は実際の発生頻度を表しません。</div></div><div class="analysis-card"><div class="analysis-card-title">🗺 条件別の事象ランキング</div><div class="analysis-sub">競馬場・芝ダート・距離・馬場の組合せごとに、何レースでその事象が記録されたかを表示します。</div>${condRows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>事象</th><th>発生レース数</th><th>平均確信度</th></tr></thead><tbody>${condRows.map(x=>`<tr><td>${aiEsc(x.condition)}</td><td>${aiEsc(x.event)}</td><td>${x.raceCount}</td><td>${x.avgConfidence==null?'—':Math.round(x.avgConfidence*100)+'%'}</td></tr>`).join('')}</tbody></table>`:'<div class="analysis-empty">条件別ランキングを作成できるデータがありません。</div>'}<div class="analysis-note">「中山1200mで多い」と結論づけるには、同条件で分析済みのレース数と、比較する全体の発生率が必要です。現在は発生レース数のランキングであり、条件ごとの発生率の断定ではありません。</div></div>`;
+}
+
+
+// ============================================================
+// Phase 4: 予想画面への条件事象情報の提示（検証モード）
+// 初期段階ではランキングのスコアを変更せず、条件別傾向を参考表示する。
+// 予想対象レース自身の回顧は除外し、未来情報の混入を防ぐ。
+// ============================================================
+function reviewAITrendContextHTML(day,venue,race){
+  try{
+    const targetId=ensureRaceId(day,venue,race);
+    const surface=aiExtractSurface(race.track)||'';
+    const distance=Number(aiExtractDistance(race.track))||null;
+    const all=reviewAIAnalyzedRaces().filter(x=>x.raceId!==targetId);
+    const matches=x=>x.venue.name===venue.name&&(aiExtractSurface(x.race.track)||'')===surface&&(Number(aiExtractDistance(x.race.track))||null)===distance;
+    const condRaces=all.filter(matches);
+    const allEvents=reviewAICollectEvents().filter(e=>e.raceId!==targetId);
+    const condIds=new Set(condRaces.map(x=>x.raceId));
+    const globalIds=new Set(all.map(x=>x.raceId));
+    if(!condRaces.length)return `<div class="ai-predict-note" style="margin-top:12px"><b>📚 条件事象データ</b><br>${aiEsc(venue.name)} ${aiEsc(surface||'馬場不明')} ${distance||'距離不明'}mの回顧分析がまだ十分にありません。現時点では事象傾向を予想に反映していません。</div>`;
+    const stats=new Map();
+    for(const e of allEvents){
+      const isCond=condIds.has(e.raceId);
+      const key=e.eventKey;
+      if(!stats.has(key))stats.set(key,{event:e.event,cond:new Set(),global:new Set(),confidence:[]});
+      const z=stats.get(key);
+      if(isCond)z.cond.add(e.raceId);
+      z.global.add(e.raceId);
+      if(e.confidence!=null)z.confidence.push(e.confidence);
+    }
+    const ranked=[...stats.values()].map(x=>({...x,condCount:x.cond.size,globalCount:x.global.size,condRate:condIds.size?x.cond.size/condIds.size:0,globalRate:globalIds.size?x.global.size/globalIds.size:0})).filter(x=>x.condCount>0).sort((a,b)=>(b.condRate-b.globalRate)||(b.condCount-a.condCount)).slice(0,3);
+    const confidence=condRaces.length>=5?'一定の比較が可能':'データ少数・仮説段階';
+    return `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📚 過去の回顧から見た条件事象（参考情報）</div><div class="analysis-sub">${aiEsc(venue.name)}・${aiEsc(surface||'馬場不明')}・${distance||'距離不明'}m｜条件分析済み ${condRaces.length}レース｜${confidence}</div>${ranked.length?ranked.map(x=>`<div class="review-ai-event"><div class="review-ai-event-title">${aiEsc(x.event)}</div><div class="review-ai-status">条件内の記録：${x.condCount}/${condIds.size}レース（${(x.condRate*100).toFixed(1)}%）<br>分析済み全条件の記録：${x.globalCount}/${globalIds.size}レース（${(x.globalRate*100).toFixed(1)}%）</div></div>`).join(''):'<div class="analysis-empty">比較できる事象がありません。</div>'}<div class="analysis-note">この表示は回顧記録に基づく仮説です。回顧が記録されたレースに偏る可能性があり、事象発生率の確定値ではありません。検証段階のため、印・スコア・ランキング順位は変更していません。</div></div>`;
+  }catch(e){console.warn('[reviewAI] 条件事象の参考表示に失敗:',e);return '';}
+}
+
 </script>
 
 </body>
