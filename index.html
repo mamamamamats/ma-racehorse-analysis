@@ -174165,6 +174165,8 @@ async function initApp() {
       resumeFirestoreSyncIfNeeded();
     } else {
       checkForRemoteUpdates();
+      // 旧raceDays.resultを新コレクションへ段階移行。移行元は削除せず、既存データを保護する。
+      migrateLegacyRaceResults().catch(e=>console.warn('[keiba] 旧結果の移行をスキップ:',e));
     }
   }
 }
@@ -179938,32 +179940,102 @@ async function saveCurrentPrediction(){
   }
 }
 // ============================================================
-// Phase 3: 予想と実際の結果を紐づける
-// 仮説/設計判断：現在のraceDaysには確定着順の専用フィールドがないため、
-// まずはレース単位の手入力を正式な結果データとして保存する。
-// 将来、自動取得を導入しても race.result の同一構造へ流し込めるようにする。
+// Phase 3: 結果データはraceDaysと分離し、raceResults/{raceId}に保存する。
+// raceDaysに残っている旧形式のresultは後方互換・移行用にだけ読む。
 // ============================================================
+const raceResultsCache = new Map();
 function getRaceResultObject(race){
+  const raceId=race?.raceId;
+  if(raceId && raceResultsCache.has(raceId)) return raceResultsCache.get(raceId);
   const r=race?.result;
   return r && Array.isArray(r.horses) ? r : null;
 }
-async function openRaceResultModal(dayId,venueName,rNum){
-  // 別端末で保存された最新の結果を、入力画面を開くタイミングでFirestoreから取得する。
+async function loadRaceResultForRace(day,venue,race,migrateLegacy=false){
+  if(!day||!venue||!race) return null;
+  const raceId=ensureRaceId(day,venue,race);
+  if(!raceId) return null;
   try{
     if(await waitForFirebase(2500)){
-      const {doc,getDoc}=window._fbFns;
-      const snap=await getDoc(doc(window._fbDb,'raceDays',dayId));
+      const {doc,getDoc,setDoc}=window._fbFns;
+      const snap=await getDoc(doc(window._fbDb,'raceResults',raceId));
       if(snap.exists()){
-        const remote=snap.data();
-        const idx=(raceDays||[]).findIndex(d=>d.id===dayId);
-        if(idx>=0){ raceDays[idx]=remote; await idbPut('raceDays',remote); }
+        const data=snap.data()||{};
+        const result=data.result || (Array.isArray(data.horses)?data:null);
+        if(result && Array.isArray(result.horses)){
+          raceResultsCache.set(raceId,result);
+          return result;
+        }
+      }else{
+        const legacy=race.result;
+        if(legacy && Array.isArray(legacy.horses)){
+          raceResultsCache.set(raceId,legacy);
+          if(migrateLegacy && isEditMode){
+            const record={raceId,dayId:day.id,venueName:venue.name,raceNumber:Number(race.r)||0,raceName:race.name||'',result:legacy,resultStatus:race.resultStatus||(legacy.horses.every(h=>h.finish!=null)?'complete':'partial'),updatedAt:legacy.recordedAt||new Date().toISOString(),migratedFrom:'raceDays'};
+            // 既存のraceResultsがないことを確認済みのときだけ作成。旧データで新しい結果を上書きしない。
+            await setDoc(doc(window._fbDb,'raceResults',raceId),record);
+            console.log('[keiba] 旧結果をraceResultsへ移行:',raceId);
+          }
+          return legacy;
+        }
       }
     }
-  }catch(e){ console.warn('[keiba] 結果入力前の最新データ取得に失敗。ローカルデータを使用します:',e); }
+  }catch(e){ console.warn('[keiba] raceResults取得/移行失敗:',raceId,e.code||e.message); }
+  const legacy=race.result;
+  if(legacy && Array.isArray(legacy.horses)){
+    raceResultsCache.set(raceId,legacy);
+    return legacy;
+  }
+  return null;
+}
+async function migrateLegacyRaceResults(){
+  if(!isEditMode || !(await waitForFirebase(3000))) return;
+  try{
+    const {doc,getDoc,setDoc,collection,getDocs}=window._fbFns;
+    const markerRef=doc(window._fbDb,'meta','raceResultsMigrationV1');
+    const markerSnap=await getDoc(markerRef);
+    if(markerSnap.exists()) return; // 全体移行は一度だけ
+    // ローカルキャッシュに限らず、Firestore上の全raceDaysを走査して旧形式の結果を移行する。
+    // 一回限りの処理。既存raceResultsがあるレースは絶対に上書きしない。
+    const [daysSnap,resultsSnap]=await Promise.all([
+      getDocs(collection(window._fbDb,'raceDays')),
+      getDocs(collection(window._fbDb,'raceResults'))
+    ]);
+    const existing=new Set(resultsSnap.docs.map(d=>d.id));
+    let migrated=0, foundLegacy=0;
+    for(const dayDoc of daysSnap.docs){
+      const day=dayDoc.data()||{}; if(!day.id) day.id=dayDoc.id;
+      for(const venue of (day.venues||[])) for(const race of (venue.races||[])){
+        const legacy=race?.result;
+        if(!legacy || !Array.isArray(legacy.horses)) continue;
+        foundLegacy++;
+        const raceId=ensureRaceId(day,venue,race);
+        if(existing.has(raceId)){
+          const localDay=(raceDays||[]).find(d=>d.id===day.id);
+          const localVenue=localDay?.venues?.find(v=>v.name===venue.name);
+          const localRace=localVenue?.races?.find(r=>Number(r.r)===Number(race.r));
+          const existingResult=resultsSnap.docs.find(d=>d.id===raceId)?.data()?.result;
+          if(existingResult && Array.isArray(existingResult.horses)) raceResultsCache.set(raceId,existingResult);
+          continue;
+        }
+        const record={raceId,dayId:day.id,venueName:venue.name,raceNumber:Number(race.r)||0,raceName:race.name||'',result:legacy,resultStatus:race.resultStatus||(legacy.horses.every(h=>h.finish!=null)?'complete':'partial'),updatedAt:legacy.recordedAt||new Date().toISOString(),migratedFrom:'raceDays'};
+        await setDoc(doc(window._fbDb,'raceResults',raceId),record);
+        existing.add(raceId); raceResultsCache.set(raceId,legacy); migrated++;
+      }
+    }
+    await setDoc(markerRef,{completedAt:new Date().toISOString(),legacyResultsFound:foundLegacy,migratedResults:migrated,version:1});
+    console.log(`[keiba] 旧結果移行完了: ${migrated}件をraceResultsへ移行（旧結果検出 ${foundLegacy}件）`);
+    if(migrated) showToast(`✓ 過去のレース結果 ${migrated}件を新しい保存先へ移行しました`);
+  }catch(e){
+    // 権限設定や通信の問題で失敗した場合は完了マーカーを作らず、次回起動時に再試行する。
+    console.warn('[keiba] 旧結果の全体移行に失敗。Firestoreルールを確認してください:',e.code||e.message);
+  }
+}
+async function openRaceResultModal(dayId,venueName,rNum){
   const {day,venue,race}=getRaceByRef(dayId,venueName,rNum);
   if(!day||!venue||!race) return;
   const horsesArr=Array.isArray(race.horses)?race.horses.filter(h=>h&&h.name):[];
   if(!horsesArr.length){ showToast('⚠ 出走馬が登録されていないため結果を入力できません',true); return; }
+  await loadRaceResultForRace(day,venue,race,true);
   let modal=document.getElementById('raceResultModal');
   if(!modal){
     modal=document.createElement('div'); modal.id='raceResultModal'; modal.className='modal-overlay';
@@ -179999,25 +180071,19 @@ async function saveRaceResult(dayId,venueName,rNum){
   try{
     if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
     const {doc,getDoc,setDoc}=window._fbFns;
-    // まずクラウド上の最新開催日を取得し、結果だけをそのレースへ反映する。
-    // 古い端末の開催日データ全体で他の端末の編集を上書きしないため。
-    const remoteSnap=await getDoc(doc(window._fbDb,'raceDays',dayId));
-    let targetDay=remoteSnap.exists()?remoteSnap.data():null;
-    if(!targetDay) targetDay=(raceDays||[]).find(d=>d.id===dayId);
-    if(!targetDay) throw new Error('保存対象の開催日が見つかりません');
-    const targetVenue=(targetDay.venues||[]).find(v=>v.name===venueName);
-    const targetRace=(targetVenue?.races||[]).find(r=>Number(r.r)===Number(rNum));
-    if(!targetVenue||!targetRace) throw new Error('クラウド上に対象レースが見つかりません。先に端末間同期を行ってください');
-    targetRace.result={schemaVersion:1,source:'manual',recordedAt:new Date().toISOString(),horses};
-    targetRace.resultStatus=entered.length===(targetRace.horses||[]).length?'complete':'partial';
-    ensureRaceId(targetDay,targetVenue,targetRace);
-    await setDoc(doc(window._fbDb,'raceDays',dayId),targetDay);
+    const {day,venue,race}=getRaceByRef(dayId,venueName,rNum);
+    if(!day||!venue||!race) throw new Error('対象レースが端末内に見つかりません');
+    const raceId=ensureRaceId(day,venue,race);
+    const result={schemaVersion:1,source:'manual',recordedAt:new Date().toISOString(),horses};
+    const resultStatus=entered.length===(race.horses||[]).length?'complete':'partial';
+    const resultRef=doc(window._fbDb,'raceResults',raceId);
+    // raceDaysは一切書き換えず、結果専用コレクションだけを更新する。
+    // 既存の新形式結果を誤って消さないよう、専用ドキュメントをraceId単位で保存。
+    await setDoc(resultRef,{raceId,dayId,venueName,raceNumber:Number(rNum),raceName:race.name||'',result,resultStatus,updatedAt:result.recordedAt,source:'manual'});
+    raceResultsCache.set(raceId,result);
     await bumpSyncVersion();
-    await idbPut('raceDays',targetDay);
-    const localIdx=(raceDays||[]).findIndex(d=>d.id===dayId);
-    if(localIdx>=0) raceDays[localIdx]=targetDay;
     closeRaceResultModal();
-    renderWeekContent(targetDay);
+    if(selectedDate===dayId) renderWeekContent(day);
     if(analysisSelectedPrediction){
       const selectedRace=findRaceForPrediction(analysisSelectedPrediction);
       if(selectedRace?.day?.id===dayId && selectedRace?.venue?.name===venueName && Number(selectedRace?.race?.r)===Number(rNum)){
@@ -180025,7 +180091,7 @@ async function saveRaceResult(dayId,venueName,rNum){
         if(selectedIndex>=0) showPredictionDetail(selectedIndex);
       }
     }
-    showToast(`✓ ${entered.length}頭の結果をFirestoreに保存しました。別端末は更新通知から取得できます`);
+    showToast(`✓ ${entered.length}頭の結果をraceResultsへ保存しました。別端末は結果を再取得すると反映されます`);
   }catch(e){
     console.error('[keiba] 結果保存失敗:',e);
     showToast('⚠ 結果の保存に失敗しました: '+(e.message||'Firestoreエラー'),true);
@@ -180199,14 +180265,18 @@ function renderAnalysisView(){
   loadAndRenderPredictionHistory();
 }
 async function refreshPredictionRaceDays(predictions){
-  // 分析時に結果データだけはクラウドの最新開催日から再取得する。馬DB全件同期は行わない。
+  // レースの基本情報は必要な開催日だけ更新し、結果はraceResultsから別取得する。
   try{
     if(!(await waitForFirebase(2500)))return;
     const {doc,getDoc}=window._fbFns; const ids=[...new Set((predictions||[]).map(p=>p.raceRef?.dayId||String(p.raceKey||'').split('__')[0]).filter(Boolean))];
     for(const id of ids){
-      try{const snap=await getDoc(doc(window._fbDb,'raceDays',id));if(!snap.exists())continue;const remote=snap.data();const idx=(raceDays||[]).findIndex(d=>d.id===id);if(idx>=0)raceDays[idx]=remote;else raceDays.push(remote);await idbPut('raceDays',remote);}catch(e){console.warn('[keiba] 分析用レース結果の更新をスキップ:',id,e);}
+      try{const snap=await getDoc(doc(window._fbDb,'raceDays',id));if(!snap.exists())continue;const remote=snap.data();const idx=(raceDays||[]).findIndex(d=>d.id===id);if(idx>=0)raceDays[idx]=remote;else raceDays.push(remote);await idbPut('raceDays',remote);}catch(e){console.warn('[keiba] 分析用レース基本情報の更新をスキップ:',id,e);}
     }
-  }catch(e){console.warn('[keiba] 分析用最新結果の取得に失敗:',e);}
+    for(const p of (predictions||[])){
+      const x=findRaceForPrediction(p);
+      if(x?.race) await loadRaceResultForRace(x.day,x.venue,x.race,true);
+    }
+  }catch(e){console.warn('[keiba] 分析用raceResultsの取得に失敗:',e);}
 }
 async function loadAndRenderPredictionHistory(){
   setAnalysisSectionTab(0);
