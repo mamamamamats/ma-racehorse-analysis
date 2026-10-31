@@ -1664,7 +1664,7 @@ textarea.search-input { line-height: 1.7; }
 .analysis-table{width:100%;border-collapse:collapse;font-size:11px}
 .analysis-table th,.analysis-table td{padding:7px 6px;border-top:1px solid var(--border);text-align:left}
 .analysis-table th{color:var(--muted);font-weight:500}
-.result-row{display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:12px}
+.result-row{display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:12px}.race-result-status{width:100%;font-size:11px;padding:4px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text)}.race-result-pos:disabled{opacity:.45}
 .result-pos-input{width:72px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px}
 @media(max-width:700px){.analysis-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-row{grid-template-columns:34px 1fr 70px 70px}}
 
@@ -178122,7 +178122,7 @@ function openReviewLinkModal(dayId, venueName, rNum) {
       const trackMatch = track && rr.track &&
         (rr.track.trim() === track || rr.track.includes(track) || track.includes(rr.track.trim()));
 
-      if (nameMatch || (raceHorses.has(h.name) && trackMatch)) {
+      if (raceHorses.has(h.name) && (nameMatch || trackMatch)) {
         reviewLinkCandidates.push({
           horseName: h.name,
           raceIndex: i,
@@ -180055,17 +180055,31 @@ async function openRaceResultModal(dayId,venueName,rNum){
     const old=byNum.get(String(h.num));
     const detected=detectedFinishes.get(h.name);
     const finishValue=old?.finish??detected??'';
+    const statusValue=['取消','中止'].includes(old?.status)?old.status:'';
     const note=old?.note||(old?.finish==null&&detected?`回顧文からの候補：${detected}着（要確認）`:'');
-    return `<div class="result-row"><div>${escHtml(String(h.num||''))}</div><div><b>${escHtml(h.name||'')}</b></div><div><input class="result-pos-input race-result-pos" data-num="${Number(h.num)||0}" type="number" min="1" step="1" placeholder="着順" value="${finishValue}"></div><div style="font-size:10px;color:var(--muted)">${escHtml(note)}</div></div>`;
+    return `<div class="result-row"><div>${escHtml(String(h.num||''))}</div><div><b>${escHtml(h.name||'')}</b></div><div style="display:flex;flex-direction:column;gap:4px"><input class="result-pos-input race-result-pos" data-num="${Number(h.num)||0}" type="number" min="1" step="1" placeholder="着順" value="${finishValue}" ${statusValue?'disabled':''}><select class="race-result-status" data-num="${Number(h.num)||0}" onchange="toggleRaceResultStatus(this)"><option value="" ${!statusValue?'selected':''}>通常</option><option value="取消" ${statusValue==='取消'?'selected':''}>取消</option><option value="中止" ${statusValue==='中止'?'selected':''}>中止</option></select></div><div style="font-size:10px;color:var(--muted)">${escHtml(note)}</div></div>`;
   }).join('');
-  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順を確認して保存してください。回顧文から読み取れた着順候補は仮入力しています（要確認）。未入力馬は「結果未入力」として扱います。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
+  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順を確認して保存してください。「取消」「中止」は着順不要で保存でき、分析対象から完全に除外されます。回顧文から読み取れた着順候補は仮入力しています（要確認）。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順／状態</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
   modal.classList.add('open');
 }
 function closeRaceResultModal(){document.getElementById('raceResultModal')?.classList.remove('open');}
+function toggleRaceResultStatus(select){
+  const row=select.closest('.result-row');
+  const input=row?.querySelector('.race-result-pos');
+  if(!input)return;
+  const excluded=['取消','中止'].includes(select.value);
+  input.disabled=excluded;
+  if(excluded)input.value='';
+}
 async function saveRaceResult(dayId,venueName,rNum){
   const rows=[...document.querySelectorAll('.race-result-pos')];
-  const horses=rows.map(el=>({num:Number(el.dataset.num)||0,finish:el.value?Number(el.value):null})).filter(x=>x.num);
+  const horses=rows.map(el=>{
+    const statusEl=document.querySelector(`.race-result-status[data-num="${el.dataset.num}"]`);
+    const status=['取消','中止'].includes(statusEl?.value)?statusEl.value:'';
+    return {num:Number(el.dataset.num)||0,finish:status?null:(el.value?Number(el.value):null),...(status?{status}:{})};
+  }).filter(x=>x.num);
   const entered=horses.filter(x=>Number.isFinite(x.finish)&&x.finish>0);
+  const excludedCount=horses.filter(x=>['取消','中止'].includes(x.status)).length;
   const dup=new Set(), dupFound=entered.some(x=>dup.has(x.finish)?true:(dup.add(x.finish),false));
   if(dupFound){showToast('⚠ 同じ着順が複数あります',true);return;}
   try{
@@ -180075,7 +180089,7 @@ async function saveRaceResult(dayId,venueName,rNum){
     if(!day||!venue||!race) throw new Error('対象レースが端末内に見つかりません');
     const raceId=ensureRaceId(day,venue,race);
     const result={schemaVersion:1,source:'manual',recordedAt:new Date().toISOString(),horses};
-    const resultStatus=entered.length===(race.horses||[]).length?'complete':'partial';
+    const resultStatus=horses.every(h=>(Number.isFinite(h.finish)&&h.finish>0)||['取消','中止'].includes(h.status))?'complete':'partial';
     const resultRef=doc(window._fbDb,'raceResults',raceId);
     // raceDaysは一切書き換えず、結果専用コレクションだけを更新する。
     // 既存の新形式結果を誤って消さないよう、専用ドキュメントをraceId単位で保存。
@@ -180091,7 +180105,7 @@ async function saveRaceResult(dayId,venueName,rNum){
         if(selectedIndex>=0) showPredictionDetail(selectedIndex);
       }
     }
-    showToast(`✓ ${entered.length}頭の結果をraceResultsへ保存しました。別端末は結果を再取得すると反映されます`);
+    showToast(`✓ 結果を保存しました（着順 ${entered.length}頭・取消/中止 ${excludedCount}頭）。別端末は結果を再取得すると反映されます`);
   }catch(e){
     console.error('[keiba] 結果保存失敗:',e);
     showToast('⚠ 結果の保存に失敗しました: '+(e.message||'Firestoreエラー'),true);
@@ -180108,19 +180122,54 @@ function findRaceForPrediction(p){
 function buildPredictionOutcome(p){
   const x=findRaceForPrediction(p), result=x?.race?getRaceResultObject(x.race):null;
   if(!x||!result) return null;
-  const finishMap=new Map((result.horses||[]).map(h=>[String(h.num),h.finish]));
-  const horses=(p.horses||[]).map(h=>({...h,finish:finishMap.get(String(h.num))??null,top3:finishMap.has(String(h.num))&&Number(finishMap.get(String(h.num)))<=3,win:finishMap.has(String(h.num))&&Number(finishMap.get(String(h.num)))===1}));
-  const ranked=horses.filter(h=>h.rank).sort((a,b)=>a.rank-b.rank);
-  return {prediction:p,race:x,complete:result.schemaVersion===1&&result.horses.every(h=>h.finish!=null),horses,topPick:ranked[0]||null,top5:ranked.slice(0,5)};
+  const resultMap=new Map((result.horses||[]).map(h=>[String(h.num),h]));
+  const horses=(p.horses||[]).map(h=>{
+    const rh=resultMap.get(String(h.num));
+    const excluded=['取消','中止'].includes(rh?.status);
+    const finish=excluded?null:(rh?.finish??null);
+    return {...h,finish,resultStatus:excluded?rh.status:'',excluded,top3:!excluded&&finish!=null&&Number(finish)<=3,win:!excluded&&finish!=null&&Number(finish)===1};
+  });
+  const ranked=horses.filter(h=>h.rank&&!h.excluded).sort((a,b)=>a.rank-b.rank);
+  const complete=result.schemaVersion===1&&result.horses.every(h=>(h.finish!=null&&Number.isFinite(Number(h.finish)))||['取消','中止'].includes(h.status));
+  return {prediction:p,race:x,complete,horses,topPick:ranked[0]||null,top5:ranked.slice(0,5)};
 }
 let analysisPredictionCache=[];
 let analysisSelectedPrediction=null;
-async function loadPredictionHistory(limitCount=20){
+let analysisHistoryCursor=null;
+let analysisHistoryHasMore=false;
+let analysisHistoryLoading=false;
+let analysisAllHistoryLoaded=false;
+let analysisAllHistoryPromise=null;
+let analysisRaceDataRefreshed=false;
+let analysisTabRequestId=0;
+let analysisActiveTabIndex=0;
+async function loadPredictionHistory(limitCount=20,cursor=null){
   if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
-  const {collection,query,orderBy,limit,getDocs}=window._fbFns;
-  const q=query(collection(window._fbDb,'predictions'),orderBy('createdAt','desc'));
+  const {collection,query,orderBy,limit,getDocs,startAfter}=window._fbFns;
+  const constraints=[orderBy('createdAt','desc')];
+  if(cursor) constraints.push(startAfter(cursor));
+  constraints.push(limit(limitCount));
+  const q=query(collection(window._fbDb,'predictions'),...constraints);
   const snap=await getDocs(q);
-  return snap.docs.map(d=>({...d.data(), _docId:d.id}));
+  return {items:snap.docs.map(d=>({...d.data(), _docId:d.id})),lastDoc:snap.docs.length?snap.docs[snap.docs.length-1]:null,hasMore:snap.docs.length===limitCount};
+}
+async function loadAllPredictionHistory(){
+  if(analysisAllHistoryLoaded)return;
+  if(analysisAllHistoryPromise)return analysisAllHistoryPromise;
+  analysisAllHistoryPromise=(async()=>{
+    const pageSize=100; let cursor=null; const all=[];
+    while(true){
+      const page=await loadPredictionHistory(pageSize,cursor);
+      all.push(...page.items);
+      if(!page.hasMore||!page.lastDoc)break;
+      cursor=page.lastDoc;
+    }
+    analysisPredictionCache=all;
+    analysisHistoryCursor=cursor;
+    analysisHistoryHasMore=false;
+    analysisAllHistoryLoaded=true;
+  })();
+  try{await analysisAllHistoryPromise;}finally{analysisAllHistoryPromise=null;}
 }
 function analysisFormatDate(v){
   if(!v) return '';
@@ -180164,14 +180213,27 @@ function analysisFilterHTML(tab){
   return `<div class="analysis-card analysis-filter-card"><div class="analysis-card-title">🔎 条件フィルター</div><div class="analysis-filter-grid">${fields.map(field=>{
     const options=analysisFilterOptions(field); const value=f[field]||'';
     return `<label class="analysis-filter-field"><span>${analysisFilterLabels[field]}</span><select class="analysis-filter" id="analysis-filter-${tab}-${field}"><option value="">全て</option>${options.map(v=>`<option value="${aiEsc(String(v))}" ${String(value)===String(v)?'selected':''}>${aiEsc(String(v))}${field==='distance'?'m':''}</option>`).join('')}</select></label>`;
-  }).join('')}</div><button class="analysis-filter-submit" type="button" onclick="applyAnalysisFilter('${tab}')">${tab==='history'?'この条件で検索':'この条件で分析'}</button><div class="analysis-note">フィルターはこのタブ専用です。条件を選んでボタンを押すと結果が更新されます。</div></div>`;
+  }).join('')}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="analysis-filter-submit" type="button" onclick="applyAnalysisFilter('${tab}')">${tab==='history'?'この条件で検索':'この条件で分析'}</button><button class="analysis-back" type="button" onclick="resetAnalysisFilter('${tab}')">↺ 検索条件をリセット（全てに戻す）</button></div><div class="analysis-note">フィルターはこのタブ専用です。条件を選んでボタンを押すと結果が更新されます。</div></div>`;
 }
-function applyAnalysisFilter(tab){
+function resetAnalysisFilter(tab){
+  if(!analysisFilters[tab])return;
+  analysisFilters[tab]={venue:'',surface:'',distance:'',trackCondition:''};
+  if(tab==='history')renderPredictionHistoryList();
+  else if(tab==='factors')renderFactorAnalysis();
+  else if(tab==='conditions')renderConditionAnalysis();
+  else if(tab==='weights')renderWeightOptimization();
+}
+async function applyAnalysisFilter(tab){
   if(!analysisFilters[tab])return;
   for(const field of ['venue','surface','distance','trackCondition']){
     analysisFilters[tab][field]=document.getElementById(`analysis-filter-${tab}-${field}`)?.value||'';
   }
-  if(tab==='history') renderPredictionHistoryList();
+  if(tab==='history'){
+    const requestId=analysisTabRequestId; const el=document.getElementById('analysisHistory');
+    if(el)el.innerHTML='<div class="analysis-card analysis-empty">検索条件に合う履歴を確認しています…</div>';
+    try{await loadAllPredictionHistory();if(requestId===analysisTabRequestId&&analysisActiveTabIndex===0)renderPredictionHistoryList();}
+    catch(e){if(el)el.innerHTML=`<div class="analysis-card analysis-empty">⚠ 履歴を検索できませんでした。${aiEsc(e.message||'Firestore接続エラー')}</div>`;}
+  }
   else if(tab==='factors') renderFactorAnalysis();
   else if(tab==='conditions') renderConditionAnalysis();
   else if(tab==='weights') renderWeightOptimization();
@@ -180207,7 +180269,7 @@ function calcFactorAnalysis(outs){
   const rows=keys.map(k=>{
     let corrSum=0,corrWeight=0,top3Weight=0,totalWeight=0,rawRaces=0;
     for(const o of outs){
-      const usable=o.horses.filter(h=>h.factors?.[k]!=null&&h.finish!=null);
+      const usable=o.horses.filter(h=>!h.excluded&&h.factors?.[k]!=null&&h.finish!=null);
       if(usable.length<3)continue;
       const c=analysisSpearman(usable.map(h=>Number(h.factors[k])),usable.map(h=>-Number(h.finish)));
       const w=analysisLearningWeight(o); if(w<=0)continue;
@@ -180246,7 +180308,7 @@ function renderConditionAnalysis(){
   el.innerHTML=`${analysisFilterHTML('conditions')}<div class="analysis-card"><div class="analysis-card-title">🗺 条件別分析</div><div class="analysis-sub">条件に一致する結果確定済み予想 ${outs.length} 件。距離は距離帯にまとめず、1400m・1600mのように完全一致で集計します。</div>${rows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rowHTML}</tbody></table>`:'<div class="analysis-empty">この条件に該当する結果付き予想はありません。</div>'}<div class="analysis-note">各率の分母は該当条件の結果確定済み予想数です。同じレースで異なる重みの予想を複数保存した場合は、それぞれ別の予想記録として集計します。</div></div><div class="analysis-card"><div class="analysis-card-title">🏆 現在のAI予想・得意条件ランキング TOP10</div><div class="analysis-sub">選択条件に該当する条件組合せを、予想5頭の3着内率を主指標にランキング。少数データによる過大評価を避けるため3予想以上の条件だけを掲載します。</div>${top10.length?`<table class="analysis-table"><thead><tr><th>順位</th><th>条件</th><th>予想数</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭3着内率</th></tr></thead><tbody>${topHTML}</tbody></table>`:'<div class="analysis-empty">ランキングを作成できる条件がまだありません（条件ごとに結果付き予想が3件以上必要です）。</div>'}</div>`;
 }
 function scoreWithWeights(h,w){const vals=['overall','venue','distance','condition','form']; let s=0,ws=0; for(const k of vals){const v=h.factors?.[k]; const ww=Number(w[k])||0;if(v==null||ww<=0)continue;s+=Number(v)*ww;ws+=ww;}return ws?s/ws:null;}
-function evaluateWeightSet(outs,w){let races=0,top3=0,win=0,effectiveRaces=0; for(const o of outs){const usable=o.horses.filter(h=>scoreWithWeights(h,w)!=null&&h.finish!=null); if(!usable.length)continue; const ranked=usable.slice().sort((a,b)=>scoreWithWeights(b,w)-scoreWithWeights(a,w)); const top=ranked[0],rw=analysisLearningWeight(o);if(rw<=0)continue;races++;effectiveRaces+=rw;if(top.finish===1)win+=rw;if(top.finish<=3)top3+=rw;} return {races,effectiveRaces,win,top3,winRate:effectiveRaces?win/effectiveRaces:0,top3Rate:effectiveRaces?top3/effectiveRaces:0};}
+function evaluateWeightSet(outs,w){let races=0,top3=0,win=0,effectiveRaces=0; for(const o of outs){const usable=o.horses.filter(h=>!h.excluded&&scoreWithWeights(h,w)!=null&&h.finish!=null); if(!usable.length)continue; const ranked=usable.slice().sort((a,b)=>scoreWithWeights(b,w)-scoreWithWeights(a,w)); const top=ranked[0],rw=analysisLearningWeight(o);if(rw<=0)continue;races++;effectiveRaces+=rw;if(top.finish===1)win+=rw;if(top.finish<=3)top3+=rw;} return {races,effectiveRaces,win,top3,winRate:effectiveRaces?win/effectiveRaces:0,top3Rate:effectiveRaces?top3/effectiveRaces:0};}
 function optimizeWeights(outs){
   outs=outs||analysisFilterOutcomes('weights'); if(!outs.length)return [];
   const vals=[0,2,4,6], keys=['overall','venue','distance','condition','form']; let best=[];
@@ -180261,8 +180323,30 @@ function renderWeightOptimization(){
 }
 function renderAnalysisView(){
   const el=document.getElementById('analysisMain'); if(!el) return;
-  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="loadAndRenderPredictionHistory()">予想履歴</button><button class="analysis-section-tab" onclick="renderFactorAnalysis()">要素分析</button><button class="analysis-section-tab" onclick="renderConditionAnalysis()">条件別分析</button><button class="analysis-section-tab" onclick="renderWeightOptimization()">重み学習</button><button class="analysis-section-tab" onclick="renderReviewAIAnalysis()">回顧AI分析</button><button class="analysis-section-tab" onclick="renderReviewEventRanking()">事象ランキング</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">予想履歴を再取得すると、クラウド上の最新記録を読み込みます。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory()">🔄 履歴を再読み込み</button></div></div><div id="analysisHistory"></div>`;
-  loadAndRenderPredictionHistory();
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="analysisSelectTab(0)">予想履歴</button><button class="analysis-section-tab" onclick="analysisSelectTab(1)">要素分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(2)">条件別分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(3)">重み学習</button><button class="analysis-section-tab" onclick="analysisSelectTab(4)">回顧AI分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(5)">事象ランキング</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">予想履歴は最新20件から表示し、必要な分だけ追加読み込みします。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory(true)">🔄 履歴を再読み込み</button></div></div><div id="analysisHistory"></div>`;
+  analysisSelectTab(0);
+}
+function analysisSelectTab(index){
+  analysisActiveTabIndex=index;
+  const requestId=++analysisTabRequestId;
+  setAnalysisSectionTab(index);
+  if(index===0){loadAndRenderPredictionHistory(false,requestId);return;}
+  if(index>=1&&index<=3){loadAndRenderPredictionAnalysis(index,requestId);return;}
+  if(index===4)renderReviewAIAnalysis();
+  else if(index===5)renderReviewEventRanking();
+}
+async function loadAndRenderPredictionAnalysis(index,requestId){
+  const el=document.getElementById('analysisHistory');if(!el)return;
+  el.innerHTML='<div class="analysis-card analysis-empty">分析に必要な予想履歴を読み込んでいます…</div>';
+  try{
+    await loadAllPredictionHistory();
+    if(requestId!==analysisTabRequestId||analysisActiveTabIndex!==index)return;
+    if(!analysisRaceDataRefreshed){await refreshPredictionRaceDays(analysisPredictionCache);analysisRaceDataRefreshed=true;}
+    if(requestId!==analysisTabRequestId||analysisActiveTabIndex!==index)return;
+    if(index===1)renderFactorAnalysis();
+    else if(index===2)renderConditionAnalysis();
+    else if(index===3)renderWeightOptimization();
+  }catch(e){if(requestId===analysisTabRequestId){console.error(e);el.innerHTML=`<div class="analysis-card analysis-empty">⚠ 分析データを取得できませんでした。${aiEsc(e.message||'Firestore接続エラー')}</div>`;}}
 }
 async function refreshPredictionRaceDays(predictions){
   // レースの基本情報は必要な開催日だけ更新し、結果はraceResultsから別取得する。
@@ -180272,24 +180356,52 @@ async function refreshPredictionRaceDays(predictions){
     for(const id of ids){
       try{const snap=await getDoc(doc(window._fbDb,'raceDays',id));if(!snap.exists())continue;const remote=snap.data();const idx=(raceDays||[]).findIndex(d=>d.id===id);if(idx>=0)raceDays[idx]=remote;else raceDays.push(remote);await idbPut('raceDays',remote);}catch(e){console.warn('[keiba] 分析用レース基本情報の更新をスキップ:',id,e);}
     }
+    const refreshedRaces=new Set();
     for(const p of (predictions||[])){
       const x=findRaceForPrediction(p);
-      if(x?.race) await loadRaceResultForRace(x.day,x.venue,x.race,true);
+      if(!x?.race)continue;
+      const key=x.race.raceId||p.raceId||p.raceKey||`${x.day?.id||''}__${x.venue?.name||''}__${x.race.r||''}`;
+      if(refreshedRaces.has(key))continue;
+      refreshedRaces.add(key);
+      await loadRaceResultForRace(x.day,x.venue,x.race,true);
     }
   }catch(e){console.warn('[keiba] 分析用raceResultsの取得に失敗:',e);}
 }
-async function loadAndRenderPredictionHistory(){
+async function loadAndRenderPredictionHistory(forceReload=false,requestId=null){
+  if(requestId==null){requestId=++analysisTabRequestId;analysisActiveTabIndex=0;}
   setAnalysisSectionTab(0);
   const el=document.getElementById('analysisHistory'); if(!el) return;
-  el.innerHTML='<div class="analysis-card analysis-empty">予想履歴を読み込んでいます…</div>';
+  if(forceReload){analysisPredictionCache=[];analysisHistoryCursor=null;analysisHistoryHasMore=false;analysisAllHistoryLoaded=false;analysisAllHistoryPromise=null;analysisRaceDataRefreshed=false;}
+  if(analysisPredictionCache.length&&!forceReload){renderPredictionHistoryList();return;}
+  analysisHistoryLoading=true;
+  el.innerHTML='<div class="analysis-card analysis-empty">最新の予想履歴を読み込んでいます…</div>';
   try{
-    analysisPredictionCache=await loadPredictionHistory();
-    await refreshPredictionRaceDays(analysisPredictionCache);
+    const page=await loadPredictionHistory(20,null);
+    if(requestId!==analysisTabRequestId||analysisActiveTabIndex!==0)return;
+    analysisPredictionCache=page.items;
+    analysisHistoryCursor=page.lastDoc;
+    analysisHistoryHasMore=page.hasMore;
+    analysisAllHistoryLoaded=!page.hasMore;
     renderPredictionHistoryList();
   }catch(e){
-    console.error(e);
-    el.innerHTML=`<div class="analysis-card analysis-empty">⚠ 履歴を取得できませんでした。${aiEsc(e.message||'Firestore接続エラー')}</div>`;
-  }
+    if(requestId===analysisTabRequestId){console.error(e);el.innerHTML=`<div class="analysis-card analysis-empty">⚠ 履歴を取得できませんでした。${aiEsc(e.message||'Firestore接続エラー')}</div>`;}
+  }finally{analysisHistoryLoading=false;}
+}
+async function loadMorePredictionHistory(){
+  if(analysisHistoryLoading||!analysisHistoryHasMore||!analysisHistoryCursor)return;
+  const requestId=analysisTabRequestId;
+  analysisHistoryLoading=true;
+  try{
+    const page=await loadPredictionHistory(20,analysisHistoryCursor);
+    if(requestId!==analysisTabRequestId||analysisActiveTabIndex!==0)return;
+    const known=new Set(analysisPredictionCache.map(p=>p._docId));
+    analysisPredictionCache.push(...page.items.filter(p=>!known.has(p._docId)));
+    analysisHistoryCursor=page.lastDoc;
+    analysisHistoryHasMore=page.hasMore;
+    analysisAllHistoryLoaded=!page.hasMore;
+    renderPredictionHistoryList();
+  }catch(e){console.error(e);showToast('⚠ 続きの履歴を取得できませんでした',true);}
+  finally{analysisHistoryLoading=false;}
 }
 async function deletePredictionHistory(i, ev){
   if(ev) ev.stopPropagation();
@@ -180313,6 +180425,7 @@ async function deletePredictionHistory(i, ev){
   }
 }
 function setAnalysisSectionTab(index){
+  analysisActiveTabIndex=index;
   const tabs=document.querySelectorAll('#analysisMain .analysis-section-tab');
   tabs.forEach((el,i)=>el.classList.toggle('active',i===index));
 }
@@ -180327,7 +180440,7 @@ function renderPredictionHistoryList(){
   el.innerHTML=toolbar+filtered.map(({p,i})=>{
     const r=p.raceSnapshot||{}; const top=(p.top5||[]).map(x=>`${x.mark||''}${x.num} ${aiEsc(x.name)}`).join(' ／ '); const o=buildPredictionOutcome(p); const status=o?(o.complete?'✓ 結果あり':'△ 結果一部入力'):'— 結果未入力';
     return `<div class="analysis-prediction" onclick="showPredictionDetail(${i})"><div class="analysis-pred-head"><div class="analysis-pred-title">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-pred-meta">${status} ／ ${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')} ／ ${analysisFormatDate(p.createdAt)}</div></div><div class="analysis-marks">${top||'上位予想なし'}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">重み：総合${p.weights?.overall??0}・競馬場${p.weights?.venue??0}・距離${p.weights?.distance??0}・馬場${p.weights?.condition??0}・調子${p.weights?.form??0}</div><button type="button" class="analysis-back" style="margin-top:8px;color:var(--red)" onclick="deletePredictionHistory(${i},event)">🗑 この履歴を削除</button></div>`;
-  }).join('');
+  }).join('')+(analysisHistoryHasMore?'<div class="analysis-card" style="text-align:center"><button type="button" class="analysis-filter-submit" onclick="loadMorePredictionHistory()">さらに20件読み込む</button></div>':'<div class="analysis-note" style="text-align:center">'+(analysisPredictionCache.length?'全ての予想履歴を読み込みました':'')+'</div>');
 }
 function showPredictionDetail(i){
   const p=analysisPredictionCache[i]; if(!p) return; analysisSelectedPrediction=p;
@@ -180337,7 +180450,7 @@ function showPredictionDetail(i){
   const resultEntryButton=resultRaceRef?.day&&resultRaceRef?.venue&&resultRaceRef?.race
     ? `<button type="button" class="result-entry-btn" style="margin-top:10px" onclick="openRaceResultModal('${aiEsc(resultRaceRef.day.id)}','${aiEsc(resultRaceRef.venue.name)}',${Number(resultRaceRef.race.r)})">📋 ${outcome?'結果を確認・修正':'結果を入力'}</button>`
     : `<div class="analysis-note">対応する開催レースが見つからないため、ここから結果入力を開けません。開催データとの紐づけを確認してください。</div>`;
-  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/5</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
+  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/${outcome.top5.length}</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
   const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
   el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
 }
