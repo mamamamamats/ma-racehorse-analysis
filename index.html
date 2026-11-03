@@ -174978,6 +174978,8 @@ function renderWeekContent(day) {
             </div>
           </div>
 
+          ${raceConditionAnalysisPanel(day,venue,race)}
+          ${raceWholeReviewPanel(day,venue,race)}
           ${horseGridHTML}
           ${buildRaceAptitudeHTML(race, venue.name)}
         </div>
@@ -175039,6 +175041,124 @@ async function saveRaceSection(key, section) {
   await saveMemos();
   const msg = document.getElementById(savedIds[section]);
   if (msg) { msg.style.opacity='1'; setTimeout(()=>msg.style.opacity='0',1500); }
+}
+
+
+// レース全体回顧：raceIdでFirestore raceReviewsに独立保存。
+// 既存のraceDays・各馬評価・結果データは変更しない。
+const raceWholeReviewCache = new Map();
+const raceWholeReviewLoading = new Set();
+const raceConditionAnalysisCache = new Map();
+
+function raceWholeReviewKey(day,venue,race) {
+  return ensureRaceId(day,venue,race);
+}
+function raceWholeReviewPanel(day,venue,race) {
+  const raceId=raceWholeReviewKey(day,venue,race);
+  window._wholeReviewRefs=window._wholeReviewRefs||{};
+  window._wholeReviewRefs[raceId]=buildRaceRef(day,venue,race);
+  const entry=raceWholeReviewCache.get(raceId);
+  if(!entry && !raceWholeReviewLoading.has(raceId)) {
+    raceWholeReviewLoading.add(raceId);
+    Promise.resolve().then(async()=>{
+      try {
+        if(!(await waitForFirebase(5000))) return;
+        const {doc,getDoc}=window._fbFns;
+        const snap=await getDoc(doc(window._fbDb,'raceReviews',raceId));
+        if(snap.exists()) raceWholeReviewCache.set(raceId,snap.data());
+      } catch(e) {console.warn('レース全体回顧の取得に失敗',e);}
+      finally {
+        raceWholeReviewLoading.delete(raceId);
+        const node=document.querySelector('[data-whole-review-id="'+raceId+'"]');
+        if(node) {
+          const body=node.querySelector('.whole-review-body');
+          if(body) body.innerHTML=renderWholeReviewBody(raceId);
+        }
+      }
+    });
+  }
+  return `<section class="whole-review-panel" data-whole-review-id="${escHtml(raceId)}" style="margin:12px 0;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--card2)">
+    <div style="font-size:13px;font-weight:700;margin-bottom:6px">📋 レース全体回顧</div>
+    <div class="whole-review-body">${renderWholeReviewBody(raceId)}</div>
+  </section>`;
+}
+function renderWholeReviewBody(raceId) {
+  const entry=raceWholeReviewCache.get(raceId);
+  const review=entry?.review||'';
+  const analysis=entry?.analysis||'';
+  const escape=v=>escHtml(String(v||''));
+  const display=review||analysis
+    ? `<div style="white-space:pre-wrap;font-size:12px;line-height:1.8">${escape(review)}</div>${analysis?`<div style="font-size:11px;color:var(--muted);margin-top:8px">考察・仮説</div><div style="white-space:pre-wrap;font-size:12px;line-height:1.8">${escape(analysis)}</div>`:''}`
+    : `<div style="font-size:12px;color:var(--muted)">レース全体の回顧は未登録です。</div>`;
+  if(!isEditMode) return display;
+  return `${display}<div style="font-size:11px;color:var(--muted);margin-top:5px">分析用事象：${Array.isArray(entry?.events)?entry.events.length:0}件</div><details style="margin-top:10px"><summary style="cursor:pointer;font-size:12px;color:var(--accent2)">回顧を入力・JSONから読み込み</summary>
+    <div style="margin-top:8px;font-size:11px;color:var(--muted)">JSON形式：{"raceReview":{"summary":"展開・ラップ・馬場・不利等","analysis":"考察・仮説"}}。読み込みだけでは保存されません。</div>
+    <textarea class="whole-review-json search-input" style="width:100%;box-sizing:border-box;min-height:65px;margin-top:6px" placeholder="レース全体回顧JSON（任意）"></textarea>
+    <button type="button" class="edit-btn-save" style="margin:6px 0;font-size:11px" onclick="loadWholeReviewJson(this)">JSONを入力欄へ反映</button>
+    <div style="font-size:11px;margin-top:6px">レース全体回顧（事実・映像確認情報）</div>
+    <textarea class="whole-review-text search-input" style="width:100%;box-sizing:border-box;min-height:85px" placeholder="ペース、展開、馬場状況、不利の発生状況など">${escape(review)}</textarea>
+    <div style="font-size:11px;margin-top:6px">考察・仮説（任意）</div>
+    <textarea class="whole-review-analysis search-input" style="width:100%;box-sizing:border-box;min-height:65px" placeholder="好走馬の特徴や考えられる理由">${escape(analysis)}</textarea>
+    <button type="button" class="edit-btn-save" style="margin-top:8px" onclick="saveWholeReview(this)">レース全体回顧をDBへ保存</button>
+    <span class="whole-review-message edit-msg"></span>
+  </details>`;
+}
+function loadWholeReviewJson(btn) {
+  const panel=btn.closest('.whole-review-panel');
+  const msg=panel.querySelector('.whole-review-message');
+  try {
+    const data=JSON.parse(panel.querySelector('.whole-review-json').value);
+    const r=data.raceReview||data.wholeRaceReview||data.race||data;
+    const summary=typeof r==='string'?r:(r.summary||r.review||r.overview||'');
+    const analysis=typeof r==='object'?(r.analysis||r.consideration||''):'';
+    const events=Array.isArray(data.events)?data.events:(Array.isArray(r.events)?r.events:[]);
+    const uncertainties=Array.isArray(data.uncertainties)?data.uncertainties:(Array.isArray(r.uncertainties)?r.uncertainties:[]);
+    if(!summary&&!analysis&&!events.length) throw new Error('回顧本文またはeventsが見つかりません');
+    if(events.length){
+      panel._wholeImportedEvents=events;
+      panel._wholeImportedUncertainties=uncertainties;
+    }
+    const a=panel.querySelector('.whole-review-text'),b=panel.querySelector('.whole-review-analysis');
+    if(summary&&!a.value.trim()) a.value=String(summary);
+    if(analysis&&!b.value.trim()) b.value=String(analysis);
+    msg.textContent='入力欄へ反映しました。事象 '+events.length+'件。確認後にDBへ保存してください。';
+  } catch(e) {msg.textContent='JSON読み込み失敗: '+e.message;}
+}
+async function saveWholeReview(btn) {
+  if(!isEditMode) return;
+  const panel=btn.closest('.whole-review-panel');
+  const raceId=panel.dataset.wholeReviewId;
+  const review=panel.querySelector('.whole-review-text').value.trim();
+  const analysis=panel.querySelector('.whole-review-analysis').value.trim();
+  const msg=panel.querySelector('.whole-review-message');
+  btn.disabled=true;
+  try {
+    if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できません');
+    const {doc,setDoc}=window._fbFns;
+    const old=raceWholeReviewCache.get(raceId)||{};
+    const data={...old,schemaVersion:1,raceId,review,analysis,
+      raceRef:window._wholeReviewRefs?.[raceId]||old.raceRef||{},
+      events:panel._wholeImportedEvents||old.events||[],
+      uncertainties:panel._wholeImportedUncertainties||old.uncertainties||[],
+      updatedAt:new Date().toISOString(),source:'manual-reviewed'};
+    await setDoc(doc(window._fbDb,'raceReviews',raceId),data,{merge:true});
+    raceWholeReviewCache.set(raceId,data);
+    msg.textContent='✓ DBへ保存しました';
+    showToast('レース全体回顧を保存しました');
+  } catch(e) {msg.textContent='保存失敗: '+(e.message||e);showToast('レース全体回顧の保存に失敗',true);}
+  finally {btn.disabled=false;}
+}
+// 全体考察：将来の集計結果を短く表示する枠。未集計の段階では傾向を捏造しない。
+function raceConditionAnalysisPanel(day,venue,race) {
+  const course=`${venue.name} ${race.track||''}`.trim();
+  const key=`${venue.name}|${race.track||''}`;
+  const item=raceConditionAnalysisCache.get(key);
+  const lines=item?.findings||[];
+  return `<section style="margin:10px 0 12px;padding:10px 12px;border:1px solid var(--border);border-radius:8px">
+    <div style="font-size:13px;font-weight:700">🔎 全体考察 <span style="font-size:10px;color:var(--muted);font-weight:400">過去レースの傾向</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:3px">${escHtml(course)}</div>
+    ${lines.length?`<div style="font-size:12px;margin-top:6px">${lines.map(x=>`<div style="margin-top:3px">・${escHtml(String(x))}</div>`).join('')}</div><div style="font-size:10px;color:var(--muted)">対象 ${Number(item.sampleSize)||0} レース</div>`:'<div style="font-size:11px;color:var(--muted);margin-top:5px">集計データ未登録。回顧を蓄積後、条件別の分析結果を表示します。</div>'}
+  </section>`;
 }
 
 // 全頭考察グリッドHTML構築（race.horses + 全頭診断リアルタイム参照）
@@ -176945,6 +177065,8 @@ function renderHistoryMain() {
               <button type="button" class="ai-predict-btn" onclick="event.stopPropagation(); openAIPredictor('${day.id}','${escHtml(venue.name)}',${rNum})">🧠 AIアシスタント予想</button>
             </div>
           </div>
+          ${raceConditionAnalysisPanel(day,venue,race)}
+          ${raceWholeReviewPanel(day,venue,race)}
           ${horseGridHTML}
           ${buildRaceAptitudeHTML(race, venue.name)}
         </div>
@@ -179444,6 +179566,13 @@ function refreshActiveRaceGrid() {
     });
     drafts.push({ name: form.dataset.horseName, values, open: form.style.display !== 'none' });
   });
+  const wholeReviewDrafts=[...document.querySelectorAll('.whole-review-panel')].map(p=>({
+    id:p.dataset.wholeReviewId,
+    open:!!p.querySelector('details')?.open,
+    json:p.querySelector('.whole-review-json')?.value||'',
+    review:p.querySelector('.whole-review-text')?.value||'',
+    analysis:p.querySelector('.whole-review-analysis')?.value||''
+  }));
   const jsonInput = document.getElementById('rhcReviewJsonInput');
   const jsonDraft = jsonInput ? jsonInput.value : '';
   if (currentView === 'week' && selectedDate) {
@@ -179463,6 +179592,14 @@ function refreshActiveRaceGrid() {
       form.style.display = 'block';
       const toggle = form.previousElementSibling;
       if (toggle) toggle.classList.add('open');
+    }
+  });
+  wholeReviewDrafts.forEach(d=>{
+    const p=[...document.querySelectorAll('.whole-review-panel')].find(x=>x.dataset.wholeReviewId===d.id);
+    if(!p)return;
+    const details=p.querySelector('details');if(details)details.open=d.open;
+    for(const [cls,val] of [['.whole-review-json',d.json],['.whole-review-text',d.review],['.whole-review-analysis',d.analysis]]){
+      const el=p.querySelector(cls);if(el)el.value=val;
     }
   });
   const newJsonInput = document.getElementById('rhcReviewJsonInput');
@@ -180508,7 +180645,7 @@ function renderWeightOptimization(){
 }
 function renderAnalysisView(){
   const el=document.getElementById('analysisMain'); if(!el) return;
-  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="analysisSelectTab(0)">予想履歴</button><button class="analysis-section-tab" onclick="analysisSelectTab(1)">要素分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(2)">条件別分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(3)">重み学習</button><button class="analysis-section-tab" onclick="analysisSelectTab(4)">回顧AI分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(5)">事象ランキング</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">予想履歴は最新20件から表示し、必要な分だけ追加読み込みします。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory(true)">🔄 履歴を再読み込み</button></div></div><div id="analysisHistory"></div>`;
+  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📊 分析メニュー</div><div class="analysis-section-tabs"><button class="analysis-section-tab active" onclick="analysisSelectTab(0)">予想履歴</button><button class="analysis-section-tab" onclick="analysisSelectTab(1)">要素分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(2)">条件別分析</button><button class="analysis-section-tab" onclick="analysisSelectTab(3)">重み学習</button><button class="analysis-section-tab" onclick="analysisSelectTab(4)">レース事象分析</button></div><div class="analysis-toolbar"><span style="font-size:11px;color:var(--muted);flex:1">予想履歴は最新20件から表示し、必要な分だけ追加読み込みします。</span><button type="button" class="analysis-back" onclick="loadAndRenderPredictionHistory(true)">🔄 履歴を再読み込み</button></div></div><div id="analysisHistory"></div>`;
   analysisSelectTab(0);
 }
 function analysisSelectTab(index){
@@ -180517,8 +180654,7 @@ function analysisSelectTab(index){
   setAnalysisSectionTab(index);
   if(index===0){loadAndRenderPredictionHistory(false,requestId);return;}
   if(index>=1&&index<=3){loadAndRenderPredictionAnalysis(index,requestId);return;}
-  if(index===4)renderReviewAIAnalysis();
-  else if(index===5)renderReviewEventRanking();
+  if(index===4)renderReviewEventRanking();
 }
 async function loadAndRenderPredictionAnalysis(index,requestId){
   const el=document.getElementById('analysisHistory');if(!el)return;
@@ -181006,14 +181142,91 @@ function reviewAIConditionStats(events){
   }
   return [...map.values()].map(x=>({...x,raceCount:x.races.size,avgConfidence:x.confidences.length?x.confidences.reduce((a,b)=>a+b,0)/x.confidences.length:null})).sort((a,b)=>b.raceCount-a.raceCount||(b.avgConfidence||0)-(a.avgConfidence||0));
 }
+let wholeReviewRankingRecords=[];
+let wholeReviewRankingLoaded=false;
+let wholeReviewRankingError='';
+async function loadWholeReviewRanking(){
+  wholeReviewRankingError='';
+  try {
+    if(!(await waitForFirebase(5000)))throw new Error('Firebase接続待ちがタイムアウトしました');
+    const {collection,getDocs}=window._fbFns;
+    const snapshot=await getDocs(collection(window._fbDb,'raceReviews'));
+    wholeReviewRankingRecords=snapshot.docs.map(d=>({raceId:d.id,...d.data()}));
+    wholeReviewRankingLoaded=true;
+  }catch(e){wholeReviewRankingError=e.message||String(e);}
+  renderReviewEventRanking();
+}
+function wholeReviewRankingHTML(){
+  if(!wholeReviewRankingLoaded)return `<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">新設したraceReviewsコレクションを読み込み、登録数と回顧内容を確認します。回顧文章だけから事象発生率を断定せず、構造化された事象は従来のランキングで集計します。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">DBからレース全体回顧を読み込む</button>${wholeReviewRankingError?`<div class="analysis-note">読み込み失敗：${aiEsc(wholeReviewRankingError)}（Firestoreルールを確認してください）</div>`:''}</div>`;
+  const rows=wholeReviewRankingRecords;
+  return `<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">DB登録 ${rows.length} レース。文章の登録数を確認できます。レース事象の統計は、回顧AI分析のeventsとして保存した構造化データを利用します。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button><div style="margin-top:10px;max-height:320px;overflow:auto">${rows.length?rows.slice(0,100).map(x=>`<details style="padding:8px 0;border-top:1px solid var(--border)"><summary style="cursor:pointer;font-size:12px">${aiEsc(x.raceId||'ID不明')} <span style="color:var(--muted)">${aiEsc(x.updatedAt||'')}</span></summary><div style="white-space:pre-wrap;font-size:12px;margin-top:6px">${aiEsc(x.review||'（回顧本文なし）')}</div>${x.analysis?`<div class="analysis-note">考察：${aiEsc(x.analysis)}</div>`:''}</details>`).join(''):'<div class="analysis-empty">登録されたレース全体回顧はありません。</div>'}</div>${rows.length>100?`<div class="analysis-note">先頭100件を表示しています（登録総数 ${rows.length}件）。</div>`:''}</div>`;
+}
+
+// レース全体回顧を主データとする条件別ランキング。
+// AIが作成しユーザーが確認したeventsのみ数値集計し、自由文を勝手に事実認定しない。
+function wholeReviewEvents(record){
+  return (Array.isArray(record.events)?record.events:[]).filter(e=>e&&String(e.event||'').trim());
+}
+function wholeReviewRaceRef(record){
+  if(record.raceRef?.venue)return record.raceRef;
+  for(const day of (raceDays||[]))for(const venue of(day.venues||[]))for(const race of(venue.races||[])){
+    if(ensureRaceId(day,venue,race)===record.raceId)return buildRaceRef(day,venue,race);
+  }
+  return {};
+}
+function wholeReviewStats(){
+  const records=wholeReviewRankingRecords.filter(x=>x.review||x.analysis||wholeReviewEvents(x).length);
+  const grouped=new Map(), allEvents=new Map();
+  for(const r of records){
+    const ref=wholeReviewRaceRef(r);
+    const venue=ref.venue||'不明';
+    const surface=ref.surface||aiExtractSurface(ref.track||'')||'不明';
+    const distance=Number(ref.distance||aiExtractDistance(ref.track||''))||null;
+    const condition=`${venue}・${surface}・${distance?distance+'m':'距離不明'}`;
+    if(!grouped.has(condition))grouped.set(condition,{condition,races:new Set(),events:new Map()});
+    const group=grouped.get(condition);group.races.add(r.raceId);
+    for(const e of wholeReviewEvents(r)){
+      if(e.learningTreatment==='exclude'||e.learningTreatment==='除外')continue;
+      const name=String(e.event).trim();
+      const key=reviewAINormalizeEventName(name);
+      if(!key)continue;
+      if(!group.events.has(key))group.events.set(key,{event:name,ids:new Set(),evidence:[]});
+      const item=group.events.get(key);item.ids.add(r.raceId);
+      if(e.evidence&&item.evidence.length<2&&!item.evidence.includes(e.evidence))item.evidence.push(String(e.evidence));
+      if(!allEvents.has(key))allEvents.set(key,{event:name,ids:new Set()});
+      allEvents.get(key).ids.add(r.raceId);
+    }
+  }
+  return {records,groups:[...grouped.values()],allEvents:[...allEvents.values()].sort((a,b)=>b.ids.size-a.ids.size)};
+}
+function wholeReviewExport(){
+  const rows=wholeReviewRankingRecords.map(r=>({raceId:r.raceId,raceRef:wholeReviewRaceRef(r),review:r.review||'',analysis:r.analysis||'',events:wholeReviewEvents(r),uncertainties:r.uncertainties||[]}));
+  const blob=new Blob([JSON.stringify({schemaVersion:1,type:'whole_race_review_analysis',instructions:'事実と推測、未確認を分離し、事象名を統一してeventsに整理。発生なしと記載なしを混同しない。',races:rows},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='race_review_analysis_export.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 function renderReviewEventRanking(){
-  setAnalysisSectionTab(5);
+  setAnalysisSectionTab(4);
   const el=document.getElementById('analysisHistory');if(!el)return;
-  const races=reviewAIAnalyzedRaces(), events=reviewAICollectEvents(), global=reviewAIEventStats(events), byCond=reviewAIConditionStats(events);
-  const minRaces=Math.max(1,Number(document.getElementById('reviewAI-rank-min')?.value||1));
-  const globalRows=global.filter(x=>x.raceCount>=minRaces);
-  const condRows=byCond.filter(x=>x.raceCount>=minRaces).slice(0,100);
-  el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📈 回顧から見つかった事象ランキング</div><div class="analysis-sub">LLMが保存した事象をraceId単位で集計します。同じレースの予想履歴が複数あっても、発生レース数は1件として数えます。表記が異なる似た事象はまだ自動統合せず、今後の改善候補として残します。</div><div class="review-ai-grid"><div class="review-ai-stat"><span>分析済みレース</span><b>${races.length}</b></div><div class="review-ai-stat"><span>抽出事象の記録</span><b>${events.length}</b></div><div class="review-ai-stat"><span>事象名の種類</span><b>${global.length}</b></div></div><label style="display:block;margin-top:12px;font-size:11px;color:var(--muted2)">ランキングに表示する最低発生レース数 <select id="reviewAI-rank-min" class="review-ai-select" style="max-width:220px" onchange="renderReviewEventRanking()">${[1,2,3,5,10].map(n=>`<option value="${n}" ${n===minRaces?'selected':''}>${n}レース以上</option>`).join('')}</select></label></div><div class="analysis-card"><div class="analysis-card-title">🌐 全体ランキング</div>${globalRows.length?globalRows.map((x,i)=>`<div class="review-ai-rank"><b>${i+1}</b><div><b>${aiEsc(x.event)}</b><div class="analysis-note">${x.mentions}件の記録／平均確信度 ${x.avgConfidence==null?'不明':Math.round(x.avgConfidence*100)+'%'}${x.conditions.length?'<br>多い条件：'+x.conditions.slice(0,2).map(c=>aiEsc(c.condition)+`（${c.count}）`).join('、'):''}${x.evidence.length?'<br>根拠例：'+x.evidence.map(aiEsc).join(' ／ '):''}</div><div class="review-ai-bar"><i style="width:${Math.min(100,x.raceCount/Math.max(1,global[0]?.raceCount||1)*100)}%"></i></div></div><span>${x.raceCount}レース</span></div>`).join(''):'<div class="analysis-empty">この発生件数の事象はありません。</div>'}<div class="analysis-note">これは回顧が記録された範囲での頻度です。全レースの発生率ではなく、未記録レースが多い場合は実際の発生頻度を表しません。</div></div><div class="analysis-card"><div class="analysis-card-title">🗺 条件別の事象ランキング</div><div class="analysis-sub">競馬場・芝ダート・距離・馬場の組合せごとに、何レースでその事象が記録されたかを表示します。</div>${condRows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>事象</th><th>発生レース数</th><th>平均確信度</th></tr></thead><tbody>${condRows.map(x=>`<tr><td>${aiEsc(x.condition)}</td><td>${aiEsc(x.event)}</td><td>${x.raceCount}</td><td>${x.avgConfidence==null?'—':Math.round(x.avgConfidence*100)+'%'}</td></tr>`).join('')}</tbody></table>`:'<div class="analysis-empty">条件別ランキングを作成できるデータがありません。</div>'}<div class="analysis-note">「中山1200mで多い」と結論づけるには、同条件で分析済みのレース数と、比較する全体の発生率が必要です。現在は発生レース数のランキングであり、条件ごとの発生率の断定ではありません。</div></div>`;
+  if(!wholeReviewRankingLoaded){
+    el.innerHTML=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧・事象分析</div><div class="analysis-sub">raceReviewsの回顧を読み込み、レース条件別の事象を集計します。自由文からの事象抽出はChatGPTとの手動連携で行い、確認済みeventsを登録します。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">DBからレース全体回顧を読み込む</button>${wholeReviewRankingError?`<div class="analysis-note">読み込み失敗：${aiEsc(wholeReviewRankingError)}</div>`:''}</div>`;
+    return;
+  }
+  const {records,groups,allEvents}=wholeReviewStats();
+  const eventRaces=records.filter(r=>wholeReviewEvents(r).length).length;
+  const conditionRows=groups.flatMap(g=>[...g.events.values()].map(e=>({condition:g.condition,event:e.event,count:e.ids.size,denominator:g.races.size,examples:e.evidence})))
+    .sort((a,b)=>b.count-a.count||b.count/b.denominator-a.count/a.denominator);
+  const overview=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div>
+    <div class="analysis-sub">回顧登録 ${records.length} レース／事象登録 ${eventRaces} レース。事象はレース単位で重複除去して集計します。</div>
+    <button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button>
+    <button class="review-ai-btn secondary" onclick="wholeReviewExport()">ChatGPT分析用JSON出力</button>
+    <div class="analysis-note">回顧文だけのレースはランキングに加算されません。別チャットで事象を整理したJSONを対象レースの回顧欄から登録してください。</div>
+    <details style="margin-top:10px"><summary style="cursor:pointer">登録済み回顧を確認（${records.length}件）</summary><div style="max-height:280px;overflow:auto">${records.slice(0,100).map(r=>`<details style="border-top:1px solid var(--border);padding:7px 0"><summary>${aiEsc(r.raceId)}</summary><div style="white-space:pre-wrap;font-size:12px">${aiEsc(r.review||'本文なし')}</div><div class="analysis-note">事象 ${wholeReviewEvents(r).length}件</div></details>`).join('')}</div></details></div>`;
+  const global=`<div class="analysis-card"><div class="analysis-card-title">📈 全体事象ランキング</div>${allEvents.length?allEvents.slice(0,60).map((x,i)=>`<div class="review-ai-rank"><b>${i+1}</b><div><b>${aiEsc(x.event)}</b></div><span>${x.ids.size}レース</span></div>`).join(''):'<div class="analysis-empty">まだ構造化された事象がありません。</div>'}</div>`;
+  const conditions=`<div class="analysis-card"><div class="analysis-card-title">🗺 条件別・発生事象ランキング</div><div class="analysis-sub">競馬場・芝ダート・距離別。件数は事象が記録されたレース数です。割合は登録回顧内の参考割合で、実際の全レース発生率ではありません。</div>
+    ${conditionRows.length?`<table class="analysis-table"><thead><tr><th>レース条件</th><th>事象</th><th>記録数</th><th>参考割合</th></tr></thead><tbody>${conditionRows.slice(0,100).map(x=>`<tr><td>${aiEsc(x.condition)}</td><td>${aiEsc(x.event)}</td><td>${x.count}件</td><td>${x.count}/${x.denominator}（${Math.round(x.count/x.denominator*100)}%）</td></tr>`).join('')}</tbody></table>`:'<div class="analysis-empty">事象を登録すると条件別ランキングが表示されます。</div>'}
+    <div class="analysis-note">「記載なし」は「発生なし」ではありません。レース前の予想では対象レース自身の回顧を使わず、事象傾向はスコアに自動加算しません。今後のカスタム重み検証用の参考データです。</div></div>`;
+  el.innerHTML=overview+global+conditions;
 }
 
 
