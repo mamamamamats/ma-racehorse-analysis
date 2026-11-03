@@ -175164,8 +175164,21 @@ function buildHorseGrid(race, day, venue) {
     }
   }).join('');
 
+  const reviewJsonImportHTML = isEditMode ? `
+    <div class="rhc-json-import" style="margin:0 0 14px;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--card2)" onclick="event.stopPropagation()">
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:6px">🤖 AI基本回顧 JSON読み込み</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">別チャットで生成したJSONを貼り付けてください。既に入力済みの項目は残し、空欄だけ補完します。</div>
+      <textarea id="rhcReviewJsonInput" class="search-input" style="width:100%;min-height:92px;resize:vertical;box-sizing:border-box;margin-bottom:8px" placeholder='{"horses":[{"horseName":"馬名","raceName":"レース名","track":"コース","eval":"B","comment":"基本回顧"}]}'></textarea>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px" onclick="applyRhcReviewJson(this)">JSONを読み込む</button>
+        <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;background:var(--green);color:#101510" onclick="registerAllRhcDrafts(this)">入力済みを一括登録</button>
+        <span id="rhcReviewJsonMsg" class="edit-msg" style="font-size:11px"></span>
+      </div>
+    </div>` : '';
+
   return `
     <div class="section-lbl" style="margin-bottom:8px">全頭考察</div>
+    ${reviewJsonImportHTML}
     <div class="race-horse-grid">${cards}</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px">右バッジ = 総合評価　直近最大4走のレース・評価表示　タップで全頭診断へ</div>`;
 }
@@ -179405,11 +179418,164 @@ function showToast(msg, isError) {
 
 // 現在表示中のレースカードグリッドを再描画（今週/過去開催どちらにも対応）
 function refreshActiveRaceGrid() {
+  // 個別登録後の再描画で、ほかの馬の未登録入力を失わないよう退避・復元する。
+  const drafts = [];
+  document.querySelectorAll('.rhc-edit-form').forEach(form => {
+    const values = {};
+    form.querySelectorAll('input,textarea,select').forEach(el => {
+      const key = el.className.split(/\s+/).find(c => c.startsWith('rhc-')) || el.tagName;
+      values[key] = el.value;
+    });
+    drafts.push({ name: form.dataset.horseName, values, open: form.style.display !== 'none' });
+  });
+  const jsonInput = document.getElementById('rhcReviewJsonInput');
+  const jsonDraft = jsonInput ? jsonInput.value : '';
   if (currentView === 'week' && selectedDate) {
     const day = raceDays.find(d => d.id === selectedDate);
     if (day) renderWeekContent(day);
   } else if (currentView === 'history' && selectedHistoryDate) {
     renderHistoryMain();
+  }
+  drafts.forEach(draft => {
+    const form = [...document.querySelectorAll('.rhc-edit-form')].find(f => f.dataset.horseName === draft.name);
+    if (!form) return;
+    Object.entries(draft.values).forEach(([cls, value]) => {
+      const el = form.querySelector('.' + cls);
+      if (el && !el.value) el.value = value;
+    });
+    if (draft.open) {
+      form.style.display = 'block';
+      const toggle = form.previousElementSibling;
+      if (toggle) toggle.classList.add('open');
+    }
+  });
+  const newJsonInput = document.getElementById('rhcReviewJsonInput');
+  if (newJsonInput && jsonDraft) newJsonInput.value = jsonDraft;
+}
+
+// AI基本回顧JSONを、既存の各馬インライン入力欄へ反映する。
+// 既存入力は上書きせず、空欄のみ補完する。JSON読込時点ではDB保存しない。
+function applyRhcReviewJson(btn) {
+  const box = document.getElementById('rhcReviewJsonInput');
+  const msg = document.getElementById('rhcReviewJsonMsg');
+  if (!box || !msg) return;
+  let data;
+  try { data = JSON.parse(box.value); }
+  catch (e) { msg.style.color = 'var(--red)'; msg.textContent = 'JSONの形式を確認してください'; return; }
+  const rows = Array.isArray(data) ? data : (data.horses || data.items || data.horseReviews || []);
+  if (!Array.isArray(rows) || !rows.length) {
+    msg.style.color = 'var(--red)'; msg.textContent = 'horses配列が見つかりません'; return;
+  }
+  const norm = v => String(v ?? '').trim().replace(/[\s　]+/g, '').replace(/[・･]/g, '');
+  let applied = 0, missing = 0, skipped = 0;
+  rows.forEach(row => {
+    const horseName = String(row.horseName || (row.horse && typeof row.horse === 'object' ? (row.horse.name || row.horse.horseName || '') : row.horse) || row.name || '').trim();
+    if (!horseName) { skipped++; return; }
+    const form = [...document.querySelectorAll('.rhc-edit-form')].find(f => norm(f.dataset.horseName) === norm(horseName));
+    if (!form) { missing++; return; }
+    form.style.display = 'block';
+    const toggle = form.previousElementSibling;
+    if (toggle) toggle.classList.add('open');
+    const isNew = !!form.querySelector('.rhc-new-rname');
+    const get = (...keys) => {
+      for (const key of keys) {
+        const value = row[key];
+        if (value !== undefined && value !== null && String(value).trim() !== '') return String(value).trim();
+      }
+      return '';
+    };
+    const raceObj = row.race && typeof row.race === 'object' ? row.race : {};
+    const fields = isNew ? {
+      '.rhc-new-shortnote': get('shortNote','summary'),
+      '.rhc-new-rname': get('raceName','raceTitle') || String(raceObj.name || ''),
+      '.rhc-new-rtrack': get('track','course') || String(raceObj.track || ''),
+      '.rhc-new-reval': get('eval','evaluation','rating'),
+      '.rhc-new-rcomment': get('comment','review','basicReview','memo')
+    } : {
+      '.rhc-add-name': get('raceName','raceTitle') || String(raceObj.name || ''),
+      '.rhc-add-track': get('track','course') || String(raceObj.track || ''),
+      '.rhc-add-eval': get('eval','evaluation','rating'),
+      '.rhc-add-comment': get('comment','review','basicReview','memo')
+    };
+    let changed = false;
+    Object.entries(fields).forEach(([selector, value]) => {
+      if (!value) return;
+      const el = form.querySelector(selector);
+      if (el && !String(el.value || '').trim()) { el.value = value; changed = true; }
+    });
+    if (changed) applied++; else skipped++;
+  });
+  msg.style.color = missing ? 'var(--accent2)' : 'var(--green)';
+  msg.textContent = `${applied}頭に反映（既存入力保持）${missing ? `／出走馬欄に該当なし ${missing}頭` : ''}${skipped ? `／変更なし ${skipped}頭` : ''}。内容を確認して個別・一括登録してください。`;
+  showToast(`JSONから${applied}頭分の入力欄に反映しました`);
+}
+
+// 表示中の各馬フォームに入力された基本回顧をまとめて登録する。
+// 成功したフォームだけ内容をクリアし、失敗・未登録分は残す。
+async function registerAllRhcDrafts(btn) {
+  const forms = [...document.querySelectorAll('.rhc-edit-form')];
+  let success = 0, failed = 0, skipped = 0;
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = '登録中...';
+  try {
+    for (const form of forms) {
+      const name = form.dataset.horseName;
+      const isNew = !!form.querySelector('.rhc-new-rname');
+      const commentEl = form.querySelector(isNew ? '.rhc-new-rcomment' : '.rhc-add-comment');
+      const comment = commentEl ? commentEl.value.trim() : '';
+      const shortEl = form.querySelector('.rhc-new-shortnote');
+      const shortNote = shortEl ? shortEl.value.trim() : '';
+      if (!comment && !shortNote) { skipped++; continue; }
+      const msgEl = form.querySelector('.rhc-add-msg');
+      if (isNew) {
+        if (horses.find(x => x.name === name)) {
+          if (msgEl) { msgEl.style.color='var(--red)'; msgEl.textContent='既に馬ページがあります'; }
+          failed++; continue;
+        }
+        const rName = form.querySelector('.rhc-new-rname').value.trim();
+        const races = rName ? [{
+          name:rName,
+          track:form.querySelector('.rhc-new-rtrack').value.trim(),
+          eval:form.querySelector('.rhc-new-reval').value,
+          comment
+        }] : [];
+        const h = { frame:parseInt(form.dataset.frame)||0, num:parseInt(form.dataset.num)||0, name, checked:false, shortNote, races };
+        try {
+          horses.push(h);
+          await saveHorse(h);
+          if (comment) addCommentHistory(comment);
+          success++;
+          if (msgEl) { msgEl.style.color='var(--green)'; msgEl.textContent='登録済み'; }
+        } catch (e) {
+          const idx = horses.indexOf(h); if (idx >= 0) horses.splice(idx,1);
+          if (msgEl) { msgEl.style.color='var(--red)'; msgEl.textContent='保存失敗'; }
+          failed++;
+        }
+      } else {
+        const h = horses.find(x => x.name === name);
+        const raceName = form.querySelector('.rhc-add-name').value.trim();
+        if (!h || !raceName) { failed++; continue; }
+        const newRace = { name:raceName, track:form.querySelector('.rhc-add-track').value.trim(), eval:form.querySelector('.rhc-add-eval').value, comment };
+        const result = await saveHorseRaceChange(name, { type:'add', race:newRace });
+        if (!result.ok) {
+          if (msgEl) { msgEl.style.color='var(--red)'; msgEl.textContent='保存失敗：'+(result.message||result.code||''); }
+          failed++; continue;
+        }
+        applySavedHorseToCurrentState(result.horse);
+        if (comment) addCommentHistory(comment);
+        commentEl.value = '';
+        form.querySelector('.rhc-add-eval').value = 'B';
+        success++;
+      }
+    }
+    if (success) { invalidateHorseCache(); updateHomeStats(); refreshActiveRaceGrid(); }
+    showToast(`一括登録：成功 ${success}頭／失敗 ${failed}頭` , failed > 0);
+    const msg = document.getElementById('rhcReviewJsonMsg');
+    if (msg) { msg.style.color=failed?'var(--red)':'var(--green)'; msg.textContent=`登録 ${success}頭／失敗 ${failed}頭／入力なし ${skipped}頭`; }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
   }
 }
 
@@ -179443,6 +179609,9 @@ async function saveRhcInlineRace(btn) {
     return;
   }
   applySavedHorseToCurrentState(result.horse);
+  // 登録済みの入力だけ空にしてから再描画し、他馬の下書きはrefresh側で復元する。
+  form.querySelector('.rhc-add-comment').value = '';
+  form.querySelector('.rhc-add-eval').value = 'B';
   invalidateHorseCache();
   updateHomeStats();
   showToast(`✓「${name}」に近走を追加しました`);
