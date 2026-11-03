@@ -175143,21 +175143,86 @@ async function saveWholeReview(btn) {
       updatedAt:new Date().toISOString(),source:'manual-reviewed'};
     await setDoc(doc(window._fbDb,'raceReviews',raceId),data,{merge:true});
     raceWholeReviewCache.set(raceId,data);
+    horseRaceRefreshEventBadges();
+    if(raceConditionReviewRecords!==null){
+      const ix=raceConditionReviewRecords.findIndex(x=>x.raceId===raceId);
+      if(ix>=0)raceConditionReviewRecords[ix]={...data};else raceConditionReviewRecords.push({...data});
+      raceConditionRefreshPanels();
+    }
     msg.textContent='✓ DBへ保存しました';
     showToast('レース全体回顧を保存しました');
   } catch(e) {msg.textContent='保存失敗: '+(e.message||e);showToast('レース全体回顧の保存に失敗',true);}
   finally {btn.disabled=false;}
 }
-// 全体考察：将来の集計結果を短く表示する枠。未集計の段階では傾向を捏造しない。
-function raceConditionAnalysisPanel(day,venue,race) {
-  const course=`${venue.name} ${race.track||''}`.trim();
-  const key=`${venue.name}|${race.track||''}`;
-  const item=raceConditionAnalysisCache.get(key);
-  const lines=item?.findings||[];
+// 全体考察：raceReviewsに保存された4分類から、同条件の過去傾向を自動生成する。
+let raceConditionReviewRecords=null;
+let raceConditionReviewPromise=null;
+let raceConditionReviewError='';
+function raceConditionRefreshPanels(){
+  document.querySelectorAll('.race-condition-auto-panel').forEach(node=>{
+    node.innerHTML=raceConditionAnalysisBody(node.dataset.raceId,node.dataset.venue,node.dataset.surface,Number(node.dataset.distance)||0,node.dataset.condition);
+  });
+}
+async function raceConditionLoadReviews(force=false){
+  if(raceConditionReviewPromise)return raceConditionReviewPromise;
+  if(!force&&raceConditionReviewRecords!==null)return;
+  raceConditionReviewPromise=(async()=>{
+    try{
+      if(!(await waitForFirebase(5000)))throw new Error('Firebaseに接続できません');
+      const {collection,getDocs}=window._fbFns;
+      const snap=await getDocs(collection(window._fbDb,'raceReviews'));
+      raceConditionReviewRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));
+      raceConditionReviewError='';
+    }catch(e){raceConditionReviewError=e.message||String(e);}
+    finally{raceConditionReviewPromise=null;raceConditionRefreshPanels();horseRaceRefreshEventBadges();}
+  })();
+  return raceConditionReviewPromise;
+}
+function raceConditionAnalysisBody(raceId,venue,surface,distance,condition){
+  if(raceConditionReviewRecords===null){
+    return `<div style="font-size:11px;color:var(--muted)">${raceConditionReviewError?'取得失敗：'+escHtml(raceConditionReviewError):'過去の全体回顧を読み込み中…'}</div><button type="button" class="review-ai-btn secondary" style="margin-top:5px" onclick="raceConditionLoadReviews(true)">再読み込み</button>`;
+  }
+  const matches=raceConditionReviewRecords.filter(r=>{
+    if(r.raceId===raceId||!simpleReviewEvents(r))return false;
+    const ref=simpleReviewRef(r);
+    const v=String(ref.venue||''),su=String(ref.surface||aiExtractSurface(ref.track||'')),d=Number(ref.distance||aiExtractDistance(ref.track||''))||0;
+    return v===venue&&su===surface&&d===distance;
+  });
+  if(!matches.length)return `<div style="font-size:11px;color:var(--muted)">同じ競馬場・芝ダート・距離の4分類回顧はまだありません。</div><button type="button" class="review-ai-btn secondary" style="margin-top:5px" onclick="raceConditionLoadReviews(true)">集計を更新</button>`;
+  const fields=[
+    {key:'pace',label:'展開',options:{high:'ハイペース',middle:'ミドルペース',slow:'スローペース'}},
+    {key:'lapPattern',label:'ラップ',options:{front_loaded:'前傾',back_loaded:'後傾',even:'平均型',mid_slow:'中盤緩む',long_spurt:'ロングスパート'}},
+    {key:'topFinishFrame',label:'上位馬の枠',options:{inner:'内枠のみ',outer:'外枠のみ',balanced:'内外混在'}},
+    {key:'trouble',label:'不利',options:{yes:'あり',no:'なし'}}
+  ];
+  const lines=fields.map(f=>{
+    const counts=new Map();let known=0;
+    for(const r of matches){
+      const ev=simpleReviewEvents(r),raw=ev?.[f.key];
+      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>f.key==='topFinishFrame'&&v==='mixed'?'balanced':v);
+      const valid=[...new Set(vals.filter(v=>Object.prototype.hasOwnProperty.call(f.options,v)))];
+      if(!valid.length)continue;
+      known++;
+      for(const v of valid)counts.set(v,(counts.get(v)||0)+1);
+    }
+    if(!known)return `<div style="margin-top:4px">${f.label}：判定済みデータなし</div>`;
+    const sorted=[...counts].sort((a,b)=>b[1]-a[1]);
+    const top=sorted.slice(0,3).map(([v,n])=>`${f.options[v]} ${n}/${known}件 (${Math.round(n/known*100)}%)`).join('、');
+    return `<div style="margin-top:4px"><b>${f.label}</b>：${top}</div>`;
+  }).join('');
+  return `<div style="font-size:11px;color:var(--muted);margin:4px 0">同コース ${matches.length}レース（現在のレースは除外）</div><div style="font-size:12px;line-height:1.7">${lines}</div><div style="font-size:10px;color:var(--muted);margin-top:5px">※ 回顧で判定できた事象の記録割合。枠の内外混在は有利不利の判定ではありません。馬場状態は絞り込みに含めていません。</div><button type="button" class="review-ai-btn secondary" style="margin-top:5px" onclick="raceConditionLoadReviews(true)">集計を更新</button>`;
+}
+function raceConditionAnalysisPanel(day,venue,race){
+  const ref=buildRaceRef(day,venue,race);
+  const raceId=ensureRaceId(day,venue,race);
+  const venueName=String(ref.venue||''),surface=String(ref.surface||''),distance=Number(ref.distance)||0;
+  if(raceConditionReviewRecords===null&&!raceConditionReviewPromise){
+    Promise.resolve().then(()=>raceConditionLoadReviews());
+  }
   return `<section style="margin:10px 0 12px;padding:10px 12px;border:1px solid var(--border);border-radius:8px">
-    <div style="font-size:13px;font-weight:700">🔎 全体考察 <span style="font-size:10px;color:var(--muted);font-weight:400">過去レースの傾向</span></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:3px">${escHtml(course)}</div>
-    ${lines.length?`<div style="font-size:12px;margin-top:6px">${lines.map(x=>`<div style="margin-top:3px">・${escHtml(String(x))}</div>`).join('')}</div><div style="font-size:10px;color:var(--muted)">対象 ${Number(item.sampleSize)||0} レース</div>`:'<div style="font-size:11px;color:var(--muted);margin-top:5px">集計データ未登録。回顧を蓄積後、条件別の分析結果を表示します。</div>'}
+    <div style="font-size:13px;font-weight:700">🔎 全体考察 <span style="font-size:10px;color:var(--muted);font-weight:400">過去レースの4分類傾向</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:3px">${escHtml(venueName+' '+(ref.track||''))}</div>
+    <div class="race-condition-auto-panel" data-race-id="${escHtml(raceId)}" data-venue="${escHtml(venueName)}" data-surface="${escHtml(surface)}" data-distance="${distance}" data-condition="${escHtml(ref.trackCondition||'')}">${raceConditionAnalysisBody(raceId,venueName,surface,distance,ref.trackCondition||'')}</div>
   </section>`;
 }
 
@@ -175240,7 +175305,7 @@ function buildHorseGrid(race, day, venue) {
 
       const editAddon = isEditMode ? `
         <div class="rhc-edit-toggle" onclick="event.stopPropagation(); toggleRhcForm(this)">＋ 近走を追加</div>
-        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}">
+        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}" data-race-id="${escHtml(String(ensureRaceId(day,venue,race)))}">
           <div class="edit-row" style="gap:6px;margin-bottom:6px">
             <input type="text" class="rhc-add-name search-input" placeholder="レース名（例: 有馬記念）" value="${prefillRaceNameSafe}" style="flex:2">
             <input type="text" class="rhc-add-track search-input" placeholder="コース（例: 中山芝2500）" value="${prefillTrackSafe}" style="flex:1.4">
@@ -175270,7 +175335,7 @@ function buildHorseGrid(race, day, venue) {
     } else {
       const editAddon = isEditMode ? `
         <div class="rhc-edit-toggle" onclick="event.stopPropagation(); toggleRhcForm(this)">＋ 馬ページを作成</div>
-        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}" data-frame="${h.frame||0}" data-num="${h.num||0}">
+        <div class="rhc-edit-form" style="display:none" onclick="event.stopPropagation()" data-horse-name="${safeName}" data-race-id="${escHtml(String(ensureRaceId(day,venue,race)))}" data-frame="${h.frame||0}" data-num="${h.num||0}">
           <textarea class="rhc-new-shortnote search-input" style="min-height:40px;resize:vertical;margin-bottom:6px" placeholder="短評（任意）"></textarea>
           <div class="edit-row" style="gap:6px;margin-bottom:6px">
             <input type="text" class="rhc-new-rname search-input" placeholder="近走レース名（任意）" value="${prefillRaceNameSafe}" style="flex:2">
@@ -175738,6 +175803,146 @@ function selectHorse(num) {
   if (selectedHorse) lazyRefreshHorse(selectedHorse.name);
 }
 
+// 各馬の近走評価に、同じraceIdの全体回顧4分類を表示する（読み取り専用）。
+function horseRaceNorm(v){return String(v||'').normalize('NFKC').replace(/[\s　・･_()（）]/g,'').toLowerCase();}
+function horseRaceReviewCandidates(r){
+  const records=raceConditionReviewRecords||[...raceWholeReviewCache.values()];
+  const name=horseRaceNorm(r?.name), track=horseRaceNorm(r?.track);
+  return records.map(record=>{
+    let ref=record.raceRef||{};
+    if(!ref.raceName&&!ref.name){
+      outer:for(const day of (raceDays||[]))for(const venue of (day.venues||[]))for(const race of (venue.races||[])){
+        if(String(ensureRaceId(day,venue,race))===String(record.raceId)){ref=buildRaceRef(day,venue,race);break outer;}
+      }
+    }
+    const n=horseRaceNorm(ref.raceName||ref.name),t=horseRaceNorm(ref.track);
+    const score=(name&&n===name?100:0)+(track&&t===track?30:0);
+    return {record,ref,score,exactName:!!name&&n===name,compatibleTrack:!track||!t||track===t};
+  }).filter(x=>x.record.raceId).sort((a,b)=>b.score-a.score);
+}
+// 厳密な自動照合：名前・コースの一致を必須とし、複数候補は絶対に自動保存しない。
+function horseRaceAutoTarget(r){
+  if(r?.raceId)return null;
+  const name=horseRaceNorm(r?.name),track=horseRaceNorm(r?.track);
+  if(!name||!track)return null;
+  const matches=horseRaceReviewCandidates(r).filter(x=>x.exactName && x.compatibleTrack && horseRaceNorm(x.ref?.track)===track);
+  // 同名・同コースでも複数開催があれば自動では決めない。
+  if(matches.length!==1)return null;
+  const x=matches[0];
+  const rd=String(r.date||r.raceDate||'').replace(/\D/g,''),dd=String(x.ref?.date||'').replace(/\D/g,'');
+  if(rd&&dd&&rd!==dd)return null;
+  return x.record.raceId;
+}
+let horseRaceAutoBusy=false;
+async function horseRaceAutoLinkCurrent(){
+  if(horseRaceAutoBusy||!selectedHorse||raceConditionReviewRecords===null)return;
+  const h=selectedHorse;
+  const changes=(h.races||[]).map(r=>({r,id:horseRaceAutoTarget(r)})).filter(x=>x.id);
+  if(!changes.length)return;
+  horseRaceAutoBusy=true;
+  try{
+    for(const {r,id} of changes){
+      if(selectedHorse?.name!==h.name)break;
+      const result=await saveHorseRaceChange(h.name,{type:'update',original:{...r},updated:{...r,raceId:id}});
+      if(!result.ok){console.warn('[keiba] 自動紐づけ保留',h.name,r.name,result.message);break;}
+      applySavedHorseToCurrentState(result.horse);
+    }
+    if(selectedHorse?.name===h.name){invalidateHorseCache();renderHorseDetail();}
+  }finally{horseRaceAutoBusy=false;}
+}
+// 既存データを安全に一括処理。最初はプレビューだけ、明示的に確定した場合のみ保存。
+let horseRaceBulkPlan=[];
+function horseRaceBulkPreview(){
+  const out=document.getElementById('horseRaceBulkStatus');if(!out)return;
+  if(raceConditionReviewRecords===null){out.textContent='先に回顧DBを読み込んでください。';raceConditionLoadReviews()?.then(horseRaceBulkPreview);return;}
+  horseRaceBulkPlan=[];let pending=0,linked=0,total=0;
+  for(const h of horses){if(h.deleted)continue;for(const r of(h.races||[])){
+    total++;if(r.raceId){linked++;continue;}
+    const id=horseRaceAutoTarget(r);
+    if(id)horseRaceBulkPlan.push({horseName:h.name,original:{...r},raceId:id});else pending++;
+  }}
+  out.textContent=`読み込み済み ${total}件：既存ID ${linked}件／自動連携可能 ${horseRaceBulkPlan.length}件／要確認 ${pending}件。※読み込み済みの馬のみ対象。`;
+  const btn=document.getElementById('horseRaceBulkApply');if(btn)btn.disabled=!horseRaceBulkPlan.length;
+}
+async function horseRaceBulkApply(){
+  const out=document.getElementById('horseRaceBulkStatus'),btn=document.getElementById('horseRaceBulkApply');
+  if(!horseRaceBulkPlan.length||!out)return;
+  if(!confirm(`確実に一致した ${horseRaceBulkPlan.length}件のraceIdを保存します。続行しますか？`))return;
+  btn.disabled=true;let ok=0,fail=0;
+  // 各書き込みで最新DBを照合。変更された評価は上書きしない。
+  const plan=horseRaceBulkPlan.splice(0);
+  for(const item of plan){
+    const result=await saveHorseRaceChange(item.horseName,{type:'update',original:item.original,updated:{...item.original,raceId:item.raceId}});
+    if(result.ok){ok++;applySavedHorseToCurrentState(result.horse);}else fail++;
+    if((ok+fail)%10===0)out.textContent=`保存中 ${ok+fail}/${plan.length}件（成功${ok}・保留${fail}）`;
+  }
+  out.textContent=`完了：成功 ${ok}件／保留・失敗 ${fail}件。必要なら再プレビューしてください。`;
+  if(selectedHorse)renderHorseDetail();
+}
+function horseRaceReviewMatch(r){
+  if(!r?.raceId)return null;
+  const records=raceConditionReviewRecords||[...raceWholeReviewCache.values()];
+  return records.find(x=>String(x.raceId)===String(r.raceId))||null;
+}
+function horseRaceReviewLinkControl(r,idx){
+  if(!isEditMode)return '';
+  const records=raceConditionReviewRecords;
+  if(records===null)return '<div style="font-size:11px;color:var(--muted)">レース照合データ読み込み中…</div>';
+  const found=horseRaceReviewMatch(r);
+  const candidates=horseRaceReviewCandidates(r);
+  const exact=candidates.filter(x=>x.exactName&&x.compatibleTrack);
+  const status=r.raceId?(found?'ID連携済み':'保存済みIDの回顧が見つかりません'):(exact.length===1?'候補1件（未保存）':exact.length>1?'候補が複数あります':'自動照合できません');
+  const options=candidates.map(x=>{
+    const ref=x.ref||{}, label=[ref.date||ref.dayId||'',ref.venue||'',ref.raceName||ref.name||x.record.raceId,ref.track||''].filter(Boolean).join(' / ');
+    return `<option value="${escHtml(String(x.record.raceId))}" ${String(r.raceId||'')===String(x.record.raceId)?'selected':''}>${escHtml(label)}</option>`;
+  }).join('');
+  return `<details style="margin:5px 0 7px;font-size:11px"><summary style="cursor:pointer;color:var(--muted)">🔗 レース紐づけ：${escHtml(status)}（確認・変更）</summary><div style="margin:7px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><input type="search" class="search-input" style="min-width:170px;flex:1" placeholder="レース名・開催日・コースで候補検索" oninput="horseRaceFilterLinkOptions(this)"/><select class="search-input horse-review-link-select" style="min-width:200px;flex:2"><option value="">レースを選択</option>${options}</select><button type="button" class="review-ai-btn secondary" onclick="horseRaceSaveReviewLink(this,${idx})">紐づけを保存</button></div><div class="horse-review-link-message" style="color:var(--muted)">選択したレースIDをこの馬の近走評価に保存します。候補が複数ある場合は開催日を確認してください。</div></details>`;
+}
+function horseRaceFilterLinkOptions(input){
+  const select=input.parentElement.querySelector('select');if(!select)return;
+  const q=horseRaceNorm(input.value);
+  for(const option of select.options){option.hidden=!!q&&!!option.value&&!horseRaceNorm(option.textContent).includes(q);}
+}
+async function horseRaceSaveReviewLink(btn,idx){
+  if(!isEditMode){showToast('レース紐づけは編集モードのみ可能です',true);return;}
+  const h=selectedHorse,r=h?.races?.[idx],box=btn.closest('details'),select=box?.querySelector('select'),msg=box?.querySelector('.horse-review-link-message');
+  if(!r||!select?.value){if(msg)msg.textContent='候補のレースを選択してください。';return;}
+  const target=select.value;
+  if(!horseRaceReviewCandidates(r).some(x=>String(x.record.raceId)===target)){if(msg)msg.textContent='候補を再読み込みしてください。';return;}
+  btn.disabled=true;if(msg)msg.textContent='保存中…';
+  const result=await saveHorseRaceChange(h.name,{type:'update',original:{...r},updated:{...r,raceId:target}});
+  btn.disabled=false;
+  if(!result.ok){if(msg)msg.textContent='保存失敗：'+(result.message||'再試行してください');return;}
+  applySavedHorseToCurrentState(result.horse);invalidateHorseCache();renderHorseDetail();
+}
+function horseRaceEventBadges(r){
+  const record=horseRaceReviewMatch(r),e=record?.events;
+  if(!record)return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：未登録</div>';
+  if(!e||Array.isArray(e)||typeof e!=='object')return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：連携済み・4分類未登録</div>';
+  const labels=[];
+  const pace={high:'ハイペース',middle:'ミドルペース',mid:'ミドルペース',slow:'スローペース'};
+  if(pace[e.pace])labels.push(pace[e.pace]);
+  const lap={front_loaded:'前傾',back_loaded:'後傾',even:'平均型',mid_slow:'中盤緩む',long_spurt:'ロングスパート'};
+  for(const v of (Array.isArray(e.lapPattern)?e.lapPattern:[e.lapPattern]))if(lap[v]&&!labels.includes(lap[v]))labels.push(lap[v]);
+  const frame={inner:'上位枠：内枠のみ',outer:'上位枠：外枠のみ',mixed:'上位枠：内外混在',balanced:'上位枠：内外混在'};
+  if(frame[e.topFinishFrame])labels.push(frame[e.topFinishFrame]);
+  if(e.trouble==='yes')labels.push('不利あり（レース全体）');
+  else if(e.trouble==='no')labels.push('不利なし（レース全体）');
+  if(!labels.length)return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：判定データなし</div>';
+  return '<div class="horse-race-event-badges" style="display:flex;flex-wrap:wrap;gap:5px;margin:7px 0">'+labels.map(label=>'<span style="font-size:10px;padding:3px 7px;border-radius:6px;background:var(--card2);border:1px solid var(--border);color:var(--muted)">'+escHtml(label)+'</span>').join('')+'</div>';
+}
+function horseRaceRefreshEventBadges(){
+  const root=document.getElementById('horseDetailEl');if(!root)return;
+  root.querySelectorAll('[data-horse-review-index]').forEach(node=>{
+    const idx=Number(node.dataset.horseReviewIndex),r=selectedHorse?.races?.[idx];
+    if(r)node.innerHTML=horseRaceEventBadges(r)+horseRaceReviewLinkControl(r,idx);
+  });
+}
+function horseRaceEnsureReviewBadges(){
+  horseRaceRefreshEventBadges();
+  if(raceConditionReviewRecords!==null){return;}
+  raceConditionLoadReviews()?.then(()=>{horseRaceRefreshEventBadges();}).catch(()=>{});
+}
 // ===== 馬詳細 =====
 function renderHorseDetail() {
   const el = document.getElementById('horseDetailEl');
@@ -175814,6 +176019,7 @@ function renderHorseDetail() {
         ${editControls}
       </div>
       <div class="result-comment">${r.comment}</div>
+      <div data-horse-review-index="${idx}">${horseRaceEventBadges(r)}${horseRaceReviewLinkControl(r,idx)}</div>
       ${editForm}
     </div>
   `;
@@ -175992,6 +176198,8 @@ function renderHorseDetail() {
     </div>
   `;
 
+  // 馬詳細を開くたびに全体回顧の4分類を取得・表示
+  if(h.races.length)horseRaceEnsureReviewBadges();
   // みんなのメモを非同期でロード
   initPublicMemo(h.name);
 }
@@ -176003,6 +176211,7 @@ async function saveHorseMemo(name) {
   await saveMemos();
   const msg = document.getElementById('horseMemoSaved');
   if (msg) { msg.style.opacity='1'; setTimeout(()=>msg.style.opacity='0',1500); }
+  if(h.races.length)horseRaceEnsureReviewBadges();
 }
 
 // 馬ページの近走評価の並び替え（編集モード）
@@ -179717,6 +179926,7 @@ async function registerAllRhcDrafts(btn) {
         const rName = form.querySelector('.rhc-new-rname').value.trim();
         const races = rName ? [{
           name:rName,
+          raceId:form.dataset.raceId||undefined,
           track:form.querySelector('.rhc-new-rtrack').value.trim(),
           eval:form.querySelector('.rhc-new-reval').value,
           comment
@@ -179737,7 +179947,7 @@ async function registerAllRhcDrafts(btn) {
         const h = horses.find(x => x.name === name);
         const raceName = form.querySelector('.rhc-add-name').value.trim();
         if (!h || !raceName) { failed++; continue; }
-        const newRace = { name:raceName, track:form.querySelector('.rhc-add-track').value.trim(), eval:form.querySelector('.rhc-add-eval').value, comment };
+        const newRace = { name:raceName, track:form.querySelector('.rhc-add-track').value.trim(), eval:form.querySelector('.rhc-add-eval').value, comment, raceId:form.dataset.raceId||undefined };
         const result = await saveHorseRaceChange(name, { type:'add', race:newRace });
         if (!result.ok) {
           if (msgEl) { msgEl.style.color='var(--red)'; msgEl.textContent='保存失敗：'+(result.message||result.code||''); }
@@ -179781,7 +179991,7 @@ async function saveRhcInlineRace(btn) {
   const evalVal = form.querySelector('.rhc-add-eval').value;
   const comment = form.querySelector('.rhc-add-comment').value.trim();
   addCommentHistory(comment);
-  const newRace = { name: raceName, track, eval: evalVal, comment };
+  const newRace = { name: raceName, track, eval: evalVal, comment, raceId:form.dataset.raceId||undefined };
   const result = await saveHorseRaceChange(name, { type:'add', race:newRace });
   if (!result.ok) {
     msgEl.style.color = 'var(--red)';
@@ -179821,6 +180031,7 @@ async function createHorsePageInline(btn) {
     addCommentHistory(c);
     races.push({
       name: rName,
+      raceId:form.dataset.raceId||undefined,
       track: form.querySelector('.rhc-new-rtrack').value.trim(),
       eval: form.querySelector('.rhc-new-reval').value,
       comment: c
@@ -181182,6 +181393,7 @@ async function loadWholeReviewRanking(){
     const {collection,getDocs}=window._fbFns;
     const snapshot=await getDocs(collection(window._fbDb,'raceReviews'));
     wholeReviewRankingRecords=snapshot.docs.map(d=>({raceId:d.id,...d.data()}));
+    raceConditionReviewRecords=wholeReviewRankingRecords;raceConditionRefreshPanels();
     wholeReviewRankingLoaded=true;
   }catch(e){wholeReviewRankingError=e.message||String(e);}
   renderReviewEventRanking();
