@@ -173667,6 +173667,22 @@ const SYNC_VERSION_LS_KEY = 'keiba-fs-sync-version';
 
 // editモード判定（URLに?editが含まれるか）—どこからでも参照できるようスクリプト冒頭で宣言
 const isEditMode = location.search.includes('edit');
+
+/*
+ * 将来の公開運用に向けたFirebase権限・Security Rules整備メモ（今回はルール変更なし）
+ * visitor: 公開済みデータのreadのみ。write不可。
+ * owner/admin: Firebase Authで認証し、許可UIDまたはCustom Claimsで管理権限を確認。
+ * future user: 公開データread＋本人の予想・回顧等のread/writeのみ。
+ *
+ * 導入手順:
+ * 1. Firestoreコレクションを棚卸しし、公開／非公開データを分離する。
+ * 2. 公開分析は公開用データに分離し、公開フラグ等で対象を管理する。
+ * 3. deny-by-defaultのRulesを作り、管理者のみマスターデータ更新を許可する。
+ * 4. Firebase Emulator Suiteで未認証・管理者・一般ユーザーのread/writeを検証する。
+ * 5. 本番デプロイ後に公開閲覧・管理者更新を確認し、復旧手順も用意する。
+ * 6. App Check/APIキー制限は補助対策であり、Security Rulesの代わりではない。
+ * 注意: ?editによるボタン非表示はUI制御であり、DB書き込み防止にはならない。
+ */
 // 編集ページでは分析タブも同じデータ環境で利用できるようにする。
 // ?analysis 単独でも分析画面は開けるが、?edit では編集タブと分析タブを同時表示する。
 const isAnalysisRoute = location.search.includes('analysis');
@@ -174956,7 +174972,7 @@ function renderWeekContent(day) {
             </div>
             <div class="dbsend-wrap">
               ${gradeLabel[race.grade] ? `<span class="race-grade-badge ${gradeClass[race.grade]}" style="font-size:12px;padding:4px 12px">${gradeLabel[race.grade]}</span>` : ''}
-              ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}<button type="button" class="reviewed-btn review-link-btn" onclick="event.stopPropagation(); openReviewLinkModal('${day.id}','${escHtml(venue.name)}',${rNum})">🔗 既存の回顧をこのレースに紐づける</button><button type="button" class="result-entry-btn" onclick="event.stopPropagation(); openRaceResultModal('${day.id}','${escHtml(venue.name)}',${rNum})">📋 結果を入力</button>
+              ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button><button type="button" class="reviewed-btn review-link-btn" onclick="event.stopPropagation(); openReviewLinkModal('${day.id}','${escHtml(venue.name)}',${rNum})">🔗 既存の回顧をこのレースに紐づける</button><button type="button" class="result-entry-btn" onclick="event.stopPropagation(); openRaceResultModal('${day.id}','${escHtml(venue.name)}',${rNum})">📋 結果を入力</button>` : ''}
               ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
               <button type="button" class="ai-predict-btn" onclick="event.stopPropagation(); openAIPredictor('${day.id}','${escHtml(venue.name)}',${rNum})">🧠 AIアシスタント予想</button>
             </div>
@@ -176924,7 +176940,7 @@ function renderHistoryMain() {
             </div>
             <div class="dbsend-wrap">
               ${isEditMode ? `<button type="button" class="reviewed-btn${race.reviewed ? ' done' : ''}" onclick="toggleReviewed('${day.id}','${escHtml(venue.name)}',${rNum},this)">${race.reviewed ? '✅ 回顧済み' : '☑ 回顧済みにする'}</button>` : ''}
-              <button type="button" class="reviewed-btn review-link-btn" onclick="event.stopPropagation(); openReviewLinkModal('${day.id}','${escHtml(venue.name)}',${rNum})">🔗 既存の回顧をこのレースに紐づける</button><button type="button" class="result-entry-btn" onclick="event.stopPropagation(); openRaceResultModal('${day.id}','${escHtml(venue.name)}',${rNum})">📋 結果を入力</button>
+              ${isEditMode ? `<button type="button" class="reviewed-btn review-link-btn" onclick="event.stopPropagation(); openReviewLinkModal('${day.id}','${escHtml(venue.name)}',${rNum})">🔗 既存の回顧をこのレースに紐づける</button><button type="button" class="result-entry-btn" onclick="event.stopPropagation(); openRaceResultModal('${day.id}','${escHtml(venue.name)}',${rNum})">📋 結果を入力</button>` : ''}
               ${isEditMode ? `<button type="button" class="dbsend-btn" onclick="sendDayToFirestoreBtn('${day.id}', this)">📤 この開催日をDBへ送信</button><span class="dbsend-msg"></span>` : ''}
               <button type="button" class="ai-predict-btn" onclick="event.stopPropagation(); openAIPredictor('${day.id}','${escHtml(venue.name)}',${rNum})">🧠 AIアシスタント予想</button>
             </div>
@@ -180616,9 +180632,11 @@ function showPredictionDetail(i){
   const el=document.getElementById('analysisHistory'); if(!el) return;
   const r=p.raceSnapshot||{}, w=p.weights||{}; const outcome=buildPredictionOutcome(p);
   const resultRaceRef=findRaceForPrediction(p);
-  const resultEntryButton=resultRaceRef?.day&&resultRaceRef?.venue&&resultRaceRef?.race
-    ? `<button type="button" class="result-entry-btn" style="margin-top:10px" onclick="openRaceResultModal('${aiEsc(resultRaceRef.day.id)}','${aiEsc(resultRaceRef.venue.name)}',${Number(resultRaceRef.race.r)})">📋 ${outcome?'結果を確認・修正':'結果を入力'}</button>`
-    : `<div class="analysis-note">対応する開催レースが見つからないため、ここから結果入力を開けません。開催データとの紐づけを確認してください。</div>`;
+  const resultEntryButton=!isEditMode
+    ? ''
+    : (resultRaceRef?.day&&resultRaceRef?.venue&&resultRaceRef?.race
+      ? `<button type="button" class="result-entry-btn" style="margin-top:10px" onclick="openRaceResultModal('${aiEsc(resultRaceRef.day.id)}','${aiEsc(resultRaceRef.venue.name)}',${Number(resultRaceRef.race.r)})">📋 ${outcome?'結果を確認・修正':'結果を入力'}</button>`
+      : `<div class="analysis-note">対応する開催レースが見つからないため、ここから結果入力を開けません。開催データとの紐づけを確認してください。</div>`);
   const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/${outcome.top5.length}</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
   const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
   el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
