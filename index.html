@@ -181194,7 +181194,7 @@ function wholeReviewRankingHTML(){
 const SIMPLE_REVIEW_FIELDS=[
   {key:'pace',label:'展開面',options:{high:'ハイペース',middle:'ミドルペース',slow:'スローペース',unknown:'不明'}},
   {key:'lapPattern',label:'ラップ構成',options:{front_loaded:'前傾',back_loaded:'後傾',even:'平均型',mid_slow:'中盤緩む',long_spurt:'ロングスパート',unknown:'不明'},multiple:true},
-  {key:'topFinishFrame',label:'上位馬の枠',options:{inner:'内枠優勢',outer:'外枠優勢',balanced:'偏りなし',mixed:'偏りなし',unknown:'不明'}},
+  {key:'topFinishFrame',label:'上位馬の枠',options:{inner:'内枠優勢',outer:'外枠優勢',balanced:'偏りなし',unknown:'不明'}},
   {key:'trouble',label:'不利の有無',options:{yes:'あり',no:'なし',unknown:'不明'}}
 ];
 function simpleReviewEvents(r){
@@ -181208,10 +181208,25 @@ function simpleReviewRef(r){
   }
   return {};
 }
+function simpleReviewValue(field,value){
+  const v=String(value);
+  return field.key==='topFinishFrame'&&v==='mixed'?'balanced':v;
+}
+function simpleReviewFilter(input,selector){
+  const q=String(input.value||'').trim().toLocaleLowerCase();
+  const root=document.getElementById('analysisHistory');if(!root)return;
+  let shown=0;
+  root.querySelectorAll(selector).forEach(el=>{
+    const match=!q||String(el.textContent||'').toLocaleLowerCase().includes(q);
+    el.style.display=match?'':'none';if(match)shown++;
+  });
+  const count=input.parentElement.querySelector('.simple-review-search-count');
+  if(count)count.textContent=shown+'件表示';
+}
 function simpleReviewLabels(field,e){
   if(!e||e[field.key]==null)return [];
   const values=Array.isArray(e[field.key])?e[field.key]:[e[field.key]];
-  return [...new Set(values.map(v=>field.key==='topFinishFrame'&&String(v)==='mixed'?'balanced':String(v)).filter(v=>Object.hasOwn(field.options,v)&&v!=='unknown'))];
+  return [...new Set(values.map(v=>simpleReviewValue(field,v)).filter(v=>Object.hasOwn(field.options,v)&&v!=='unknown'))];
 }
 function simpleReviewDownload(){
   const rows=wholeReviewRankingRecords.map(r=>({raceId:r.raceId,raceRef:simpleReviewRef(r),review:r.review||'',analysis:r.analysis||'',events:r.events||null}));
@@ -181227,14 +181242,14 @@ function renderReviewEventRanking(){
   }
   const records=wholeReviewRankingRecords.filter(r=>r.review||r.analysis||r.events);
   const structured=records.filter(r=>simpleReviewEvents(r));
-  const overview=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">回顧 ${records.length}件／4分類データ ${structured.length}件。旧形式のevents配列は集計に混ぜません。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button> <button class="review-ai-btn secondary" onclick="simpleReviewDownload()">分析用JSON出力</button><details style="margin-top:12px"><summary style="cursor:pointer">登録済みの回顧を見る</summary><div style="max-height:300px;overflow:auto">${records.slice(0,100).map(r=>`<details style="padding:7px 0;border-top:1px solid var(--border)"><summary>${aiEsc(r.raceId)} ${simpleReviewEvents(r)?'（4分類登録済み）':''}</summary><div style="white-space:pre-wrap;font-size:12px">${aiEsc(r.review||'本文なし')}</div></details>`).join('')}</div></details></div>`;
+  const overview=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">回顧 ${records.length}件／4分類データ ${structured.length}件。旧形式のevents配列は集計に混ぜません。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button> <button class="review-ai-btn secondary" onclick="simpleReviewDownload()">分析用JSON出力</button><details style="margin-top:12px"><summary style="cursor:pointer">登録済みの回顧を見る</summary><div style="margin:8px 0"><input type="search" placeholder="レースID・回顧本文を検索" oninput="simpleReviewFilter(this,'.simple-review-record')" style="width:100%;max-width:360px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:inherit"><span class="simple-review-search-count" style="margin-left:8px;font-size:12px"></span></div><div style="max-height:300px;overflow:auto">${records.map(r=>`<details class="simple-review-record" style="padding:7px 0;border-top:1px solid var(--border)"><summary>${aiEsc(r.raceId)} ${simpleReviewEvents(r)?'（4分類登録済み）':''}</summary><div style="white-space:pre-wrap;font-size:12px">${aiEsc(r.review||'本文なし')}</div></details>`).join('')}</div></details></div>`;
   const cards=SIMPLE_REVIEW_FIELDS.map(f=>{
     const counts=new Map(Object.keys(f.options).map(k=>[k,0]));let known=0,unknown=0,missing=0;
     for(const r of structured){
       const e=simpleReviewEvents(r),v=e?.[f.key];
       if(v==null||v===''||(Array.isArray(v)&&!v.length)){missing++;continue;}
       const vals=Array.isArray(v)?v:[v];
-      const valid=[...new Set(vals.map(x=>f.key==='topFinishFrame'&&String(x)==='mixed'?'balanced':String(x)).filter(x=>Object.hasOwn(f.options,x)))];
+      const valid=[...new Set(vals.map(x=>simpleReviewValue(f,x)).filter(x=>Object.hasOwn(f.options,x)))];
       if(!valid.length){missing++;continue;}
       if(valid.every(x=>x==='unknown')){unknown++;continue;}
       known++;
@@ -181257,9 +181272,9 @@ function renderReviewEventRanking(){
       const top=[...counts].sort((a,b)=>b[1]-a[1])[0];
       return `<td>${top?`${aiEsc(f.options[top[0]])} ${top[1]}/${valid.length}`:'—'}</td>`;
     }).join('');
-    return `<tr><td>${aiEsc(condition)}</td><td>${races.length}</td>${detail}</tr>`;
+    return `<tr class="simple-review-condition"><td>${aiEsc(condition)}</td><td>${races.length}</td>${detail}</tr>`;
   }).join('');
-  const conditions=`<div class="analysis-card"><div class="analysis-card-title">🗺 条件別・最多事象</div><div class="analysis-sub">競馬場・芝ダート・距離ごとの最多分類。分母はその項目を判定できたレース数です。</div>${condRows?`<div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>条件</th><th>レース数</th><th>展開面</th><th>ラップ構成</th><th>上位馬の枠</th><th>不利</th></tr></thead><tbody>${condRows}</tbody></table></div>`:'<div class="analysis-empty">4分類データを登録すると表示されます。</div>'}<div class="analysis-note">これは回顧に記録された事象の分布です。発生しなかったレースや未入力を区別し、予想の重みにはまだ自動反映しません。</div></div>`;
+  const conditions=`<div class="analysis-card"><div class="analysis-card-title">🗺 条件別・最多事象</div><div class="analysis-sub">競馬場・芝ダート・距離ごとの最多分類。分母はその項目を判定できたレース数です。</div><div style="margin:10px 0"><input type="search" placeholder="競馬場・芝ダート・距離・事象を検索" oninput="simpleReviewFilter(this,'.simple-review-condition')" style="width:100%;max-width:420px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:inherit"><span class="simple-review-search-count" style="margin-left:8px;font-size:12px"></span></div>${condRows?`<div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>条件</th><th>レース数</th><th>展開面</th><th>ラップ構成</th><th>上位馬の枠</th><th>不利</th></tr></thead><tbody>${condRows}</tbody></table></div>`:'<div class="analysis-empty">4分類データを登録すると表示されます。</div>'}<div class="analysis-note">これは回顧に記録された事象の分布です。発生しなかったレースや未入力を区別し、予想の重みにはまだ自動反映しません。</div></div>`;
   el.innerHTML=overview+cards+conditions;
 }
 
