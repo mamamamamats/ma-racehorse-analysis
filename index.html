@@ -175302,7 +175302,7 @@ function buildHorseGrid(race, day, venue) {
 
   const reviewJsonImportHTML = isEditMode ? `
     <div class="rhc-json-import" style="margin:0 0 14px;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--card2)" onclick="event.stopPropagation()">
-      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:6px">🤖 AI基本回顧 JSON読み込み</div>
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:6px">🤖 AI基本回顧・レース全体回顧 JSON一括読み込み</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px">別チャットで生成したJSONを貼り付けてください。既に入力済みの項目は残し、空欄だけ補完します。</div>
       <textarea id="rhcReviewJsonInput" class="search-input" style="width:100%;min-height:92px;resize:vertical;box-sizing:border-box;margin-bottom:8px" placeholder='{"horses":[{"horseName":"馬名","raceName":"レース名","track":"コース","eval":"B","comment":"基本回顧"}]}'></textarea>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -179615,9 +179615,37 @@ function applyRhcReviewJson(btn) {
   let data;
   try { data = JSON.parse(box.value); }
   catch (e) { msg.style.color = 'var(--red)'; msg.textContent = 'JSONの形式を確認してください'; return; }
+  // 同じJSONからレース全体回顧・事象も読み込む（この時点ではDB保存しない）。
+  const whole = data && !Array.isArray(data) ? (data.raceReview || data.wholeRaceReview || null) : null;
+  const hasWhole = !!whole || (data && !Array.isArray(data) && (typeof data.summary === 'string' || Array.isArray(data.events)));
+  let wholeApplied = false, wholeNote = '';
+  if (hasWhole) {
+    const panel = document.querySelector('.whole-review-panel');
+    if (panel) {
+      const body = typeof whole === 'string' ? {summary:whole} : (whole || data);
+      const summary = String(body.summary || body.review || body.overview || '').trim();
+      const analysis = String(body.analysis || body.consideration || '').trim();
+      const events = Array.isArray(body.events) ? body.events : (Array.isArray(data.events) ? data.events : []);
+      const uncertainties = Array.isArray(body.uncertainties) ? body.uncertainties : (Array.isArray(data.uncertainties) ? data.uncertainties : []);
+      const reviewInput=panel.querySelector('.whole-review-text');
+      const analysisInput=panel.querySelector('.whole-review-analysis');
+      if (reviewInput && summary && !reviewInput.value.trim()) reviewInput.value=summary;
+      if (analysisInput && analysis && !analysisInput.value.trim()) analysisInput.value=analysis;
+      if (events.length) panel._wholeImportedEvents=events;
+      if (uncertainties.length) panel._wholeImportedUncertainties=uncertainties;
+      wholeApplied=true;
+      wholeNote=`全体回顧も反映（事象${events.length}件）。`;
+      const detail=panel.querySelector('details');
+      if(detail)detail.open=true;
+    } else {
+      wholeNote='全体回顧欄が見つかりません。';
+    }
+  }
   const rows = Array.isArray(data) ? data : (data.horses || data.items || data.horseReviews || []);
   if (!Array.isArray(rows) || !rows.length) {
-    msg.style.color = 'var(--red)'; msg.textContent = 'horses配列が見つかりません'; return;
+    msg.style.color = wholeApplied ? 'var(--green)' : 'var(--red)';
+    msg.textContent = wholeApplied ? `${wholeNote} レース全体回顧の保存ボタンでDB登録してください。` : 'horses配列が見つかりません';
+    return;
   }
   const norm = v => String(v ?? '').trim().replace(/[\s　]+/g, '').replace(/[・･]/g, '');
   let applied = 0, missing = 0, skipped = 0;
@@ -179659,7 +179687,7 @@ function applyRhcReviewJson(btn) {
     if (changed) applied++; else skipped++;
   });
   msg.style.color = missing ? 'var(--accent2)' : 'var(--green)';
-  msg.textContent = `${applied}頭に反映（既存入力保持）${missing ? `／出走馬欄に該当なし ${missing}頭` : ''}${skipped ? `／変更なし ${skipped}頭` : ''}。内容を確認して個別・一括登録してください。`;
+  msg.textContent = `${wholeNote} ${applied}頭に反映（既存入力保持）${missing ? `／出走馬欄に該当なし ${missing}頭` : ''}${skipped ? `／変更なし ${skipped}頭` : ''}。内容を確認して個別・一括登録してください。`;
   showToast(`JSONから${applied}頭分の入力欄に反映しました`);
 }
 
