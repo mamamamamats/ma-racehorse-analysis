@@ -175369,7 +175369,7 @@ function buildHorseGrid(race, day, venue) {
     <div class="rhc-json-import" style="margin:0 0 14px;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--card2)" onclick="event.stopPropagation()">
       <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:6px">🤖 AI基本回顧・レース全体回顧 JSON一括読み込み</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px">別チャットで生成したJSONを貼り付けてください。既に入力済みの項目は残し、空欄だけ補完します。</div>
-      <textarea id="rhcReviewJsonInput" class="search-input" style="width:100%;min-height:92px;resize:vertical;box-sizing:border-box;margin-bottom:8px" placeholder='{"horses":[{"horseName":"馬名","raceName":"レース名","track":"コース","eval":"B","comment":"基本回顧"}]}'></textarea>
+      <textarea id="rhcReviewJsonInput" data-day-id="${escHtml(String(day.id))}" data-venue="${escHtml(String(venue.name))}" data-rnum="${Number(race.r)||0}" class="search-input" style="width:100%;min-height:92px;resize:vertical;box-sizing:border-box;margin-bottom:8px" placeholder='{"horses":[{"horseName":"馬名","raceName":"レース名","track":"コース","eval":"B","comment":"基本回顧"}]}'></textarea>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px" onclick="applyRhcReviewJson(this)">JSONを読み込む</button>
         <button type="button" class="edit-btn-save" style="padding:7px 14px;font-size:12px;background:var(--green);color:#101510" onclick="registerAllRhcDrafts(this)">入力済みを一括登録</button>
@@ -179817,7 +179817,7 @@ function refreshActiveRaceGrid() {
 
 // AI基本回顧JSONを、既存の各馬インライン入力欄へ反映する。
 // 既存入力は上書きせず、空欄のみ補完する。JSON読込時点ではDB保存しない。
-function applyRhcReviewJson(btn) {
+async function applyRhcReviewJson(btn) {
   const box = document.getElementById('rhcReviewJsonInput');
   const msg = document.getElementById('rhcReviewJsonMsg');
   if (!box || !msg) return;
@@ -179897,7 +179897,76 @@ function applyRhcReviewJson(btn) {
   });
   msg.style.color = missing ? 'var(--accent2)' : 'var(--green)';
   msg.textContent = `${wholeNote} ${applied}頭に反映（既存入力保持）${missing ? `／出走馬欄に該当なし ${missing}頭` : ''}${skipped ? `／変更なし ${skipped}頭` : ''}。内容を確認して個別・一括登録してください。`;
-  showToast(`JSONから${applied}頭分の入力欄に反映しました`);
+  // 着順は近走評価ではなく、既存の「結果入力」画面と同じraceResultsへ直接保存。
+  // JSONに明示された着順だけを採用し、既存結果は保持する。
+  const saved = await saveRhcJsonRaceFinishes(box, rows);
+  if (saved.message) msg.textContent += ' '+saved.message;
+  showToast(`JSONから${applied}頭分の回顧を反映。${saved.message||''}`, !!saved.error);
+}
+
+// AI回顧JSONの着順を、結果入力画面と共通の raceResults/{raceId} に保存する。
+async function saveRhcJsonRaceFinishes(box, rows) {
+  if (!isEditMode) return {message:'着順保存は編集モードのみです',error:true};
+  const {day,venue,race}=getRaceByRef(box.dataset.dayId,box.dataset.venue,Number(box.dataset.rnum));
+  if (!day||!venue||!race) return {message:'結果保存先のレースが見つかりません',error:true};
+  const norm=v=>String(v??'').trim().replace(/[\\s　]+/g,'').replace(/[・･]/g,'');
+  const entries=new Map();
+  let invalid=0, unknown=0, duplicate=0;
+  const starters=Array.isArray(race.horses)?race.horses.filter(h=>h&&h.name):[];
+  for (const row of rows) {
+    const raw=row.finishPosition??row.finish??row.position??row.rank??row.着順;
+    const rawStatus=row.status??row.resultStatus??'';
+    if ((raw===undefined||raw===null||raw==='')&&!rawStatus) continue;
+    const horseName=String(row.horseName||(typeof row.horse==='object'?row.horse?.name:row.horse)||row.name||'');
+    const target=starters.find(h=>norm(h.name)===norm(horseName));
+    if(!target||!Number(target.num)){unknown++;continue;}
+    let status='';
+    const statusText=String(rawStatus||raw).trim();
+    if (['取消','出走取消'].includes(statusText)) status='取消';
+    else if (['中止','競走中止'].includes(statusText)) status='中止';
+    else if (['除外','競走除外','失格'].includes(statusText)) {invalid++;continue;}
+    const num=Number(String(raw).replace(/着$/,'').trim());
+    if(!status && (!Number.isInteger(num)||num<1||num>starters.length)){invalid++;continue;}
+    if(entries.has(String(target.num))){duplicate++;continue;}
+    entries.set(String(target.num),{num:Number(target.num),finish:status?null:num,...(status?{status}:{})});
+  }
+  if(!entries.size) return {message:invalid||unknown||duplicate?`着順保存なし（不正 ${invalid}／馬名不一致 ${unknown}／重複 ${duplicate}）`:'JSONに着順指定なし'};
+  if(duplicate||invalid||unknown) return {message:`着順を保存せず確認待ち（不正 ${invalid}／馬名不一致 ${unknown}／重複 ${duplicate}）`,error:true};
+  const raceId=ensureRaceId(day,venue,race);
+  try {
+    if(!(await waitForFirebase(5000)))throw new Error('Firebaseに接続できません');
+    const {doc,getDoc,setDoc,runTransaction}=window._fbFns;
+    const ref=doc(window._fbDb,'raceResults',raceId);
+    const legacy=race.result&&Array.isArray(race.result.horses)?race.result:null;
+    let inserted=0, kept=0;
+    // トランザクションで既存の手入力結果を上書きせず、JSONで指定された馬だけ追加。
+    if(typeof runTransaction!=='function') throw new Error('安全な結果保存機能が利用できません');
+    let updated=null;
+    await runTransaction(window._fbDb,async tx=>{
+      const snap=await tx.get(ref);
+      const stored=snap.exists()?snap.data():{};
+      const old=stored.result&&Array.isArray(stored.result.horses)?stored.result:(!snap.exists()?legacy:null);
+      const oldMap=new Map((old?.horses||[]).map(x=>[String(x.num),{...x}]));
+      inserted=0;kept=0;
+      for(const [num,item] of entries){
+        const prev=oldMap.get(num);
+        if(prev && (Number.isInteger(prev.finish)&&prev.finish>0 || ['取消','中止'].includes(prev.status))){kept++;continue;}
+        oldMap.set(num,item);inserted++;
+      }
+      const all=[...oldMap.values()];
+      const finishes=all.filter(x=>Number.isInteger(x.finish)&&x.finish>0);
+      if(new Set(finishes.map(x=>x.finish)).size!==finishes.length) throw new Error('既存結果と着順が重複しています。結果入力で確認してください');
+      updated={schemaVersion:1,source:'json-import',recordedAt:new Date().toISOString(),horses:all};
+      const complete=starters.every(h=>all.some(x=>String(x.num)===String(h.num)&&(Number.isInteger(x.finish)&&x.finish>0||['取消','中止'].includes(x.status))));
+      tx.set(ref,{raceId,dayId:day.id,venueName:venue.name,raceNumber:Number(race.r),raceName:race.name||'',result:updated,resultStatus:complete?'complete':'partial',updatedAt:updated.recordedAt,source:'json-import'},{merge:true});
+    });
+    if(updated)raceResultsCache.set(raceId,updated);
+    if(inserted)await bumpSyncVersion();
+    return {message:`結果入力へ着順${inserted}頭を自動保存${kept?`（既存${kept}頭は保持）`:''}。`};
+  } catch(e) {
+    console.error('[keiba] JSON着順保存失敗:',e);
+    return {message:'着順のDB保存失敗：'+(e.message||e),error:true};
+  }
 }
 
 // 表示中の各馬フォームに入力された基本回顧をまとめて登録する。
