@@ -179955,7 +179955,7 @@ async function saveRhcJsonRaceFinishes(box, rows) {
       }
       const all=[...oldMap.values()];
       const finishes=all.filter(x=>Number.isInteger(x.finish)&&x.finish>0);
-      if(new Set(finishes.map(x=>x.finish)).size!==finishes.length) throw new Error('既存結果と着順が重複しています。結果入力で確認してください');
+      // 同着は正式な着順として許容する（例：1着・2着・2着・4着）。
       updated={schemaVersion:1,source:'json-import',recordedAt:new Date().toISOString(),horses:all};
       const complete=starters.every(h=>all.some(x=>String(x.num)===String(h.num)&&(Number.isInteger(x.finish)&&x.finish>0||['取消','中止'].includes(x.status))));
       tx.set(ref,{raceId,dayId:day.id,venueName:venue.name,raceNumber:Number(race.r),raceName:race.name||'',result:updated,resultStatus:complete?'complete':'partial',updatedAt:updated.recordedAt,source:'json-import'},{merge:true});
@@ -180689,7 +180689,7 @@ async function openRaceResultModal(dayId,venueName,rNum){
     const note=old?.note||(old?.finish==null&&detected?`回顧文からの候補：${detected}着（要確認）`:'');
     return `<div class="result-row"><div>${escHtml(String(h.num||''))}</div><div><b>${escHtml(h.name||'')}</b></div><div style="display:flex;flex-direction:column;gap:4px"><input class="result-pos-input race-result-pos" data-num="${Number(h.num)||0}" type="number" min="1" step="1" placeholder="着順" value="${finishValue}" ${statusValue?'disabled':''}><select class="race-result-status" data-num="${Number(h.num)||0}" onchange="toggleRaceResultStatus(this)"><option value="" ${!statusValue?'selected':''}>通常</option><option value="取消" ${statusValue==='取消'?'selected':''}>取消</option><option value="中止" ${statusValue==='中止'?'selected':''}>中止</option></select></div><div style="font-size:10px;color:var(--muted)">${escHtml(note)}</div></div>`;
   }).join('');
-  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順を確認して保存してください。「取消」「中止」は着順不要で保存でき、分析対象から完全に除外されます。回顧文から読み取れた着順候補は仮入力しています（要確認）。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順／状態</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
+  document.getElementById('raceResultBody').innerHTML=`<div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:10px"><b style="color:var(--accent2)">${escHtml(day.label)} ${escHtml(venue.name)} ${rNum}R ${escHtml(race.name||'')}</b><br>着順を確認して保存してください。同着は同じ着順を入力できます。「取消」「中止」は着順不要で保存でき、分析対象から完全に除外されます。回顧文から読み取れた着順候補は仮入力しています（要確認）。</div><div style="display:grid;grid-template-columns:42px 1.4fr 90px 90px;gap:8px;padding:6px 0;color:var(--muted);font-size:10px"><div>馬番</div><div>馬名</div><div>着順／状態</div><div>備考</div></div><div>${rows}</div><div class="modal-btns"><button class="btn-cancel" onclick="closeRaceResultModal()">キャンセル</button><button class="btn-ok" onclick="saveRaceResult('${escHtml(dayId)}','${escHtml(venueName)}',${Number(rNum)})">✓ 結果を保存</button></div>`;
   modal.classList.add('open');
 }
 function closeRaceResultModal(){document.getElementById('raceResultModal')?.classList.remove('open');}
@@ -180710,8 +180710,7 @@ async function saveRaceResult(dayId,venueName,rNum){
   }).filter(x=>x.num);
   const entered=horses.filter(x=>Number.isFinite(x.finish)&&x.finish>0);
   const excludedCount=horses.filter(x=>['取消','中止'].includes(x.status)).length;
-  const dup=new Set(), dupFound=entered.some(x=>dup.has(x.finish)?true:(dup.add(x.finish),false));
-  if(dupFound){showToast('⚠ 同じ着順が複数あります',true);return;}
+  // 同着のため同一着順は許容する。馬番単位で結果を保存する。
   try{
     if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
     const {doc,getDoc,setDoc}=window._fbFns;
@@ -180814,10 +180813,19 @@ function analysisFormatDate(v){
 // ============================================================
 function analysisSpearman(xs,ys){
   const a=[]; for(let i=0;i<xs.length;i++){if(Number.isFinite(xs[i])&&Number.isFinite(ys[i]))a.push([xs[i],ys[i]]);} if(a.length<3)return null;
-  const rank=v=>{const vals=a.map(z=>z[0]).slice().sort((m,n)=>m-n);return vals.indexOf(v)+1};
-  const rankY=v=>{const vals=a.map(z=>z[1]).slice().sort((m,n)=>m-n);return vals.indexOf(v)+1};
-  const rx=a.map(z=>rank(z[0])), ry=a.map(z=>rankY(z[1])); const n=a.length;
-  let d2=0; for(let i=0;i<n;i++)d2+=(rx[i]-ry[i])**2; return 1-(6*d2)/(n*(n*n-1));
+  // 同着や同スコアの順位は平均順位を割り当て、Pearson相関でSpearman係数を計算する。
+  const averageRanks=values=>{
+    const sorted=values.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v);
+    const ranks=new Array(values.length);
+    for(let i=0;i<sorted.length;){let j=i+1;while(j<sorted.length&&sorted[j].v===sorted[i].v)j++;
+      const avg=(i+1+j)/2;for(let k=i;k<j;k++)ranks[sorted[k].i]=avg;i=j;}
+    return ranks;
+  };
+  const rx=averageRanks(a.map(z=>z[0])),ry=averageRanks(a.map(z=>z[1]));
+  const mx=rx.reduce((s,v)=>s+v,0)/rx.length,my=ry.reduce((s,v)=>s+v,0)/ry.length;
+  let cov=0,vx=0,vy=0;
+  for(let i=0;i<rx.length;i++){const dx=rx[i]-mx,dy=ry[i]-my;cov+=dx*dy;vx+=dx*dx;vy+=dy*dy;}
+  return vx>0&&vy>0?cov/Math.sqrt(vx*vy):null;
 }
 const analysisFilters={
   history:{venue:'',surface:'',distance:'',trackCondition:''},
