@@ -1736,6 +1736,7 @@ body:not(.unused) .home-cards:has(> .home-card[data-public-only]) { column-gap: 
   .home-cards > .home-card[data-public-only] .card-desc, .home-cards > .home-card.green .card-desc { font-size: 10px; line-height: 1.5; }
   .home-cards > .home-card[data-public-only] .card-icon, .home-cards > .home-card.green .card-icon { font-size: 25px; }
 }
+.public-compact-chart .public-bar-row{margin:4px 0;min-height:22px}.public-compact-chart .public-bar-track{height:9px}.public-compact-chart .public-muted{font-size:12px}
 </style>
 <!-- Firebase SDK -->
 <script type="module">
@@ -181847,24 +181848,56 @@ async function publicLoadData(target,render){
   try{await loadAllPredictionHistory();if(!analysisRaceDataRefreshed){await refreshPredictionRaceDays(analysisPredictionCache);analysisRaceDataRefreshed=true;}render();}
   catch(e){el.innerHTML=`<div class="public-panel">データを取得できませんでした。公開用のFirestore読み取り権限をご確認ください。<div class="public-muted">${publicEscape(e.message)}</div></div>`;}
 }
-// 今週の開催レース一覧：レース名のみを表示し、馬の出馬表は表示しない。
+// 公開予想分析専用。管理者の保存・同期・AI予想設定は一切変更しない。
 let publicSelectedRaceKey='';
-function publicRaceKey(r){return [String(r.date||'').replace(/\D/g,''),r.venue||'',String(r.raceNumber||''),r.raceName||''].join('|');}
+const publicDraftWeights={overall:3,venue:3,distance:3,condition:3,form:3};
+let publicAppliedWeights={...publicDraftWeights};
+function publicDateKey(value){
+  const s=String(value??'').trim();
+  const m=s.match(/^(20\d{2})\D*(\d{1,2})\D*(\d{1,2})(?:\D|$)/);
+  return m?`${m[1]}${m[2].padStart(2,'0')}${m[3].padStart(2,'0')}`:'';
+}
+function publicRaceKey(r){return [publicDateKey(r.date),r.venue||'',String(r.raceNumber||''),r.raceName||''].join('|');}
 function publicWeekRaceRows(){
-  const dates=new Set(getThisWeekDates().map(d=>String(d).replace(/\D/g,'')));
+  const dates=new Set(getThisWeekDates().map(publicDateKey).filter(Boolean));
   const rows=[];
-  for(const d of (raceDays||[])){
-    if(!dates.has(String(d.date||'').replace(/\D/g,'')))continue;
-    for(const v of d.venues||[])for(const r of v.races||[]){
+  for(const d of (Array.isArray(raceDays)?raceDays:[])){
+    const date=publicDateKey(d.date||d.id);
+    if(!dates.has(date))continue;
+    for(const v of (d.venues||[]))for(const r of (v.races||[])){
       const track=String(r.track||r.course||'');
-      rows.push({date:d.date,venue:v.name||v.venue||'',raceNumber:r.number||r.raceNumber||'',raceName:r.name||r.raceName||'',surface:aiExtractSurface(track)||'',distance:Number(aiExtractDistance(track))||null,trackCondition:r.trackCondition||'',track});
+      rows.push({date,venue:v.name||v.venue||'',raceNumber:r.number??r.raceNumber??r.r??'',raceName:r.name||r.raceName||'',surface:aiExtractSurface(track),distance:Number(aiExtractDistance(track))||null,trackCondition:r.trackCondition||'',track,sourceRace:r});
     }
   }
-  // 管理者側の開催データが未取得の場合は今週の予想スナップショットを補助的に使用
-  for(const p of analysisPredictionCache){const r=analysisSnapshot(p);if(dates.has(String(r.date||'').replace(/\D/g,'')))rows.push({...r});}
-  const seen=new Set();return rows.filter(r=>{const k=publicRaceKey(r);if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.venue).localeCompare(String(b.venue),'ja')||Number(a.raceNumber)-Number(b.raceNumber));
+  const seen=new Set();
+  return rows.filter(r=>{const k=publicRaceKey(r);if(seen.has(k))return false;seen.add(k);return true;})
+    .sort((a,b)=>a.date.localeCompare(b.date)||a.venue.localeCompare(b.venue,'ja')||Number(a.raceNumber)-Number(b.raceNumber));
 }
 function publicChooseRace(key){publicSelectedRaceKey=key;renderPublicPredict();}
+function publicSetWeight(k,v){if(Object.hasOwn(publicDraftWeights,k))publicDraftWeights[k]=Math.max(0,Math.min(6,Number(v)||0));}
+function publicRecalculate(){publicAppliedWeights={...publicDraftWeights};renderPublicPredict();}
+function publicRaceRanking(selected){
+  if(!selected?.sourceRace)return [];
+  const source=selected.sourceRace;
+  // 元の馬データを参照するだけ。管理者の aiCustomWeights や aiBuildRaceData は操作しない。
+  const horseMap=new Map((Array.isArray(horses)?horses:[]).filter(h=>h?.name).map(h=>[h.name,h]));
+  return (source.horses||[]).map((entry,i)=>{
+    const name=entry.name||entry.horseName||'';
+    const h=horseMap.get(name);
+    const factors={overall:null,venue:null,distance:null,condition:null,form:null};
+    if(h){
+      const rs=(h.races||[]).filter(r=>!aiSurfaceFilterEnabled||!selected.surface||aiExtractSurface(r.track)===selected.surface);
+      const scores=rs.slice(0,5).map(r=>aptScore(r.eval)).filter(v=>v!==null);
+      factors.overall=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:null;
+      factors.venue=aiTrackStats(h,selected.venue,'',selected.surface).avg;
+      factors.distance=aiTrackStats(h,'',String(selected.distance||''),selected.surface).avg;
+      factors.condition=aiConditionStats(h,'','',selected.surface,aiConditionMode).avg;
+      factors.form=aptAvg((h.races||[]).slice(0,3));
+    }
+    const customScore=scoreWithWeights({factors},publicAppliedWeights);
+    return {name,num:entry.num??entry.number??i+1,factors,customScore};
+  }).sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
+}
 function publicRadar(h){
   const keys=Object.keys(publicLabels), cx=110,cy=103,R=76;
   const xy=(i,v)=>{const ang=-Math.PI/2+i*2*Math.PI/5;return [cx+Math.cos(ang)*R*v/6,cy+Math.sin(ang)*R*v/6];};
@@ -181878,29 +181911,29 @@ function publicRadar(h){
 }
 function renderPublicPredict(){
   const el=document.getElementById('publicPredictMain');if(!el)return;
-  if(!analysisAllHistoryLoaded){publicLoadData('publicPredictMain',renderPublicPredict);return;}
-  const rows=publicWeekRaceRows();
-  const selected=rows.find(r=>publicRaceKey(r)===publicSelectedRaceKey)||rows[0];
-  if(selected)publicSelectedRaceKey=publicRaceKey(selected);
-  const historical=analysisPredictionCache.filter(p=>{
-    const r=analysisSnapshot(p);
-    if(selected)return (!selected.venue||r.venue===selected.venue)&&(!selected.surface||r.surface===selected.surface)&&(!selected.distance||Number(r.distance)===Number(selected.distance))&&(!selected.trackCondition||!r.trackCondition||r.trackCondition===selected.trackCondition);
-    return publicFilterSnapshot(r);
-  });
-  const outs=historical.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
-  const wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
-  const pred=selected&&analysisPredictionCache.find(p=>publicRaceKey(analysisSnapshot(p))===publicSelectedRaceKey);
-  const ranked=(pred?.horses||[]).map(h=>({...h,customScore:scoreWithWeights(h,publicWeights)})).filter(h=>h.customScore!=null).sort((a,b)=>b.customScore-a.customScore);
-  const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${label}</span><input type="range" min="0" max="6" step="1" value="${publicWeights[k]}" oninput="publicWeights.${k}=Number(this.value);renderPublicPredict()"><b>${publicWeights[k]}</b></label>`).join('');
-  const cards=rows.map(r=>{const key=publicRaceKey(r);return `<button type="button" class="public-race-choice ${key===publicSelectedRaceKey?'selected':''}" onclick="publicChooseRace('${publicEscape(key).replace(/'/g,'&#39;')}')"><strong>${publicEscape(r.venue)} ${publicEscape(r.raceNumber?`${r.raceNumber}R`:'')}　${publicEscape(r.raceName||'レース名未登録')}</strong><small>${publicEscape(r.date||'')} ・ ${publicEscape(r.surface||'')} ${r.distance?Number(r.distance)+'m':''}</small></button>`;}).join('');
-  el.innerHTML=`<div class="public-hero"><h2>🎯 今週のレース・予想分析</h2><div class="public-muted">レースを選択すると、同じ競馬場・芝ダート・距離の過去傾向と、保存済み予想の各馬ステータスを表示します。</div></div>
-  <div class="public-panel"><h3>📅 今週のレース一覧</h3>${rows.length?`<div class="public-race-list">${cards}</div>`:'<div class="public-muted">今週の開催レースがまだ取得できません。管理者側で開催データを登録すると表示できます。</div>'}</div>
-  ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''}　／　過去の同条件（馬場状態が登録済みの場合はそれも一致）を参照</div></div>`:''}
-  <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
-  <div class="public-panel"><h3>📊 この条件での本命馬の着順</h3>${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}<p class="public-muted">※ 過去の確定結果に基づく参考値です。予想履歴が少ない条件は解釈に注意してください。</p></div>
-  ${selected?publicConditionStats(outs):''}
-  <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<div class="public-muted">重みは5角形の軸の数値ではなく、総合スコア計算への影響度です。レーダーは各評価点（0〜6）を示します。</div></div>
-  <div class="public-panel"><h3>🏇 ${selected?'選択レースの':'今週の'}評価ランキング・5角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.name||h.horseName||'馬名未登録')}</strong><b>${h.customScore.toFixed(2)}点</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicLabels[k]}：${h.factors?.[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">このレースの保存済み予想スコアがまだありません。予想が登録されると5角形ステータスが表示されます。</div>'}<p class="public-muted">※ スコアの重み変更は簡易再計算です。管理者AIの独自ボーナスや印の判定とは一致しない場合があります。</p></div>`;
+  try{
+    const rows=publicWeekRaceRows();
+    const selected=rows.find(r=>publicRaceKey(r)===publicSelectedRaceKey)||rows[0];
+    publicSelectedRaceKey=selected?publicRaceKey(selected):'';
+    const history=Array.isArray(analysisPredictionCache)?analysisPredictionCache:[];
+    const historical=selected?history.filter(p=>{
+      const r=analysisSnapshot(p);
+      return publicDateKey(r.date)<selected.date&&(!selected.venue||r.venue===selected.venue)&&(!selected.surface||r.surface===selected.surface)&&(!selected.distance||Number(r.distance)===selected.distance)&&(!selected.trackCondition||!r.trackCondition||r.trackCondition===selected.trackCondition);
+    }):[];
+    const outs=historical.map(p=>{try{return buildPredictionOutcome(p);}catch(e){return null;}}).filter(o=>o?.complete&&o.topPick?.finish!=null);
+    const wins=outs.filter(o=>Number(o.topPick.finish)===1).length;
+    const places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
+    const ranked=selected?publicRaceRanking(selected):[];
+    const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${publicEscape(label)}</span><input type="range" min="0" max="6" step="1" value="${publicDraftWeights[k]}" oninput="publicSetWeight('${k}',this.value);this.parentElement.querySelector('b').textContent=this.value"><b>${publicDraftWeights[k]}</b></label>`).join('');
+    const cards=rows.map(r=>{const key=publicRaceKey(r);return `<button type="button" class="public-race-choice ${key===publicSelectedRaceKey?'selected':''}" onclick="publicChooseRace('${publicEscape(key).replace(/'/g,'&#39;')}')"><strong>${publicEscape(r.venue)} ${publicEscape(r.raceNumber?`${r.raceNumber}R`:'')}　${publicEscape(r.raceName||'レース名未登録')}</strong><small>${publicEscape(r.date)} ・ ${publicEscape(r.surface||'')} ${r.distance?r.distance+'m':''}</small></button>`;}).join('');
+    el.innerHTML=`<div class="public-hero"><h2>🎯 今週のレース・予想分析</h2><div class="public-muted">今週の土日と開催日が一致するレースだけ表示。予想の登録・保存とは無関係にランキングを算出します。</div></div>
+    <div class="public-panel"><h3>📅 今週のレース一覧</h3><p class="public-muted">対象：${getThisWeekDates().map(publicEscape).join('・')}</p>${rows.length?`<div class="public-race-list">${cards}</div>`:'<div class="public-muted">対象日の開催データがありません。開催日の登録・読み込み状況をご確認ください。</div>'}</div>
+    ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''} ／ 同条件の過去の予想実績</div></div>
+    <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
+    <div class="public-panel public-compact-chart"><h3>📊 本命馬の着順分布</h3><div class="public-compact-bars">${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}</div><p class="public-muted">過去の保存済み予想から集計。下のランキングは独立して計算します。</p></div>`:''}
+    <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<button type="button" class="public-reset" onclick="publicRecalculate()" style="margin-top:12px">🔄 この重みでランキングを再計算</button><div class="public-muted" style="margin-top:8px">初期値は5項目すべて3。再計算ボタンを押すまでランキングは変わりません。予想の保存は行いません。</div></div>
+    <div class="public-panel"><h3>🏇 評価ランキング・五角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。管理者の予想保存・印・高適性ボーナスとは独立した5項目加重平均です。</p></div>`;
+  }catch(e){console.error('[public] 予想分析表示エラー',e);el.innerHTML=`<div class="public-panel">予想分析の表示でエラーが発生しました。管理者データは変更していません。<div class="public-muted">${publicEscape(e.message||String(e))}</div></div>`;}
 }
 function renderPublicResults(){
   const el=document.getElementById('publicResultsMain');if(!el)return;
