@@ -1720,6 +1720,7 @@ textarea.search-input { line-height: 1.7; }
 .public-race-choice{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:13px;text-align:left;cursor:pointer;font-family:inherit}
 .public-race-choice.selected{border-color:var(--accent);background:rgba(201,168,76,.12)}
 .public-race-choice strong{display:block;font-size:13px}.public-race-choice small{display:block;color:var(--muted2);margin-top:6px;font-size:11px}
+.public-compact-chart{padding:12px 16px!important}.public-compact-chart h3{margin-bottom:8px!important}.public-compact-bars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px}.public-compact-bars .public-bar-row{margin:3px 0!important;font-size:11px}.public-compact-chart .public-muted{font-size:10px;margin-top:6px}@media(max-width:600px){.public-compact-bars{grid-template-columns:1fr}}
 .public-radar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
 .public-radar-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
 .public-radar-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:13px}
@@ -181787,7 +181788,8 @@ function reviewAITrendContextHTML(day,venue,race){
 
 
 // ===== 一般ユーザー向け閲覧・可視化（初期版） =====
-const publicWeights={overall:4,venue:4,distance:4,condition:4,form:4};
+const publicWeights={overall:3,venue:3,distance:3,condition:3,form:3};
+let publicAppliedWeights={...publicWeights};
 const publicLabels={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性',form:'調子指数'};
 let publicChosenPrediction='';
 const publicAnalysisFilters={venue:'',surface:'',distance:'',trackCondition:''};
@@ -181851,18 +181853,43 @@ async function publicLoadData(target,render){
 let publicSelectedRaceKey='';
 function publicRaceKey(r){return [String(r.date||'').replace(/\D/g,''),r.venue||'',String(r.raceNumber||''),r.raceName||''].join('|');}
 function publicWeekRaceRows(){
-  const dates=new Set(getThisWeekDates().map(d=>String(d).replace(/\D/g,'')));
+  // getThisWeekDates() が返す土日の「日付そのもの」に一致する開催だけを採用する。
+  // 保存済み予想の履歴を開催一覧へ混入させない。
+  const dates=new Set(getThisWeekDates().map(publicDateKey).filter(Boolean));
   const rows=[];
   for(const d of (raceDays||[])){
-    if(!dates.has(String(d.date||'').replace(/\D/g,'')))continue;
+    if(!dates.has(publicDateKey(d.date||d.id)))continue;
     for(const v of d.venues||[])for(const r of v.races||[]){
       const track=String(r.track||r.course||'');
-      rows.push({date:d.date,venue:v.name||v.venue||'',raceNumber:r.number||r.raceNumber||'',raceName:r.name||r.raceName||'',surface:aiExtractSurface(track)||'',distance:Number(aiExtractDistance(track))||null,trackCondition:r.trackCondition||'',track});
+      rows.push({date:d.date,venue:v.name||v.venue||'',raceNumber:r.r||r.number||r.raceNumber||'',raceName:r.name||r.raceName||'',surface:aiExtractSurface(track)||'',distance:Number(aiExtractDistance(track))||null,trackCondition:r.trackCondition||'',track,_day:d,_venue:v,_race:r});
     }
   }
-  // 管理者側の開催データが未取得の場合は今週の予想スナップショットを補助的に使用
-  for(const p of analysisPredictionCache){const r=analysisSnapshot(p);if(dates.has(String(r.date||'').replace(/\D/g,'')))rows.push({...r});}
-  const seen=new Set();return rows.filter(r=>{const k=publicRaceKey(r);if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.venue).localeCompare(String(b.venue),'ja')||Number(a.raceNumber)-Number(b.raceNumber));
+  const seen=new Set();
+  return rows.filter(r=>{const k=publicRaceKey(r);if(seen.has(k))return false;seen.add(k);return true;})
+    .sort((a,b)=>publicDateKey(a.date).localeCompare(publicDateKey(b.date))||String(a.venue).localeCompare(String(b.venue),'ja')||Number(a.raceNumber)-Number(b.raceNumber));
+}
+function publicDateKey(value){
+  const s=String(value||'').trim();
+  const m=s.match(/(20\d{2})\D*(\d{1,2})\D*(\d{1,2})(?!\d)/);
+  return m?`${m[1]}${m[2].padStart(2,'0')}${m[3].padStart(2,'0')}`:'';
+}
+function publicRecalculate(){publicAppliedWeights={...publicWeights};renderPublicPredict();}
+function publicRaceRanking(selected){
+  if(!selected?._race)return [];
+  // 保存済み予想に依存せず、出馬表と既存の各馬評価からその場で計算する。
+  // 既存管理者予想と同じ aiBuildRaceData を使う（重みの一時変更は必ず復元）。
+  const before={...aiCustomWeights};
+  let results=[];
+  try{
+    Object.assign(aiCustomWeights,publicAppliedWeights);
+    const base=aiBuildRaceData(selected._day,selected._venue,selected._race);
+    results=base.map(h=>({
+      name:h.name,num:h.num,known:h.known,customScore:h.score,
+      factors:{overall:h.overallAvg,venue:h.venueStats?.avg,distance:h.distanceStats?.avg,condition:h.conditionStats?.avg,form:h.formAvg}
+    }));
+  }catch(e){console.error('[public] ランキング再計算失敗',e);}
+  finally{Object.assign(aiCustomWeights,before);}
+  return results.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
 }
 function publicChooseRace(key){publicSelectedRaceKey=key;renderPublicPredict();}
 function publicRadar(h){
@@ -181878,30 +181905,37 @@ function publicRadar(h){
 }
 function renderPublicPredict(){
   const el=document.getElementById('publicPredictMain');if(!el)return;
-  if(!analysisAllHistoryLoaded){publicLoadData('publicPredictMain',renderPublicPredict);return;}
   const rows=publicWeekRaceRows();
   const selected=rows.find(r=>publicRaceKey(r)===publicSelectedRaceKey)||rows[0];
   if(selected)publicSelectedRaceKey=publicRaceKey(selected);
-  const historical=analysisPredictionCache.filter(p=>{
+  const historical=(analysisPredictionCache||[]).filter(p=>{
     const r=analysisSnapshot(p);
-    if(selected)return (!selected.venue||r.venue===selected.venue)&&(!selected.surface||r.surface===selected.surface)&&(!selected.distance||Number(r.distance)===Number(selected.distance))&&(!selected.trackCondition||!r.trackCondition||r.trackCondition===selected.trackCondition);
-    return publicFilterSnapshot(r);
+    return selected&&publicDateKey(r.date)<publicDateKey(selected.date)&&
+      (!selected.venue||r.venue===selected.venue)&&(!selected.surface||r.surface===selected.surface)&&
+      (!selected.distance||Number(r.distance)===Number(selected.distance))&&
+      (!selected.trackCondition||!r.trackCondition||r.trackCondition===selected.trackCondition);
   });
   const outs=historical.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
   const wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
-  const pred=selected&&analysisPredictionCache.find(p=>publicRaceKey(analysisSnapshot(p))===publicSelectedRaceKey);
-  const ranked=(pred?.horses||[]).map(h=>({...h,customScore:scoreWithWeights(h,publicWeights)})).filter(h=>h.customScore!=null).sort((a,b)=>b.customScore-a.customScore);
-  const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${label}</span><input type="range" min="0" max="6" step="1" value="${publicWeights[k]}" oninput="publicWeights.${k}=Number(this.value);renderPublicPredict()"><b>${publicWeights[k]}</b></label>`).join('');
+  const ranked=selected?publicRaceRanking(selected):[];
+  const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${label}</span><input type="range" min="0" max="6" step="1" value="${publicWeights[k]}" oninput="publicWeights.${k}=Number(this.value);this.parentElement.querySelector('b').textContent=this.value"><b>${publicWeights[k]}</b></label>`).join('');
   const cards=rows.map(r=>{const key=publicRaceKey(r);return `<button type="button" class="public-race-choice ${key===publicSelectedRaceKey?'selected':''}" onclick="publicChooseRace('${publicEscape(key).replace(/'/g,'&#39;')}')"><strong>${publicEscape(r.venue)} ${publicEscape(r.raceNumber?`${r.raceNumber}R`:'')}　${publicEscape(r.raceName||'レース名未登録')}</strong><small>${publicEscape(r.date||'')} ・ ${publicEscape(r.surface||'')} ${r.distance?Number(r.distance)+'m':''}</small></button>`;}).join('');
-  el.innerHTML=`<div class="public-hero"><h2>🎯 今週のレース・予想分析</h2><div class="public-muted">レースを選択すると、同じ競馬場・芝ダート・距離の過去傾向と、保存済み予想の各馬ステータスを表示します。</div></div>
-  <div class="public-panel"><h3>📅 今週のレース一覧</h3>${rows.length?`<div class="public-race-list">${cards}</div>`:'<div class="public-muted">今週の開催レースがまだ取得できません。管理者側で開催データを登録すると表示できます。</div>'}</div>
-  ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''}　／　過去の同条件（馬場状態が登録済みの場合はそれも一致）を参照</div></div>`:''}
-  <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
-  <div class="public-panel"><h3>📊 この条件での本命馬の着順</h3>${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}<p class="public-muted">※ 過去の確定結果に基づく参考値です。予想履歴が少ない条件は解釈に注意してください。</p></div>
-  ${selected?publicConditionStats(outs):''}
-  <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<div class="public-muted">重みは5角形の軸の数値ではなく、総合スコア計算への影響度です。レーダーは各評価点（0〜6）を示します。</div></div>
-  <div class="public-panel"><h3>🏇 ${selected?'選択レースの':'今週の'}評価ランキング・5角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.name||h.horseName||'馬名未登録')}</strong><b>${h.customScore.toFixed(2)}点</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicLabels[k]}：${h.factors?.[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">このレースの保存済み予想スコアがまだありません。予想が登録されると5角形ステータスが表示されます。</div>'}<p class="public-muted">※ スコアの重み変更は簡易再計算です。管理者AIの独自ボーナスや印の判定とは一致しない場合があります。</p></div>`;
+  el.innerHTML=`<div class="public-hero"><h2>🎯 今週のレース・予想分析</h2><div class="public-muted">今週の開催日と一致するレースだけを表示。予想の保存・登録とは無関係に、現在の馬評価からランキングを計算します。</div></div>
+  <div class="public-panel"><h3>📅 今週のレース一覧</h3><p class="public-muted">対象：${getThisWeekDates().map(publicEscape).join('・')}</p>${rows.length?`<div class="public-race-list">${cards}</div>`:'<div class="public-muted">対象日に一致する開催データがありません。開催データの読み込み・同期状況をご確認ください。</div>'}</div>
+  ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''}　／　過去の同条件の予想結果を参考表示</div></div>`:''}
+  ${selected?`<div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
+  <div class="public-panel public-compact-chart"><h3>📊 同条件の本命着順（過去）</h3><div class="public-compact-bars">${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}</div><p class="public-muted">対象 ${outs.length}件。保存済み予想の実績であり、下の新規ランキングとは独立しています。</p></div>`:''}
+  <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<button type="button" class="public-reset" onclick="publicRecalculate()" style="margin-top:12px">🔄 この重みでランキングを再計算</button><div class="public-muted" style="margin-top:8px">初期値は全項目3。スライダー変更後、再計算ボタンで順位を更新します。保存済み予想は変更しません。</div></div>
+  <div class="public-panel"><h3>🏇 ${selected?'選択レースの':'今週の'}評価ランキング・5角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${h.num?publicEscape(h.num)+'番 ':''}${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicLabels[k]}：${h.factors?.[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">${selected?'出走馬データがありません。':'レースを選択してください。'}</div>'}<p class="public-muted">※ 元の馬評価がない馬は「評価なし」として表示。スコアは管理者側の既存計算式を使用します。</p></div>`;
+  // 過去実績は非同期取得。レース一覧・ランキングの表示は待たせない。
+  if(!analysisAllHistoryLoaded&&!publicPredictHistoryLoading){
+    publicPredictHistoryLoading=true;
+    loadAllPredictionHistory().then(()=>{analysisAllHistoryLoaded=true;renderPublicPredict();})
+      .catch(e=>console.warn('[public] 過去実績読み込み失敗',e))
+      .finally(()=>{publicPredictHistoryLoading=false;});
+  }
 }
+let publicPredictHistoryLoading=false;
 function renderPublicResults(){
   const el=document.getElementById('publicResultsMain');if(!el)return;
   if(!analysisAllHistoryLoaded){publicLoadData('publicResultsMain',renderPublicResults);return;}
