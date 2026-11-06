@@ -1726,20 +1726,15 @@ textarea.search-input { line-height: 1.7; }
 .public-radar-heading .public-rank{color:var(--accent2)}.public-radar-heading b{color:var(--accent2)}
 .public-radar-values{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 9px;font-size:10px;color:var(--muted2)}
 
-/* 公開ホーム: 3つのタブカードを同じ行に配置。編集モードのレイアウトは維持 */
-body:not(.unused) .home-cards:has(> .home-card[data-public-only]) { column-gap: 16px; }
-@media (max-width: 768px) {
-  .home-cards:has(> .home-card[data-public-only]) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 6px !important; }
-  .home-cards > .home-card { min-width: 0; }
-  .home-cards > .home-card[data-public-only], .home-cards > .home-card.green { padding: 14px 5px; gap: 8px; }
-  .home-cards > .home-card[data-public-only] .card-title, .home-cards > .home-card.green .card-title { font-size: 12px; letter-spacing: 0; }
-  .home-cards > .home-card[data-public-only] .card-desc, .home-cards > .home-card.green .card-desc { font-size: 10px; line-height: 1.5; }
-  .home-cards > .home-card[data-public-only] .card-icon, .home-cards > .home-card.green .card-icon { font-size: 25px; }
+/* 公開ホーム：PCは横3列、スマホは縦1列。管理者モードは対象外 */
+@media (min-width: 769px) {
+.home-cards:has(> .home-card[data-public-only][style*="display: flex"]){grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:20px!important}
 }
+.home-cards:has(> .home-card[data-public-only][style*="display: flex"]) > .home-card{width:100%;min-width:0;box-sizing:border-box}
 .public-compact-chart .public-bar-row{margin:4px 0;min-height:22px}.public-compact-chart .public-bar-track{height:9px}.public-compact-chart .public-muted{font-size:12px}
 
 /* 公開画面のスマートフォン向け幅調整（編集モードには適用しない） */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .home-cards:has(> .home-card[data-public-only]) {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 10px !important;
