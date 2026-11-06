@@ -1690,6 +1690,52 @@ textarea.search-input { line-height: 1.7; }
 .review-ai-bar>i{display:block;height:100%;background:var(--accent);border-radius:8px}
 @media(max-width:700px){.review-ai-toolbar{grid-template-columns:1fr}.review-ai-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.review-ai-rank{grid-template-columns:24px minmax(0,1fr) 70px}}
 
+
+/* 公開ダッシュボード：外部チャートライブラリ不要 */
+.public-dashboard{padding:24px 28px;max-width:1150px;margin:auto}
+.public-hero{padding:24px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(120deg,rgba(201,168,76,.12),var(--card));margin-bottom:18px}
+.public-hero h2{font-size:22px;color:var(--accent2);margin-bottom:7px}
+.public-muted{font-size:12px;color:var(--muted2);line-height:1.7}
+.public-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.public-stat,.public-panel{border:1px solid var(--border);border-radius:10px;background:var(--card);padding:18px}
+.public-stat b{display:block;font-size:28px;color:var(--accent2);margin-top:5px}
+.public-panel{margin-bottom:14px}.public-panel h3{font-size:15px;margin-bottom:12px;color:var(--accent2)}
+.public-bar-row{display:grid;grid-template-columns:minmax(95px,1.2fr) minmax(90px,3fr) 80px;gap:12px;align-items:center;margin:12px 0;font-size:12px}
+.public-bar-track{height:16px;border-radius:9px;background:var(--border);overflow:hidden}
+.public-bar-fill{height:100%;background:linear-gradient(90deg,#b18c36,#f0d878);border-radius:9px;min-width:0}
+.public-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:15px}
+.public-controls select,.public-controls input{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:6px}
+.public-weight{display:grid;grid-template-columns:90px minmax(100px,1fr) 35px;gap:12px;align-items:center;margin:12px 0;font-size:12px}
+.public-weight input{width:100%;accent-color:var(--accent)}
+.public-horse{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--border)}
+.public-horse .public-rank{font-size:18px;color:var(--accent2);width:35px}
+.public-horse .public-horse-info{flex:1;min-width:0}.public-horse b{font-size:14px}
+.public-horse small{display:block;color:var(--muted2);margin-top:4px}
+@media(max-width:768px){.public-dashboard{padding:14px 12px}.public-bar-row{grid-template-columns:95px minmax(65px,1fr) 65px;gap:6px}.public-hero{padding:16px}}
+
+.public-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:12px}.public-filter-grid label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted2)}.public-filter-grid select{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:9px}.public-reset{border:1px solid var(--accent);color:var(--accent2);background:transparent;border-radius:6px;padding:8px 13px;cursor:pointer}.public-condition-line{border-top:1px solid var(--border);padding:12px 0}.public-condition-line>div:first-child{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px}.public-condition-line small,.public-class-group small{color:var(--muted2);font-weight:400}.public-class-group{border-top:1px solid var(--border);padding:14px 0}.public-class-group h4{margin-bottom:10px;font-size:13px}
+
+/* 一般ユーザー：今週のレース選択と5角形評価 */
+.public-race-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px}
+.public-race-choice{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:13px;text-align:left;cursor:pointer;font-family:inherit}
+.public-race-choice.selected{border-color:var(--accent);background:rgba(201,168,76,.12)}
+.public-race-choice strong{display:block;font-size:13px}.public-race-choice small{display:block;color:var(--muted2);margin-top:6px;font-size:11px}
+.public-radar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
+.public-radar-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.public-radar-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:13px}
+.public-radar-heading .public-rank{color:var(--accent2)}.public-radar-heading b{color:var(--accent2)}
+.public-radar-values{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 9px;font-size:10px;color:var(--muted2)}
+
+/* 公開ホーム: 3つのタブカードを同じ行に配置。編集モードのレイアウトは維持 */
+body:not(.unused) .home-cards:has(> .home-card[data-public-only]) { column-gap: 16px; }
+@media (max-width: 768px) {
+  .home-cards:has(> .home-card[data-public-only]) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 6px !important; }
+  .home-cards > .home-card { min-width: 0; }
+  .home-cards > .home-card[data-public-only], .home-cards > .home-card.green { padding: 14px 5px; gap: 8px; }
+  .home-cards > .home-card[data-public-only] .card-title, .home-cards > .home-card.green .card-title { font-size: 12px; letter-spacing: 0; }
+  .home-cards > .home-card[data-public-only] .card-desc, .home-cards > .home-card.green .card-desc { font-size: 10px; line-height: 1.5; }
+  .home-cards > .home-card[data-public-only] .card-icon, .home-cards > .home-card.green .card-icon { font-size: 25px; }
+}
 </style>
 <!-- Firebase SDK -->
 <script type="module">
@@ -1766,15 +1812,17 @@ textarea.search-input { line-height: 1.7; }
     <div class="nav-tab active" onclick="switchView('home')" data-view="home">
       <span class="tab-icon">🏠</span> ホーム
     </div>
-    <div class="nav-tab" onclick="switchView('week')" data-view="week">
+    <div class="nav-tab" onclick="switchView('week')" data-view="week" data-admin-only="true">
       <span class="tab-icon">📅</span> 今週のレース
     </div>
     <div class="nav-tab" onclick="switchView('horses')" data-view="horses">
       <span class="tab-icon">🐴</span> 全頭診断
     </div>
-    <div class="nav-tab" onclick="switchView('history')" data-view="history">
+    <div class="nav-tab" onclick="switchView('history')" data-view="history" data-admin-only="true">
       <span class="tab-icon">📚</span> 過去開催
     </div>
+    <div class="nav-tab" onclick="switchView('publicPredict')" data-view="publicPredict" data-public-only="true"><span class="tab-icon">🎯</span> 予想分析</div>
+    <div class="nav-tab" onclick="switchView('publicResults')" data-view="publicResults" data-public-only="true"><span class="tab-icon">📊</span> 過去の予想結果</div>
     <div class="nav-tab" onclick="switchView('edit')" data-view="edit" id="navEditTab" style="display:none">
       <span class="tab-icon">✏️</span> 編集
     </div>
@@ -1796,13 +1844,14 @@ textarea.search-input { line-height: 1.7; }
         <div id="syncNoticeBanner" style="display:none;width:100%;max-width:860px;margin-bottom:18px"></div>
 
         <div class="home-cards">
-          <div class="home-card yellow" onclick="switchView('week')">
+          <div class="home-card yellow" data-admin-only="true" onclick="switchView('week')">
             <div class="card-icon">📅</div>
             <div class="card-title">今週のレース</div>
             <div class="card-desc">今週の開催レース一覧。<br>競馬場ごとに整理・メモ管理。</div>
             <div style="font-size:11px;color:var(--accent);letter-spacing:1px;margin-top:4px" id="statWeek">—</div>
             <div class="card-arrow">→</div>
           </div>
+          <div data-public-only="true" style="display:none" class="home-card yellow" onclick="switchView('publicPredict')"><div class="card-icon">🎯</div><div class="card-title">予想分析</div><div class="card-desc">今週のレースから選んで<br>条件傾向と5角形スコアを確認。</div><div class="card-arrow">→</div></div>
           <div class="home-card green" onclick="switchView('horses')">
             <div class="card-icon">🐴</div>
             <div class="card-title">全頭診断</div>
@@ -1810,13 +1859,14 @@ textarea.search-input { line-height: 1.7; }
             <div style="font-size:11px;color:var(--green);letter-spacing:1px;margin-top:4px" id="statHorses">—</div>
             <div class="card-arrow">→</div>
           </div>
-          <div class="home-card blue" onclick="switchView('history')">
+          <div class="home-card blue" data-admin-only="true" onclick="switchView('history')">
             <div class="card-icon">📚</div>
             <div class="card-title">過去開催</div>
             <div class="card-desc">過去のレース記録を<br>日付別にアーカイブ。</div>
             <div style="font-size:11px;color:var(--blue);letter-spacing:1px;margin-top:4px" id="statHistory">—</div>
             <div class="card-arrow">→</div>
           </div>
+          <div data-public-only="true" style="display:none" class="home-card blue" onclick="switchView('publicResults')"><div class="card-icon">📊</div><div class="card-title">過去の予想結果</div><div class="card-desc">本命好走率や過去の実績を<br>グラフで振り返る。</div><div class="card-arrow">→</div></div>
         </div>
 
         <!-- SNS LINKS -->
@@ -1949,6 +1999,8 @@ textarea.search-input { line-height: 1.7; }
     </div>
 
     <!-- 編集モード（?edit のとき表示） -->
+    <div class="view" id="view-publicPredict"><div class="public-dashboard" id="publicPredictMain"></div></div>
+    <div class="view" id="view-publicResults"><div class="public-dashboard" id="publicResultsMain"></div></div>
     <div class="view" id="view-edit">
       <div class="edit-page">
         <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px">編集モード</div>
@@ -2033,6 +2085,17 @@ textarea.search-input { line-height: 1.7; }
         </div>
 
         <!-- ① レースリスト作成 -->
+        <div class="edit-card">
+          <div class="edit-card-title">📋 出馬表JSON一括読み込み</div>
+          <div class="edit-hint">1レース・競馬場単位・複数競馬場をまとめて登録できます。既存レースは自動上書きせず、スキップします。</div>
+          <textarea id="racecardBulkJson" class="search-input" rows="8" style="width:100%;margin-top:10px;font-family:monospace" placeholder='{"date":"2026-11-01","venues":[{"venue":"東京","races":[...]}]}'></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            <button type="button" class="edit-btn-save" onclick="previewRacecardBulkJson()">🔍 JSONを確認</button>
+            <button type="button" class="edit-btn-save" id="racecardBulkSave" onclick="saveRacecardBulkJson()" disabled>💾 新規レースを一括保存</button>
+          </div>
+          <div id="racecardBulkPreview" class="edit-hint" style="margin-top:12px;white-space:pre-wrap"></div>
+        </div>
+
         <div class="edit-card">
           <div class="edit-card-title">🏇 レース・レースリストを作成</div>
 
@@ -174510,6 +174573,8 @@ async function importDataFile() {
 
 // ================= NAVIGATION =================
 function switchView(v) {
+  if(!isEditMode && ['week','history','edit','analysis'].includes(v))return;
+  if(isEditMode && ['publicPredict','publicResults'].includes(v))return;
   currentView = v;
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(el => {
@@ -174523,11 +174588,13 @@ function switchView(v) {
   if (v === 'history') renderHistory();
   if (v === 'edit') renderEditView();
   if (v === 'analysis') renderAnalysisView();
+  if (v === 'publicPredict') renderPublicPredict();
+  if (v === 'publicResults') renderPublicResults();
 }
 
 function updateBreadcrumb() {
   const bc = document.getElementById('breadcrumb');
-  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催', edit:'編集', analysis:'分析' };
+  const labels = { home:'ホーム', week:'今週のレース', horses:'全頭診断', history:'過去開催', edit:'編集', analysis:'分析', publicPredict:'予想分析', publicResults:'過去の予想結果' };
   bc.innerHTML = `<span class="crumb" onclick="switchView('home')">ホーム</span>`;
   if (currentView !== 'home') {
     bc.innerHTML += `<span class="sep">/</span><span class="current">${labels[currentView]}</span>`;
@@ -177358,6 +177425,13 @@ const navEditTab = document.getElementById('navEditTab');
 if (navEditTab) navEditTab.style.display = isEditMode ? 'flex' : 'none';
 const navAnalysisTab = document.getElementById('navAnalysisTab');
 if (navAnalysisTab) navAnalysisTab.style.display = isAnalysisMode ? 'flex' : 'none';
+// 一般表示と編集表示でナビゲーションを分離（UIのみ。実際の権限はFirestore Rulesで制御する）
+document.querySelectorAll('[data-admin-only]').forEach(el=>el.style.display=isEditMode?'flex':'none');
+document.querySelectorAll('[data-public-only]').forEach(el=>el.style.display=isEditMode?'none':'flex');
+// ホームのカードもタブ表示と同じモードに切り替える
+document.querySelectorAll('.home-card[data-admin-only]').forEach(el=>el.style.display=isEditMode?'flex':'none');
+// 公開カードは既存のホームカードと同じグリッド内で切り替える
+
 // 非editモードではDB同期バナーを完全に隠し、進行中の同期状態もリセット
 if (!isEditMode) {
   localStorage.removeItem(SYNC_PROGRESS_KEY);
@@ -179298,6 +179372,103 @@ async function applyDateChange() {
   if (el) { el.style.color = 'var(--green)'; el.textContent = `✓ ${m}月${d}日（${dow}）に変更しました`; }
 }
 
+// 出馬表JSON一括読み込み。既存レースは触らず、新規レースのみ追加する。
+let racecardBulkValidated=null;
+function parseRacecardBulkJson(){
+  const raw=JSON.parse(document.getElementById('racecardBulkJson').value);
+  const date=String(raw.date||raw.raceInfo?.date||'');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date+'T00:00:00')))throw Error('date は YYYY-MM-DD 形式で指定してください');
+  const venueGroups=Array.isArray(raw.venues)?raw.venues:
+    raw.raceInfo?[{venue:raw.raceInfo.venue,races:[{...raw.raceInfo,raceNumber:raw.raceInfo.raceNumber,horses:raw.horses}]}]:[];
+  if(!venueGroups.length)throw Error('venues が空です');
+  const allowed=['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  const grades={'新馬':'new','未勝利':'un','1勝クラス':'1s','2勝クラス':'2s','3勝クラス':'3s','オープン':'op','オープン・特別':'op','OP':'op','G3':'g3','G2':'g2','G1':'g1','GI':'g1','GII':'g2','GIII':'g3'};
+  const validGrades=['new','un','1s','2s','3s','op','g3','g2','g1'];
+  const seen=new Set(), result=[];
+  for(const group of venueGroups){
+    const venue=String(group.venue||'').trim();
+    if(!allowed.includes(venue))throw Error('競馬場名が不正です: '+venue);
+    if(!Array.isArray(group.races))throw Error(venue+' の races がありません');
+    for(const r of group.races){
+      const n=Number(r.raceNumber), name=String(r.raceName||'').trim();
+      if(!Number.isInteger(n)||n<1||n>12||!name)throw Error(venue+'：レース番号またはレース名が不正です');
+      const key=venue+'|'+n;
+      if(seen.has(key))throw Error('JSON内に同じレースが重複しています: '+key);
+      seen.add(key);
+      const grade=grades[String(r.raceClass||'').trim()]||String(r.raceClass||'op').trim();
+      if(!validGrades.includes(grade))throw Error(venue+n+'R：クラスが不正です: '+r.raceClass);
+      let track=String(r.course||'').trim().replace(/^ダート/,'ダ');
+      if(!/^(芝|ダ|障)[0-9]{3,4}$/.test(track))throw Error(venue+n+'R：コースは芝1400、ダ1600などで指定してください');
+      if(!Array.isArray(r.horses)||r.horses.length<1||r.horses.length>18)throw Error(venue+n+'R：出走馬は1～18頭で指定してください');
+      const nums=new Set(),names=new Set(),horsesArr=[];
+      for(const h of r.horses){
+        const frame=Number(h.frame),num=Number(h.number),horseName=String(h.horseName||'').trim();
+        if(!Number.isInteger(frame)||frame<1||frame>8||!Number.isInteger(num)||num<1||num>18||!horseName)throw Error(venue+n+'R：枠・馬番・馬名が不正です');
+        if(nums.has(num)||names.has(horseName))throw Error(venue+n+'R：馬番または馬名が重複しています');
+        nums.add(num);names.add(horseName);horsesArr.push({frame,num,name:horseName});
+      }
+      horsesArr.sort((a,b)=>a.num-b.num);
+      result.push({venue,r:n,name,grade,track,horses:horsesArr});
+    }
+  }
+  if(result.length>36)throw Error('一度に登録できるレースは36件までです');
+  return {date,result};
+}
+function previewRacecardBulkJson(){
+  const el=document.getElementById('racecardBulkPreview'),btn=document.getElementById('racecardBulkSave');
+  racecardBulkValidated=null;btn.disabled=true;
+  try{
+    const parsed=parseRacecardBulkJson();
+    const [y,m,d]=parsed.date.split('-').map(Number);
+    const id=`day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const day=raceDays.find(x=>x.id===id);
+    const fresh=parsed.result.filter(r=>!day?.venues?.find(v=>v.name===r.venue)?.races?.some(x=>Number(x.r)===r.r));
+    const existing=parsed.result.filter(r=>!fresh.includes(r));
+    if((day?.venues||[]).reduce((a,v)=>a+(v.races||[]).length,0)+fresh.length>36)throw Error('開催日あたりのレース数上限36件を超えます');
+    racecardBulkValidated={...parsed,id,fresh,existing};
+    el.style.color='var(--muted2)';
+    el.textContent=`${parsed.date}：新規 ${fresh.length}レース／${fresh.reduce((n,r)=>n+r.horses.length,0)}頭、既存 ${existing.length}レース（変更しません）\\n`+
+      fresh.map(r=>`＋ ${r.venue} ${r.r}R ${r.name} ${r.track}（${r.horses.length}頭）`).join('\n')+
+      (existing.length?'\n既存のためスキップ：'+existing.map(r=>r.venue+r.r+'R').join('、'):'');
+    btn.disabled=!fresh.length;
+  }catch(e){el.style.color='var(--red)';el.textContent='⚠ '+e.message;}
+}
+async function saveRacecardBulkJson(){
+  if(!isEditMode)return;
+  const el=document.getElementById('racecardBulkPreview'),btn=document.getElementById('racecardBulkSave');
+  btn.disabled=true;
+  try{
+    // 貼り付け後の内容変更・保存直前の既存レース増加を再確認
+    const current=parseRacecardBulkJson();
+    if(!racecardBulkValidated||JSON.stringify(current)!==JSON.stringify({date:racecardBulkValidated.date,result:racecardBulkValidated.result}))throw Error('JSONが変更されました。再度「JSONを確認」を押してください');
+    const [y,m,d]=current.date.split('-').map(Number);
+    const dayId=`day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let day=raceDays.find(x=>x.id===dayId);
+    const newDay=!day;
+    if(!day)day={id:dayId,date:`${y}/${m}/${d}`,dayOfWeek:dowFromYMD(y,m,d),label:`${m}月${d}日（${dowFromYMD(y,m,d)}）`,venues:[]};
+    const pending=current.result.filter(r=>!day.venues.find(v=>v.name===r.venue)?.races?.some(x=>Number(x.r)===r.r));
+    if(day.venues.reduce((a,v)=>a+(v.races||[]).length,0)+pending.length>36)throw Error('36レースの上限を超えます');
+    if(!pending.length){el.textContent='新規登録対象はありません';return;}
+    // 保存失敗時にメモリの既存オブジェクトを壊さないようコピーを編集する
+    const copy=JSON.parse(JSON.stringify(day));
+    for(const r of pending){
+      let venue=copy.venues.find(v=>v.name===r.venue);
+      if(!venue){venue={name:r.venue,races:[]};copy.venues.push(venue);}
+      const race={r:r.r,name:r.name,grade:r.grade,track:r.track,horses:r.horses};
+      ensureRaceId(copy,venue,race);
+      venue.races.push(race);
+    }
+    const remote = await fbSaveRaceDay(copy);
+    if (!remote?.ok) throw Error(remote?.message || "Firestoreへの保存に失敗しました");
+    await idbPut('raceDays',copy);
+    if(newDay)raceDays.push(copy);
+    else raceDays.splice(raceDays.findIndex(x=>x.id===dayId),1,copy);
+    invalidateHorseCache();updateHomeStats();renderEditView();
+    racecardBulkValidated=null;
+    const savedMsg=document.getElementById('racecardBulkPreview');
+    if(savedMsg){savedMsg.style.color='var(--green)';savedMsg.textContent=`✓ ${pending.length}レース／${pending.reduce((n,r)=>n+r.horses.length,0)}頭を保存しました。既存レースは変更していません。`;}
+  }catch(e){el.style.color='var(--red)';el.textContent='⚠ 保存失敗：'+e.message;}
+}
 async function saveEditRace() {
   const msgEl = document.getElementById('editRaceMsg');
   msgEl.style.color = 'var(--red)';
@@ -181614,6 +181785,137 @@ function reviewAITrendContextHTML(day,venue,race){
   }catch(e){console.warn('[reviewAI] 条件事象の参考表示に失敗:',e);return '';}
 }
 
+
+// ===== 一般ユーザー向け閲覧・可視化（初期版） =====
+const publicWeights={overall:4,venue:4,distance:4,condition:4,form:4};
+const publicLabels={overall:'総合評価',venue:'競馬場適性',distance:'距離適性',condition:'馬場適性',form:'調子指数'};
+let publicChosenPrediction='';
+const publicAnalysisFilters={venue:'',surface:'',distance:'',trackCondition:''};
+let publicReviewLoading=false,publicReviewError='';
+function publicSetFilter(field,value){publicAnalysisFilters[field]=value;renderPublicPredict();}
+function publicFilterSnapshot(r){return Object.entries(publicAnalysisFilters).every(([k,v])=>!v||String(k==='distance'?Number(r[k]||0):r[k]||'')===v);}
+function publicFilterUI(){
+  const snapshots=analysisPredictionCache.map(analysisSnapshot);
+  const names={venue:'競馬場',surface:'芝／ダート',distance:'距離',trackCondition:'馬場状態'};
+  return `<div class="public-panel"><h3>🔎 分析条件を絞り込む</h3><div class="public-filter-grid">${Object.keys(names).map(k=>{
+    const values=[...new Set(snapshots.map(r=>r[k]).filter(v=>v!=null&&v!=='' ).map(String))].sort((a,b)=>k==='distance'?Number(a)-Number(b):a.localeCompare(b,'ja'));
+    return `<label><span>${names[k]}</span><select onchange="publicSetFilter('${k}',this.value)"><option value="">すべて</option>${values.map(v=>`<option value="${publicEscape(v)}" ${publicAnalysisFilters[k]===v?'selected':''}>${publicEscape(v)}${k==='distance'?'m':''}</option>`).join('')}</select></label>`;
+  }).join('')}</div><button class="public-reset" onclick="Object.keys(publicAnalysisFilters).forEach(k=>publicAnalysisFilters[k]='');renderPublicPredict()">条件をリセット</button></div>`;
+}
+function publicConditionStats(outs){
+  const groupings=[['venue','競馬場別'],['surface','芝・ダート別'],['distance','距離別'],['trackCondition','馬場状態別']];
+  return groupings.map(([key,title])=>{
+    const map=new Map();
+    for(const o of outs){const r=analysisSnapshot(o.prediction),v=r[key];if(v==null||v==='')continue;
+      const label=String(v)+(key==='distance'?'m':'');
+      if(!map.has(label))map.set(label,{label,n:0,win:0,top3:0});
+      const g=map.get(label);g.n++;if(Number(o.topPick.finish)===1)g.win++;if(Number(o.topPick.finish)<=3)g.top3++;
+    }
+    const rows=[...map.values()].sort((a,b)=>b.n-a.n||b.top3/b.n-a.top3/a.n);
+    return `<div class="public-panel"><h3>🏇 ${title}・本命好走率</h3>${rows.length?rows.map(g=>`<div class="public-condition-line"><div><strong>${publicEscape(g.label)}</strong><small>${g.n}予想・1着 ${g.win}件・3着内 ${g.top3}件</small></div>${publicBar('3着内',g.top3,g.n)}</div>`).join(''):'<p class="public-muted">該当する結果データがありません。</p>'}</div>`;
+  }).join('');
+}
+async function publicLoadReviewData(){
+  if(publicReviewLoading)return;
+  publicReviewLoading=true;publicReviewError='';renderPublicPredict();
+  try{if(!(await waitForFirebase(5000)))throw Error('Firebaseに接続できませんでした');
+    const {collection,getDocs}=window._fbFns;
+    const snap=await getDocs(collection(window._fbDb,'raceReviews'));
+    wholeReviewRankingRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));wholeReviewRankingLoaded=true;
+  }catch(e){publicReviewError=e.message||String(e);}
+  publicReviewLoading=false;renderPublicPredict();
+}
+function publicReviewSummary(){
+  if(!wholeReviewRankingLoaded)return `<div class="public-panel"><h3>📚 条件別・回顧4分類</h3><p class="public-muted">展開・ラップ・上位馬の枠・不利の傾向を条件別に比較できます。公開可能な回顧分類データを読み込みます。</p><button class="public-reset" onclick="publicLoadReviewData()" ${publicReviewLoading?'disabled':''}>${publicReviewLoading?'読み込み中…':'4分類データを読み込む'}</button>${publicReviewError?`<p class="public-muted">${publicEscape(publicReviewError)}</p>`:''}</div>`;
+  const records=wholeReviewRankingRecords.filter(r=>simpleReviewEvents(r)&&publicFilterSnapshot(simpleReviewRef(r)));
+  return `<div class="public-panel"><h3>📚 条件別・回顧4分類</h3><p class="public-muted">選択条件の分類登録済み ${records.length}レース。複数選択のラップ分類は合計が100%を超える場合があります。未入力・不明は最多分類の計算から除外しています。</p>${SIMPLE_REVIEW_FIELDS.map(f=>{
+    const counts=new Map(),known=records.filter(r=>simpleReviewLabels(f,simpleReviewEvents(r)).length);
+    for(const r of known)for(const v of simpleReviewLabels(f,simpleReviewEvents(r)))counts.set(v,(counts.get(v)||0)+1);
+    const rows=[...counts].sort((a,b)=>b[1]-a[1]);
+    return `<div class="public-class-group"><h4>${publicEscape(f.label)} <small>判定 ${known.length}レース</small></h4>${rows.length?rows.map(([v,n])=>publicBar(f.options[v],n,known.length,` · ${n}件`)).join(''):'<div class="public-muted">分類データなし</div>'}</div>`;
+  }).join('')}<p class="public-muted">回顧の分類は事象の記録傾向であり、予想的中の因果関係を示すものではありません。</p></div>`;
+}
+
+const publicEscape=v=>aiEsc(String(v??''));
+function publicBar(label,value,denominator,extra=''){
+  const pct=denominator>0?Math.max(0,Math.min(100,100*value/denominator)):0;
+  return `<div class="public-bar-row"><span>${publicEscape(label)}</span><div class="public-bar-track"><div class="public-bar-fill" style="width:${pct.toFixed(2)}%"></div></div><b style="text-align:right">${denominator?`${pct.toFixed(1)}%`:'—'}${extra}</b></div>`;
+}
+async function publicLoadData(target,render){
+  const el=document.getElementById(target);if(!el)return;
+  el.innerHTML='<div class="public-panel">公開データを読み込み中です…</div>';
+  try{await loadAllPredictionHistory();if(!analysisRaceDataRefreshed){await refreshPredictionRaceDays(analysisPredictionCache);analysisRaceDataRefreshed=true;}render();}
+  catch(e){el.innerHTML=`<div class="public-panel">データを取得できませんでした。公開用のFirestore読み取り権限をご確認ください。<div class="public-muted">${publicEscape(e.message)}</div></div>`;}
+}
+// 今週の開催レース一覧：レース名のみを表示し、馬の出馬表は表示しない。
+let publicSelectedRaceKey='';
+function publicRaceKey(r){return [String(r.date||'').replace(/\D/g,''),r.venue||'',String(r.raceNumber||''),r.raceName||''].join('|');}
+function publicWeekRaceRows(){
+  const dates=new Set(getThisWeekDates().map(d=>String(d).replace(/\D/g,'')));
+  const rows=[];
+  for(const d of (raceDays||[])){
+    if(!dates.has(String(d.date||'').replace(/\D/g,'')))continue;
+    for(const v of d.venues||[])for(const r of v.races||[]){
+      const track=String(r.track||r.course||'');
+      rows.push({date:d.date,venue:v.name||v.venue||'',raceNumber:r.number||r.raceNumber||'',raceName:r.name||r.raceName||'',surface:aiExtractSurface(track)||'',distance:Number(aiExtractDistance(track))||null,trackCondition:r.trackCondition||'',track});
+    }
+  }
+  // 管理者側の開催データが未取得の場合は今週の予想スナップショットを補助的に使用
+  for(const p of analysisPredictionCache){const r=analysisSnapshot(p);if(dates.has(String(r.date||'').replace(/\D/g,'')))rows.push({...r});}
+  const seen=new Set();return rows.filter(r=>{const k=publicRaceKey(r);if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.venue).localeCompare(String(b.venue),'ja')||Number(a.raceNumber)-Number(b.raceNumber));
+}
+function publicChooseRace(key){publicSelectedRaceKey=key;renderPublicPredict();}
+function publicRadar(h){
+  const keys=Object.keys(publicLabels), cx=110,cy=103,R=76;
+  const xy=(i,v)=>{const ang=-Math.PI/2+i*2*Math.PI/5;return [cx+Math.cos(ang)*R*v/6,cy+Math.sin(ang)*R*v/6];};
+  const points=v=>keys.map((_,i)=>xy(i,v).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const labels=keys.map((k,i)=>{const [x,y]=xy(i,7.6);return `<text x="${x}" y="${y}" fill="#b9bed0" font-size="10" text-anchor="middle" dominant-baseline="middle">${publicEscape(publicLabels[k])}</text>`;}).join('');
+  const grid=[2,4,6].map(v=>`<polygon points="${points(v)}" fill="none" stroke="#465064" stroke-width="1"/>`).join('');
+  const vals=keys.map(k=>{const v=Number(h.factors?.[k]);return h.factors?.[k]==null||!Number.isFinite(v)?0:Math.max(0,Math.min(6,v));});
+  const poly=vals.map((v,i)=>xy(i,v).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const dots=vals.map((v,i)=>{const [x,y]=xy(i,v);return `<circle cx="${x}" cy="${y}" r="3" fill="#f0d878"/>`;}).join('');
+  return `<svg viewBox="0 0 220 210" role="img" aria-label="5項目の評価レーダーチャート" style="width:220px;max-width:100%;height:auto">${grid}<polygon points="${poly}" fill="rgba(201,168,76,.28)" stroke="#f0d878" stroke-width="2"/>${dots}${labels}</svg>`;
+}
+function renderPublicPredict(){
+  const el=document.getElementById('publicPredictMain');if(!el)return;
+  if(!analysisAllHistoryLoaded){publicLoadData('publicPredictMain',renderPublicPredict);return;}
+  const rows=publicWeekRaceRows();
+  const selected=rows.find(r=>publicRaceKey(r)===publicSelectedRaceKey)||rows[0];
+  if(selected)publicSelectedRaceKey=publicRaceKey(selected);
+  const historical=analysisPredictionCache.filter(p=>{
+    const r=analysisSnapshot(p);
+    if(selected)return (!selected.venue||r.venue===selected.venue)&&(!selected.surface||r.surface===selected.surface)&&(!selected.distance||Number(r.distance)===Number(selected.distance))&&(!selected.trackCondition||!r.trackCondition||r.trackCondition===selected.trackCondition);
+    return publicFilterSnapshot(r);
+  });
+  const outs=historical.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
+  const wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
+  const pred=selected&&analysisPredictionCache.find(p=>publicRaceKey(analysisSnapshot(p))===publicSelectedRaceKey);
+  const ranked=(pred?.horses||[]).map(h=>({...h,customScore:scoreWithWeights(h,publicWeights)})).filter(h=>h.customScore!=null).sort((a,b)=>b.customScore-a.customScore);
+  const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${label}</span><input type="range" min="0" max="6" step="1" value="${publicWeights[k]}" oninput="publicWeights.${k}=Number(this.value);renderPublicPredict()"><b>${publicWeights[k]}</b></label>`).join('');
+  const cards=rows.map(r=>{const key=publicRaceKey(r);return `<button type="button" class="public-race-choice ${key===publicSelectedRaceKey?'selected':''}" onclick="publicChooseRace('${publicEscape(key).replace(/'/g,'&#39;')}')"><strong>${publicEscape(r.venue)} ${publicEscape(r.raceNumber?`${r.raceNumber}R`:'')}　${publicEscape(r.raceName||'レース名未登録')}</strong><small>${publicEscape(r.date||'')} ・ ${publicEscape(r.surface||'')} ${r.distance?Number(r.distance)+'m':''}</small></button>`;}).join('');
+  el.innerHTML=`<div class="public-hero"><h2>🎯 今週のレース・予想分析</h2><div class="public-muted">レースを選択すると、同じ競馬場・芝ダート・距離の過去傾向と、保存済み予想の各馬ステータスを表示します。</div></div>
+  <div class="public-panel"><h3>📅 今週のレース一覧</h3>${rows.length?`<div class="public-race-list">${cards}</div>`:'<div class="public-muted">今週の開催レースがまだ取得できません。管理者側で開催データを登録すると表示できます。</div>'}</div>
+  ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''}　／　過去の同条件（馬場状態が登録済みの場合はそれも一致）を参照</div></div>`:''}
+  <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
+  <div class="public-panel"><h3>📊 この条件での本命馬の着順</h3>${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}<p class="public-muted">※ 過去の確定結果に基づく参考値です。予想履歴が少ない条件は解釈に注意してください。</p></div>
+  ${selected?publicConditionStats(outs):''}
+  <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<div class="public-muted">重みは5角形の軸の数値ではなく、総合スコア計算への影響度です。レーダーは各評価点（0〜6）を示します。</div></div>
+  <div class="public-panel"><h3>🏇 ${selected?'選択レースの':'今週の'}評価ランキング・5角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.name||h.horseName||'馬名未登録')}</strong><b>${h.customScore.toFixed(2)}点</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicLabels[k]}：${h.factors?.[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">このレースの保存済み予想スコアがまだありません。予想が登録されると5角形ステータスが表示されます。</div>'}<p class="public-muted">※ スコアの重み変更は簡易再計算です。管理者AIの独自ボーナスや印の判定とは一致しない場合があります。</p></div>`;
+}
+function renderPublicResults(){
+  const el=document.getElementById('publicResultsMain');if(!el)return;
+  if(!analysisAllHistoryLoaded){publicLoadData('publicResultsMain',renderPublicResults);return;}
+  const outs=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
+  const n=outs.length,wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
+  const counts=[0,0,0,0];for(const o of outs){const f=Number(o.topPick.finish);counts[f===1?0:f===2?1:f===3?2:3]++;}
+  const factor=calcFactorAnalysis();
+  const cond=calcConditionRows(outs).filter(g=>g.n>=2).slice(0,8);
+  el.innerHTML=`<div class="public-hero"><h2>📊 過去の予想結果</h2><div class="public-muted">保存された予想と確定結果を照合した集計です。同じレースに複数の予想記録があれば別々に数えます。</div></div>
+  <div class="public-grid"><div class="public-stat">集計対象<b>${n}<small style="font-size:13px"> 件</small></b></div><div class="public-stat">本命1着率<b>${n?(wins/n*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${n?(places/n*100).toFixed(1)+'%':'—'}</b></div></div>
+  <div class="public-panel"><h3>🏁 本命馬の着順分布</h3>${['1着','2着','3着','4着以下'].map((t,i)=>publicBar(t,counts[i],n)).join('')}<div class="public-muted">同着は公式の着順をそのまま集計します。</div></div>
+  <div class="public-panel"><h3>🔎 どの評価項目が当たっている？</h3>${factor.rows.map(r=>publicBar(r.label,r.top3==null?0:r.top3,1,r.races?` · ${r.races}件`:'' )).join('')}<div class="public-muted">各項目で最も高評価だった馬が3着以内に入った割合。各項目で集計対象数が異なります。データが少ない場合は参考値です。</div></div>
+  <div class="public-panel"><h3>🗺 得意なレース条件</h3>${cond.length?cond.map(g=>publicBar(g.condition,g.top3,g.n,` · ${g.n}件`)).join(''):'<div class="public-muted">同じ条件で2件以上の結果が集まると表示します。</div>'}</div>`;
+}
 </script>
 
 </body>
