@@ -1737,6 +1737,28 @@ body:not(.unused) .home-cards:has(> .home-card[data-public-only]) { column-gap: 
   .home-cards > .home-card[data-public-only] .card-icon, .home-cards > .home-card.green .card-icon { font-size: 25px; }
 }
 .public-compact-chart .public-bar-row{margin:4px 0;min-height:22px}.public-compact-chart .public-bar-track{height:9px}.public-compact-chart .public-muted{font-size:12px}
+
+/* 公開画面のスマートフォン向け幅調整（編集モードには適用しない） */
+@media (max-width: 600px) {
+  .home-cards:has(> .home-card[data-public-only]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .home-cards:has(> .home-card[data-public-only]) > .home-card {
+    width: 100%; min-width: 0; box-sizing: border-box;
+    padding: 14px 16px;
+  }
+  .public-dashboard { padding: 12px 10px; width: 100%; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+  .public-grid, .public-filter-grid, .public-race-list, .public-radar-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 9px;
+  }
+  .public-radar-card, .public-race-choice { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .public-bar-row { grid-template-columns: 76px minmax(0, 1fr) 50px !important; gap: 5px !important; font-size: 11px; }
+  .public-weight { grid-template-columns: 74px minmax(0, 1fr) 24px !important; gap: 7px !important; }
+  .public-hero { padding: 14px 12px; }
+  .public-hero h2 { font-size: 18px; }
+}
 </style>
 <!-- Firebase SDK -->
 <script type="module">
@@ -181876,27 +181898,51 @@ function publicWeekRaceRows(){
 function publicChooseRace(key){publicSelectedRaceKey=key;renderPublicPredict();}
 function publicSetWeight(k,v){if(Object.hasOwn(publicDraftWeights,k))publicDraftWeights[k]=Math.max(0,Math.min(6,Number(v)||0));}
 function publicRecalculate(){publicAppliedWeights={...publicDraftWeights};renderPublicPredict();}
+// 管理者の aiBuildRaceData と同一の5項目・高適性加点を、公開画面内で副作用なく計算する。
+// 管理者のグローバル設定・予想保存・Firestoreの読み書きは一切変更しない。
 function publicRaceRanking(selected){
   if(!selected?.sourceRace)return [];
   const source=selected.sourceRace;
-  // 元の馬データを参照するだけ。管理者の aiCustomWeights や aiBuildRaceData は操作しない。
+  const surface=selected.surface||aiExtractSurface(selected.track);
+  const dist=String(selected.distance||'');
+  const w=publicAppliedWeights;
   const horseMap=new Map((Array.isArray(horses)?horses:[]).filter(h=>h?.name).map(h=>[h.name,h]));
-  return (source.horses||[]).map((entry,i)=>{
+  const rows=(source.horses||[]).map((entry,i)=>{
     const name=entry.name||entry.horseName||'';
+    const num=entry.num??entry.number??i+1;
     const h=horseMap.get(name);
     const factors={overall:null,venue:null,distance:null,condition:null,form:null};
-    if(h){
-      const rs=(h.races||[]).filter(r=>!aiSurfaceFilterEnabled||!selected.surface||aiExtractSurface(r.track)===selected.surface);
-      const scores=rs.slice(0,5).map(r=>aptScore(r.eval)).filter(v=>v!==null);
-      factors.overall=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:null;
-      factors.venue=aiTrackStats(h,selected.venue,'',selected.surface).avg;
-      factors.distance=aiTrackStats(h,'',String(selected.distance||''),selected.surface).avg;
-      factors.condition=aiConditionStats(h,'','',selected.surface,aiConditionMode).avg;
-      factors.form=aptAvg((h.races||[]).slice(0,3));
+    if(!h)return {name,num,factors,customScore:null,known:false};
+    // 管理者デフォルトと同じく、芝/ダート除外はOFF、馬場は「良」。
+    const scoringRaces=h.races||[];
+    const overall=scoringRaces.map(r=>aiEvalScore(r.eval)).filter(v=>v!==null&&v!==undefined);
+    factors.overall=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
+    const venueStats=aiTrackStats(h,selected.venue,'',surface);
+    const distanceStats=aiTrackStats(h,'',dist,surface);
+    const conditionStats=aiConditionStats(h,'','',surface,'good');
+    factors.venue=venueStats.avg;
+    factors.distance=distanceStats.avg;
+    factors.condition=conditionStats.avg;
+    factors.form=aptAvg((h.races||[]).slice(0,3));
+    return {name,num,factors,customScore:scoreWithWeights({factors},w),known:true,venueStats,distanceStats,conditionStats};
+  });
+  const candidates={
+    venue:rows.filter(x=>x.known&&x.venueStats?.avg>=3&&x.venueStats?.count>=3),
+    distance:rows.filter(x=>x.known&&x.distanceStats?.avg>=3&&x.distanceStats?.count>=3),
+    condition:rows.filter(x=>x.known&&x.conditionStats?.avg>=3&&x.conditionStats?.count>=3)
+  };
+  for(const x of rows){
+    if(x.customScore==null)continue;
+    for(const k of ['venue','distance','condition']){
+      const weight=(Number(w[k])||0)/6;
+      if(!weight||!candidates[k].some(y=>y.num===x.num))continue;
+      const stat=k==='venue'?x.venueStats:k==='distance'?x.distanceStats:x.conditionStats;
+      const strength=1.20+Math.max(0,Math.min(1.5,(stat.avg-3)*0.55));
+      x.customScore+=strength*weight;
+      if(candidates[k].length===1)x.customScore+=1.50*weight;
     }
-    const customScore=scoreWithWeights({factors},publicAppliedWeights);
-    return {name,num:entry.num??entry.number??i+1,factors,customScore};
-  }).sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
+  }
+  return rows.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
 }
 function publicRadar(h){
   const keys=Object.keys(publicLabels), cx=110,cy=103,R=76;
@@ -181932,7 +181978,7 @@ function renderPublicPredict(){
     <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
     <div class="public-panel public-compact-chart"><h3>📊 本命馬の着順分布</h3><div class="public-compact-bars">${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}</div><p class="public-muted">過去の保存済み予想から集計。下のランキングは独立して計算します。</p></div>`:''}
     <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<button type="button" class="public-reset" onclick="publicRecalculate()" style="margin-top:12px">🔄 この重みでランキングを再計算</button><div class="public-muted" style="margin-top:8px">初期値は5項目すべて3。再計算ボタンを押すまでランキングは変わりません。予想の保存は行いません。</div></div>
-    <div class="public-panel"><h3>🏇 評価ランキング・五角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。管理者の予想保存・印・高適性ボーナスとは独立した5項目加重平均です。</p></div>`;
+    <div class="public-panel"><h3>🏇 評価ランキング・五角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。管理者と同じ5項目加重平均＋高適性・唯一高適性ボーナスで計算します。公開画面の馬場適性は「良」、芝/ダート除外はOFFで固定。管理者側の設定が異なる場合は結果も異なります。</p></div>`;
   }catch(e){console.error('[public] 予想分析表示エラー',e);el.innerHTML=`<div class="public-panel">予想分析の表示でエラーが発生しました。管理者データは変更していません。<div class="public-muted">${publicEscape(e.message||String(e))}</div></div>`;}
 }
 function renderPublicResults(){
