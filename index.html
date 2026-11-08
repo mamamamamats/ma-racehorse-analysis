@@ -1754,6 +1754,9 @@ textarea.search-input { line-height: 1.7; }
   .public-hero { padding: 14px 12px; }
   .public-hero h2 { font-size: 18px; }
 }
+
+/* 公開分析: モバイルではランキングを1列に */
+@media(max-width:900px){#view-publicPredict .public-ranking-list{display:block}#view-publicPredict .public-radar-card{width:100%;max-width:100%;box-sizing:border-box}#view-publicPredict .public-grid{grid-template-columns:1fr}#view-publicPredict .public-bar-row{font-size:11px}}
 </style>
 <!-- Firebase SDK -->
 <script type="module">
@@ -174466,13 +174469,9 @@ async function fetchGitHubData() {
       }
     }
 
-    // GitHubのJSONにない馬はIndexedDBから削除（削除操作を反映するため）
-    const payloadNames = new Set(payload.horses.map(h => h.name).filter(name => !deletedHorseNames.has(name)));
-    for (const h of existingHorses) {
-      if (!payloadNames.has(h.name)) {
-        try { await idbDelete('horses', h.name); } catch(e) {}
-      }
-    }
+    // 安全対策: 公開JSONに含まれない馬をローカルから消さない。
+    // 公開JSONの更新遅れで編集モードのIndexedDB全頭データが失われるのを防ぐ。
+    // 削除は管理者が明示的に行う操作と、完了が検証できたFirestore同期のみで行う。
 
     // バージョンを記録
     localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion); // exportedAt_rN_hN形式
@@ -177444,10 +177443,11 @@ if (navEditTab) navEditTab.style.display = isEditMode ? 'flex' : 'none';
 const navAnalysisTab = document.getElementById('navAnalysisTab');
 if (navAnalysisTab) navAnalysisTab.style.display = isAnalysisMode ? 'flex' : 'none';
 // 一般表示と編集表示でナビゲーションを分離（UIのみ。実際の権限はFirestore Rulesで制御する）
-document.querySelectorAll('[data-admin-only]').forEach(el=>el.style.display=isEditMode?'flex':'none');
-document.querySelectorAll('[data-public-only]').forEach(el=>el.style.display=isEditMode?'none':'flex');
-// ホームのカードもタブ表示と同じモードに切り替える
-document.querySelectorAll('.home-card[data-admin-only]').forEach(el=>el.style.display=isEditMode?'flex':'none');
+// モード別のナビゲーションとホームカードを個別に制御。CSSの!importantにも負けない。
+document.querySelectorAll('.nav-tab[data-admin-only]').forEach(el=>el.style.setProperty('display',isEditMode?'flex':'none','important'));
+document.querySelectorAll('.nav-tab[data-public-only]').forEach(el=>el.style.setProperty('display',isEditMode?'none':'flex','important'));
+document.querySelectorAll('.home-card[data-admin-only]').forEach(el=>el.style.setProperty('display',isEditMode?'flex':'none','important'));
+document.querySelectorAll('.home-card[data-public-only]').forEach(el=>el.style.setProperty('display',isEditMode?'none':'flex','important'));
 // 公開カードは既存のホームカードと同じグリッド内で切り替える
 
 // 非editモードではDB同期バナーを完全に隠し、進行中の同期状態もリセット
@@ -181843,10 +181843,52 @@ async function publicLoadReviewData(){
   }catch(e){publicReviewError=e.message||String(e);}
   publicReviewLoading=false;renderPublicPredict();
 }
+const publicReviewPeriod={mode:'month',year:'',month:'',season:'',raceClass:''};
+function publicReviewDate(r){
+  const ref=r.raceRef||{};
+  let value=ref.date||ref.day||r.date||r.raceDate||'';
+  if(!value && r.raceId){
+    const m=String(r.raceId).match(/(20\d{2})[-\/]?(\d{2})[-\/]?(\d{2})/);
+    if(m)value=`${m[1]}-${m[2]}-${m[3]}`;
+  }
+  if(!value){const found=simpleReviewRef(r);value=found.date||found.day||'';}
+  return publicDateKey(value);
+}
+function publicReviewSeason(month){return month<=2||month===12?'winter':month<=5?'spring':month<=8?'summer':'autumn';}
+// raceRef.gradeを優先し、過去の開催データにも照合。クラス不明を勝手に推定しない。
+function publicReviewClass(r){
+  const ref=simpleReviewRef(r)||{};
+  let raw=String(ref.grade||ref.raceClass||ref.class||r.grade||r.raceClass||r.class||'').trim();
+  if(!raw)return '';
+  const v=raw.toLowerCase().replace(/[\s　_-]/g,'');
+  if(/^(g[123]|j\.?g[123])$/.test(v))return v.replace('.','').toUpperCase();
+  if(/^(新馬|新馬戦|new|debut|maidennew)$/.test(v))return '新馬';
+  if(/^(未勝利|未勝利戦|未勝|un|maiden)$/.test(v))return '未勝利';
+  if(/^(1勝|1勝クラス|1勝class|1s|1win|500万下|500万)$/.test(v))return '1勝クラス';
+  if(/^(2勝|2勝クラス|2勝class|2s|2win|1000万下|1000万)$/.test(v))return '2勝クラス';
+  if(/^(3勝|3勝クラス|3勝class|3s|3win|1600万下|1600万)$/.test(v))return '3勝クラス';
+  if(/^(op|open|オープン|オープン特別|リステッド|listed|l)$/.test(v))return 'OP/L';
+  return raw;
+}
+function publicReviewClassMatch(r){return !publicReviewPeriod.raceClass||publicReviewClass(r)===publicReviewPeriod.raceClass;}
+function publicReviewPeriodMatch(r){
+  if(publicReviewPeriod.mode==='all')return true;
+  const key=publicReviewDate(r);if(!key)return false;
+  const year=key.slice(0,4),month=Number(key.slice(4,6));
+  if(publicReviewPeriod.mode==='month')return (!publicReviewPeriod.year||year===publicReviewPeriod.year)&&(!publicReviewPeriod.month||String(month)===publicReviewPeriod.month);
+  if(publicReviewPeriod.mode==='season')return (!publicReviewPeriod.year||year===publicReviewPeriod.year)&&(!publicReviewPeriod.season||publicReviewSeason(month)===publicReviewPeriod.season);
+  return true;
+}
+function publicSetReviewPeriod(k,v){publicReviewPeriod[k]=v;renderPublicPredict();}
+function publicReviewPeriodUI(){
+  const years=[...new Set((wholeReviewRankingRecords||[]).map(publicReviewDate).filter(Boolean).map(d=>d.slice(0,4)))].sort().reverse();
+  const select=(key,items)=>`<select style="min-width:0;width:100%;padding:8px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px" onchange="publicSetReviewPeriod('${key}',this.value)">${items.map(([v,t])=>`<option value="${v}" ${String(publicReviewPeriod[key])===String(v)?'selected':''}>${t}</option>`).join('')}</select>`;
+  return `<div class="public-filter-grid" style="margin:10px 0;grid-template-columns:repeat(auto-fit,minmax(125px,1fr))"><label>集計期間${select('mode',[['all','全期間'],['month','同じ月'],['season','同じ季節']])}</label>${publicReviewPeriod.mode!=='all'?`<label>対象年${select('year',[['','全年（複数年）'],...years.map(y=>[y,y+'年'])])}</label>`:''}${publicReviewPeriod.mode==='month'?`<label>対象月${select('month',[['','全月'],...Array.from({length:12},(_,i)=>[String(i+1),`${i+1}月`])])}</label>`:''}${publicReviewPeriod.mode==='season'?`<label>季節${select('season',[['','全季節'],['spring','春（3〜5月）'],['summer','夏（6〜8月）'],['autumn','秋（9〜11月）'],['winter','冬（12〜2月）']])}</label>`:''}<label>レースクラス${select('raceClass',[['','全クラス'],['新馬','新馬'],['未勝利','未勝利'],['1勝クラス','1勝クラス'],['2勝クラス','2勝クラス'],['3勝クラス','3勝クラス'],['OP/L','OP・リステッド'],['G3','G3'],['G2','G2'],['G1','G1']])}</label></div>`;
+}
 function publicReviewSummary(){
   if(!wholeReviewRankingLoaded)return `<div class="public-panel"><h3>📚 条件別・回顧4分類</h3><p class="public-muted">展開・ラップ・上位馬の枠・不利の傾向を条件別に比較できます。公開可能な回顧分類データを読み込みます。</p><button class="public-reset" onclick="publicLoadReviewData()" ${publicReviewLoading?'disabled':''}>${publicReviewLoading?'読み込み中…':'4分類データを読み込む'}</button>${publicReviewError?`<p class="public-muted">${publicEscape(publicReviewError)}</p>`:''}</div>`;
-  const records=wholeReviewRankingRecords.filter(r=>simpleReviewEvents(r)&&publicFilterSnapshot(simpleReviewRef(r)));
-  return `<div class="public-panel"><h3>📚 条件別・回顧4分類</h3><p class="public-muted">選択条件の分類登録済み ${records.length}レース。複数選択のラップ分類は合計が100%を超える場合があります。未入力・不明は最多分類の計算から除外しています。</p>${SIMPLE_REVIEW_FIELDS.map(f=>{
+  const records=wholeReviewRankingRecords.filter(r=>simpleReviewEvents(r)&&publicFilterSnapshot(simpleReviewRef(r))&&publicReviewPeriodMatch(r)&&publicReviewClassMatch(r));
+  return `<div class="public-panel"><h3>📚 条件別・回顧4分類</h3>${publicReviewPeriodUI()}<p class="public-muted">期間・条件・クラス一致の分類登録済み ${records.length}レース（開催日不明は期間指定時に除外）。複数選択のラップ分類は合計が100%を超える場合があります。未入力・不明は最多分類の計算から除外しています。</p>${SIMPLE_REVIEW_FIELDS.map(f=>{
     const counts=new Map(),known=records.filter(r=>simpleReviewLabels(f,simpleReviewEvents(r)).length);
     for(const r of known)for(const v of simpleReviewLabels(f,simpleReviewEvents(r)))counts.set(v,(counts.get(v)||0)+1);
     const rows=[...counts].sort((a,b)=>b[1]-a[1]);
@@ -181939,6 +181981,22 @@ function publicRaceRanking(selected){
   }
   return rows.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
 }
+const publicExpandedHorses=new Set();
+function publicToggleHorse(key){if(publicExpandedHorses.has(key))publicExpandedHorses.delete(key);else publicExpandedHorses.add(key);renderPublicPredict();}
+function publicHorseExplanation(h){
+  if(!h.known)return 'この馬の評価履歴が見つからないため、順位を判断できません。';
+  const known=Object.entries(h.factors).filter(([k,v])=>v!=null&&Number.isFinite(Number(v)));
+  if(!known.length)return '採点に使える評価履歴がありません。';
+  const sorted=[...known].sort((a,b)=>b[1]-a[1]);
+  const top=sorted.slice(0,2).map(([k,v])=>`${publicLabels[k]} ${Number(v).toFixed(1)}`).join('・');
+  const low=sorted[sorted.length-1];
+  const caution=Object.entries({venue:h.venueStats,distance:h.distanceStats,condition:h.conditionStats}).filter(([k,v])=>!v||v.count<3).map(([k,v])=>`${publicLabels[k]} ${v?.count||0}走`).join('、');
+  return `強み：${top}。${low&&sorted.length>1?`相対的な弱点：${publicLabels[low[0]]} ${Number(low[1]).toFixed(1)}。`:''}${caution?`注意：${caution}で判断材料が少なめ。`:''}過去の評価に基づく傾向であり、当日の好走を保証するものではありません。`;
+}
+function publicHorseDetails(h){
+  const n=k=>h[k]?.count??0;
+  return `<div class="public-muted" style="text-align:left;line-height:1.65">${publicEscape(publicHorseExplanation(h))}<div style="margin-top:7px">評価対象：競馬場 ${n('venueStats')}走／距離 ${n('distanceStats')}走／馬場 ${n('conditionStats')}走。0走の項目はデータ不足であり、能力0点ではありません。</div></div>`;
+}
 function publicRadar(h){
   const keys=Object.keys(publicLabels), cx=110,cy=103,R=76;
   const xy=(i,v)=>{const ang=-Math.PI/2+i*2*Math.PI/5;return [cx+Math.cos(ang)*R*v/6,cy+Math.sin(ang)*R*v/6];};
@@ -181964,6 +182022,7 @@ function renderPublicPredict(){
     const outs=historical.map(p=>{try{return buildPredictionOutcome(p);}catch(e){return null;}}).filter(o=>o?.complete&&o.topPick?.finish!=null);
     const wins=outs.filter(o=>Number(o.topPick.finish)===1).length;
     const places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
+    if(selected && !publicReviewPeriod.month && !publicReviewPeriod.season){publicReviewPeriod.month=String(Number(selected.date.slice(4,6)));}
     const ranked=selected?publicRaceRanking(selected):[];
     const controls=Object.entries(publicLabels).map(([k,label])=>`<label class="public-weight"><span>${publicEscape(label)}</span><input type="range" min="0" max="6" step="1" value="${publicDraftWeights[k]}" oninput="publicSetWeight('${k}',this.value);this.parentElement.querySelector('b').textContent=this.value"><b>${publicDraftWeights[k]}</b></label>`).join('');
     const cards=rows.map(r=>{const key=publicRaceKey(r);return `<button type="button" class="public-race-choice ${key===publicSelectedRaceKey?'selected':''}" onclick="publicChooseRace('${publicEscape(key).replace(/'/g,'&#39;')}')"><strong>${publicEscape(r.venue)} ${publicEscape(r.raceNumber?`${r.raceNumber}R`:'')}　${publicEscape(r.raceName||'レース名未登録')}</strong><small>${publicEscape(r.date)} ・ ${publicEscape(r.surface||'')} ${r.distance?r.distance+'m':''}</small></button>`;}).join('');
@@ -181972,8 +182031,9 @@ function renderPublicPredict(){
     ${selected?`<div class="public-panel"><h3>📍 ${publicEscape(selected.venue)} ${publicEscape(selected.raceNumber?selected.raceNumber+'R':'')} ${publicEscape(selected.raceName)}</h3><div class="public-muted">${publicEscape(selected.surface||'')} ${selected.distance?selected.distance+'m':''} ／ 同条件の過去の予想実績</div></div>
     <div class="public-grid"><div class="public-stat">過去の比較対象<b>${outs.length}件</b></div><div class="public-stat">本命1着率<b>${outs.length?(wins/outs.length*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${outs.length?(places/outs.length*100).toFixed(1)+'%':'—'}</b></div></div>
     <div class="public-panel public-compact-chart"><h3>📊 本命馬の着順分布</h3><div class="public-compact-bars">${['1着','2着','3着','4着以下'].map((label,i)=>publicBar(label,outs.filter(o=>{const f=Number(o.topPick.finish);return i===0?f===1:i===1?f===2:i===2?f===3:f>=4;}).length,outs.length)).join('')}</div><p class="public-muted">過去の保存済み予想から集計。下のランキングは独立して計算します。</p></div>`:''}
+    ${selected?publicReviewSummary():''}
     <div class="public-panel"><h3>⚙️ カスタム評価の重み（0〜6）</h3>${controls}<button type="button" class="public-reset" onclick="publicRecalculate()" style="margin-top:12px">🔄 この重みでランキングを再計算</button><div class="public-muted" style="margin-top:8px">初期値は5項目すべて3。再計算ボタンを押すまでランキングは変わりません。予想の保存は行いません。</div></div>
-    <div class="public-panel"><h3>🏇 評価ランキング・五角形ステータス</h3>${ranked.length?`<div class="public-radar-grid">${ranked.map((h,i)=>`<div class="public-radar-card"><div class="public-radar-heading"><span class="public-rank">${i+1}位</span><strong>${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b></div>${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'—':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div></div>`).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。管理者と同じ5項目加重平均＋高適性・唯一高適性ボーナスで計算します。公開画面の馬場適性は「良」、芝/ダート除外はOFFで固定。管理者側の設定が異なる場合は結果も異なります。</p></div>`;
+    <div class="public-panel"><h3>🏇 評価ランキング</h3><p class="public-muted">馬をタップすると五角形と採点理由を表示します。上位3頭は最初から詳細を表示します。</p>${ranked.length?`<div class="public-ranking-list">${ranked.map((h,i)=>{const key=publicRaceKey(selected)+'|'+h.num+'|'+h.name;const expanded=publicExpandedHorses.has(key)?i>=3:i<3;return `<div class="public-radar-card" style="margin-bottom:9px"><button type="button" onclick="publicToggleHorse('${publicEscape(key).replace(/'/g,'&#39;')}')" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:0;color:inherit;padding:5px;cursor:pointer"><span class="public-rank">${i+1}位</span><strong style="flex:1;min-width:0;overflow-wrap:anywhere">${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b><span>⌄</span></button>${expanded?`${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'データ不足':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div>${publicHorseDetails(h)}`:''}</div>`;}).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。馬場適性は「良」、芝/ダート除外はOFFで固定しています。</p></div>`;
   }catch(e){console.error('[public] 予想分析表示エラー',e);el.innerHTML=`<div class="public-panel">予想分析の表示でエラーが発生しました。管理者データは変更していません。<div class="public-muted">${publicEscape(e.message||String(e))}</div></div>`;}
 }
 function renderPublicResults(){
