@@ -173922,8 +173922,8 @@ async function resumeFirestoreSyncIfNeeded() {
         for (const h of items) {
           if (!h || !h.name) continue;
           if (h.deleted === true) {
-            try { await idbDelete('horses', h.name); } catch(e) {}
-            addDeletedHorseName(h.name);
+            // 安全優先: 同期中の削除フラグによるローカル馬データ削除も停止。
+            console.warn('[keiba] 削除フラグを検知（ローカル保持）:', h.name);
           } else {
             try { await idbPut('horses', h); } catch(e) {}
           }
@@ -173937,17 +173937,10 @@ async function resumeFirestoreSyncIfNeeded() {
       }
       prog.horsesDone += items.length;
       if (snap.size < SYNC_HORSE_BATCH) {
-        // 全頭完了：Firestoreに存在しない古い馬をIndexedDBから削除。
-        // これがないと、Firestoreから削除した馬がローカル検索に復活する。
-        try {
-          const seen = new Set(JSON.parse(localStorage.getItem(SYNC_SEEN_HORSES_KEY) || '[]'));
-          const localHorses = await idbGetAll('horses');
-          for (const h of localHorses) {
-            if (h && h.name && !seen.has(h.name)) {
-              try { await idbDelete('horses', h.name); } catch(e) {}
-            }
-          }
-        } catch(e) { console.warn('[keiba] 同期後の古い馬データ削除失敗:', e.message); }
+        // 安全対策: 同期結果に含まれない馬を一括削除しない。
+        // 取得漏れ・途中失敗・権限制限があっても既存のIndexedDBを保持する。
+        console.warn('[keiba] Firestore同期完了: 未取得馬の自動削除は安全のため無効です。',
+          '取得:', prog.horsesDone, '件');
         localStorage.removeItem(SYNC_SEEN_HORSES_KEY);
         // 全頭完了
         prog.phase = 'done';
@@ -174440,26 +174433,32 @@ const _notionIdToLocation = {};
 
 // zipまたはjsonからペイロードを取得するヘルパー
 async function _fetchPayload() {
-  // まずzipを試みる
+  // 公開JSONを正とする。ZIPはJSON取得に失敗した場合のみ使用する。
   try {
-    const resZip = await fetch(GITHUB_DATA_URL_ZIP, { cache: 'no-cache' });
-    if (resZip.ok) {
-      if (typeof JSZip === 'undefined') throw new Error('JSZip未ロード');
-      const blob = await resZip.blob();
-      const zip = await JSZip.loadAsync(blob);
-      // zip内のjsonファイルを探す（名前問わず最初の.jsonを使用）
-      const jsonName = Object.keys(zip.files).find(n => n.endsWith('.json') && !zip.files[n].dir && !n.startsWith('__MACOSX/'));
-      if (!jsonName) throw new Error('zip内にjsonファイルが見つかりません');
-      const text = await zip.files[jsonName].async('string');
-      return JSON.parse(text);
+    const resJson = await fetch(GITHUB_DATA_URL_JSON, { cache: 'no-store' });
+    if (resJson.ok) {
+      const payload = await resJson.json();
+      if (Array.isArray(payload?.horses) && Array.isArray(payload?.raceDays)) return payload;
+      throw new Error('JSONのデータ形式が不正です');
     }
+    throw new Error('JSON HTTP ' + resJson.status);
   } catch(e) {
-    console.log('[keiba] zip取得失敗、jsonにフォールバック:', e.message);
+    console.warn('[keiba] 公開JSON取得失敗。ZIPを試行:', e.message);
   }
-  // zipが取得できなければ従来のjsonを試みる
-  const resJson = await fetch(GITHUB_DATA_URL_JSON, { cache: 'no-cache' });
-  if (!resJson.ok) return null;
-  return await resJson.json();
+  try {
+    const resZip = await fetch(GITHUB_DATA_URL_ZIP, { cache: 'no-store' });
+    if (!resZip.ok) return null;
+    if (typeof JSZip === 'undefined') throw new Error('JSZip未ロード');
+    const zip = await JSZip.loadAsync(await resZip.blob());
+    const jsonName = Object.keys(zip.files).find(n => n.endsWith('.json') && !zip.files[n].dir && !n.startsWith('__MACOSX/'));
+    if (!jsonName) throw new Error('ZIP内のJSONが見つかりません');
+    const payload = JSON.parse(await zip.files[jsonName].async('string'));
+    if (!Array.isArray(payload?.horses) || !Array.isArray(payload?.raceDays)) throw new Error('ZIPのデータ形式が不正です');
+    return payload;
+  } catch(e) {
+    console.warn('[keiba] 公開データを取得できません:', e);
+    return null;
+  }
 }
 
 async function restoreMissingAdminRecordsSafely() {
@@ -174481,55 +174480,39 @@ async function restoreMissingAdminRecordsSafely() {
 }
 
 async function fetchGitHubData() {
-  if (isEditMode) return; // editモードはFirestoreを正として使うのでGitHub JSONは読まない
+  if (isEditMode) return;
   try {
     const payload = await _fetchPayload();
-    if (!payload || !payload.raceDays || !payload.horses) return;
-
-    // 既に同じバージョンのデータが入っていればスキップ
-    // exportedAt + データ件数の組み合わせでバージョンを判定
-    const storedVersion = localStorage.getItem(GITHUB_DATA_VERSION_KEY);
-    const payloadVersion = (payload.exportedAt || '') + '_r' + (payload.raceDays||[]).length + '_h' + (payload.horses||[]).length + '_v' + GITHUB_DATA_CODE_VER;
-    if (storedVersion === payloadVersion) return;
-
-    // GitHubのデータをIndexedDBに書き込む
-    // ユーザーのローカルデータ（メモなど）は上書きしない
+    if (!payload || !Array.isArray(payload.raceDays) || !Array.isArray(payload.horses)) return;
     const existingDays = await idbGetAll('raceDays');
-    const existingHorses = await loadAllHorses();
-
-    // raceDaysは全て上書き（管理者が正として扱う）
-    for (const day of payload.raceDays) {
-      await idbPut('raceDays', day);
-    }
-
-    // horsesは既存にないものだけ追加、あるものはraces等を上書き
+    const existingHorses = await idbGetAll('horses');
+    const currentNames = new Set(existingHorses.map(h => h.name));
+    const currentDayIds = new Set(existingDays.map(d => d.id));
     const deletedHorseNames = getDeletedHorseNames();
-    for (const h of payload.horses) {
-      if (!h || h.deleted === true || deletedHorseNames.has(h.name)) continue;
-      const existing = existingHorses.find(e => e.name === h.name);
-      if (!existing) {
-        await idbPut('horses', h);
-      } else {
-        // races・shortNoteはGitHubデータで更新、メモはローカルを保持
-        existing.races = h.races;
-        existing.shortNote = h.shortNote;
-        existing.frame = h.frame;
-        existing.num = h.num;
-        await idbPut('horses', existing);
-      }
+    const validHorses = payload.horses.filter(h => h && h.name && h.deleted !== true && !deletedHorseNames.has(h.name));
+    const missingHorses = validHorses.filter(h => !currentNames.has(h.name));
+    const missingDays = payload.raceDays.filter(d => d && d.id && !currentDayIds.has(d.id));
+    const payloadVersion = (payload.exportedAt || '') + '_r' + payload.raceDays.length + '_h' + payload.horses.length + '_v5-jsonfirst';
+    const storedVersion = localStorage.getItem(GITHUB_DATA_VERSION_KEY);
+    // バージョンが同じでも不足分は必ず補完する。途中で書き込みが止まっても次回再試行。
+    if (missingHorses.length) await idbPutAll('horses', missingHorses);
+    if (missingDays.length) await idbPutAll('raceDays', missingDays);
+    if (storedVersion !== payloadVersion) {
+      // 公開データの変更は既存の馬にも反映する。ただし端末の独自メモは維持する。
+      const existingMap = new Map(existingHorses.map(h => [h.name, h]));
+      const updated = validHorses.filter(h => existingMap.has(h.name)).map(h => {
+        const old = existingMap.get(h.name);
+        return { ...old, races: h.races, shortNote: h.shortNote, frame: h.frame, num: h.num };
+      });
+      if (updated.length) await idbPutAll('horses', updated);
+      if (payload.raceDays.length) await idbPutAll('raceDays', payload.raceDays);
     }
-
-    // 安全対策: 公開JSONに含まれない馬をローカルから消さない。
-    // 公開JSONの更新遅れで編集モードのIndexedDB全頭データが失われるのを防ぐ。
-    // 削除は管理者が明示的に行う操作と、完了が検証できたFirestore同期のみで行う。
-
-    // バージョンを記録
-    localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion); // exportedAt_rN_hN形式
+    // 保存完了後にだけバージョン記録する。
+    localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion);
     invalidateHorseCache();
-    console.log('[keiba] GitHubデータを自動ロードしました:', payloadVersion);
+    console.log('[keiba] 公開JSON照合: JSON馬', validHorses.length, '頭 / ローカル', existingHorses.length, '頭 / 補完', missingHorses.length, '頭');
   } catch(e) {
-    // ネットワークエラー等は無視（オフラインでも動く）
-    console.log('[keiba] GitHubデータのフェッチをスキップ:', e.message);
+    console.error('[keiba] 公開データ読み込みに失敗。既存データは保持:', e);
   }
 }
 
