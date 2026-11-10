@@ -182036,20 +182036,97 @@ function renderPublicPredict(){
     <div class="public-panel"><h3>🏇 評価ランキング</h3><p class="public-muted">馬をタップすると五角形と採点理由を表示します。上位3頭は最初から詳細を表示します。</p>${ranked.length?`<div class="public-ranking-list">${ranked.map((h,i)=>{const key=publicRaceKey(selected)+'|'+h.num+'|'+h.name;const expanded=publicExpandedHorses.has(key)?i>=3:i<3;return `<div class="public-radar-card" style="margin-bottom:9px"><button type="button" onclick="publicToggleHorse('${publicEscape(key).replace(/'/g,'&#39;')}')" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:0;color:inherit;padding:5px;cursor:pointer"><span class="public-rank">${i+1}位</span><strong style="flex:1;min-width:0;overflow-wrap:anywhere">${publicEscape(h.num)}番 ${publicEscape(h.name||'馬名未登録')}</strong><b>${h.customScore==null?'評価なし':h.customScore.toFixed(2)+'点'}</b><span>⌄</span></button>${expanded?`${publicRadar(h)}<div class="public-radar-values">${Object.keys(publicLabels).map(k=>`<span>${publicEscape(publicLabels[k])}：${h.factors[k]==null?'データ不足':Number(h.factors[k]).toFixed(1)}</span>`).join('')}</div>${publicHorseDetails(h)}`:''}</div>`;}).join('')}</div>`:'<div class="public-muted">出走馬が登録されたレースを選択してください。</div>'}<p class="public-muted">※ 馬の評価が未登録の場合は「評価なし」。馬場適性は「良」、芝/ダート除外はOFFで固定しています。</p></div>`;
   }catch(e){console.error('[public] 予想分析表示エラー',e);el.innerHTML=`<div class="public-panel">予想分析の表示でエラーが発生しました。管理者データは変更していません。<div class="public-muted">${publicEscape(e.message||String(e))}</div></div>`;}
 }
+// 一般ユーザー「過去の予想結果」専用。管理者の分析フィルター・保存データには干渉しない。
+const publicResultFilters={period:'all',year:'',month:'',season:'',raceClass:'',venue:'',surface:'',distance:'',trackCondition:''};
+let publicResultPage=1;
+const PUBLIC_RESULT_PAGE_SIZE=10;
+function publicResultDate(o){
+  const r=analysisSnapshot(o.prediction),fallback=o.race?.day||{};
+  const raw=r.date||r.day||fallback.date||fallback.id||'';
+  const key=publicDateKey(raw);
+  return /^\d{8}$/.test(key)?key:'';
+}
+function publicResultClass(o){
+  const r=analysisSnapshot(o.prediction),race=o.race?.race||{};
+  return publicReviewClass({raceRef:{venue:r.venue||o.race?.venue?.name||'（不明）',grade:r.grade||r.raceClass||r.class||race.grade||race.class||''}});
+}
+function publicResultMatch(o){
+  const f=publicResultFilters,r=analysisSnapshot(o.prediction),race=o.race||{};
+  const date=publicResultDate(o),month=date?Number(date.slice(4,6)):null;
+  if(f.period!=='all'){
+    if(!date)return false;
+    if(f.year&&date.slice(0,4)!==f.year)return false;
+    if(f.period==='month'&&f.month&&String(month)!==f.month)return false;
+    if(f.period==='season'&&f.season&&publicReviewSeason(month)!==f.season)return false;
+  }
+  if(f.raceClass&&publicResultClass(o)!==f.raceClass)return false;
+  const actual={
+    venue:r.venue||race.venue?.name||'',
+    surface:r.surface||aiExtractSurface(r.track||race.race?.track||'')||'',
+    distance:r.distance||aiExtractDistance(r.track||race.race?.track||'')||'',
+    trackCondition:r.trackCondition||''
+  };
+  for(const k of ['venue','surface','distance','trackCondition'])if(f[k]&&String(k==='distance'?Number(actual[k]):actual[k])!==f[k])return false;
+  return true;
+}
+function publicSetResultFilter(k,v){
+  if(!Object.prototype.hasOwnProperty.call(publicResultFilters,k))return;
+  publicResultFilters[k]=v;publicResultPage=1;renderPublicResults();
+}
+function publicSetResultPage(page){
+  publicResultPage=Math.max(1,Math.floor(Number(page)||1));renderPublicResults();
+  document.getElementById('publicResultsMain')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function publicResultFilterUI(all){
+  const f=publicResultFilters;
+  const refs=all.map(o=>analysisSnapshot(o.prediction));
+  const dates=all.map(publicResultDate).filter(Boolean);
+  const years=[...new Set(dates.map(d=>d.slice(0,4)))].sort().reverse();
+  const opts=(key,items,allLabel='すべて')=>`<select aria-label="${publicEscape(key)}" onchange="publicSetResultFilter('${key}',this.value)" style="width:100%;min-width:0;padding:8px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px"><option value="">${allLabel}</option>${items.map(([v,t])=>`<option value="${publicEscape(v)}" ${String(f[key])===String(v)?'selected':''}>${publicEscape(t)}</option>`).join('')}</select>`;
+  const field=(title,key,items,allLabel)=>`<label style="display:flex;flex-direction:column;gap:5px;min-width:0"><span>${title}</span>${opts(key,items,allLabel)}</label>`;
+  const values=(k)=>[...new Set(refs.map(r=>r[k]).filter(v=>v!=null&&String(v)!=='').map(v=>String(v)))].sort((a,b)=>k==='distance'?Number(a)-Number(b):a.localeCompare(b,'ja'));
+  const venues=[...new Set([...values('venue'),...all.map(o=>o.race?.venue?.name).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,'ja'));
+  const classes=['新馬','未勝利','1勝クラス','2勝クラス','3勝クラス','OP/L','G3','G2','G1'];
+  const classValues=[...new Set(all.map(publicResultClass).filter(Boolean))];
+  const allClasses=[...new Set([...classes,...classValues])];
+  const periodOptions=[['all','全期間'],['month','同じ月'],['season','同じ季節']];
+  const period=`<label style="display:flex;flex-direction:column;gap:5px"><span>期間の種類</span><select onchange="publicSetResultFilter('period',this.value)" style="width:100%;padding:8px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px">${periodOptions.map(([v,t])=>`<option value="${v}" ${f.period===v?'selected':''}>${t}</option>`).join('')}</select></label>`;
+  const fields=[period];
+  if(f.period!=='all')fields.push(field('対象年','year',years.map(v=>[v,v+'年']),'全年（複数年）'));
+  if(f.period==='month')fields.push(field('月','month',Array.from({length:12},(_,i)=>[String(i+1),`${i+1}月`]),'全月'));
+  if(f.period==='season')fields.push(field('季節','season',[['spring','春（3〜5月）'],['summer','夏（6〜8月）'],['autumn','秋（9〜11月）'],['winter','冬（12〜2月）']],'全季節'));
+  fields.push(field('クラス','raceClass',allClasses.map(v=>[v,v]),'全クラス'));
+  fields.push(field('競馬場','venue',venues.map(v=>[v,v])));
+  fields.push(field('芝／ダート','surface',[['芝','芝'],['ダート','ダート']])));
+  fields.push(field('距離','distance',values('distance').map(v=>[v,v+'m'])));
+  fields.push(field('馬場状態','trackCondition',['良','稍重','重','不良'].map(v=>[v,v])));
+  return `<div class="public-panel"><h3>🔎 過去の予想結果を条件で絞る</h3><div class="public-filter-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">${fields.join('')}</div><button type="button" class="public-reset" style="margin-top:12px" onclick="Object.keys(publicResultFilters).forEach(k=>publicResultFilters[k]=k==='period'?'all':'');publicResultPage=1;renderPublicResults()">↺ 条件をリセット</button><p class="public-muted" style="margin-top:8px">月・季節は年を指定しなければ複数年の同月・同季節をまとめます。日付やクラスが不明な記録は該当条件の指定時に除外されます。</p></div>`;
+}
 function renderPublicResults(){
   const el=document.getElementById('publicResultsMain');if(!el)return;
   if(!analysisAllHistoryLoaded){publicLoadData('publicResultsMain',renderPublicResults);return;}
-  const outs=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
-  const n=outs.length,wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
-  const counts=[0,0,0,0];for(const o of outs){const f=Number(o.topPick.finish);counts[f===1?0:f===2?1:f===3?2:3]++;}
-  const factor=calcFactorAnalysis();
-  const cond=calcConditionRows(outs).filter(g=>g.n>=2).slice(0,8);
-  el.innerHTML=`<div class="public-hero"><h2>📊 過去の予想結果</h2><div class="public-muted">保存された予想と確定結果を照合した集計です。同じレースに複数の予想記録があれば別々に数えます。</div></div>
-  <div class="public-grid"><div class="public-stat">集計対象<b>${n}<small style="font-size:13px"> 件</small></b></div><div class="public-stat">本命1着率<b>${n?(wins/n*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${n?(places/n*100).toFixed(1)+'%':'—'}</b></div></div>
-  <div class="public-panel"><h3>🏁 本命馬の着順分布</h3>${['1着','2着','3着','4着以下'].map((t,i)=>publicBar(t,counts[i],n)).join('')}<div class="public-muted">同着は公式の着順をそのまま集計します。</div></div>
-  <div class="public-panel"><h3>🔎 どの評価項目が当たっている？</h3>${factor.rows.map(r=>publicBar(r.label,r.top3==null?0:r.top3,1,r.races?` · ${r.races}件`:'' )).join('')}<div class="public-muted">各項目で最も高評価だった馬が3着以内に入った割合。各項目で集計対象数が異なります。データが少ない場合は参考値です。</div></div>
-  <div class="public-panel"><h3>🗺 得意なレース条件</h3>${cond.length?cond.map(g=>publicBar(g.condition,g.top3,g.n,` · ${g.n}件`)).join(''):'<div class="public-muted">同じ条件で2件以上の結果が集まると表示します。</div>'}</div>`;
+  try{
+    const all=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
+    const outs=all.filter(publicResultMatch);
+    const n=outs.length,wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
+    const counts=[0,0,0,0];for(const o of outs){const f=Number(o.topPick.finish);counts[f===1?0:f===2?1:f===3?2:3]++;}
+    const factor=calcFactorAnalysis(outs);
+    // 件数1の条件も隠さず掲載する。元データは変更せず表示だけページ分割。
+    const cond=calcConditionRows(outs);
+    const totalPages=Math.max(1,Math.ceil(cond.length/PUBLIC_RESULT_PAGE_SIZE));
+    publicResultPage=Math.max(1,Math.min(publicResultPage,totalPages));
+    const from=(publicResultPage-1)*PUBLIC_RESULT_PAGE_SIZE;
+    const visible=cond.slice(from,from+PUBLIC_RESULT_PAGE_SIZE);
+    const pageControls=cond.length>PUBLIC_RESULT_PAGE_SIZE?`<div style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:14px"><button class="public-reset" type="button" ${publicResultPage===1?'disabled':''} onclick="publicSetResultPage(${publicResultPage-1})">← 前へ</button><span class="public-muted">${publicResultPage} / ${totalPages} ページ</span><button class="public-reset" type="button" ${publicResultPage===totalPages?'disabled':''} onclick="publicSetResultPage(${publicResultPage+1})">次へ →</button></div>`:'';
+    el.innerHTML=`<div class="public-hero"><h2>📊 過去の予想結果</h2><div class="public-muted">保存された予想と確定結果を照合した集計です。同じレースに複数の予想記録があれば別々に数えます。</div></div>
+    ${publicResultFilterUI(all)}
+    <div class="public-grid"><div class="public-stat">集計対象<b>${n}<small style="font-size:13px"> 件</small></b></div><div class="public-stat">本命1着率<b>${n?(wins/n*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${n?(places/n*100).toFixed(1)+'%':'—'}</b></div></div>
+    <div class="public-panel"><h3>🏁 本命馬の着順分布</h3>${['1着','2着','3着','4着以下'].map((t,i)=>publicBar(t,counts[i],n)).join('')}<div class="public-muted">同着は公式の着順をそのまま集計します。</div></div>
+    <div class="public-panel"><h3>🔎 どの評価項目が当たっている？</h3>${factor.rows.map(r=>publicBar(r.label,r.top3==null?0:r.top3,1,r.races?` · ${r.races}件`:'' )).join('')}<div class="public-muted">各項目で最も高評価だった馬が3着以内に入った割合。各項目で集計対象数が異なります。データが少ない場合は参考値です。</div></div>
+    <div class="public-panel"><h3>🗺 得意なレース条件</h3><p class="public-muted">条件の組合せ ${cond.length}件を全件表示対象にしています。1ページ最大${PUBLIC_RESULT_PAGE_SIZE}件。件数の多い順で、1予想だけの条件も表示します（少数データは参考値）。</p>${visible.length?visible.map(g=>publicBar(g.condition,g.top3,g.n,` · ${g.n}件`)).join(''):'<div class="public-muted">指定した条件に一致する結果付き予想はありません。</div>'}${pageControls}</div>`;
+  }catch(e){console.error('[public] 過去の予想結果表示エラー',e);el.innerHTML=`<div class="public-panel">過去の予想結果の表示でエラーが発生しました。<p class="public-muted">${publicEscape(e.message||String(e))}</p></div>`;}
 }
+
 </script>
 
 </body>
