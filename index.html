@@ -1842,6 +1842,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
 
   window._fbReady = true;
 </script>
+<link rel="stylesheet" href="public-assistant.css?v=20261112-1">
 </head>
 <body>
 <div class="app">
@@ -182039,13 +182040,14 @@ function publicRaceRanking(selected){
     const h=horseMap.get(name);
     const factors={overall:null,venue:null,distance:null,condition:null,form:null};
     if(!h)return {name,num,factors,customScore:null,known:false};
-    // 管理者デフォルトと同じく、芝/ダート除外はOFF、馬場は「良」。
+    // 一般モードの想定馬場を使用。スコアの計算式は維持する。
     const scoringRaces=h.races||[];
     const overall=scoringRaces.map(r=>aiEvalScore(r.eval)).filter(v=>v!==null&&v!==undefined);
     factors.overall=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
     const venueStats=aiTrackStats(h,selected.venue,'',surface);
     const distanceStats=aiTrackStats(h,'',dist,surface);
-    const conditionStats=aiConditionStats(h,'','',surface,'good');
+    const conditionMode=selected.trackCondition==='稍重'?'yielding':['重','不良'].includes(selected.trackCondition)?'heavy':'good';
+    const conditionStats=aiConditionStats(h,'','',surface,conditionMode);
     factors.venue=venueStats.avg;
     factors.distance=distanceStats.avg;
     factors.condition=conditionStats.avg;
@@ -182303,5 +182305,6 @@ async function publicHistoryMore(){
 }
 </script>
 
+<script src="public-assistant.js?v=20261112-1"></script>
 </body>
 </html>
