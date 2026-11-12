@@ -173656,7 +173656,8 @@ let memos = {};
 
 // ===== IndexedDB ストレージ =====
 // localStorage（5MB上限）の代わりにIndexedDB（容量制限なし）を使用
-const DB_NAME = new URLSearchParams(location.search).has('edit') ? 'keiba-notebook' : 'keiba-notebook-public-v2';
+// 同一オリジンの一般・編集モードで最新のキャッシュを共有する。旧DBは削除しない。
+const DB_NAME = 'keiba-notebook';
 const DB_VERSION = 1;
 let db = null;
 
@@ -173674,10 +173675,37 @@ function openDB() {
   });
 }
 
+async function restoreLegacyPublicCache() {
+  if (typeof indexedDB.databases !== 'function') return;
+  const databases = await indexedDB.databases();
+  if (!databases.some(d => d.name === 'keiba-notebook-public-v2')) return;
+  const legacy = await new Promise((resolve, reject) => {
+    const req = indexedDB.open('keiba-notebook-public-v2');
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  try {
+    for (const [storeName, key] of [['horses','name'], ['raceDays','id']]) {
+      if (!legacy.objectStoreNames.contains(storeName)) continue;
+      const values = await new Promise((resolve, reject) => {
+        const req = legacy.transaction(storeName).objectStore(storeName).getAll();
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      const known = new Set((await idbGetAll(storeName)).map(v => v[key]));
+      const deleted = getDeletedHorseNames();
+      await idbPutAll(storeName, values.filter(v => v?.[key] && !known.has(v[key]) &&
+        (storeName !== 'horses' || (v.deleted !== true && !deleted.has(v.name)))));
+    }
+  } finally { legacy.close(); }
+}
+
 function idbPut(storeName, value) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(storeName, 'readwrite');
-    tx.objectStore(storeName).put(value).onsuccess = () => resolve();
+    tx.objectStore(storeName).put(value);
+    tx.oncomplete = () => resolve();
+    tx.onabort = () => reject(tx.error || new Error('IndexedDB保存が中断されました'));
     tx.onerror = e => reject(e.target.error);
   });
 }
@@ -173707,6 +173735,7 @@ function idbPutAll(storeName, values) {
     const store = tx.objectStore(storeName);
     for (const v of values) store.put(v);
     tx.oncomplete = () => resolve();
+    tx.onabort = () => reject(tx.error || new Error('IndexedDB保存が中断されました'));
     tx.onerror = e => reject(e.target.error);
   });
 }
@@ -173851,7 +173880,7 @@ async function startFirestoreSync() {
 
 // initApp終了後に呼ぶ。同期が途中なら続きを実行する。
 async function resumeFirestoreSyncIfNeeded() {
-  if (!isEditMode) { localStorage.removeItem(SYNC_PROGRESS_KEY); return; }
+  if (!isEditMode) return; // 一般モードを開いても管理者の同期カーソルを保持する。
   const raw = localStorage.getItem(SYNC_PROGRESS_KEY);
   if (!raw) return;
   let prog;
@@ -173866,7 +173895,6 @@ async function resumeFirestoreSyncIfNeeded() {
 
   const ready = await waitForFirebase(5000);
   if (!ready) {
-    localStorage.removeItem(SYNC_PROGRESS_KEY);
     showSyncProgressBanner(null, '⚠ Firebaseに接続できませんでした');
     return;
   }
@@ -173877,16 +173905,9 @@ async function resumeFirestoreSyncIfNeeded() {
     if (prog.phase === 'days') {
       updateSyncProgressBanner(`開催日を取得中…`);
       // 開催日は件数が少ないので1回で全部取れる
-      let q = query(collection(window._fbDb, 'days'), orderBy('__name__'), limit(SYNC_DAY_BATCH));
-      if (prog.lastId) {
-        // startAfterにはDocumentSnapshotが必要なので、lastIdを使ってgetDocしてカーソルを復元
-        const lastSnap = await getDoc(doc(window._fbDb, 'raceDays', prog.lastId));
-        if (lastSnap.exists()) {
-          q = query(collection(window._fbDb, 'raceDays'), orderBy('__name__'), startAfter(lastSnap), limit(SYNC_DAY_BATCH));
-        }
-      } else {
-        q = query(collection(window._fbDb, 'raceDays'), orderBy('__name__'), limit(SYNC_DAY_BATCH));
-      }
+      const constraints = [orderBy('__name__')];
+      if (prog.lastId) constraints.push(startAfter(prog.lastId));
+      const q = query(collection(window._fbDb, 'raceDays'), ...constraints, limit(SYNC_DAY_BATCH));
       const snap = await getDocs(q);
       const items = []; snap.forEach(d => items.push(d.data()));
       if (items.length > 0) await idbPutAll('raceDays', items);
@@ -173903,29 +173924,20 @@ async function resumeFirestoreSyncIfNeeded() {
 
     } else if (prog.phase === 'horses') {
       updateSyncProgressBanner(`馬データを取得中… ${prog.horsesDone}頭完了`);
-      let q;
-      if (prog.lastId) {
-        const lastSnap = await getDoc(doc(window._fbDb, 'horses', prog.lastId));
-        if (lastSnap.exists()) {
-          q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), startAfter(lastSnap), limit(SYNC_HORSE_BATCH));
-        } else {
-          q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), limit(SYNC_HORSE_BATCH));
-        }
-      } else {
-        q = query(collection(window._fbDb, 'horses'), orderBy('__name__'), limit(SYNC_HORSE_BATCH));
-      }
+      const constraints = [orderBy('__name__')];
+      if (prog.lastId) constraints.push(startAfter(prog.lastId));
+      const q = query(collection(window._fbDb, 'horses'), ...constraints, limit(SYNC_HORSE_BATCH));
       const snap = await getDocs(q);
       const items = []; snap.forEach(d => items.push(d.data()));
       if (items.length > 0) {
-        // 削除済みフラグの馬はIndexedDBへ保存せず、既存のローカルデータも消す。
-        // ただし「Firestoreに存在した馬」としてはseenに記録しないので、旧データが残っていても最後に一掃される。
+        // 削除フラグ・取得漏れによるローカルデータの自動削除は行わない。
         for (const h of items) {
           if (!h || !h.name) continue;
           if (h.deleted === true) {
             // 安全優先: 同期中の削除フラグによるローカル馬データ削除も停止。
             console.warn('[keiba] 削除フラグを検知（ローカル保持）:', h.name);
           } else {
-            try { await idbPut('horses', h); } catch(e) {}
+            await idbPut('horses', h); // 保存失敗時はカーソルを進めない。
           }
         }
         // 今回の完全同期でFirestoreに「現役」として実在した馬名を記録する。
@@ -173959,7 +173971,7 @@ async function resumeFirestoreSyncIfNeeded() {
   } catch(e) {
     console.warn('[keiba] 同期中にエラー:', e.code || e.message);
     showSyncProgressBanner(null, `⚠ 取得中にエラーが発生しました（${e.code || e.message}）。もう一度お試しください。`);
-    localStorage.removeItem(SYNC_PROGRESS_KEY);
+    // 保存済みの進捗を保持し、次回は失敗したページから再試行する。
   }
 }
 
@@ -174003,23 +174015,9 @@ async function lazyRefreshHorse(name) {
     const { doc, getDoc } = window._fbFns;
     const snap = await getDoc(doc(window._fbDb, 'horses', name));
 
-    // Firestoreに削除済みフラグが立っている場合は、ローカルキャッシュを
-    // そのまま残さず削除済みとして扱う。削除済みページを開いている間は
-    // 「削除済み」と表示し、ページを離れた時点で通常一覧には戻さない。
+    // 読み取り同期では削除を適用しない。明示的な削除操作とは分離する。
     if (snap.exists() && snap.data()?.deleted === true) {
-      const freshDeleted = { ...(snap.data() || {}), name, deleted:true };
-      addDeletedHorseName(name);
-      try { await idbDelete('horses', name); } catch(e) {}
-      const idx = horses.findIndex(h => h.name === name);
-      if (idx >= 0) horses.splice(idx, 1);
-      invalidateHorseCache();
-
-      if (selectedHorse && selectedHorse.name === name) {
-        // ページを離れるまで削除済み状態を表示するため、一時的にselectedHorseへ保持
-        selectedHorse = freshDeleted;
-        renderHorseDetail();
-      }
-      renderHorseList();
+      console.warn('[keiba] 削除フラグを検知（ローカル保持）:', name);
       return;
     }
 
@@ -174065,7 +174063,7 @@ async function saveHorse(horse) {
 
 // 全馬をロード
 async function loadAllHorses() {
-  try { return await idbGetAll('horses'); } catch(e) { return []; }
+  return await idbGetAll('horses'); // 読み込み失敗を空DBとして扱わない。
 }
 
 // 馬を削除
@@ -174114,6 +174112,7 @@ memos = {};
 async function initApp() {
   // IndexedDBを開く
   db = await openDB();
+  await restoreLegacyPublicCache();
 
   // データソースの切り替え：
   //   一般ユーザー（通常URL）→ GitHubのJSONを起動時に取得（Firestoreアクセスなし・無料枠を消費しない）
@@ -174212,7 +174211,8 @@ async function initApp() {
     }
   } else {
     raceDays = [..._INITIAL_RACE_DAYS];
-    horses   = [..._INITIAL_HORSES].filter(h => h && h.deleted !== true && !getDeletedHorseNames().has(h.name));
+    const knownHorses = new Set(savedHorses.map(h => h.name));
+    horses   = [...savedHorses, ..._INITIAL_HORSES.filter(h => !knownHorses.has(h.name))].filter(h => h && h.deleted !== true && !getDeletedHorseNames().has(h.name));
     for (const day of raceDays) await idbPut('raceDays', day);
     for (const h of horses)    await idbPut('horses', h);
   }
@@ -174290,8 +174290,7 @@ async function initApp() {
       resumeFirestoreSyncIfNeeded();
     } else {
       checkForRemoteUpdates();
-      // 旧raceDays.resultを新コレクションへ段階移行。移行元は削除せず、既存データを保護する。
-      migrateLegacyRaceResults().catch(e=>console.warn('[keiba] 旧結果の移行をスキップ:',e));
+      // 起動時は読み取りのみ。旧結果のFirestoreへの自動移行は行わない。
     }
   }
 }
@@ -174299,9 +174298,9 @@ async function initApp() {
 // アプリ起動
 initApp().catch(e => {
   console.error('initApp失敗:', e);
-  raceDays = _INITIAL_RACE_DAYS;
-  horses   = _INITIAL_HORSES;
-  memos    = {};
+  raceDays = raceDays || [];
+  horses   = horses || [];
+  showStorageWarning('保存データを読み込めませんでした。データは初期化していません。再読み込みしてください。');
   updateBreadcrumb();
   updateHomeStats();
 });
@@ -174464,8 +174463,6 @@ async function _fetchPayload() {
 async function restoreMissingAdminRecordsSafely() {
   try {
     const [localH, localD] = await Promise.all([idbGetAll('horses'), idbGetAll('raceDays')]);
-    // 一度でも十分な件数があれば、再読込時の公開データによる巻き戻しを防ぐため補完しない。
-    if (localH.length >= 5000 && localD.length >= 100) return;
     const payload = await _fetchPayload();
     if (!payload || !Array.isArray(payload.horses) || !Array.isArray(payload.raceDays)) return;
     const knownH = new Set(localH.map(h => h.name));
@@ -174493,20 +174490,10 @@ async function fetchGitHubData() {
     const missingHorses = validHorses.filter(h => !currentNames.has(h.name));
     const missingDays = payload.raceDays.filter(d => d && d.id && !currentDayIds.has(d.id));
     const payloadVersion = (payload.exportedAt || '') + '_r' + payload.raceDays.length + '_h' + payload.horses.length + '_v5-jsonfirst';
-    const storedVersion = localStorage.getItem(GITHUB_DATA_VERSION_KEY);
     // バージョンが同じでも不足分は必ず補完する。途中で書き込みが止まっても次回再試行。
     if (missingHorses.length) await idbPutAll('horses', missingHorses);
     if (missingDays.length) await idbPutAll('raceDays', missingDays);
-    if (storedVersion !== payloadVersion) {
-      // 公開データの変更は既存の馬にも反映する。ただし端末の独自メモは維持する。
-      const existingMap = new Map(existingHorses.map(h => [h.name, h]));
-      const updated = validHorses.filter(h => existingMap.has(h.name)).map(h => {
-        const old = existingMap.get(h.name);
-        return { ...old, races: h.races, shortNote: h.shortNote, frame: h.frame, num: h.num };
-      });
-      if (updated.length) await idbPutAll('horses', updated);
-      if (payload.raceDays.length) await idbPutAll('raceDays', payload.raceDays);
-    }
+    // 公開スナップショットは不足レコードのみ補完。既存レコードの新旧は判定できないため上書きしない。
     // 保存完了後にだけバージョン記録する。
     localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion);
     invalidateHorseCache();
@@ -177480,9 +177467,8 @@ if (navAnalysisTab) navAnalysisTab.style.display = isEditMode ? 'flex' : 'none';
 // ナビゲーションとホームカードはhead内のdata-keiba-modeとCSSで一元管理。
 // 公開カードは既存のホームカードと同じグリッド内で切り替える
 
-// 非editモードではDB同期バナーを完全に隠し、進行中の同期状態もリセット
+// 一般モードではバナーだけ隠し、編集モードの同期進捗を保持する。
 if (!isEditMode) {
-  localStorage.removeItem(SYNC_PROGRESS_KEY);
   const _b = document.getElementById('syncNoticeBanner');
   if (_b) _b.style.display = 'none';
 }
@@ -180978,7 +180964,7 @@ function buildPredictionOutcome(p){
     return {...h,finish,resultStatus:excluded?rh.status:'',excluded,top3:!excluded&&finish!=null&&Number(finish)<=3,win:!excluded&&finish!=null&&Number(finish)===1};
   });
   const ranked=horses.filter(h=>h.rank&&!h.excluded).sort((a,b)=>a.rank-b.rank);
-  const complete=result.schemaVersion===1&&result.horses.every(h=>(h.finish!=null&&Number.isFinite(Number(h.finish)))||['取消','中止'].includes(h.status));
+  const complete=result.schemaVersion===1&&result.horses.length>0&&result.horses.every(h=>(h.finish!=null&&Number.isFinite(Number(h.finish))&&Number(h.finish)>0)||['取消','中止'].includes(h.status));
   return {prediction:p,race:x,complete,horses,topPick:ranked[0]||null,top5:ranked.slice(0,5)};
 }
 let analysisPredictionCache=[];
@@ -181152,7 +181138,7 @@ function calcConditionRows(outs){
   outs=outs||analysisFilterOutcomes('conditions'); const groups=new Map();
   for(const o of outs){const r=analysisSnapshot(o.prediction); const key=[r.venue||'不明',r.surface||'不明',r.distance??'不明',r.trackCondition||'不明'].join('|');
     if(!groups.has(key))groups.set(key,{key,condition:conditionLabel(r),n:0,top3:0,win:0,top5:0});
-    const g=groups.get(key);g.n++;if(o.topPick?.finish===1)g.win++;if(o.topPick?.finish<=3)g.top3++;if(o.top5.some(h=>h.top3))g.top5++;
+    const g=groups.get(key);g.n++;if(o.topPick?.finish===1)g.win++;if(o.topPick?.finish!=null&&o.topPick.finish<=3)g.top3++;if(o.top5.some(h=>h.top3))g.top5++;
   }
   return [...groups.values()].sort((a,b)=>b.n-a.n||a.condition.localeCompare(b.condition,'ja'));
 }
@@ -181221,7 +181207,7 @@ async function refreshPredictionRaceDays(predictions){
       const key=x.race.raceId||p.raceId||p.raceKey||`${x.day?.id||''}__${x.venue?.name||''}__${x.race.r||''}`;
       if(refreshedRaces.has(key))continue;
       refreshedRaces.add(key);
-      await loadRaceResultForRace(x.day,x.venue,x.race,true);
+      await loadRaceResultForRace(x.day,x.venue,x.race,false);
     }
   }catch(e){console.warn('[keiba] 分析用raceResultsの取得に失敗:',e);}
 }
@@ -181857,7 +181843,7 @@ function publicConditionStats(outs){
     for(const o of outs){const r=analysisSnapshot(o.prediction),v=r[key];if(v==null||v==='')continue;
       const label=String(v)+(key==='distance'?'m':'');
       if(!map.has(label))map.set(label,{label,n:0,win:0,top3:0});
-      const g=map.get(label);g.n++;if(Number(o.topPick.finish)===1)g.win++;if(Number(o.topPick.finish)<=3)g.top3++;
+      const g=map.get(label);g.n++;if(Number(o.topPick?.finish ?? NaN)===1)g.win++;if(Number(o.topPick?.finish ?? NaN)<=3)g.top3++;
     }
     const rows=[...map.values()].sort((a,b)=>b.n-a.n||b.top3/b.n-a.top3/a.n);
     return `<div class="public-panel"><h3>🏇 ${title}・本命好走率</h3>${rows.length?rows.map(g=>`<div class="public-condition-line"><div><strong>${publicEscape(g.label)}</strong><small>${g.n}予想・1着 ${g.win}件・3着内 ${g.top3}件</small></div>${publicBar('3着内',g.top3,g.n)}</div>`).join(''):'<p class="public-muted">該当する結果データがありません。</p>'}</div>`;
@@ -182160,12 +182146,19 @@ function publicResultsShell(){
 function publicConditionsShell(){
   return `<div class="public-panel"><h3>🗺 得意なレース条件ランキング</h3><p class="public-muted">上の検索条件とは独立した全期間のランキングです。</p><button type="button" class="public-reset" onclick="publicLoadConditions()">ランキングを読み込む</button></div>`;
 }
+async function preparePublicOutcomes(){
+  await loadAllPredictionHistory();
+  if(!analysisRaceDataRefreshed){
+    await refreshPredictionRaceDays(analysisPredictionCache);
+    analysisRaceDataRefreshed=true;
+  }
+}
 async function publicLoadConditions(){
   if(publicConditionsLoading)return;
   publicConditionsRequested=true;publicConditionsLoading=true;
   const slot=document.getElementById('publicConditionsSlot');
   if(slot)slot.innerHTML='<div class="public-panel"><h3>🗺 得意なレース条件ランキング</h3><div class="public-muted">読み込み中…</div></div>';
-  try{if(!analysisAllHistoryLoaded)await loadAllPredictionHistory();renderPublicConditions();}
+  try{await preparePublicOutcomes();renderPublicConditions();}
   catch(e){if(slot)slot.innerHTML=`<div class="public-panel">ランキング取得エラー：${publicEscape(e.message||String(e))}<button class="public-reset" onclick="publicLoadConditions()">再試行</button></div>`;}
   finally{publicConditionsLoading=false;}
 }
@@ -182173,7 +182166,7 @@ function renderPublicConditions(){
   const slot=document.getElementById('publicConditionsSlot');if(!slot)return;
   if(!publicConditionsRequested){slot.innerHTML=publicConditionsShell();return;}
   if(!analysisAllHistoryLoaded){slot.innerHTML=publicConditionsShell();return;}
-  const all=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
+  const all=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete);
   const cond=calcConditionRows(all); // 検索フィルターを適用しない
   const visible=cond.slice(0,publicConditionsVisibleCount);
   slot.innerHTML=`<div class="public-panel"><h3>🗺 得意なレース条件ランキング</h3><p class="public-muted">全期間の結果確定済み予想から集計。検索条件とは独立しています（${cond.length}条件）。</p>${visible.length?visible.map(g=>publicBar(g.condition,g.top3,g.n,` · ${g.n}件`)).join(''):'<div class="public-muted">集計できる予想がありません。</div>'}${cond.length>visible.length?`<div style="text-align:center;margin-top:14px"><button type="button" class="public-reset" onclick="publicShowMoreConditions()">さらに10件表示（${visible.length} / ${cond.length}件）</button></div>`:''}</div>`;
@@ -182183,7 +182176,7 @@ async function publicStartResults(){
   publicResultsRequested=true;publicResultsLoading=true;
   const slot=document.getElementById('publicResultsStatsSlot');
   if(slot)slot.innerHTML='<div class="public-panel">検索条件に基づいて集計中…</div>';
-  try{if(!analysisAllHistoryLoaded)await loadAllPredictionHistory();renderPublicResults();}
+  try{await preparePublicOutcomes();renderPublicResults();}
   catch(e){if(slot)slot.innerHTML=`<div class="public-panel">取得エラー：${publicEscape(e.message||String(e))}</div>`;}
   finally{publicResultsLoading=false;}
 }
@@ -182198,13 +182191,13 @@ function renderPublicResults(){
   const slot=document.getElementById('publicResultsStatsSlot');if(!slot)return;
   if(!analysisAllHistoryLoaded){slot.innerHTML='<div class="public-panel">読み込み中…</div>';return;}
   try{
-    const all=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete&&o.topPick?.finish!=null);
+    const all=analysisPredictionCache.map(buildPredictionOutcome).filter(o=>o?.complete);
     const outs=all.filter(publicResultMatch);
-    const n=outs.length,wins=outs.filter(o=>Number(o.topPick.finish)===1).length,places=outs.filter(o=>Number(o.topPick.finish)<=3).length;
-    const counts=[0,0,0,0];for(const o of outs){const f=Number(o.topPick.finish);counts[f===1?0:f===2?1:f===3?2:3]++;}
+    const rated=outs.filter(o=>o.topPick?.finish!=null),n=rated.length,wins=outs.filter(o=>Number(o.topPick?.finish ?? NaN)===1).length,places=outs.filter(o=>Number(o.topPick?.finish ?? NaN)<=3).length;
+    const counts=[0,0,0,0];for(const o of rated){const f=Number(o.topPick.finish);counts[f===1?0:f===2?1:f===3?2:3]++;}
     const factor=calcFactorAnalysis(outs);
-    slot.innerHTML=`<div class="public-grid"><div class="public-stat">集計対象<b>${n}<small style="font-size:13px"> 件</small></b></div><div class="public-stat">本命1着率<b>${n?(wins/n*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${n?(places/n*100).toFixed(1)+'%':'—'}</b></div></div>
-    <div class="public-panel"><h3>🏁 本命馬の着順分布</h3>${['1着','2着','3着','4着以下'].map((t,i)=>publicBar(t,counts[i],n)).join('')}<div class="public-muted">同着は公式の着順をそのまま集計します。</div></div>
+    slot.innerHTML=`<div class="public-grid"><div class="public-stat">結果入力済み<b>${outs.length}<small style="font-size:13px"> 件</small></b></div><div class="public-stat">本命1着率<b>${n?(wins/n*100).toFixed(1)+'%':'—'}</b></div><div class="public-stat">本命3着以内率<b>${n?(places/n*100).toFixed(1)+'%':'—'}</b></div></div>
+    <div class="public-panel"><p class="public-muted">保存済み予想 ${analysisPredictionCache.length}件。本命の着順がある ${n}件を本命的中率・着順分布の対象とします。</p><h3>🏁 本命馬の着順分布</h3>${['1着','2着','3着','4着以下'].map((t,i)=>publicBar(t,counts[i],n)).join('')}<div class="public-muted">同着は公式の着順をそのまま集計します。</div></div>
     <div class="public-panel"><h3>🔎 どの評価項目が当たっている？</h3>${factor.rows.map(r=>publicBar(r.label,r.top3==null?0:r.top3,1,r.races?` · ${r.races}件`:'' )).join('')}<div class="public-muted">各項目で最も高評価だった馬が3着以内に入った割合。各項目で集計対象数が異なります。</div></div>`;
   }catch(e){console.error('[public] 過去の予想結果表示エラー',e);slot.innerHTML=`<div class="public-panel">集計エラー：${publicEscape(e.message||String(e))}</div>`;}
 }
