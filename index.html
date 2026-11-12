@@ -1887,6 +1887,11 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
           <h1>競馬予想ノート</h1>
           <p>RACE ANALYSIS &amp; HORSE DIAGNOSIS</p>
         </div>
+        <details style="width:100%;max-width:860px;margin-bottom:14px;font-size:12px;color:var(--muted2)">
+          <summary style="cursor:pointer" onclick="refreshStorageStatus()">端末の保存状態を確認（保存確認版 20261112-2）</summary>
+          <pre id="storageStatus" style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px">確認中…</pre>
+          <button type="button" class="btn-back" onclick="refreshStorageStatus()">保存状態を再確認</button>
+        </details>
         <div id="syncNoticeBanner" style="display:none;width:100%;max-width:860px;margin-bottom:18px"></div>
 
         <div class="home-cards">
@@ -173700,9 +173705,75 @@ async function restoreLegacyPublicCache() {
   } finally { legacy.close(); }
 }
 
+// strictを利用できるブラウザでは、保存の確定を優先する。
+function openStorageWriteTransaction(storeName) {
+  try { return db.transaction(storeName, 'readwrite', { durability: 'strict' }); }
+  catch (error) {
+    if (!(error instanceof TypeError)) throw error;
+    return db.transaction(storeName, 'readwrite');
+  }
+}
+
+function idbGet(storeName, key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(storeName, 'readonly');
+    const req = tx.objectStore(storeName).get(key);
+    tx.oncomplete = () => resolve(req.result);
+    tx.onabort = () => reject(tx.error || new Error('保存確認が中断されました'));
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+const LAST_DATE_SYNC_KEY = 'keiba-last-verified-date-sync';
+async function verifyDateSync(dayId, horseNames = []) {
+  const day = await idbGet('raceDays', dayId);
+  if (!day) throw new Error('開催日の端末保存を確認できません。再取得してください。');
+  const savedHorseNames = [];
+  for (const name of horseNames) {
+    if (await idbGet('horses', name)) savedHorseNames.push(name);
+  }
+  const marker = {dayId, date: day.date || '', checkedAt: new Date().toISOString(), savedHorseNames};
+  // IndexedDBと別の保存先にも小さな確認記録だけを残し、再起動後の消失を区別する。
+  await idbPut('memos', {key: LAST_DATE_SYNC_KEY, value: marker});
+  try { localStorage.setItem(LAST_DATE_SYNC_KEY, JSON.stringify(marker)); } catch(e) {}
+  await refreshStorageStatus();
+  return marker;
+}
+
+async function refreshStorageStatus() {
+  const el = document.getElementById('storageStatus');
+  if (!el) return;
+  try {
+    if (!db) { el.textContent = '起動中です。読み込み完了後に再確認してください。'; return; }
+    const count = store => new Promise((resolve, reject) => {
+      const tx = db.transaction(store);
+      const req = tx.objectStore(store).count();
+      tx.oncomplete = () => resolve(req.result);
+      tx.onabort = () => reject(tx.error || new Error('件数確認が中断されました'));
+      tx.onerror = () => reject(tx.error);
+    });
+    const [horseCount, dayCount, storedMarker] = await Promise.all([count('horses'), count('raceDays'), idbGet('memos', LAST_DATE_SYNC_KEY)]);
+    let marker = storedMarker?.value;
+    try { marker = JSON.parse(localStorage.getItem(LAST_DATE_SYNC_KEY) || 'null') || marker; } catch(e) {}
+    const lines = ['保存確認版: 20261112-2', 'モード: ' + (isEditMode ? '編集' : '一般'),
+      '表示中の馬: ' + (horses?.length ?? '読込中') + '頭',
+      '端末に保存された馬: ' + horseCount + '頭', '端末に保存された開催: ' + dayCount + '件'];
+    if (marker) {
+      const savedDay = await idbGet('raceDays', marker.dayId);
+      let retained = 0;
+      for (const name of marker.savedHorseNames || []) if (await idbGet('horses', name)) retained++;
+      lines.push('直近の取得日: ' + (marker.date || marker.dayId),
+        'その開催の保存: ' + (savedDay ? 'あり' : 'なし（取得時の保存確認記録はあります）'),
+        '取得時に確認した馬の保持: ' + retained + ' / ' + (marker.savedHorseNames || []).length + '頭');
+    } else lines.push('この版での日付取得の保存確認記録: まだありません');
+    lines.push('保存先: ' + location.origin, 'DB: ' + DB_NAME);
+    el.textContent = lines.join('\n');
+  } catch(error) { el.textContent = '保存状態を確認できません: ' + (error.name || '') + ' ' + error.message; }
+}
+
 function idbPut(storeName, value) {
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, 'readwrite');
+    const tx = openStorageWriteTransaction(storeName);
     tx.objectStore(storeName).put(value);
     tx.oncomplete = () => resolve();
     tx.onabort = () => reject(tx.error || new Error('IndexedDB保存が中断されました'));
@@ -173731,7 +173802,7 @@ function idbDelete(storeName, key) {
 function idbPutAll(storeName, values) {
   return new Promise((resolve, reject) => {
     if (!values || values.length === 0) return resolve();
-    const tx = db.transaction(storeName, 'readwrite');
+    const tx = openStorageWriteTransaction(storeName);
     const store = tx.objectStore(storeName);
     for (const v of values) store.put(v);
     tx.oncomplete = () => resolve();
@@ -178912,6 +178983,7 @@ async function syncManualDate() {
     }
     const fresh = snap.data();
     await idbPut('raceDays', fresh);
+    await verifyDateSync(fresh.id);
     const idx = raceDays.findIndex(day => day.id === dayId);
     if (idx >= 0) raceDays[idx] = fresh; else raceDays.push(fresh);
     invalidateHorseCache();
@@ -178927,13 +178999,14 @@ async function syncManualDate() {
       if (horseNames.length) {
         msgEl.textContent = `開催日取得済み。出走馬 ${horseNames.length}頭を取得中…`;
         const fetched = await fetchHorsesByNames(horseNames);
+        await verifyDateSync(fresh.id, horseNames);
         msgEl.style.color = 'var(--green)';
-        msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）＋出走馬 ${fetched}頭を取得しました`;
+        msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）＋出走馬 ${fetched}頭を取得し、端末への保存を確認しました`;
         return;
       }
     }
     msgEl.style.color = 'var(--green)';
-    msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）を取得しました`;
+    msgEl.textContent = `✓ ${m}月${d}日（${fresh.label}）を取得し、端末への保存を確認しました`;
   } catch(e) {
     msgEl.style.color = 'var(--red)';
     msgEl.textContent = `⚠ 取得失敗: ${e.code || e.message}`;
