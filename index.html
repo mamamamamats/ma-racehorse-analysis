@@ -1760,6 +1760,7 @@ textarea.search-input { line-height: 1.7; }
 @media(max-width:900px){#view-publicPredict .public-ranking-list{display:block}#view-publicPredict .public-radar-card{width:100%;max-width:100%;box-sizing:border-box}#view-publicPredict .public-grid{grid-template-columns:1fr}#view-publicPredict .public-bar-row{font-size:11px}}
 
 /* モード別表示の単一ルール。旧CSSやインラインstyleより優先する */
+html[data-keiba-mode="public"] #deviceStorageStatus,
 html[data-keiba-mode="public"] .nav-tab[data-admin-only],
 html[data-keiba-mode="public"] .home-card[data-admin-only],
 html[data-keiba-mode="public"] #navEditTab,
@@ -1888,7 +1889,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
           <h1>競馬予想ノート</h1>
           <p>RACE ANALYSIS &amp; HORSE DIAGNOSIS</p>
         </div>
-        <details style="width:100%;max-width:860px;margin-bottom:14px;font-size:12px;color:var(--muted2)">
+        <details id="deviceStorageStatus" style="width:100%;max-width:860px;margin-bottom:14px;font-size:12px;color:var(--muted2)">
           <summary style="cursor:pointer" onclick="refreshStorageStatus()">端末の保存状態を確認（保存確認版 20261112-2）</summary>
           <pre id="storageStatus" style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px">確認中…</pre>
           <button type="button" class="btn-back" onclick="refreshStorageStatus()">保存状態を再確認</button>
