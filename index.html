@@ -1842,7 +1842,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
 
   window._fbReady = true;
 </script>
-<link rel="stylesheet" href="public-assistant.css?v=20261112-1">
+<link rel="stylesheet" href="public-assistant.css?v=20261113-1">
 </head>
 <body>
 <div class="app">
@@ -2142,7 +2142,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
         <div class="edit-card">
           <div class="edit-card-title">📋 出馬表JSON一括読み込み</div>
           <div class="edit-hint">1レース・競馬場単位・複数競馬場をまとめて登録できます。既存レースは自動上書きせず、スキップします。</div>
-          <textarea id="racecardBulkJson" class="search-input" rows="8" style="width:100%;margin-top:10px;font-family:monospace" placeholder='{"date":"2026-11-01","venues":[{"venue":"東京","races":[...]}]}'></textarea>
+          <textarea id="racecardBulkJson" oninput="invalidateRacecardBulkPreview()" class="search-input" rows="8" style="width:100%;margin-top:10px;font-family:monospace" placeholder='{"date":"2026-11-01","venues":[{"venue":"東京","races":[...]}]}'></textarea>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
             <button type="button" class="edit-btn-save" onclick="previewRacecardBulkJson()">🔍 JSONを確認</button>
             <button type="button" class="edit-btn-save" id="racecardBulkSave" onclick="saveRacecardBulkJson()" disabled>💾 新規レースを一括保存</button>
@@ -179482,10 +179482,39 @@ async function applyDateChange() {
 
 // 出馬表JSON一括読み込み。既存レースは触らず、新規レースのみ追加する。
 let racecardBulkValidated=null;
+let racecardBulkSaving=false;
+function invalidateRacecardBulkPreview(){
+  if(racecardBulkSaving)return;
+  racecardBulkValidated=null;
+  const btn=document.getElementById('racecardBulkSave');if(btn)btn.disabled=true;
+}
+function mergeRacecardExistingDays(primary, extras){
+  const day=JSON.parse(JSON.stringify(primary));day.venues=day.venues||[];
+  for(const extra of extras)for(const v of extra.venues||[]){
+    let target=day.venues.find(x=>x.name===v.name);
+    if(!target){day.venues.push(JSON.parse(JSON.stringify(v)));continue;}
+    target.races=target.races||[];
+    for(const r of v.races||[])if(!target.races.some(x=>Number(x.r)===Number(r.r)))target.races.push(JSON.parse(JSON.stringify(r)));
+  }
+  return day;
+}
+function buildRacecardBulkAddition(base,current){
+  const copy=JSON.parse(JSON.stringify(base));copy.venues=copy.venues||[];
+  const pending=current.result.filter(r=>!copy.venues.find(v=>v.name===r.venue)?.races?.some(x=>Number(x.r)===r.r));
+  if(copy.venues.reduce((a,v)=>a+(v.races||[]).length,0)+pending.length>36)throw Error('36レースの上限を超えます');
+  for(const r of pending){
+    let venue=copy.venues.find(v=>v.name===r.venue);
+    if(!venue){venue={name:r.venue,races:[]};copy.venues.push(venue);}
+    const race={r:r.r,name:r.name,grade:r.grade,track:r.track,horses:JSON.parse(JSON.stringify(r.horses))};
+    ensureRaceId(copy,venue,race);venue.races.push(race);
+  }
+  return {copy,pending};
+}
+
 function parseRacecardBulkJson(){
   const raw=JSON.parse(document.getElementById('racecardBulkJson').value);
   const date=String(raw.date||raw.raceInfo?.date||'');
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date+'T00:00:00')))throw Error('date は YYYY-MM-DD 形式で指定してください');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date+'T00:00:00Z'))||new Date(date+'T00:00:00Z').toISOString().slice(0,10)!==date)throw Error('date は実在する日付を YYYY-MM-DD 形式で指定してください');
   const venueGroups=Array.isArray(raw.venues)?raw.venues:
     raw.raceInfo?[{venue:raw.raceInfo.venue,races:[{...raw.raceInfo,raceNumber:raw.raceInfo.raceNumber,horses:raw.horses}]}]:[];
   if(!venueGroups.length)throw Error('venues が空です');
@@ -179523,59 +179552,72 @@ function parseRacecardBulkJson(){
   return {date,result};
 }
 function previewRacecardBulkJson(){
+  if(racecardBulkSaving)return;
   const el=document.getElementById('racecardBulkPreview'),btn=document.getElementById('racecardBulkSave');
   racecardBulkValidated=null;btn.disabled=true;
   try{
     const parsed=parseRacecardBulkJson();
     const [y,m,d]=parsed.date.split('-').map(Number);
     const id=`day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const day=raceDays.find(x=>x.id===id);
+    const sameDays=raceDays.filter(x=>x.id===id);
+    const day=sameDays.length?mergeRacecardExistingDays(sameDays[0],sameDays.slice(1)):null;
     const fresh=parsed.result.filter(r=>!day?.venues?.find(v=>v.name===r.venue)?.races?.some(x=>Number(x.r)===r.r));
     const existing=parsed.result.filter(r=>!fresh.includes(r));
     if((day?.venues||[]).reduce((a,v)=>a+(v.races||[]).length,0)+fresh.length>36)throw Error('開催日あたりのレース数上限36件を超えます');
     racecardBulkValidated={...parsed,id,fresh,existing};
     el.style.color='var(--muted2)';
-    el.textContent=`${parsed.date}：新規 ${fresh.length}レース／${fresh.reduce((n,r)=>n+r.horses.length,0)}頭、既存 ${existing.length}レース（変更しません）\\n`+
+    el.textContent=`${parsed.date}：新規 ${fresh.length}レース／${fresh.reduce((n,r)=>n+r.horses.length,0)}頭、既存 ${existing.length}レース（変更しません）\n`+
       fresh.map(r=>`＋ ${r.venue} ${r.r}R ${r.name} ${r.track}（${r.horses.length}頭）`).join('\n')+
       (existing.length?'\n既存のためスキップ：'+existing.map(r=>r.venue+r.r+'R').join('、'):'');
     btn.disabled=!fresh.length;
   }catch(e){el.style.color='var(--red)';el.textContent='⚠ '+e.message;}
 }
 async function saveRacecardBulkJson(){
-  if(!isEditMode)return;
+  if(!isEditMode||racecardBulkSaving)return;
+  racecardBulkSaving=true;
   const el=document.getElementById('racecardBulkPreview'),btn=document.getElementById('racecardBulkSave');
-  btn.disabled=true;
+  const input=document.getElementById('racecardBulkJson'),preview=document.querySelector('[onclick="previewRacecardBulkJson()"]');
+  btn.disabled=true;btn.textContent='⏳ 保存中…';if(preview)preview.disabled=true;if(input)input.readOnly=true;
+  let remoteSaved=false;
   try{
-    // 貼り付け後の内容変更・保存直前の既存レース増加を再確認
     const current=parseRacecardBulkJson();
     if(!racecardBulkValidated||JSON.stringify(current)!==JSON.stringify({date:racecardBulkValidated.date,result:racecardBulkValidated.result}))throw Error('JSONが変更されました。再度「JSONを確認」を押してください');
-    const [y,m,d]=current.date.split('-').map(Number);
-    const dayId=`day-${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    let day=raceDays.find(x=>x.id===dayId);
-    const newDay=!day;
-    if(!day)day={id:dayId,date:`${y}/${m}/${d}`,dayOfWeek:dowFromYMD(y,m,d),label:`${m}月${d}日（${dowFromYMD(y,m,d)}）`,venues:[]};
-    const pending=current.result.filter(r=>!day.venues.find(v=>v.name===r.venue)?.races?.some(x=>Number(x.r)===r.r));
-    if(day.venues.reduce((a,v)=>a+(v.races||[]).length,0)+pending.length>36)throw Error('36レースの上限を超えます');
-    if(!pending.length){el.textContent='新規登録対象はありません';return;}
-    // 保存失敗時にメモリの既存オブジェクトを壊さないようコピーを編集する
-    const copy=JSON.parse(JSON.stringify(day));
-    for(const r of pending){
-      let venue=copy.venues.find(v=>v.name===r.venue);
-      if(!venue){venue={name:r.venue,races:[]};copy.venues.push(venue);}
-      const race={r:r.r,name:r.name,grade:r.grade,track:r.track,horses:r.horses};
-      ensureRaceId(copy,venue,race);
-      venue.races.push(race);
-    }
-    const remote = await fbSaveRaceDay(copy);
-    if (!remote?.ok) throw Error(remote?.message || "Firestoreへの保存に失敗しました");
-    await idbPut('raceDays',copy);
-    if(newDay)raceDays.push(copy);
-    else raceDays.splice(raceDays.findIndex(x=>x.id===dayId),1,copy);
-    invalidateHorseCache();updateHomeStats();renderEditView();
+    const [y,m,d]=current.date.split('-').map(Number),dayId='day-'+current.date;
+    const localDays=raceDays.filter(x=>x.id===dayId);
+    const empty={id:dayId,date:y+'/'+m+'/'+d,dayOfWeek:dowFromYMD(y,m,d),label:m+'月'+d+'日（'+dowFromYMD(y,m,d)+'）',venues:[]};
+    if(!(await waitForFirebase(5000)))throw Error('Firebaseに接続できませんでした。内容を保持したまま再試行できます');
+    const {doc,runTransaction}=window._fbFns;
+    if(typeof runTransaction!=='function')throw Error('安全な保存処理を準備できませんでした。ページを再読み込みしてください');
+    if(localDays.length)await idbPut('memos',{key:'racecard-before-'+dayId+'-'+Date.now(),value:JSON.parse(JSON.stringify(localDays))});
+    el.style.color='var(--muted2)';el.textContent='Firestoreの最新データを確認して保存しています…';
+    const target=doc(window._fbDb,'raceDays',dayId);
+    const saved=await runTransaction(window._fbDb,async tx=>{
+      const snap=await tx.get(target);
+      const base=mergeRacecardExistingDays(snap.exists()?snap.data():empty,localDays);
+      if(base.id!==dayId)throw Error('保存先と開催日のIDが一致しません。既存データは変更していません');
+      const addition=buildRacecardBulkAddition(base,current);
+      // Missing local slots are retained as well as this import's new slots.
+      if(addition.pending.length||JSON.stringify(base)!==JSON.stringify(snap.exists()?snap.data():empty))tx.set(target,addition.copy);
+      return addition;
+    });
+    remoteSaved=true;
+    await idbPut('raceDays',saved.copy);
+    const first=raceDays.findIndex(x=>x.id===dayId);
+    raceDays=raceDays.filter(x=>x.id!==dayId);
+    raceDays.splice(first<0?raceDays.length:Math.min(first,raceDays.length),0,saved.copy);
     racecardBulkValidated=null;
+    invalidateHorseCache();updateHomeStats();renderEditView();
     const savedMsg=document.getElementById('racecardBulkPreview');
-    if(savedMsg){savedMsg.style.color='var(--green)';savedMsg.textContent=`✓ ${pending.length}レース／${pending.reduce((n,r)=>n+r.horses.length,0)}頭を保存しました。既存レースは変更していません。`;}
-  }catch(e){el.style.color='var(--red)';el.textContent='⚠ 保存失敗：'+e.message;}
+    if(savedMsg){savedMsg.style.color='var(--green)';savedMsg.textContent=saved.pending.length?'✓ '+saved.pending.length+'レース／'+saved.pending.reduce((n,r)=>n+r.horses.length,0)+'頭を保存しました。既存レースは変更していません。':'✓ すべて登録済みです。新しいレースは追加せず、端末の表示を最新化しました。';}
+    if(saved.pending.length)bumpSyncVersion();
+  }catch(e){
+    el.style.color='var(--red)';el.textContent=remoteSaved?'⚠ Firestoreへの保存は完了しましたが、端末への保存に失敗しました。開催日を再取得してください：'+e.message:'⚠ 保存失敗：'+e.message+'（入力内容は保持しています）';
+    if(remoteSaved)racecardBulkValidated=null;
+  }finally{
+    racecardBulkSaving=false;
+    const saveBtn=document.getElementById('racecardBulkSave');if(saveBtn){saveBtn.textContent='💾 新規レースを一括保存';saveBtn.disabled=!racecardBulkValidated;}
+    if(preview)preview.disabled=false;if(input)input.readOnly=false;
+  }
 }
 async function saveEditRace() {
   const msgEl = document.getElementById('editRaceMsg');
@@ -182305,6 +182347,6 @@ async function publicHistoryMore(){
 }
 </script>
 
-<script src="public-assistant.js?v=20261112-1"></script>
+<script src="public-assistant.js?v=20261113-1"></script>
 </body>
 </html>
