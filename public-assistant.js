@@ -137,11 +137,11 @@
     return `<div class="pa-horse-foot"><p class="pa-muted">${strongest?'評価の強み：'+E(strongest):'評価履歴が足りないため判断を保留'}</p><div>${['venue','distance','condition'].map(k=>{const stat=h[k+'Stats'];return `<span class="pa-tag${stat?.count>=3?' mint':''}">${E(publicLabels[k])} ${stat?.count||0}走</span>`;}).join('')}</div><details style="margin:10px 0"><summary class="pa-muted">採点根拠と注意点</summary><p class="pa-muted">${E(publicHorseExplanation(h))}</p></details>${h.name&&h.known?btn('この馬の過去走を見る',`PA.openHorse(${JSON.stringify(h.name)})`,true):''}</div>`;
   }
   PA.openHorse=name=>jumpToHorse(name);
-  PA.setScope=scope=>{state.scope=scope;state.date='';publicSelectedRaceKey='';renderPublicPredict();};
+  PA.setScope=scope=>{state.scope=scope;state.date='';state.scenario='';publicSelectedRaceKey='';renderPublicPredict();};
   PA.setDate=date=>{state.date=date;publicSelectedRaceKey='';renderPublicPredict();};
   PA.setGoing=value=>{state.going=value;renderPublicPredict();};
   const originalChoose=publicChooseRace;
-  publicChooseRace=key=>{state.going='';originalChoose(key);};
+  publicChooseRace=key=>{state.going='';state.scenario='';originalChoose(key);};
   function allRaceRows(){
     const week=new Set(getThisWeekDates().map(dateKey)),rows=[];
     for(const d of raceDays||[]){const date=dateKey(d.date||d.id);if(state.scope==='week'&&!week.has(date))continue;
@@ -153,6 +153,29 @@
     const selected=allRaceRows().find(r=>publicRaceKey(r)===publicSelectedRaceKey);if(selected){state.research={venue:selected.venue,surface:selected.surface,distance:String(selected.distance||''),trackCondition:state.going||selected.trackCondition,grade:'',year:'',month:''};state.lapId='';}
     switchView('publicResearch');
   };
+
+  state.scenario='';
+  PA.setScenario=value=>{state.scenario=['high','middle','slow'].includes(value)?value:'';renderPublicPredict();};
+  function lapBriefing(records,selected,going){
+    const known=records.filter(r=>['high','middle','slow'].includes(r.events?.pace)),counts=new Map();
+    for(const r of known)counts.set(r.events.pace,(counts.get(r.events.pace)||0)+1);
+    const top=[...counts].sort((a,b)=>b[1]-a[1])[0],paceLabels={high:'ハイペース',middle:'ミドルペース',slow:'スローペース'};
+    const laps=records.map(lapOf).filter(Boolean).sort((a,b)=>dateKey(ref(b.record).date).localeCompare(dateKey(ref(a.record).date)));
+    const front=laps.map(l=>l.front).filter(v=>v!=null),back=laps.map(l=>l.back).filter(v=>v!=null),lapCounts=new Map();
+    for(const r of records)for(const key of simpleReviewLabels(SIMPLE_REVIEW_FIELDS[1],simpleReviewEvents(r)))lapCounts.set(key,(lapCounts.get(key)||0)+1);
+    const common=[...lapCounts].sort((a,b)=>b[1]-a[1])[0],label=common?SIMPLE_REVIEW_FIELDS[1].options[common[0]]:'未集計';
+    let html='<p class="pa-muted">'+E(selected.venue)+' '+E(selected.surface)+selected.distance+'m・'+E(going)+'／対象日より前の回顧 '+records.length+'件（クラス混在）</p>';
+    html+='<div class="pa-stats">'+stat('記録で多いペース',top?paceLabels[top[0]]:'材料不足',top?top[1]+'/'+known.length+'件':'')+stat('多く記録されたラップ',label,common?common[1]+'件':'')+stat('後半600mの中央値',num(median(back)),'秒 / '+back.length+'件')+'</div>';
+    html+='<div class="pa-toolbar"><label class="pa-muted">今回の展開メモ（自分の想定） <select class="pa-select" style="width:auto" aria-label="今回の展開想定" onchange="PA.setScenario(this.value)"><option value="">まだ決めない</option>'+Object.entries(paceLabels).map(([k,l])=>'<option value="'+k+'" '+(state.scenario===k?'selected':'')+'>'+l+'想定</option>').join('')+'</select></label>'+btn('条件を詳しく研究','PA.researchFromRace()',true)+'</div>';
+    if(state.scenario)html+=note(paceLabels[state.scenario]+'を想定中。過去の同じペースの記録は'+records.filter(r=>r.events?.pace===state.scenario).length+'件です。各馬の位置取り・個別ラップとの照合が不足するため、このメモによる点数補正は行いません。');
+    if(records.length)html+='<details style="margin-top:12px"><summary>展開・枠の分類を詳しく見る</summary>'+eventCards(records)+'</details>';
+    if(laps.length){
+      const chosen=laps[0],cohort=cohortOf(chosen,records);
+      html+='<details style="margin-top:12px"><summary>同条件のラップを重ねて見る（'+laps.length+'件）</summary><p class="pa-muted">参考レース：'+E(reviewTitle(chosen.record))+'</p>'+lapChart(chosen,cohort)+'<div class="pa-stats">'+stat('前半600mの中央値',num(median(front)),'秒 / '+front.length+'件')+stat('後半600mの中央値',num(median(back)),'秒 / '+back.length+'件')+stat('ラップが抽出できた',laps.length,'件')+'</div>'+note('回顧本文からの抽出候補で、元資料との照合は未実施です。表示は過去の参考値であり、今回の予測ラップや各馬自身のラップではありません。比較線は参考レースより前の同条件記録です。')+'</details>';
+    }else html+=note('この条件の実数ラップはまだ不足しています。条件を広げて研究するか、回顧分類を参考にしてください。');
+    return html;
+  }
+
   renderPublicPredict=()=>{
     const el=document.getElementById('publicPredictMain');if(!el)return;
     const rows=allRaceRows(),dates=[...new Set(rows.map(r=>r.date))];if(!dates.includes(state.date))state.date=dates[0]||'';
@@ -162,9 +185,9 @@
     if(!selected){el.innerHTML=`<div class="pa">${body}${panel('あなたの予想に、比較できる根拠を。',`<div class="pa-stats">${stat('評価の視点','5','項目')}${stat('比較するもの','展開','と適性')}${stat('判断の材料','実績','と件数')}</div><p class="pa-muted">レースを選ぶと五角形の評価カードと条件傾向を表示します。過去の傾向を調べるなら「条件・ラップ研究」へ。</p>${btn('条件・ラップ研究を開く',"switchView('publicResearch')",true)}`)}</div>`;return;}
     const going=state.going||selected.trackCondition||'良',working={...selected,trackCondition:going},ranked=publicRaceRanking(working),scored=ranked.filter(h=>h.customScore!=null),gap=scored.length>1?scored[0].customScore-scored[1].customScore:null;
     body+=panel(`${E(selected.venue)} ${E(selected.raceNumber)}R · ${E(selected.raceName)}`,`<div><span class="pa-tag mint">${E(selected.surface)} ${E(selected.distance)}m</span><span class="pa-tag">${E(publicReviewClass({raceRef:{venue:selected.venue,grade:selected.sourceRace.grade}}))}</span><span class="pa-tag">${ranked.length}頭</span></div><div class="pa-toolbar"><label class="pa-muted">想定する馬場 <select class="pa-select" style="width:auto" aria-label="想定する馬場" onchange="PA.setGoing(this.value)">${['良','稍重','重','不良'].map(g=>`<option ${g===going?'selected':''}>${g}</option>`).join('')}</select></label><span class="pa-muted">${!selected.trackCondition&&!state.going?'馬場未登録のため「良」を仮設定。変更できます。':'馬場適性の評価に反映します。'}</span></div>${state.scope==='archive'?note('過去開催の参考計算です。現在の馬の履歴を使うため、当時の発走前予想の再現・精度検証には使えません。保存済みスコアの検証は「予想の検証」で確認できます。'):''}<div class="pa-stats">${stat('評価できた馬',scored.length,`/ ${ranked.length}頭`)}${stat('トップスコア',scored.length?num(scored[0].customScore,2):'—','点')}${stat('1位と2位の点差',num(gap,2),'点')}</div>`);
-    if(state.reviews){const filters={venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},records=matchingReviews(filters,selected.date);body+=panel('この条件では、どんな展開が記録されたか',`<p class="pa-muted">${E(selected.venue)} ${E(selected.surface)}${selected.distance}m・${E(going)}／対象日より前の回顧 ${records.length}件（クラス混在）。</p>${records.length?eventCards(records):empty('一致する過去の回顧がありません。研究画面で馬場などの条件を広げて比較できます。')}${btn('条件・ラップを詳しく比較','PA.researchFromRace()',true)}`);}else body+=panel('この条件の展開傾向',loadReviewsUI());
+    if(state.reviews){const filters={venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},records=matchingReviews(filters,selected.date);body+=panel('今回の条件・ラップの判断材料',lapBriefing(records,selected,going));}else{body+=panel('同条件のラップ・展開を確認',loadReviewsUI());if(!state.reviewPromise&&!state.reviewError)Promise.resolve().then(()=>PA.loadReviews());}
     body+=panel('5つの視点で比較する',`<p class="pa-muted">五角形は各項目0〜6。最終スコアは適性加点を含むため6点を超えることがあります。未評価は0点と区別して表示します。</p><div class="pa-podium">${ranked.slice(0,3).map((h,i)=>`<article class="pa-horse"><div class="pa-rank">SCORE RANK / 0${i+1}</div><h3>${E(h.num)}番 ${E(h.name)}</h3><div class="pa-kpi">${h.customScore==null?'—':num(h.customScore,2)} <small>評価スコア</small></div>${publicRadar(h)}${radarValues(h)}${horseFoot(h)}</article>`).join('')}</div>`);
-    body+=panel('全頭を比べる',`<div class="pa-list">${ranked.map((h,i)=>`<details><summary><span class="pa-tag${i<3?' gold':''}">${i+1}位</span><strong>${E(h.num)}番 ${E(h.name)}</strong><span class="pa-kpi" style="font-size:20px">${h.customScore==null?'—':num(h.customScore,2)}</span></summary><div class="pa-horse-body">${publicRadar(h)}<div>${radarValues(h)}${horseFoot(h)}</div></div></details>`).join('')}</div>`);
+    body+=`<details class="pa-panel"><summary>全頭の評価を一覧で見る（${ranked.length}頭）</summary><div class="pa-list">${ranked.map((h,i)=>`<details><summary><span class="pa-tag${i<3?' gold':''}">${i+1}位</span><strong>${E(h.num)}番 ${E(h.name)}</strong><span class="pa-kpi" style="font-size:20px">${h.customScore==null?'—':num(h.customScore,2)}</span></summary><div class="pa-horse-body">${publicRadar(h)}<div>${radarValues(h)}${horseFoot(h)}</div></div></details>`).join('')}</div></details>`;
     body+=`<details class="pa-panel pa-weight"><summary>重視する項目を調整する</summary><p class="pa-muted">初期値は各3。重みを変更後に再計算してください。</p>${Object.entries(publicLabels).map(([k,l])=>`<label>${E(l)} <b id="pa-w-${k}">${publicDraftWeights[k]}</b><input aria-label="${E(l)}の重み" type="range" min="0" max="6" step="1" value="${publicDraftWeights[k]}" oninput="publicSetWeight('${k}',this.value);document.getElementById('pa-w-${k}').textContent=this.value"></label>`).join('')}${btn('この重みで再計算','publicRecalculate()')}</details>`;
     el.innerHTML=`<div class="pa">${body}</div>`;
   };
@@ -213,7 +236,7 @@
     return `<div class="pa">${body}</div>`;
   }
   renderPublicResults=()=>{document.getElementById('paVerification')?.remove();originalResults();const el=document.getElementById('publicResultsMain');if(el)el.insertAdjacentHTML('afterbegin',`<div id="paVerification">${resultTabs('results')}${verificationPanel()}<div class="pa">${hero('RESULT SEARCH','条件別の成績を調べる','以下の検索・条件ランキングは、上のスコア検証とは独立して集計します。')}</div></div>`);};
-  renderPublicHistory=()=>{originalHistory();const el=document.getElementById('publicHistoryMain');if(el)el.insertAdjacentHTML('afterbegin',resultTabs('history'));};
+  renderPublicHistory=()=>{originalHistory();const el=document.getElementById('publicHistoryMain');if(el)el.insertAdjacentHTML('afterbegin',resultTabs('history')+'<div class="pa">'+note('ここは保存時点の予想スコア・順位・5項目を表示しています。現在の馬評価では再計算しません。表示する着順は後から保存された結果です。')+'</div>');};
   const originalHorseDetail=renderHorseDetail;
   renderHorseDetail=()=>{
     originalHorseDetail();if(!selectedHorse)return;
