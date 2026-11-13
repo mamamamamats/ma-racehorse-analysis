@@ -2,9 +2,12 @@
 (() => {
   'use strict';
   if (isEditMode) return;
+  const LM=window.RaceLapMetrics;
+  const snapshotKeys=Object.keys(publicLabels);
+  publicLabels.lap='ラップ適性';publicDraftWeights.lap=3;publicAppliedWeights.lap=3;
   const E = value => publicEscape(value ?? '');
   const PA = window.PA = {};
-  const state = {reviews:null,reviewPromise:null,reviewError:'',predictions:null,results:null,verifyPromise:null,verifyError:'',scope:'week',date:'',going:'',research:{venue:'',surface:'',distance:'',trackCondition:'',grade:'',year:'',month:''},lapId:'',verifyMode:'dated',researchLimit:20};
+  const state = {reviews:null,reviewPromise:null,reviewError:'',predictions:null,results:null,verifyPromise:null,verifyError:'',scope:'week',date:'',going:'',research:{venue:'',surface:'',distance:'',trackCondition:'',grade:'',year:'',month:'',lapClass:''},lapId:'',verifyMode:'dated',researchLimit:20};
   const mint='#79edc9', gold='#efd18b', violet='#b6a1ff';
   const num = (v,d=1) => Number.isFinite(v)?v.toFixed(d):'—';
   const pct = (v,n) => n?num(100*v/n)+'%':'—';
@@ -50,7 +53,7 @@
   };
   function loadReviewsUI(){return `<p class="pa-muted">保存された回顧から、展開とラップの比較材料を読み込みます。</p>${btn(state.reviewPromise?'読み込み中…':'回顧データを読み込む','PA.loadReviews()',false,!!state.reviewPromise)}${state.reviewError?`<p role="alert" class="pa-inline-error">${E(state.reviewError)}</p>`:''}`;}
   function refreshCurrent(){if(currentView==='publicPredict')renderPublicPredict();if(currentView==='publicResearch')renderResearch();}
-  PA.researchFilter=(k,v)=>{if(Object.hasOwn(state.research,k))state.research[k]=v;state.lapId='';state.researchLimit=20;renderResearch();};
+  PA.researchFilter=(k,v)=>{if(Object.hasOwn(state.research,k))state.research[k]=v;if(k==='lapClass')state.research.grade='';if(k==='grade')state.research.lapClass='';state.lapId='';state.researchLimit=20;renderResearch();};
   PA.resetResearch=()=>{Object.keys(state.research).forEach(k=>state.research[k]='');state.lapId='';state.researchLimit=20;renderResearch();};
   PA.pickLap=id=>{state.lapId=id;renderResearch();};
   PA.moreResearch=()=>{state.researchLimit+=20;const y=scrollY;renderResearch();window.scrollTo(0,y);};
@@ -58,13 +61,13 @@
     return (state.reviews||[]).filter(r=>{
       const x=ref(r),d=dateKey(x.date),grade=publicReviewClass(r);
       if(before&&(!d||d>=before))return false;
-      return Object.entries(filters).every(([k,v])=>!v||String(k==='grade'?grade:k==='year'?d.slice(0,4):k==='month'?Number(d.slice(4,6)):x[k]??'')===String(v));
+      return Object.entries(filters).every(([k,v])=>k==='lapClass'?LM.matchesClass(x.grade,v):!v||String(k==='grade'?grade:k==='year'?d.slice(0,4):k==='month'?Number(d.slice(4,6)):x[k]??'')===String(v));
     });
   }
   function optionSelect(key,label,values,current,action){return `<label>${E(label)}<select aria-label="${E(label)}" onchange="${action}"><option value="">すべて</option>${values.map(v=>`<option value="${E(v)}" ${String(current)===String(v)?'selected':''}>${E(v)}</option>`).join('')}</select></label>`;}
   function researchFilters(){
-    const rows=state.reviews||[],keys=[['venue','競馬場'],['surface','芝・ダート'],['distance','距離（m）'],['trackCondition','馬場状態'],['grade','クラス'],['year','年'],['month','月']];
-    return `<div class="pa-filters">${keys.map(([k,l])=>{const vs=[...new Set(rows.map(r=>k==='grade'?publicReviewClass(r):k==='year'?dateKey(ref(r).date).slice(0,4):k==='month'?Number(dateKey(ref(r).date).slice(4,6)):ref(r)[k]).filter(Boolean))].sort((a,b)=>k==='distance'||k==='month'?a-b:String(a).localeCompare(String(b),'ja'));return optionSelect(k,l,vs,state.research[k],`PA.researchFilter('${k}',this.value)`);}).join('')}</div>${btn('条件をリセット','PA.resetResearch()',true)}`;
+    const rows=state.reviews||[],keys=[['venue','競馬場'],['surface','芝・ダート'],['distance','距離（m）'],['trackCondition','馬場状態'],['grade','クラス個別'],['lapClass','クラス群'],['year','年'],['month','月']];
+    return `<div class="pa-filters">${keys.map(([k,l])=>{if(k==='lapClass')return `<label>クラス群<select aria-label="研究のクラス群" onchange="PA.researchFilter('lapClass',this.value)"><option value="">全クラス</option>${LM.classOptions.filter(([v])=>['un','winplus','graded'].includes(v)).map(([v,l])=>`<option value="${v}" ${state.research.lapClass===v?'selected':''}>${E(l)}</option>`).join('')}</select></label>`;const vs=[...new Set(rows.map(r=>k==='grade'?publicReviewClass(r):k==='year'?dateKey(ref(r).date).slice(0,4):k==='month'?Number(dateKey(ref(r).date).slice(4,6)):ref(r)[k]).filter(Boolean))].sort((a,b)=>k==='distance'||k==='month'?a-b:String(a).localeCompare(String(b),'ja'));return optionSelect(k,l,vs,state.research[k],`PA.researchFilter('${k}',this.value)`);}).join('')}</div>${btn('条件をリセット','PA.resetResearch()',true)}`;
   }
   function bars(groups){return groups.map(g=>`<div class="pa-bar"><span>${E(g.label)}</span><div class="pa-bar-track"><div class="pa-bar-fill" style="width:${g.n?Math.min(100,100*g.hit/g.n):0}%"></div></div><small>${pct(g.hit,g.n)} · ${g.hit}/${g.n}</small></div>`).join('');}
   function eventCards(rows){
@@ -116,7 +119,7 @@
     let body=hero('COURSE & LAP LAB','条件・ラップ研究','展開を分解して、レースの中身を比較する。');
     if(!state.reviews){el.innerHTML=`<div class="pa">${body}${panel('回顧から分析を始める',loadReviewsUI())}</div>`;return;}
     const rows=matchingReviews(),laps=rows.map(lapOf).filter(Boolean).sort((a,b)=>dateKey(ref(b.record).date).localeCompare(dateKey(ref(a.record).date))),chosen=laps.find(l=>reviewIdentity(l.record)===state.lapId)||laps[0];
-    const cohort=chosen?cohortOf(chosen,state.reviews):[];
+    const cohort=chosen?cohortOf(chosen,rows):[];
     body+=panel('比較する条件',researchFilters())+`<div class="pa-stats">${stat('条件に一致する回顧',rows.length,'レース')}${stat('実数ラップ抽出候補',laps.length,'レース')}${stat('展開が判定済み',rows.filter(r=>['high','middle','slow'].includes(r.events?.pace)).length,'レース')}</div>`+eventCards(rows);
     if(chosen){const options=laps.map(l=>`<option value="${E(reviewIdentity(l.record))}" ${l===chosen?'selected':''}>${E(reviewTitle(l.record))}</option>`).join('');
       body+=panel('区間ラップを比較',`<label class="pa-muted">対象レース<select class="pa-select" aria-label="ラップ比較の対象レース" onchange="PA.pickLap(this.value)">${options}</select></label>${lapChart(chosen,cohort)}<div class="pa-stats">${stat('走破ラップ合計',num(chosen.total),'秒')}${stat('前半600m',num(chosen.front),'秒')}${stat('後半600m',num(chosen.back),'秒')}</div>${note(`本文からの自動抽出候補です。元資料との照合は未実施。比較対象は同競馬場・芝ダート・距離・馬場状態かつ対象日より前の${cohort.length}件（クラス混在）。件数が少ない場合は標準値と断定しません。100m区間は200m換算して描画します。レースラップは各馬自身のラップではありません。`)}<details><summary>元の回顧と区間値を見る</summary><p class="pa-muted">${E(chosen.record.review)}</p><div class="pa-scroll"><table class="pa-table"><thead><tr><th>区間</th><th>距離</th><th>秒</th></tr></thead><tbody>${chosen.laps.map((v,i)=>`<tr><td>${i+1}</td><td>${chosen.segments[i]}m</td><td>${num(v)}</td></tr>`).join('')}</tbody></table></div></details>`);
@@ -127,17 +130,17 @@
   let radarSequence=0;
   publicRadar = h => {
     const gradientId="paRadarGlow"+(++radarSequence);
-    const keys=Object.keys(publicLabels),short=['総合','競馬場','距離','馬場','調子'],C=150,R=91,xy=(i,v)=>{const a=-Math.PI/2+i*Math.PI*2/5;return [C+Math.cos(a)*R*v/6,C+Math.sin(a)*R*v/6];},points=v=>keys.map((_,i)=>xy(i,v).join(',')).join(' ');
+    const keys=Object.keys(publicLabels),short=['総合','競馬場','距離','馬場','調子','ラップ'],C=150,R=91,xy=(i,v)=>{const a=-Math.PI/2+i*Math.PI*2/keys.length;return [C+Math.cos(a)*R*v/6,C+Math.sin(a)*R*v/6];},points=v=>keys.map((_,i)=>xy(i,v).join(',')).join(' ');
     const vals=keys.map(k=>h.factors?.[k]!=null&&Number.isFinite(Number(h.factors[k]))?Math.max(0,Math.min(6,Number(h.factors[k]))):null),poly=vals.map((v,i)=>xy(i,v??0).join(',')).join(' ');
-    return `<svg class="pa-radar" viewBox="0 0 300 300" role="img" aria-label="${E(h.name)}の5項目評価。各軸0から6、欠測は点線表示"><defs><radialGradient id="${gradientId}"><stop stop-color="#79edc9" stop-opacity=".32"/><stop offset="1" stop-color="#79edc9" stop-opacity=".04"/></radialGradient></defs><circle cx="150" cy="150" r="110" fill="url(#${gradientId})"/>${[1,2,3,4,5,6].map(v=>`<polygon points="${points(v)}" fill="none" stroke="#9bbed4" stroke-opacity="${v===6?.3:.12}" stroke-width="${v===6?1.4:1}"/>`).join('')}${keys.map((_,i)=>{const [x,y]=xy(i,6);return `<line x1="150" y1="150" x2="${x}" y2="${y}" stroke="#9bbed4" stroke-opacity=".15"/>`;}).join('')}<polygon data-score points="${poly}" fill="#79edc92b" stroke="${mint}" stroke-width="2.4" ${vals.includes(null)?'stroke-dasharray="5 3"':''}/>${vals.map((v,i)=>{if(v==null)return '';const [x,y]=xy(i,v);return `<circle cx="${x}" cy="${y}" r="4" fill="${mint}" stroke="#173c3a" stroke-width="2"/>`;}).join('')}${keys.map((k,i)=>{const [x,y]=xy(i,8);return `<text x="${x}" y="${y}" fill="#c4d3e3" font-size="11" text-anchor="middle" dominant-baseline="middle">${short[i]}<tspan x="${x}" dy="16" fill="${vals[i]==null?'#8290a4':mint}" font-size="14" font-weight="700">${vals[i]==null?'未評価':num(vals[i])}</tspan></text>`;}).join('')}</svg>`;
+    return `<svg class="pa-radar" viewBox="0 0 300 300" role="img" aria-label="${E(h.name)}の6項目評価。各軸0から6、欠測は点線表示"><defs><radialGradient id="${gradientId}"><stop stop-color="#79edc9" stop-opacity=".32"/><stop offset="1" stop-color="#79edc9" stop-opacity=".04"/></radialGradient></defs><circle cx="150" cy="150" r="110" fill="url(#${gradientId})"/>${[1,2,3,4,5,6].map(v=>`<polygon points="${points(v)}" fill="none" stroke="#9bbed4" stroke-opacity="${v===6?.3:.12}" stroke-width="${v===6?1.4:1}"/>`).join('')}${keys.map((_,i)=>{const [x,y]=xy(i,6);return `<line x1="150" y1="150" x2="${x}" y2="${y}" stroke="#9bbed4" stroke-opacity=".15"/>`;}).join('')}<polygon data-score points="${poly}" fill="#79edc92b" stroke="${mint}" stroke-width="2.4" ${vals.includes(null)?'stroke-dasharray="5 3"':''}/>${vals.map((v,i)=>{if(v==null)return '';const [x,y]=xy(i,v);return `<circle cx="${x}" cy="${y}" r="4" fill="${mint}" stroke="#173c3a" stroke-width="2"/>`;}).join('')}${keys.map((k,i)=>{const [x,y]=xy(i,8);return `<text x="${x}" y="${y}" fill="#c4d3e3" font-size="11" text-anchor="middle" dominant-baseline="middle">${short[i]}<tspan x="${x}" dy="16" fill="${vals[i]==null?'#8290a4':mint}" font-size="14" font-weight="700">${vals[i]==null?'未評価':num(vals[i])}</tspan></text>`;}).join('')}</svg>`;
   };
   function radarValues(h){return `<div class="pa-axis-values">${Object.keys(publicLabels).map(k=>`<div><small>${E(publicLabels[k])}</small><b>${h.factors[k]==null?'—':num(Number(h.factors[k]))}</b></div>`).join('')}</div>`;}
   function horseFoot(h){
     const strongest=Object.entries(h.factors||{}).filter(([,v])=>v!=null&&Number.isFinite(Number(v))).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,v])=>`${publicLabels[k]} ${num(Number(v))}`).join(' / ');
-    return `<div class="pa-horse-foot"><p class="pa-muted">${strongest?'評価の強み：'+E(strongest):'評価履歴が足りないため判断を保留'}</p><div>${['venue','distance','condition'].map(k=>{const stat=h[k+'Stats'];return `<span class="pa-tag${stat?.count>=3?' mint':''}">${E(publicLabels[k])} ${stat?.count||0}走</span>`;}).join('')}</div><details style="margin:10px 0"><summary class="pa-muted">採点根拠と注意点</summary><p class="pa-muted">${E(publicHorseExplanation(h))}</p></details>${h.name&&h.known?btn('この馬の過去走を見る',`PA.openHorse(${JSON.stringify(h.name)})`,true):''}</div>`;
+    return `<div class="pa-horse-foot"><p class="pa-muted">${strongest?'評価の強み：'+E(strongest):'評価履歴が足りないため判断を保留'}</p><div>${['venue','distance','condition','lap'].map(k=>{const stat=h[k+'Stats'];return `<span class="pa-tag${stat?.count>=3?' mint':''}">${E(publicLabels[k])} ${stat?.count||0}走</span>`;}).join('')}</div><details style="margin:10px 0"><summary class="pa-muted">採点根拠と注意点</summary><p class="pa-muted">${E(publicHorseExplanation(h))}</p><p class="pa-muted">${E(h.lapStats?`ラップ照合：過去${h.lapStats.total}走中${h.lapStats.linked}走を同一芝・ダートの回顧と照合。同じラップ型${h.lapStats.matching}走のうちS〜D評価${h.lapStats.count}走を平均。距離・競馬場・クラスは限定しません。`:'ラップの判断材料は読み込み後に表示します。')}</p><p class="pa-muted">基礎点 ${num(h.baseScore,2)} ＋ 既存適性加点 ${num(h.bonusScore,2)}。ラップ独自のボーナスはありません。</p></details>${h.name&&h.known?btn('この馬の過去走を見る',`PA.openHorse(${JSON.stringify(h.name)})`,true):''}</div>`;
   }
   PA.openHorse=name=>jumpToHorse(name);
-  PA.setScope=scope=>{state.scope=scope;state.date='';state.scenario='';publicSelectedRaceKey='';renderPublicPredict();};
+  PA.setScope=scope=>{state.scope=scope;state.date='';state.scenario='';state.lapClass='auto';publicSelectedRaceKey='';renderPublicPredict();};
   PA.setDate=date=>{state.date=date;publicSelectedRaceKey='';renderPublicPredict();};
   PA.setGoing=value=>{state.going=value;renderPublicPredict();};
   const originalChoose=publicChooseRace;
@@ -150,49 +153,70 @@
     return rows.sort((a,b)=>b.date.localeCompare(a.date)||a.venue.localeCompare(b.venue,'ja')||a.raceNumber-b.raceNumber);
   }
   PA.researchFromRace=()=>{
-    const selected=allRaceRows().find(r=>publicRaceKey(r)===publicSelectedRaceKey);if(selected){state.research={venue:selected.venue,surface:selected.surface,distance:String(selected.distance||''),trackCondition:state.going||selected.trackCondition,grade:'',year:'',month:''};state.lapId='';}
+    const selected=allRaceRows().find(r=>publicRaceKey(r)===publicSelectedRaceKey);if(selected){state.research={venue:selected.venue,surface:selected.surface,distance:String(selected.distance||''),trackCondition:state.going||selected.trackCondition,grade:'',year:'',month:'',lapClass:''};state.lapId='';}
     switchView('publicResearch');
   };
 
-  state.scenario='';
+  state.scenario='';state.lapClass='auto';
   PA.setScenario=value=>{state.scenario=['high','middle','slow'].includes(value)?value:'';renderPublicPredict();};
+  PA.setLapClass=value=>{state.lapClass=value;renderPublicPredict();};
+  let lapContextCache=null;
+  function lapContext(selected){
+    const choice=LM.resolveClass(state.lapClass,selected.sourceRace?.grade),going=selected.trackCondition||'良';
+    const cacheKey=[selected.date,selected.venue,selected.surface,selected.distance,going,choice].join('|');
+    if(lapContextCache?.key===cacheKey&&lapContextCache.reviews===state.reviews)return lapContextCache;
+    const rows=matchingReviews({venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},selected.date).filter(r=>LM.matchesClass(ref(r).grade,choice));
+    const parsed=rows.map(lapOf).filter(Boolean),profile=LM.meanProfile(parsed);
+    return lapContextCache={key:cacheKey,reviews:state.reviews,choice,rows,parsed,profile};
+  }
+  const fiveFactorRanking=publicRaceRanking;
+  publicRaceRanking=selected=>{
+    const ranked=fiveFactorRanking(selected),context=lapContext(selected);
+    for(const h of ranked){
+      const originalBase=scoreWithWeights(h,publicAppliedWeights),bonus=h.customScore==null||originalBase==null?0:h.customScore-originalBase;
+      const horse=(horses||[]).find(x=>x.name===h.name);
+      h.lapStats=LM.horseAptitude(horse,state.reviews||[],context.profile?.pattern,{surface:selected.surface,before:selected.date,parse:lapOf});
+      h.factors.lap=h.lapStats.avg;
+      let sum=0,weight=0;for(const k of Object.keys(publicLabels)){const v=h.factors[k],w=Number(publicAppliedWeights[k])||0;if(v==null||!Number.isFinite(Number(v))||w<=0)continue;sum+=Number(v)*w;weight+=w;}
+      h.baseScore=weight?sum/weight:null;h.bonusScore=bonus;h.customScore=h.baseScore==null?null:h.baseScore+bonus;
+    }
+    return ranked.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
+  };
+  function averageLapChart(profile){
+    if(!profile)return '';
+    const W=680,H=220,L=42,T=25,B=35,values=profile.laps.map((v,i)=>v*200/profile.segments[i]),lo=Math.min(...values)-.4,hi=Math.max(...values)+.4;
+    const x=i=>L+i*(W-L-15)/Math.max(1,values.length-1),y=v=>T+(v-lo)*(H-T-B)/(hi-lo);
+    let distance=0;return `<div class="pa-chart-wrap"><svg class="pa-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="指定クラス群の平均ラップ。下ほど速い">${[0,1,2,3].map(i=>{const v=lo+(hi-lo)*i/3;return `<line class="pa-tick" x1="${L}" x2="${W-15}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-5}" y="${y(v)+4}" text-anchor="end">${num(v)}</text>`;}).join('')}<polyline points="${values.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="${mint}" stroke-width="3"/>${values.map((v,i)=>{distance+=profile.segments[i];return `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${mint}"><title>${distance}m / 元区間平均${num(profile.laps[i],2)}秒</title></circle><text x="${x(i)}" y="${H-10}" text-anchor="middle">${distance}</text>`;}).join('')}<text x="${L}" y="14">200m換算秒 / 下ほど速い</text></svg></div>`;
+  }
   function lapBriefing(records,selected,going){
-    const known=records.filter(r=>['high','middle','slow'].includes(r.events?.pace)),counts=new Map();
-    for(const r of known)counts.set(r.events.pace,(counts.get(r.events.pace)||0)+1);
-    const top=[...counts].sort((a,b)=>b[1]-a[1])[0],paceLabels={high:'ハイペース',middle:'ミドルペース',slow:'スローペース'};
-    const laps=records.map(lapOf).filter(Boolean).sort((a,b)=>dateKey(ref(b.record).date).localeCompare(dateKey(ref(a.record).date)));
-    const front=laps.map(l=>l.front).filter(v=>v!=null),back=laps.map(l=>l.back).filter(v=>v!=null),lapCounts=new Map();
-    for(const r of records)for(const key of simpleReviewLabels(SIMPLE_REVIEW_FIELDS[1],simpleReviewEvents(r)))lapCounts.set(key,(lapCounts.get(key)||0)+1);
-    const common=[...lapCounts].sort((a,b)=>b[1]-a[1])[0],label=common?SIMPLE_REVIEW_FIELDS[1].options[common[0]]:'未集計';
-    let html='<p class="pa-muted">'+E(selected.venue)+' '+E(selected.surface)+selected.distance+'m・'+E(going)+'／対象日より前の回顧 '+records.length+'件（クラス混在）</p>';
-    html+='<div class="pa-stats">'+stat('記録で多いペース',top?paceLabels[top[0]]:'材料不足',top?top[1]+'/'+known.length+'件':'')+stat('多く記録されたラップ',label,common?common[1]+'件':'')+stat('後半600mの中央値',num(median(back)),'秒 / '+back.length+'件')+'</div>';
-    html+='<div class="pa-toolbar"><label class="pa-muted">今回の展開メモ（自分の想定） <select class="pa-select" style="width:auto" aria-label="今回の展開想定" onchange="PA.setScenario(this.value)"><option value="">まだ決めない</option>'+Object.entries(paceLabels).map(([k,l])=>'<option value="'+k+'" '+(state.scenario===k?'selected':'')+'>'+l+'想定</option>').join('')+'</select></label>'+btn('条件を詳しく研究','PA.researchFromRace()',true)+'</div>';
-    if(state.scenario)html+=note(paceLabels[state.scenario]+'を想定中。過去の同じペースの記録は'+records.filter(r=>r.events?.pace===state.scenario).length+'件です。各馬の位置取り・個別ラップとの照合が不足するため、このメモによる点数補正は行いません。');
-    if(records.length)html+='<details style="margin-top:12px"><summary>展開・枠の分類を詳しく見る</summary>'+eventCards(records)+'</details>';
-    if(laps.length){
-      const chosen=laps[0],cohort=cohortOf(chosen,records);
-      html+='<details style="margin-top:12px"><summary>同条件のラップを重ねて見る（'+laps.length+'件）</summary><p class="pa-muted">参考レース：'+E(reviewTitle(chosen.record))+'</p>'+lapChart(chosen,cohort)+'<div class="pa-stats">'+stat('前半600mの中央値',num(median(front)),'秒 / '+front.length+'件')+stat('後半600mの中央値',num(median(back)),'秒 / '+back.length+'件')+stat('ラップが抽出できた',laps.length,'件')+'</div>'+note('回顧本文からの抽出候補で、元資料との照合は未実施です。表示は過去の参考値であり、今回の予測ラップや各馬自身のラップではありません。比較線は参考レースより前の同条件記録です。')+'</details>';
-    }else html+=note('この条件の実数ラップはまだ不足しています。条件を広げて研究するか、回顧分類を参考にしてください。');
+    const context=lapContext({...selected,trackCondition:going}),profile=context.profile;
+    const labels=LM.classOptions.find(([k])=>k===context.choice)?.[1]||context.choice;
+    let html=`<div class="pa-filters"><label>平均ラップの比較クラス<select aria-label="平均ラップの比較クラス" onchange="PA.setLapClass(this.value)">${LM.classOptions.map(([k,l])=>`<option value="${k}" ${state.lapClass===k?'selected':''}>${E(l)}</option>`).join('')}</select></label></div><p class="pa-muted">${E(selected.venue)} ${E(selected.surface)}${selected.distance}m・${E(going)}／${E(labels)}／対象日より前の回顧 ${context.rows.length}件。</p>`;
+    html+=`<div class="pa-stats">${stat('平均ラップから見た傾向',profile?LM.LABELS[profile.pattern]:'材料不足')}${stat('平均に使えた実数ラップ',profile?.count||0,'レース')}${stat('前後半の差',profile?num(profile.delta,2):'—','秒 / 200m換算')}</div>`;
+    html+=note('対象日より前の同競馬場・芝ダート・距離・馬場・指定クラスの区間秒を算術平均。前半と後半を距離の中点で分け、200m換算で後半が0.10秒超遅ければ前傾、逆なら後傾、それ以外は平均型とする暫定基準です。中点をまたぐ区間は一定速度を仮定して按分します。今回の確定的な展開予測ではありません。');
+    if(profile)html+=`<details style="margin-top:12px"><summary>平均ラップと計算根拠を見る</summary>${averageLapChart(profile)}<p class="pa-muted">前半 ${num(profile.front200,2)}秒 / 後半 ${num(profile.back200,2)}秒（200m換算）。元回顧からの抽出候補です。ラップ適性は、この平均から求めた型に該当する各馬の過去評価の平均です。</p></details>`;
+    else html+=note('実数ラップが不足しているため、ラップ適性は未評価です。0点として計算せず、重みの分母からも除きます。クラス条件を広げると比較材料が増える場合があります。');
+    html+=`<details style="margin-top:12px"><summary>自分の展開想定をメモする</summary><label class="pa-muted">今回のペース<select class="pa-select" aria-label="今回の展開想定" onchange="PA.setScenario(this.value)"><option value="">まだ決めない</option>${[['high','ハイペース'],['middle','ミドルペース'],['slow','スローペース']].map(([k,l])=>`<option value="${k}" ${state.scenario===k?'selected':''}>${l}想定</option>`).join('')}</select></label><p class="pa-muted">ペースの高低と前傾・後傾は別の指標です。このメモでは平均ラップ型や点数は変更しません。</p></details>`;
+    html+=`<div class="pa-toolbar">${btn('条件を詳しく研究','PA.researchFromRace()',true)}</div><details style="margin-top:12px"><summary>回顧に記録された展開・枠の内訳</summary>${eventCards(context.rows)}</details>`;
     return html;
   }
-
   renderPublicPredict=()=>{
     const el=document.getElementById('publicPredictMain');if(!el)return;
     const rows=allRaceRows(),dates=[...new Set(rows.map(r=>r.date))];if(!dates.includes(state.date))state.date=dates[0]||'';
     const visible=rows.filter(r=>r.date===state.date),selected=visible.find(r=>publicRaceKey(r)===publicSelectedRaceKey)||null;
-    let body=hero('RACE ASSISTANT','予想の根拠を、一頭ずつ。','条件の傾向、5つの評価、過去の裏付けを並べて考える。');
+    let body=hero('RACE ASSISTANT','予想の根拠を、一頭ずつ。','条件の傾向、6つの評価、過去の裏付けを並べて考える。');
     body+=panel('レースを選ぶ',`<div class="pa-toolbar">${btn('今週のレース',"PA.setScope('week')",state.scope!=='week')}${btn('過去開催で振り返る',"PA.setScope('archive')",state.scope!=='archive')}</div>${visible.length?`<div class="pa-filters"><label>開催日<select class="pa-select" onchange="PA.setDate(this.value)">${dates.map(d=>`<option value="${E(d)}" ${state.date===d?'selected':''}>${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}</option>`).join('')}</select></label><label style="grid-column:span 2">競馬場・レース<select class="pa-select" aria-label="予想するレース" onchange="publicChooseRace(this.value)"><option value="">レースを選択してください</option>${visible.map(r=>`<option value="${E(publicRaceKey(r))}" ${selected===r?'selected':''}>${E(r.venue)} ${E(r.raceNumber)}R ${E(r.raceName)} · ${E(r.surface)}${E(r.distance)}m</option>`).join('')}</select></label></div>`:empty('今週の開催データがまだありません。「過去開催で振り返る」から保存済みのレースを確認できます。')}`);
-    if(!selected){el.innerHTML=`<div class="pa">${body}${panel('あなたの予想に、比較できる根拠を。',`<div class="pa-stats">${stat('評価の視点','5','項目')}${stat('比較するもの','展開','と適性')}${stat('判断の材料','実績','と件数')}</div><p class="pa-muted">レースを選ぶと五角形の評価カードと条件傾向を表示します。過去の傾向を調べるなら「条件・ラップ研究」へ。</p>${btn('条件・ラップ研究を開く',"switchView('publicResearch')",true)}`)}</div>`;return;}
+    if(!selected){el.innerHTML=`<div class="pa">${body}${panel('あなたの予想に、比較できる根拠を。',`<div class="pa-stats">${stat('評価の視点','6','項目')}${stat('比較するもの','展開','と適性')}${stat('判断の材料','実績','と件数')}</div><p class="pa-muted">レースを選ぶと六角形の評価カードと条件傾向を表示します。過去の傾向を調べるなら「条件・ラップ研究」へ。</p>${btn('条件・ラップ研究を開く',"switchView('publicResearch')",true)}`)}</div>`;return;}
     const going=state.going||selected.trackCondition||'良',working={...selected,trackCondition:going},ranked=publicRaceRanking(working),scored=ranked.filter(h=>h.customScore!=null),gap=scored.length>1?scored[0].customScore-scored[1].customScore:null;
     body+=panel(`${E(selected.venue)} ${E(selected.raceNumber)}R · ${E(selected.raceName)}`,`<div><span class="pa-tag mint">${E(selected.surface)} ${E(selected.distance)}m</span><span class="pa-tag">${E(publicReviewClass({raceRef:{venue:selected.venue,grade:selected.sourceRace.grade}}))}</span><span class="pa-tag">${ranked.length}頭</span></div><div class="pa-toolbar"><label class="pa-muted">想定する馬場 <select class="pa-select" style="width:auto" aria-label="想定する馬場" onchange="PA.setGoing(this.value)">${['良','稍重','重','不良'].map(g=>`<option ${g===going?'selected':''}>${g}</option>`).join('')}</select></label><span class="pa-muted">${!selected.trackCondition&&!state.going?'馬場未登録のため「良」を仮設定。変更できます。':'馬場適性の評価に反映します。'}</span></div>${state.scope==='archive'?note('過去開催の参考計算です。現在の馬の履歴を使うため、当時の発走前予想の再現・精度検証には使えません。保存済みスコアの検証は「予想の検証」で確認できます。'):''}<div class="pa-stats">${stat('評価できた馬',scored.length,`/ ${ranked.length}頭`)}${stat('トップスコア',scored.length?num(scored[0].customScore,2):'—','点')}${stat('1位と2位の点差',num(gap,2),'点')}</div>`);
     if(state.reviews){const filters={venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},records=matchingReviews(filters,selected.date);body+=panel('今回の条件・ラップの判断材料',lapBriefing(records,selected,going));}else{body+=panel('同条件のラップ・展開を確認',loadReviewsUI());if(!state.reviewPromise&&!state.reviewError)Promise.resolve().then(()=>PA.loadReviews());}
-    body+=panel('5つの視点で比較する',`<p class="pa-muted">五角形は各項目0〜6。最終スコアは適性加点を含むため6点を超えることがあります。未評価は0点と区別して表示します。</p><div class="pa-podium">${ranked.slice(0,3).map((h,i)=>`<article class="pa-horse"><div class="pa-rank">SCORE RANK / 0${i+1}</div><h3>${E(h.num)}番 ${E(h.name)}</h3><div class="pa-kpi">${h.customScore==null?'—':num(h.customScore,2)} <small>評価スコア</small></div>${publicRadar(h)}${radarValues(h)}${horseFoot(h)}</article>`).join('')}</div>`);
+    body+=panel('6つの視点で比較する',`<p class="pa-muted">六角形は各項目0〜6。ラップ適性は同じラップ型の過去S〜D評価の平均。最終スコアは適性加点を含むため6点を超えることがあります。未評価は0点と区別して表示します。</p><div class="pa-podium">${ranked.slice(0,3).map((h,i)=>`<article class="pa-horse"><div class="pa-rank">SCORE RANK / 0${i+1}</div><h3>${E(h.num)}番 ${E(h.name)}</h3><div class="pa-kpi">${h.customScore==null?'—':num(h.customScore,2)} <small>評価スコア</small></div>${publicRadar(h)}${radarValues(h)}${horseFoot(h)}</article>`).join('')}</div>`);
     body+=`<details class="pa-panel"><summary>全頭の評価を一覧で見る（${ranked.length}頭）</summary><div class="pa-list">${ranked.map((h,i)=>`<details><summary><span class="pa-tag${i<3?' gold':''}">${i+1}位</span><strong>${E(h.num)}番 ${E(h.name)}</strong><span class="pa-kpi" style="font-size:20px">${h.customScore==null?'—':num(h.customScore,2)}</span></summary><div class="pa-horse-body">${publicRadar(h)}<div>${radarValues(h)}${horseFoot(h)}</div></div></details>`).join('')}</div></details>`;
     body+=`<details class="pa-panel pa-weight"><summary>重視する項目を調整する</summary><p class="pa-muted">初期値は各3。重みを変更後に再計算してください。</p>${Object.entries(publicLabels).map(([k,l])=>`<label>${E(l)} <b id="pa-w-${k}">${publicDraftWeights[k]}</b><input aria-label="${E(l)}の重み" type="range" min="0" max="6" step="1" value="${publicDraftWeights[k]}" oninput="publicSetWeight('${k}',this.value);document.getElementById('pa-w-${k}').textContent=this.value"></label>`).join('')}${btn('この重みで再計算','publicRecalculate()')}</details>`;
     el.innerHTML=`<div class="pa">${body}</div>`;
   };
-  function configKey(p){return JSON.stringify([Object.keys(publicLabels).map(k=>Number(p.weights?.[k])||0),p.conditionMode||'',!!p.surfaceFilterEnabled,p.engineVersion||'',p.scoringVersion||'']);}
-  function standardConfig(p){return Object.keys(publicLabels).every(k=>Number(p.weights?.[k])===3)&&p.conditionMode==='good'&&!p.surfaceFilterEnabled;}
+  function configKey(p){return JSON.stringify([snapshotKeys.map(k=>Number(p.weights?.[k])||0),p.conditionMode||'',!!p.surfaceFilterEnabled,p.engineVersion||'',p.scoringVersion||'']);}
+  function standardConfig(p){return snapshotKeys.every(k=>Number(p.weights?.[k])===3)&&p.conditionMode==='good'&&!p.surfaceFilterEnabled;}
   state.verifyConfig='';
   PA.verifySetting=(key,value)=>{if(key==='config')state.verifyConfig=value;if(key==='mode')state.verifyMode=value;renderPublicResults();};
   function verifyData(){
