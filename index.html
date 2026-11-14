@@ -175996,7 +175996,7 @@ function horseRaceReviewCandidates(r){
     const n=horseRaceNorm(ref.raceName||ref.name),t=horseRaceNorm(ref.track);
     const score=(name&&n===name?100:0)+(track&&t===track?30:0);
     return {record,ref,score,exactName:!!name&&n===name,compatibleTrack:!track||!t||track===t};
-  }).filter(x=>x.record.raceId).sort((a,b)=>b.score-a.score);
+  }).filter(x=>x.record.raceId).sort((a,b)=>(b.score-a.score)||Number(a.num)-Number(b.num));
 }
 // 厳密な自動照合：名前・コースの一致を必須とし、複数候補は絶対に自動保存しない。
 function horseRaceAutoTarget(r){
@@ -180605,66 +180605,11 @@ function aiWeightPanel(){
       <button type="button" class="ai-style-btn ${aiSurfaceFilterEnabled?'active':''}" onclick="aiSetSurfaceFilter(${!aiSurfaceFilterEnabled})">${aiSurfaceFilterEnabled?'ON':'OFF'}</button>
     </div>
   </div>`;
-  return `<div class="ai-style-panel"><div class="ai-style-tabs"><button class="ai-style-btn active">⚙ カスタム予想</button></div><div class="ai-weight-help"><b>重視度を0〜6で設定</b><br><span>0＝完全に無視　3＝標準　6＝最重要。数字は馬の点数ではなく、その要素を予想順位にどれだけ効かせるかを表します。</span></div><div class="ai-weight-grid">${rows.map(([k,l,d])=>`<label title="${d}"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${l}</span><b id="aiW_${k}_v" style="min-width:72px;text-align:right">${stars(aiCustomWeights[k])}</b></div><input type="range" min="0" max="6" step="1" value="${aiCustomWeights[k]}" oninput="aiSetCustomWeight('${k}',this.value)"><small style="display:block;color:var(--muted);font-size:10px;margin-top:2px">${d}</small></label>`).join('')}</div>${conditionPicker}${surfaceFilter}<div class="ai-style-note">現在：<b>カスタム予想</b> ／ 総合評価・競馬場適性・距離適性・馬場適性・直近の調子の5項目で予想します。${aiSurfaceFilterEnabled?` ${opposite}の過去レースはスコア計算から除外中です。`:''}</div></div>`;
+  return `<div class="ai-style-panel"><div class="ai-style-tabs"><button class="ai-style-btn active">⚙ カスタム予想</button></div><div class="ai-weight-help"><b>重視度を0〜6で設定</b><br><span>0＝完全に無視　3＝標準　6＝最重要。数字は馬の点数ではなく、その要素を予想順位にどれだけ効かせるかを表します。</span></div><div class="ai-weight-grid">${rows.map(([k,l,d])=>`<label title="${d}"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${l}</span><b id="aiW_${k}_v" style="min-width:72px;text-align:right">${stars(aiCustomWeights[k])}</b></div><input type="range" min="0" max="6" step="1" value="${aiCustomWeights[k]}" oninput="aiSetCustomWeight('${k}',this.value)"><small style="display:block;color:var(--muted);font-size:10px;margin-top:2px">${d}</small></label>`).join('')}</div>${conditionPicker}${surfaceFilter}<div class="ai-style-note">現在：<b>カスタム予想</b> ／ 総合評価・競馬場適性・距離適性・馬場適性・直近の調子・ラップ適性の6項目で予想します。${aiSurfaceFilterEnabled?` ${opposite}の過去レースはスコア計算から除外中です。`:''}</div></div>`;
 }
 function aiBuildRaceData(day,venue,race){
-  const rows=[];
-  const surface=aiSurface(race), dist=aiDistance(race);
-  const w=aiGetWeights();
-  for(const rh of (race.horses||[])){
-    const h=horses.find(x=>x.name===rh.name);
-    if(!h) { rows.push({name:rh.name,num:rh.num,frame:rh.frame||0,known:false,score:null,comment:''}); continue; }
-    const scoringRaces=aiScoringRaces(h,surface);
-    const overall=scoringRaces.map(r=>aiEvalScore(r.eval)).filter(v=>v!==null&&v!==undefined);
-    const overallAvg=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
-    // 適性ランキングと同じ定義を使う：競馬場は「競馬場×芝/ダート」、距離は「距離×芝/ダート」。
-    const venueStats=aiTrackStats(h,venue.name,'',surface);
-    const distanceStats=aiTrackStats(h,'',dist,surface);
-    const conditionStats=aiConditionStats(h,'','',surface,aiConditionMode);
-    // 直近の調子は出馬表下の「直近の調子スコアランキング」と同じ計算（直近3走のaptAvg）を使用。
-    const formRaces=(h.races||[]).slice(0,3);
-    const formAvg=aptAvg(formRaces);
-    const formCount=formRaces.filter(r=>aptScore(r.eval)!==null).length;
-    // 同条件（競馬場×芝/ダート×距離）は根拠文用。予想の競馬場適性とは別物。
-    const cond=aiTrackStats(h,venue.name,dist,surface);
-    let score=0, weightSum=0;
-    const parts=[['overall',overallAvg,w.overall],['venue',venueStats.avg,w.venue],['distance',distanceStats.avg,w.distance],['condition',conditionStats.avg,w.condition],['form',formAvg,w.form]];
-    for(const [,v,ww] of parts){ if(v!==null&&v!==undefined&&ww>0){ score+=v*ww; weightSum+=ww; } }
-    score=weightSum>0 ? score/weightSum : null;
-    rows.push({name:h.name,num:rh.num,frame:rh.frame||0,known:true,score,overallAvg,formAvg,formCount,cond,venueStats,distanceStats,conditionStats,comments:scoringRaces.slice(0,5).map(r=>r.comment).filter(Boolean),shortNote:h.shortNote||'',races:scoringRaces,allRaces:(h.races||[]),surface});
-  }
-
-  // 高適性はランキングと完全統一：3走以上・平均3.0以上。
-  // 「どの項目を重視しているか」に応じて、その項目の高適性だけをボーナス対象にする。
-  const candidatesByKey={
-    venue:rows.filter(x=>x.known&&x.venueStats?.avg>=3.0&&x.venueStats?.count>=3),
-    distance:rows.filter(x=>x.known&&x.distanceStats?.avg>=3.0&&x.distanceStats?.count>=3),
-    condition:rows.filter(x=>x.known&&x.conditionStats?.avg>=3.0&&x.conditionStats?.count>=3),
-    overall:[]
-  };
-  rows.forEach(x=>{
-    x.highCondition=false; x.uniqueHighCondition=false; x.highConditionBonus=0; x.uniqueHighBonus=0;
-    const activeKeys=Object.entries(aiCustomWeights).filter(([,v])=>Number(v)>0).map(([k])=>k);
-    const highKeys=activeKeys.filter(k=>k!=='overall' && candidatesByKey[k]?.some(y=>y.num===x.num));
-    const uniqueKeys=highKeys.filter(k=>candidatesByKey[k].length===1);
-    x.highCondition=highKeys.length>0;
-    x.uniqueHighCondition=uniqueKeys.length>0;
-    x.highConditionKeys=highKeys;
-    x.uniqueHighKeys=uniqueKeys;
-    x.conditionReliability=Math.max(x.venueStats?.count||0,x.distanceStats?.count||0,x.conditionStats?.count||0)>=3?'高':'なし';
-
-    // 重み0の項目からボーナスが入らないよう、各項目の重みをそのまま効かせる。
-    for(const k of highKeys){
-      const weight=(Number(aiCustomWeights[k])||0)/6;
-      const stat=k==='venue'?x.venueStats:k==='distance'?x.distanceStats:x.conditionStats;
-      if(!stat||weight<=0) continue;
-      const strength=1.20+Math.max(0,Math.min(1.5,(stat.avg-3.0)*0.55));
-      x.highConditionBonus += strength*weight;
-      if(candidatesByKey[k].length===1) x.uniqueHighBonus += 1.50*weight;
-    }
-    x.score = x.score===null ? null : x.score + x.highConditionBonus + x.uniqueHighBonus;
-  });
-  return rows;
+  if(!window.SharedPredictionRuntime)throw Error('共通採点処理を読み込めませんでした。再読み込みしてください');
+  return window.SharedPredictionRuntime.calculate(day,venue,race,{weights:aiCustomWeights,going:aiConditionMode==='yielding'?'稍重':aiConditionMode==='heavy'?'重':'良',surfaceFilter:aiSurfaceFilterEnabled,lapClass:window.aiLapClass||'auto'}).ranked;
 }
 function aiFieldContext(all,c){
   const others=all.filter(x=>x.known&&x.num!==c.num);
@@ -180824,7 +180769,7 @@ function aiPredictionRecentSnapshot(c){
 }
 function aiBuildPredictionRecord(day,venue,race){
   const all=aiBuildRaceData(day,venue,race);
-  const ranked=all.filter(x=>x.known&&x.score!==null&&x.score!==undefined&&Number.isFinite(x.score)).sort((a,b)=>b.score-a.score);
+  const ranked=all.filter(x=>x.known&&x.score!==null&&x.score!==undefined&&Number.isFinite(x.score)).sort((a,b)=>(b.score-a.score)||Number(a.num)-Number(b.num));
   const marks=['◎','○','▲','△','☆'];
   const rankByNum=new Map(ranked.map((x,i)=>[String(x.num),i+1]));
   const markByNum=new Map(ranked.slice(0,5).map((x,i)=>[String(x.num),marks[i]]));
@@ -180845,7 +180790,7 @@ function aiBuildPredictionRecord(day,venue,race){
   return {
     predictionId,
     schemaVersion:1,
-    engineVersion:'custom-ai-v1',
+    engineVersion:'shared-six-v2',
     scoringVersion:'S6_A4_B3_C2_D0_F_REFERENCE',
     createdAt:new Date().toISOString(),
     createdByUid:window._fbCurrentUser?.uid || null,
@@ -180875,7 +180820,10 @@ async function saveCurrentPrediction(){
     const snap=await getDocs(q);
     const sameWeights = snap.docs.find(d=>{
       const previous=d.data()||{},old=previous.weights||{};
-      return ['overall','venue','distance','condition','form'].every(k=>Number(old[k]||0)===Number(record.weights?.[k]||0))
+      return ['overall','venue','distance','condition','form','lap'].every(k=>Number(old[k]||0)===Number(record.weights?.[k]||0))
+        && previous.engineVersion===record.engineVersion
+        && (previous.lapClass||'auto')===(record.lapClass||'auto')
+        && previous.targetGoing===record.targetGoing
         && (previous.conditionMode||'good')===record.conditionMode
         && !!previous.surfaceFilterEnabled===!!record.surfaceFilterEnabled;
     });
@@ -181436,7 +181384,7 @@ function aiMakePrediction(day,venue,race){
   } else {
     flow='脚質情報を十分に読み取れる馬が少なく、展開は不確定要素が大きいとみます。';
   }
-  let out=`<div class="ai-predict-answer">${aiWeightPanel()}<div class="ai-predict-intro"><b>${aiEsc(day.label)} ${aiEsc(venue.name)} ${race.r}R ${aiEsc(race.name)}</b><br>${aiEsc((surface||'')+(dist?' '+dist+'m':'' )||race.track||'コース情報あり')}<br><span style="color:var(--muted)">※出走前の予想として、アプリ内の総合評価・競馬場適性・距離適性・馬場適性の4項目を組み合わせています。馬場適性は${aiConditionMode==='good'?'良馬場':aiConditionMode==='yielding'?'稍重':'重・不良'}の実績を対象にしています。</span></div>`;
+  let out=`<div class="ai-predict-answer">${aiWeightPanel()}<div class="ai-predict-intro"><b>${aiEsc(day.label)} ${aiEsc(venue.name)} ${race.r}R ${aiEsc(race.name)}</b><br>${aiEsc((surface||'')+(dist?' '+dist+'m':'' )||race.track||'コース情報あり')}<br><span style="color:var(--muted)">※出走前の予想として、アプリ内の総合評価・競馬場適性・距離適性・馬場適性・調子・ラップ適性を共通エンジンで計算しています。馬場適性は${aiConditionMode==='good'?'良馬場':aiConditionMode==='yielding'?'稍重':'重・不良'}の実績を対象にしています。</span></div>`;
   out+=`<h4>🏇 印と根拠</h4>`;
   if(top.length){
     const marks=['◎','○','▲','△','☆'];
@@ -182073,49 +182021,8 @@ function publicRecalculate(){publicAppliedWeights={...publicDraftWeights};render
 // 管理者の aiBuildRaceData と同一の5項目・高適性加点を、公開画面内で副作用なく計算する。
 // 管理者のグローバル設定・予想保存・Firestoreの読み書きは一切変更しない。
 function publicRaceRanking(selected){
-  if(!selected?.sourceRace)return [];
-  const source=selected.sourceRace;
-  const surface=selected.surface||aiExtractSurface(selected.track);
-  const dist=String(selected.distance||'');
-  const w=publicAppliedWeights;
-  const horseMap=new Map((Array.isArray(horses)?horses:[]).filter(h=>h?.name).map(h=>[h.name,h]));
-  const rows=(source.horses||[]).map((entry,i)=>{
-    const name=entry.name||entry.horseName||'';
-    const num=entry.num??entry.number??i+1;
-    const h=horseMap.get(name);
-    const factors={overall:null,venue:null,distance:null,condition:null,form:null};
-    if(!h)return {name,num,factors,customScore:null,known:false};
-    // 一般モードの想定馬場を使用。スコアの計算式は維持する。
-    const scoringRaces=h.races||[];
-    const overall=scoringRaces.map(r=>aiEvalScore(r.eval)).filter(v=>v!==null&&v!==undefined);
-    factors.overall=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
-    const venueStats=aiTrackStats(h,selected.venue,'',surface);
-    const distanceStats=aiTrackStats(h,'',dist,surface);
-    const conditionMode=selected.trackCondition==='稍重'?'yielding':['重','不良'].includes(selected.trackCondition)?'heavy':'good';
-    const conditionStats=aiConditionStats(h,'','',surface,conditionMode);
-    factors.venue=venueStats.avg;
-    factors.distance=distanceStats.avg;
-    factors.condition=conditionStats.avg;
-    factors.form=aptAvg((h.races||[]).slice(0,3));
-    return {name,num,factors,customScore:scoreWithWeights({factors},w),known:true,venueStats,distanceStats,conditionStats};
-  });
-  const candidates={
-    venue:rows.filter(x=>x.known&&x.venueStats?.avg>=3&&x.venueStats?.count>=3),
-    distance:rows.filter(x=>x.known&&x.distanceStats?.avg>=3&&x.distanceStats?.count>=3),
-    condition:rows.filter(x=>x.known&&x.conditionStats?.avg>=3&&x.conditionStats?.count>=3)
-  };
-  for(const x of rows){
-    if(x.customScore==null)continue;
-    for(const k of ['venue','distance','condition']){
-      const weight=(Number(w[k])||0)/6;
-      if(!weight||!candidates[k].some(y=>y.num===x.num))continue;
-      const stat=k==='venue'?x.venueStats:k==='distance'?x.distanceStats:x.conditionStats;
-      const strength=1.20+Math.max(0,Math.min(1.5,(stat.avg-3)*0.55));
-      x.customScore+=strength*weight;
-      if(candidates[k].length===1)x.customScore+=1.50*weight;
-    }
-  }
-  return rows.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
+  if(!window.SharedPredictionRuntime)throw Error('共通採点処理を読み込めませんでした。再読み込みしてください');
+  return window.SharedPredictionRuntime.calculate({date:selected.date},{name:selected.venue},{...selected.sourceRace,track:selected.track||selected.sourceRace?.track||String(selected.surface||'')+String(selected.distance||'')},{weights:publicAppliedWeights,going:selected.trackCondition||'良',surfaceFilter:false,lapClass:'auto'}).ranked;
 }
 const publicExpandedHorses=new Set();
 function publicToggleHorse(key){if(publicExpandedHorses.has(key))publicExpandedHorses.delete(key);else publicExpandedHorses.add(key);renderPublicPredict();}
@@ -182337,7 +182244,7 @@ function renderPublicHistory(){
    const r=p.raceSnapshot||{},w=p.weights||{};
    const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank??999)-(b.rank??999));
    const val=v=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toFixed(1);
-   el.innerHTML=header+`<div class="public-panel"><button class="public-reset" onclick="publicHistorySelected=-1;renderPublicHistory()">← 一覧に戻る</button><h3 style="margin-top:16px">${publicEscape(r.date||'')} ${publicEscape(r.venue||'')} ${publicEscape(r.raceNumber||'')}R ${publicEscape(r.raceName||'')}</h3><p class="public-muted">${publicEscape(r.surface||'')} ${publicEscape(r.distance||'')}m　${publicEscape(r.trackCondition||'')}</p><p class="public-muted">重み：総合${w.overall??0}・場${w.venue??0}・距離${w.distance??0}・馬場${w.condition??0}・調子${w.form??0}</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap"><thead><tr>${['順位','印','馬名','総合','場','距離','馬場','調子','最終'].map(x=>`<th style="padding:8px;border-bottom:1px solid var(--border)">${x}</th>`).join('')}</tr></thead><tbody>${rows.map((h,i)=>`<tr>${[h.rank??i+1,publicEscape(h.mark||''),publicEscape(h.name||''),val(h.factors?.overall),val(h.factors?.venue),val(h.factors?.distance),val(h.factors?.condition),val(h.factors?.form),h.score==null?'—':Number(h.score).toFixed(2)].map(x=>`<td style="padding:8px;border-bottom:1px solid var(--border)">${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${rows.length?'':'<p class="public-muted">この予想には馬別スコアが保存されていません。</p>'}</div>`;return;
+   el.innerHTML=header+`<div class="public-panel"><button class="public-reset" onclick="publicHistorySelected=-1;renderPublicHistory()">← 一覧に戻る</button><h3 style="margin-top:16px">${publicEscape(r.date||'')} ${publicEscape(r.venue||'')} ${publicEscape(r.raceNumber||'')}R ${publicEscape(r.raceName||'')}</h3><p class="public-muted">${publicEscape(r.surface||'')} ${publicEscape(r.distance||'')}m　${publicEscape(r.trackCondition||'')}</p><p class="public-muted">重み：総合${w.overall??0}・場${w.venue??0}・距離${w.distance??0}・馬場${w.condition??0}・調子${w.form??0}・ラップ${w.lap??'旧版対象外'}／${publicEscape(p.engineVersion||'旧版')}</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap"><thead><tr>${['順位','印','馬名','総合','場','距離','馬場','調子','ラップ','最終'].map(x=>`<th style="padding:8px;border-bottom:1px solid var(--border)">${x}</th>`).join('')}</tr></thead><tbody>${rows.map((h,i)=>`<tr>${[h.rank??i+1,publicEscape(h.mark||''),publicEscape(h.name||''),val(h.factors?.overall),val(h.factors?.venue),val(h.factors?.distance),val(h.factors?.condition),val(h.factors?.form),val(h.factors?.lap),h.score==null?'—':Number(h.score).toFixed(2)].map(x=>`<td style="padding:8px;border-bottom:1px solid var(--border)">${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${rows.length?'':'<p class="public-muted">この予想には馬別スコアが保存されていません。</p>'}</div>`;return;
  }
  el.innerHTML=header+`<div class="public-panel"><h3>保存済み予想（${publicHistoryItems.length}件読み込み済み）</h3>${publicHistoryItems.map((p,i)=>{const r=p.raceSnapshot||{};return `<button type="button" onclick="publicHistorySelected=${i};renderPublicHistory()" style="width:100%;display:block;text-align:left;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:12px;margin:8px 0;cursor:pointer"><strong>${publicEscape(r.date||'')} ${publicEscape(r.venue||'')} ${publicEscape(r.raceNumber||'')}R ${publicEscape(r.raceName||'')}</strong><div class="public-muted">${publicEscape((p.top5||[]).map(h=>(h.mark||'')+(h.name||'')).join(' ／ '))||'予想馬データなし'}</div></button>`;}).join('')||'<p class="public-muted">まだ履歴がありません。</p>'}${publicHistoryHasMore?`<button class="public-reset" onclick="publicHistoryMore()" ${publicHistoryLoading?'disabled':''}>${publicHistoryLoading?'読み込み中…':'さらに20件表示'}</button>`:''}</div>`;
 }
@@ -182351,8 +182258,10 @@ async function publicHistoryMore(){
 </script>
 
 <script src="lap-metrics.js?v=20261113-2"></script>
+<script src="shared-prediction-engine.js?v=20261114-2"></script>
+<script src="shared-prediction-runtime.js?v=20261114-2"></script>
 <script src="score-interpretation.js?v=20261114-1"></script>
-<script src="public-assistant.js?v=20261114-1"></script>
-<script src="day-standard-predictions.js?v=20261114-1"></script>
+<script src="public-assistant.js?v=20261114-2"></script>
+<script src="day-standard-predictions.js?v=20261114-2"></script>
 </body>
 </html>

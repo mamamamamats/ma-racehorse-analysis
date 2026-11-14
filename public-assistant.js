@@ -43,7 +43,7 @@
     if(state.reviews)return;
     if(state.reviewPromise)return state.reviewPromise;
     state.reviewError='';
-    state.reviewPromise=(async()=>{try{state.reviews=await readCollection('raceReviews');wholeReviewRankingRecords=state.reviews;wholeReviewRankingLoaded=true;}catch(e){state.reviewError=e.message;}finally{state.reviewPromise=null;refreshCurrent();}})();
+    state.reviewPromise=(async()=>{try{state.reviews=await window.SharedPredictionRuntime.ensure();wholeReviewRankingRecords=state.reviews;wholeReviewRankingLoaded=true;}catch(e){state.reviewError=e.message;}finally{state.reviewPromise=null;refreshCurrent();}})();
     refreshCurrent();return state.reviewPromise;
   };
   PA.loadVerification = async () => {
@@ -192,25 +192,16 @@
   PA.setLapClass=value=>{state.lapClass=value;renderPublicPredict();};
   let lapContextCache=null;
   function lapContext(selected){
-    const choice=LM.resolveClass(state.lapClass,selected.sourceRace?.grade),going=selected.trackCondition||'良';
+    const going=selected.trackCondition||'良',grade=selected.sourceRace?.grade||selected.sourceRace?.raceClass||selected.sourceRace?.class||'',choice=LM.resolveClass(state.lapClass,grade);
     const cacheKey=[selected.date,selected.venue,selected.surface,selected.distance,going,choice].join('|');
     if(lapContextCache?.key===cacheKey&&lapContextCache.reviews===state.reviews)return lapContextCache;
-    const rows=matchingReviews({venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},selected.date).filter(r=>LM.matchesClass(ref(r).grade,choice));
-    const parsed=rows.map(lapOf).filter(Boolean),profile=LM.meanProfile(parsed);
-    return lapContextCache={key:cacheKey,reviews:state.reviews,choice,rows,parsed,profile};
+    const basis=window.SharedPredictionEngine.profile({date:selected.date,venue:selected.venue,surface:selected.surface,distance:selected.distance,going,grade,lapClass:state.lapClass||'auto'},state.reviews||[],LM);
+    return lapContextCache={key:cacheKey,reviews:state.reviews,choice:basis.choice,rows:basis.rows,parsed:basis.rows.map(lapOf).filter(Boolean),profile:basis.profile};
   }
-  const fiveFactorRanking=publicRaceRanking;
   publicRaceRanking=selected=>{
-    const ranked=fiveFactorRanking(selected),context=lapContext(selected);
-    for(const h of ranked){
-      const originalBase=scoreWithWeights(h,publicAppliedWeights),bonus=h.customScore==null||originalBase==null?0:h.customScore-originalBase;
-      const horse=(horses||[]).find(x=>x.name===h.name);
-      h.lapStats=LM.horseAptitude(horse,state.reviews||[],context.profile?.pattern,{surface:selected.surface,before:selected.date,parse:lapOf});
-      h.factors.lap=h.lapStats.avg;
-      let sum=0,weight=0;for(const k of Object.keys(publicLabels)){const v=h.factors[k],w=Number(publicAppliedWeights[k])||0;if(v==null||!Number.isFinite(Number(v))||w<=0)continue;sum+=Number(v)*w;weight+=w;}
-      h.baseScore=weight?sum/weight:null;h.bonusScore=bonus;h.customScore=h.baseScore==null?null:h.baseScore+bonus;
-    }
-    return ranked.sort((a,b)=>(b.customScore??-Infinity)-(a.customScore??-Infinity)||Number(a.num)-Number(b.num));
+    const day={date:selected.date},venue={name:selected.venue},race={...selected.sourceRace,track:selected.track||selected.sourceRace?.track||String(selected.surface||'')+String(selected.distance||'')};
+    const result=window.SharedPredictionRuntime.calculate(day,venue,race,{weights:publicAppliedWeights,going:selected.trackCondition||'良',surfaceFilter:false,lapClass:state.lapClass||'auto'});
+    state.inputFingerprint=result.fingerprint;return result.ranked;
   };
   function averageLapChart(profile){
     if(!profile)return '';
@@ -238,25 +229,26 @@
     const venueNames=[...new Set(visible.map(r=>r.venue))];
     body+=panel('レースを選ぶ',`<div class="pa-toolbar">${btn('今週のレース',"PA.setScope('week')",state.scope!=='week')}${btn('過去開催で振り返る',"PA.setScope('archive')",state.scope!=='archive')}</div>${visible.length?`<div class="pa-filters"><label>① 開催日<select class="pa-select" aria-label="開催日" onchange="PA.setDate(this.value)">${dates.map(d=>`<option value="${E(d)}" ${state.date===d?'selected':''}>${d.slice(0,4)}年 ${E(displayDate(d))}</option>`).join('')}</select></label><label style="grid-column:span 2">② 競馬場・レース<select class="pa-select" aria-label="予想するレース" onchange="publicChooseRace(this.value)"><option value="">競馬場・レースを選択してください</option>${venueNames.map(venue=>`<optgroup label="${E(venue)}">${visible.filter(r=>r.venue===venue).map(r=>`<option value="${E(publicRaceKey(r))}" ${selected===r?'selected':''}>${Number(r.raceNumber)===11?'★ ':''}${E(r.venue)} ${E(r.raceNumber)}R ${E(r.raceName)} · ${E(r.surface)}${E(r.distance)}m</option>`).join('')}</optgroup>`).join('')}</select></label></div>`:empty('今週の開催データがまだありません。「過去開催で振り返る」から保存済みのレースを確認できます。')}${mainRaceCards(selected)}`);
     if(!selected){el.innerHTML=`<div class="pa">${body}${panel('あなたの予想に、比較できる根拠を。',`<div class="pa-stats">${stat('評価の視点','6','項目')}${stat('比較するもの','展開','と適性')}${stat('判断の材料','実績','と件数')}</div><p class="pa-muted">レースを選ぶと六角形の評価カードと条件傾向を表示します。過去の傾向を調べるなら「条件・ラップ研究」へ。</p>${btn('条件・ラップ研究を開く',"switchView('publicResearch')",true)}`)}</div>`;return;}
+    if(!state.reviews){el.innerHTML=`<div class="pa">${body}${panel('共通採点データを読み込み中',loadReviewsUI())}</div>`;if(!state.reviewPromise&&!state.reviewError)Promise.resolve().then(()=>PA.loadReviews());return;}
     const going=state.going||selected.trackCondition||'良',working={...selected,trackCondition:going},ranked=publicRaceRanking(working),scored=ranked.filter(h=>h.customScore!=null),gap=scored.length>1?scored[0].customScore-scored[1].customScore:null;
     body+='<div id="paSelectedRace">';
     body+=panel(`${E(selected.venue)} ${E(selected.raceNumber)}R · ${E(selected.raceName)}`,`<div><span class="pa-tag mint">${E(selected.surface)} ${E(selected.distance)}m</span><span class="pa-tag">${E(publicReviewClass({raceRef:{venue:selected.venue,grade:selected.sourceRace.grade}}))}</span><span class="pa-tag">${ranked.length}頭</span></div><div class="pa-toolbar"><label class="pa-muted">想定する馬場 <select class="pa-select" style="width:auto" aria-label="想定する馬場" onchange="PA.setGoing(this.value)">${['良','稍重','重','不良'].map(g=>`<option ${g===going?'selected':''}>${g}</option>`).join('')}</select></label><span class="pa-muted">${!selected.trackCondition&&!state.going?'馬場未登録のため「良」を仮設定。変更できます。':'馬場適性の評価に反映します。'}</span></div>${state.scope==='archive'?note('過去開催の参考計算です。現在の馬の履歴を使うため、当時の発走前予想の再現・精度検証には使えません。保存済みスコアの検証は「予想の検証」で確認できます。'):''}<div class="pa-stats">${stat('評価できた馬',scored.length,`/ ${ranked.length}頭`)}${stat('トップスコア',scored.length?num(scored[0].customScore,2):'—','点')}${stat('1位と2位の点差',num(gap,2),'点')}</div>`);
-    body+='</div>';
+    body+=`<p class="pa-muted">共通採点 ${window.SharedPredictionEngine.VERSION}／入力識別 ${E(state.inputFingerprint)}</p></div>`;
     if(state.reviews){const filters={venue:selected.venue,surface:selected.surface,distance:String(selected.distance),trackCondition:going},records=matchingReviews(filters,selected.date);body+=panel('今回の条件・ラップの判断材料',lapBriefing(records,selected,going));}else{body+=panel('同条件のラップ・展開を確認',loadReviewsUI());if(!state.reviewPromise&&!state.reviewError)Promise.resolve().then(()=>PA.loadReviews());}
-    body+=panel('6つの視点で比較する',`<div class="pa-base-guide"><b>基礎点の目安</b><span>4.0以上：高評価</span><span>3.0以上：標準以上</span><span>2.0〜3.0未満：基準未満</span><span>2.0未満：低め</span></div>${SI.analyse(ranked).allBelow?note('評価できた馬の基礎点はすべて3.0未満です。今回の順位が高くても、基礎評価が高いことを意味しません。'):''}<p class="pa-muted">六角形は各項目0〜6。ラップ適性は同じラップ型の過去S〜D評価の平均。最終スコアは適性加点を含むため6点を超えることがあります。未評価は0点と区別して表示します。</p><div class="pa-podium">${ranked.slice(0,3).map((h,i)=>`<article class="pa-horse"><div class="pa-rank">SCORE RANK / 0${i+1}</div><h3>${E(h.num)}番 ${E(h.name)}</h3><div class="pa-kpi">${h.customScore==null?'—':num(h.customScore,2)} <small>総合点</small></div>${componentScores(h)}${publicRadar(h)}${radarValues(h)}${horseFoot(h)}</article>`).join('')}</div>`);
+    body+=panel('6つの視点で比較する',`<div class="pa-base-guide"><b>基礎点の目安</b><span>4.0以上：高評価</span><span>3.0以上：標準以上</span><span>2.0〜3.0未満：基準未満</span><span>2.0未満：低め</span></div>${SI.analyse(ranked).allBelow?note('評価できた馬の基礎点はすべて3.0未満です。今回の順位が高くても、基礎評価が高いことを意味しません。'):''}<p class="pa-muted">六角形は各項目0〜6。ラップ適性は同じラップ型の過去S〜D評価の平均。最終スコアは適性加点を含むため6点を超えることがあります。未評価は0点と区別して表示します。</p><div class="pa-podium">${ranked.slice(0,3).map((h,i)=>`<article class="pa-horse"><div class="pa-rank">SCORE RANK / ${h.customScore==null?'—':String(i+1).padStart(2,'0')}</div><h3>${E(h.num)}番 ${E(h.name)}</h3><div class="pa-kpi">${h.customScore==null?'—':num(h.customScore,2)} <small>総合点</small></div>${componentScores(h)}${publicRadar(h)}${radarValues(h)}${horseFoot(h)}</article>`).join('')}</div>`);
     lastRanked=ranked;body+=`<section class="pa-panel" id="paScoreComparison">${scoreComparison(ranked)}</section>`;
-    body+=`<details class="pa-panel"><summary>全頭の評価を一覧で見る（${ranked.length}頭）</summary><div class="pa-list">${ranked.map((h,i)=>`<details><summary><span class="pa-tag${i<3?' gold':''}">${i+1}位</span><strong>${E(h.num)}番 ${E(h.name)}</strong><span class="pa-summary-score"><b class="pa-kpi" style="font-size:20px">${h.customScore==null?'—':num(h.customScore,2)}</b><small>基礎 ${num(h.baseScore,2)} ＋ 適性 ${h.customScore==null?'—':num(h.bonusScore,2)}</small></span></summary><div class="pa-horse-body">${publicRadar(h)}<div>${radarValues(h)}${horseFoot(h)}</div></div></details>`).join('')}</div></details>`;
+    body+=`<details class="pa-panel"><summary>全頭の評価を一覧で見る（${ranked.length}頭）</summary><div class="pa-list">${ranked.map((h,i)=>`<details><summary><span class="pa-tag${i<3?' gold':''}">${h.customScore==null?'未評価':(i+1)+'位'}</span><strong>${E(h.num)}番 ${E(h.name)}</strong><span class="pa-summary-score"><b class="pa-kpi" style="font-size:20px">${h.customScore==null?'—':num(h.customScore,2)}</b><small>基礎 ${num(h.baseScore,2)} ＋ 適性 ${h.customScore==null?'—':num(h.bonusScore,2)}</small></span></summary><div class="pa-horse-body">${publicRadar(h)}<div>${radarValues(h)}${horseFoot(h)}</div></div></details>`).join('')}</div></details>`;
     body+=`<details class="pa-panel pa-weight"><summary>重視する項目を調整する</summary><p class="pa-muted">初期値は各3。重みを変更後に再計算してください。</p>${Object.entries(publicLabels).map(([k,l])=>`<label>${E(l)} <b id="pa-w-${k}">${publicDraftWeights[k]}</b><input aria-label="${E(l)}の重み" type="range" min="0" max="6" step="1" value="${publicDraftWeights[k]}" oninput="publicSetWeight('${k}',this.value);document.getElementById('pa-w-${k}').textContent=this.value"></label>`).join('')}${btn('この重みで再計算','publicRecalculate()')}</details>`;
     el.innerHTML=`<div class="pa">${body}</div>`;
   };
-  function configKey(p){return JSON.stringify([snapshotKeys.map(k=>Number(p.weights?.[k])||0),p.conditionMode||'',!!p.surfaceFilterEnabled,p.engineVersion||'',p.scoringVersion||'']);}
-  function standardConfig(p){return snapshotKeys.every(k=>Number(p.weights?.[k])===3)&&p.conditionMode==='good'&&!p.surfaceFilterEnabled;}
+  function configKey(p){return JSON.stringify([(p.engineVersion===window.SharedPredictionEngine.VERSION?window.SharedPredictionEngine.KEYS:snapshotKeys).map(k=>Number(p.weights?.[k])||0),p.conditionMode||'',!!p.surfaceFilterEnabled,p.engineVersion||'',p.scoringVersion||'',p.lapClass||'auto',p.targetGoing||'']);}
+  function standardConfig(p){return (p.engineVersion===window.SharedPredictionEngine.VERSION?window.SharedPredictionEngine.KEYS:snapshotKeys).every(k=>Number(p.weights?.[k])===3)&&p.conditionMode==='good'&&!p.surfaceFilterEnabled;}
   state.verifyConfig='';
   PA.verifySetting=(key,value)=>{if(key==='config')state.verifyConfig=value;if(key==='mode')state.verifyMode=value;renderPublicResults();};
   function verifyData(){
     const ps=state.predictions||[],rs=state.results||[],byid=new Map(rs.map(r=>[r.raceId,r])),byref=new Map(rs.map(r=>[resultIdentity(r),r]));
     let after=0,unknown=0,unmatched=0,incomplete=0,duplicates=0;const seen=new Set(),records=[];
-    const configs=[...new Map(ps.map(p=>[configKey(p),p])).entries()];if(!configs.some(([k])=>k===state.verifyConfig))state.verifyConfig=configs.find(([,p])=>standardConfig(p))?.[0]||configs[0]?.[0]||'';
+    const configs=[...new Map(ps.map(p=>[configKey(p),p])).entries()];if(!configs.some(([k])=>k===state.verifyConfig))state.verifyConfig=(configs.find(([,p])=>p.engineVersion===window.SharedPredictionEngine.VERSION&&standardConfig(p))||configs.find(([,p])=>standardConfig(p)))?.[0]||configs[0]?.[0]||'';
     for(const p of [...ps].sort((a,b)=>String(a.createdAt||'').localeCompare(String(b.createdAt||'')))){
       const raceDate=dateKey(p.raceSnapshot?.date),created=new Date(p.createdAt),stamp=Number.isFinite(created.getTime())?created.toLocaleDateString('sv-SE',{timeZone:'Asia/Tokyo'}).replace(/-/g,''):'';
       const isAfter=!!(raceDate&&stamp&&stamp>raceDate);if(isAfter)after++;if(!raceDate||!stamp)unknown++;
@@ -288,13 +280,13 @@
     const data=verifyData(),{records}=data,hs=records.flatMap(r=>r.horses),groups=Array.from({length:5},(_,i)=>({label:i===4?'8点以上':`${i*2}〜${i*2+2}点未満`,n:0,hit:0})),ranks=['1位','2位','3位','4〜5位','6位以下'].map(label=>({label,n:0,hit:0})),gaps=['0〜0.5未満','0.5〜1未満','1〜2未満','2点以上'].map(label=>({label,n:0,hit:0}));
     for(const h of hs){const idx=Math.max(0,Math.min(4,Math.floor(Number(h.score)/2))),g=groups[idx];g.n++;if(h.finish!=null&&Number(h.finish)<=3)g.hit++;const rank=Number(h.rank);if(rank>0){const x=ranks[rank<=3?rank-1:rank<=5?3:4];x.n++;if(h.finish!=null&&Number(h.finish)<=3)x.hit++;}}
     for(const r of records){if(!r.top||r.gap==null||r.gap<0)continue;const g=gaps[r.gap<.5?0:r.gap<1?1:r.gap<2?2:3];g.n++;if(r.top.finish!=null&&Number(r.top.finish)<=3)g.hit++;}
-    body+=panel('比較する記録',`<div class="pa-filters"><label>保存タイミング<select aria-label="検証の保存タイミング" onchange="PA.verifySetting('mode',this.value)">${[['dated','開催日以前に保存（発走前未確認）'],['retro','開催日の翌日以降に保存'],['all','すべての保存記録']].map(([k,l])=>`<option value="${k}" ${state.verifyMode===k?'selected':''}>${l}</option>`).join('')}</select></label><label style="grid-column:span 2">同じ計算設定で比較<select aria-label="スコア検証の計算設定" onchange="PA.verifySetting('config',this.value)">${data.configs.map(([k,p])=>`<option value="${E(k)}" ${state.verifyConfig===k?'selected':''}>${standardConfig(p)?'標準設定 · ':''}総合${E(p.weights?.overall)} / 場${E(p.weights?.venue)} / 距離${E(p.weights?.distance)} / 馬場${E(p.weights?.condition)} / 調子${E(p.weights?.form)} · ${E(p.conditionMode)} · 芝ダート除外${p.surfaceFilterEnabled?'あり':'なし'}</option>`).join('')}</select></label></div><div class="pa-stats">${stat('同設定・結果確定の対象',records.length,'レース')}${stat('スコアと着順が揃う',hs.length,'頭')}${stat('全保存記録',state.predictions.length,'件')}</div>${note(`同じレース・同じ設定の複数記録は最初の保存を採用。除外した重複${data.duplicates}件、結果未照合${data.unmatched}件、部分入力等${data.incomplete}件。全記録のうち翌日以降の保存${data.after}件、日付不明${data.unknown}件。取消は分母から除き、中止は不的中に含めます。同日保存は発走前か未確認で、予測精度の証明ではありません。`)}`);
+    body+=panel('比較する記録',`<div class="pa-filters"><label>保存タイミング<select aria-label="検証の保存タイミング" onchange="PA.verifySetting('mode',this.value)">${[['dated','開催日以前に保存（発走前未確認）'],['retro','開催日の翌日以降に保存'],['all','すべての保存記録']].map(([k,l])=>`<option value="${k}" ${state.verifyMode===k?'selected':''}>${l}</option>`).join('')}</select></label><label style="grid-column:span 2">同じ計算設定で比較<select aria-label="スコア検証の計算設定" onchange="PA.verifySetting('config',this.value)">${data.configs.map(([k,p])=>`<option value="${E(k)}" ${state.verifyConfig===k?'selected':''}>${standardConfig(p)?'標準設定 · ':''}総合${E(p.weights?.overall)} / 場${E(p.weights?.venue)} / 距離${E(p.weights?.distance)} / 馬場${E(p.weights?.condition)} / 調子${E(p.weights?.form)} / ラップ${E(p.weights?.lap??'旧版対象外')} · ${E(p.engineVersion)} · 馬場${E(p.targetGoing||p.conditionMode)} · ラップ条件${E(p.lapClass||'旧版対象外')} · 芝ダート除外${p.surfaceFilterEnabled?'あり':'なし'}</option>`).join('')}</select></label></div><div class="pa-stats">${stat('同設定・結果確定の対象',records.length,'レース')}${stat('スコアと着順が揃う',hs.length,'頭')}${stat('全保存記録',state.predictions.length,'件')}</div>${note(`同じレース・同じ設定の複数記録は最初の保存を採用。除外した重複${data.duplicates}件、結果未照合${data.unmatched}件、部分入力等${data.incomplete}件。全記録のうち翌日以降の保存${data.after}件、日付不明${data.unknown}件。取消は分母から除き、中止は不的中に含めます。同日保存は発走前か未確認で、予測精度の証明ではありません。`)}`);
     body+=panel('スコア帯別・3着内率',rateChart(groups,'スコア帯別の3着内率')+note('線は95% Wilson区間の参考表示です。少数例や同一レース内の相関、対象の偏りを考慮し、次走の的中確率としては扱いません。'));
     body+=`<div class="pa-grid">${panel('予想順位別・3着内率',rateChart(ranks,'順位別の3着内率'))}${panel('1位と2位の点差・本命3着内率',rateChart(gaps,'点差別の本命3着内率'))}</div>`;
     return `<div class="pa">${body}</div>`;
   }
-  renderPublicResults=()=>{document.getElementById('paVerification')?.remove();originalResults();const el=document.getElementById('publicResultsMain');if(el)el.insertAdjacentHTML('afterbegin',`<div id="paVerification">${resultTabs('results')}${verificationPanel()}<div class="pa">${hero('RESULT SEARCH','条件別の成績を調べる','以下の検索・条件ランキングは、上のスコア検証とは独立して集計します。')}</div></div>`);};
-  renderPublicHistory=()=>{originalHistory();const el=document.getElementById('publicHistoryMain');if(el)el.insertAdjacentHTML('afterbegin',resultTabs('history')+'<div class="pa">'+note('ここは保存時点の予想スコア・順位・5項目を表示しています。現在の馬評価では再計算しません。表示する着順は後から保存された結果です。')+'</div>');};
+  renderPublicResults=()=>{document.getElementById('paVerification')?.remove();originalResults();const el=document.getElementById('publicResultsMain');if(el)el.insertAdjacentHTML('afterbegin',`<div id="paVerification">${resultTabs('results')}${verificationPanel()}<div class="pa">${hero('RESULT SEARCH','条件別の成績を調べる（旧版・各設定を含む）','以下は保存記録全体の集計です。現行モデルだけを検証する場合は、上の計算設定で shared-six-v2 を選択してください。')}</div></div>`);};
+  renderPublicHistory=()=>{originalHistory();const el=document.getElementById('publicHistoryMain');if(el)el.insertAdjacentHTML('afterbegin',resultTabs('history')+'<div class="pa">'+(publicHistorySelected>=0?'<p class="pa-muted">採点版：'+E(publicHistoryItems[publicHistorySelected]?.engineVersion||'旧版')+'／入力識別：'+E(publicHistoryItems[publicHistorySelected]?.inputFingerprint||'旧版に記録なし')+'</p>':'')+note('ここは保存時点の予想スコア・順位・5項目を表示しています。現在の馬評価では再計算しません。表示する着順は後から保存された結果です。')+'</div>');};
   const originalHorseDetail=renderHorseDetail;
   renderHorseDetail=()=>{
     originalHorseDetail();if(!selectedHorse)return;
@@ -320,7 +312,7 @@
   updateBreadcrumb=()=>{oldBreadcrumb();if(currentView==='publicResearch'){const el=document.getElementById('breadcrumb');el.innerHTML='<span class="crumb" onclick="switchView(\'home\')">ホーム</span><span class="sep">/</span><span class="current">条件・ラップ研究</span>';}else{const crumb=document.querySelector('#breadcrumb .current');if(crumb&&names[currentView])crumb.textContent=names[currentView];}};
   for(const card of document.querySelectorAll('.home-card[data-public-only]')){
     const onclick=card.getAttribute('onclick')||'';
-    if(onclick.includes('publicPredict')){card.querySelector('.card-title').textContent='予想アシスト';card.querySelector('.card-desc').innerHTML='5つの評価と条件傾向から<br>今回の候補を比較。';}
+    if(onclick.includes('publicPredict')){card.querySelector('.card-title').textContent='予想アシスト';card.querySelector('.card-desc').innerHTML='6つの評価と条件傾向から<br>今回の候補を比較。';}
     if(onclick.includes('publicResults')){card.querySelector('.card-title').textContent='予想の検証';card.querySelector('.card-desc').innerHTML='スコア・順位・点差が<br>好走につながったかを確認。';}
     if(onclick.includes('publicHistory')){card.setAttribute('onclick',"switchView('publicResearch')");card.querySelector('.card-title').textContent='条件・ラップ研究';card.querySelector('.card-desc').innerHTML='展開と区間ラップから<br>レースの中身を比較。';}
   }
