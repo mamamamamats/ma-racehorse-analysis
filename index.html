@@ -1843,7 +1843,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
 
   window._fbReady = true;
 </script>
-<link rel="stylesheet" href="public-assistant.css?v=20261113-3">
+<link rel="stylesheet" href="public-assistant.css?v=20261114-1">
 </head>
 <body>
 <div class="app">
@@ -180874,17 +180874,19 @@ async function saveCurrentPrediction(){
     const q=query(collection(window._fbDb,'predictions'),where('raceId','==',record.raceId));
     const snap=await getDocs(q);
     const sameWeights = snap.docs.find(d=>{
-      const old=d.data()?.weights||{};
-      return ['overall','venue','distance','condition','form'].every(k=>Number(old[k]||0)===Number(record.weights?.[k]||0));
+      const previous=d.data()||{},old=previous.weights||{};
+      return ['overall','venue','distance','condition','form'].every(k=>Number(old[k]||0)===Number(record.weights?.[k]||0))
+        && (previous.conditionMode||'good')===record.conditionMode
+        && !!previous.surfaceFilterEnabled===!!record.surfaceFilterEnabled;
     });
-    // 同一レースでも重みが違えば別記録。同じ重みの連打だけは同じ記録を更新して二重登録を抑止。
+    // 同一レースでも重みが違えば別記録。同じ重み・馬場設定・芝ダート除外設定の連打は同じ記録を更新して二重登録を抑止。
     const targetId=sameWeights ? sameWeights.id : record.predictionId;
     record.predictionId=targetId;
     record.createdAtServer=serverTimestamp();
     record.updatedAt=new Date().toISOString();
     await setDoc(doc(window._fbDb,'predictions',targetId),record,{merge:false});
-    if(msg){ msg.style.color='var(--accent2)'; msg.textContent=sameWeights?'✓ 同じ重みの予想を更新しました（重複なし）':'✓ この予想を個別に記録しました'; }
-    showToast(sameWeights?'✓ 同じ重みの予想を更新しました':'✓ 予想をFirestoreへ個別記録しました');
+    if(msg){ msg.style.color='var(--accent2)'; msg.textContent=sameWeights?'✓ 同じ設定の予想を更新しました（重複なし）':'✓ この予想を個別に記録しました'; }
+    showToast(sameWeights?'✓ 同じ設定の予想を更新しました':'✓ 予想をFirestoreへ個別記録しました');
   }catch(e){
     console.error('[keiba] 予想記録失敗:',e);
     if(msg){ msg.style.color='var(--red)'; msg.textContent='⚠ 予想は表示されていますが、記録できませんでした'; }
@@ -182349,6 +182351,8 @@ async function publicHistoryMore(){
 </script>
 
 <script src="lap-metrics.js?v=20261113-2"></script>
-<script src="public-assistant.js?v=20261113-3"></script>
+<script src="score-interpretation.js?v=20261114-1"></script>
+<script src="public-assistant.js?v=20261114-1"></script>
+<script src="day-standard-predictions.js?v=20261114-1"></script>
 </body>
 </html>
