@@ -1,0 +1,9 @@
+/* Refresh only actual podium horses and favorites; never read the full horse collection. */
+(()=>{
+ 'use strict';const R=window.RunningStyleModel;
+ window.loadRunningStyleIndex=async({predictions,results,days})=>{
+  const names=new Set(),byRace=new Map(),resultIds=new Set(results.map(r=>r.raceId||r._docId)),resultKeys=new Set(results.map(r=>[r.dayId,r.venueName,r.raceNumber].join('|')));for(const p of predictions){if(p.raceId){if(!byRace.has(p.raceId))byRace.set(p.raceId,[]);byRace.get(p.raceId).push(p);}for(const h of p.horses||[])if(Number(h.rank)===1&&h.name&&(resultIds.has(p.raceId)||resultKeys.has([p.raceRef?.dayId,p.raceRef?.venue,p.raceRef?.raceNumber].join('|'))))names.add(h.name);}
+  for(const result of results){const ps=byRace.get(result.raceId||result._docId)||[];const master=days.find(d=>d.id===result.dayId)?.venues?.find(v=>v.name===result.venueName)?.races?.find(r=>Number(r.r)===Number(result.raceNumber));for(const h of result.result?.horses||result.horses||[]){if(Number(h.finish)<1||Number(h.finish)>3||h.finish==null)continue;const name=h.name||ps.flatMap(p=>p.horses||[]).find(x=>Number(x.num)===Number(h.num))?.name||master?.horses?.find(x=>Number(x.num)===Number(h.num))?.name;if(name)names.add(name);}}
+  const all=new Map((horses||[]).map(h=>[h.name,h])),queue=[...names];let cursor=0,failed=0;const {doc,getDoc}=window._fbFns;await Promise.all(Array.from({length:Math.min(8,queue.length)},async()=>{while(cursor<queue.length){const name=queue[cursor++];try{const snap=await getDoc(doc(window._fbDb,'horses',name));if(snap.exists()){const data=snap.data();if(data.deleted)all.delete(name);else all.set(name,data);}}catch{failed++;}}}));return {index:R.index([...all.values()],R.metadata(days,[],results)),failed,refreshed:names.size};
+ };
+})();

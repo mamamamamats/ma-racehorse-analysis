@@ -1,0 +1,38 @@
+/* Read-only extraction from explicit passing orders and horse-specific review text. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.RunningStyleModel=api;})(typeof globalThis!=='undefined'?globalThis:this,()=>{
+ 'use strict';const categories=['逃げ','先行','中団','後方'];
+ const norm=x=>String(x||'').normalize('NFKC'),valid=x=>typeof x==='number'&&Number.isFinite(x)&&x>=1&&x<=40;
+ const date=x=>{if(/^\d{8}$/.test(String(x||'')))return String(x);const p=norm(x).match(/(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);return p?p[1]+p[2].padStart(2,'0')+p[3].padStart(2,'0'):'';};
+ function metadata(days=[],reviews=[],results=[]){const map=new Map();for(const d of days)for(const v of d.venues||[])for(const r of v.races||[]){const id=r.raceId||`race_${d.id}_${encodeURIComponent(v.name)}_${Number(r.r)}`;map.set(id,{date:d.date,horseCount:(r.horses||[]).length||null});}for(const r of reviews){const id=r.raceId||r._docId;if(!id)continue;const old=map.get(id)||{};map.set(id,{...old,date:r.raceRef?.date||old.date,horseCount:old.horseCount||r.raceRef?.horseCount||null});}for(const r of results){const hs=r.result?.horses||r.horses,id=r.raceId||r._docId;if(id&&Array.isArray(hs)&&hs.length&&(r.resultStatus==='complete'||(map.get(id)?.horseCount&&hs.length>=map.get(id).horseCount)))map.set(id,{...(map.get(id)||{}),horseCount:hs.filter(h=>h.status!=='取消').length});}return map;}
+ const relative=(rank,size)=>valid(rank)&&Number.isInteger(size)&&size>1&&rank<=size?(rank-1)/(size-1)*100:null;
+ const category=(rank,size)=>rank===1?'逃げ':relative(rank,size)==null?null:relative(rank,size)<=33.333333?'先行':relative(rank,size)<=66.666667?'中団':'後方';
+ function extract(run={},meta={}){
+  const text=norm(run.comment||run.review||''),own=text.split(/[。！？]/).filter(s=>!/(?:勝ち馬|[1-9]着馬|他馬|相手|上位馬)(?:は|が)/.test(s)).join('。');
+  let fieldSize=Number(run.fieldSize||own.match(/(\d{1,2})頭(?:立て|立|中)/)?.[1]||meta.horseCount||run.horseCount||run.raceRef?.horseCount)||null;if(fieldSize!=null&&(!Number.isInteger(fieldSize)||fieldSize<2||fieldSize>40))fieldSize=null;
+  let first=null,last=null,described=null,source='',approximate=false;const raw=run.passing||run.cornerPositions;
+  if(Array.isArray(raw)&&raw.length>=2&&raw.length<=4&&raw.every(valid)){first=raw[0];last=raw.at(-1);source='通過順';}
+  else if(raw&&typeof raw==='object'&&!Array.isArray(raw)){const pairs=Object.entries(raw).filter(([k,v])=>/^[1-4]$/.test(k)&&valid(v)).sort((a,b)=>Number(a[0])-Number(b[0]));if(pairs.length){if(pairs[0][0]!=='4')first=pairs[0][1];if(pairs.at(-1)[0]==='4')last=pairs.at(-1)[1];source='コーナー順位';}}
+  if(first==null&&last==null){const passage=own.match(/通過(?:順位|順|位置)?\s*[:：]?\s*((?:\d{1,2}\s*(?:→|⇒|[-－–])\s*)+\d{1,2})/);if(passage){const nums=passage[1].match(/\d+/g).map(Number);if(nums.length>=2&&nums.length<=4&&nums.every(valid)){first=nums[0];last=nums.at(-1);source='回顧の通過順';}}
+   if(!source){const corners=[...own.matchAll(/([1-4])(?:角|コーナー)(?:通過時点|通過|時点|では|で|は|を|から|に|の|付近|、|:|\s)*(\d{1,2})(?:\s*[,、〜～~]\s*(\d{1,2}))?(?:番手|位)/g)].map(m=>({corner:Number(m[1]),rank:m[3]?(Number(m[2])+Number(m[3]))/2:Number(m[2]),approx:!!m[3]})).filter(x=>valid(x.rank));if(corners.length){corners.sort((a,b)=>a.corner-b.corner);if(corners[0].corner!==4)first=corners[0].rank;const final=corners.find(x=>x.corner===4);last=final?.rank??null;approximate=corners.some(x=>x.approx);source='回顧のコーナー順位';}const final=own.match(/最終(?:角|コーナー)(?:で|は|を|の|通過|時点|\s)*(\d{1,2})(?:番手|位)/);if(last==null&&final&&valid(Number(final[1]))){last=Number(final[1]);source='回顧の最終角';}}
+  }
+  if(!source){const m=own.match(/(?:^|[^\d,、])(?<a>\d{1,2})(?:\s*[,、〜～~]\s*(?<b>\d{1,2}))?番手(?:付近)?(?:から|で|に(?:つけ|いて|上が)|を(?:追走|進))/);if(m){const a=Number(m.groups.a),b=m.groups.b?Number(m.groups.b):null;if(valid(a)&&(b==null||valid(b))){described=b==null?a:(a+b)/2;approximate=b!=null;source='回顧の番手（角不明）';}}}
+  if(fieldSize&&[first,last,described].some(x=>x!=null&&x>fieldSize)){first=null;last=null;described=null;source='頭数と順位が不整合';}
+  const qualitative=[...own.matchAll(/逃げ(?:て|た|切|る競馬)|ハナ(?:を切|に立|を奪)|先行(?:して|し|した|から|策)|好位(?:から|で|に)|中(?:団|断)(?:前目|前|後ろ|後方)?(?:から|で|に)|(?:最後方|後方)(?:から|で|に)|追い込(?:んで|み(?:策|から))/g)].map(m=>({at:m.index,label:/逃げ|ハナ/.test(m[0])?'逃げ':/先行|好位/.test(m[0])?'先行':/中団|中断/.test(m[0])?'中団':'後方'}))[0]?.label||null;
+  const primary=first??last??described,style=category(primary,fieldSize)||qualitative;const makuri=/(?:まく|捲)(?:って|り(?:上げ|上が|切|で|を打)|る競馬)/.test(own);
+  return {first,last,described,fieldSize,firstRelative:relative(first,fieldSize),lastRelative:relative(last,fieldSize),style,makuri,source,approximate};
+ }
+ const mean=xs=>xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null;
+ function profile(horse,{meta=new Map(),before='',targetRaceId=''}={}){const samples=[],seen=new Set();let undated=0;for(const run of horse?.races||[]){if(targetRaceId&&run.raceId===targetRaceId)continue;if(run.raceId){if(seen.has(run.raceId))continue;seen.add(run.raceId);}const ref=meta.get(run.raceId)||{},d=date(run.date||run.raceDate||run.raceRef?.date||ref.date);if(before&&d&&d>=date(before))continue;if(!d)undated++;const x=extract(run,ref);if(x.style||x.first!=null||x.last!=null||x.described!=null||x.makuri)samples.push({...x,raceId:run.raceId||'',name:run.name||''});}
+  const counts=Object.fromEntries(categories.map(c=>[c,samples.filter(x=>x.style===c).length])),known=Object.values(counts).reduce((a,b)=>a+b,0),sorted=categories.filter(c=>counts[c]).sort((a,b)=>counts[b]-counts[a]),label=!known?'脚質データなし':counts[sorted[0]]/known>0.5?sorted[0]+'中心':sorted.slice(0,2).join('・');
+  const stat=key=>{const rs=samples.map(x=>x[key]).filter(x=>x!=null),relativeValues=samples.map(x=>x[key+'Relative']).filter(x=>x!=null);return {average:mean(rs),count:rs.length,relativeAverage:mean(relativeValues),relativeCount:relativeValues.length};};
+  return {version:1,label,counts,known,total:horse?.races?.length||0,observed:samples.length,undated,makuri:samples.filter(x=>x.makuri).length,first:stat('first'),last:stat('last'),described:stat('described'),samples};
+ }
+ function compact(profile){if(!profile)return null;const {samples,...saved}=profile;return saved;}
+ function index(horses=[],meta=new Map()){const map=new Map();for(const horse of horses)for(const run of horse.races||[]){if(!run.raceId)continue;const key=run.raceId+'|'+horse.name,old=map.get(key),value={position:extract(run,meta.get(run.raceId)||{}),eval:run.eval||null};if(old){if(JSON.stringify(old)!==JSON.stringify(value))map.set(key,{position:null,eval:null,ambiguous:true});}else map.set(key,value);}return map;}
+ function enrich(row,runIndex=new Map()){
+  const actualByNum={};const size=(row.result?.horses||[]).filter(h=>h.status!=='取消').length||row.race.horses.length;
+  for(const result of row.result?.horses||[]){const saved=(row.prediction.horses||[]).find(h=>Number(h.num)===Number(result.num)),entry=(row.race.horses||[]).find(h=>Number(h.num)===Number(result.num)),linked=runIndex.get(row.raceId+'|'+(saved?.name||entry?.name||result.name||''));const explicit=extract(result,{horseCount:size}),hasExplicit=explicit.first!=null||explicit.last!=null||explicit.described!=null;actualByNum[Number(result.num)]={actualPosition:hasExplicit?explicit:linked?.position||null,postRaceEval:result.reviewEval||result.eval||linked?.eval||null,ambiguous:!!linked?.ambiguous};}
+  const decorate=h=>h?{...h,...actualByNum[Number(h.num)]}:h;return {...row,actualByNum,outcome:{...row.outcome,top:decorate(row.outcome.top),top5:row.outcome.top5.map(decorate)}};
+ }
+ return {categories,date,metadata,extract,relative,profile,compact,index,enrich};
+});
