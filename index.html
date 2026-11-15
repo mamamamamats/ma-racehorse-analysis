@@ -1844,7 +1844,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
   window._fbReady = true;
 </script>
 <link rel="stylesheet" href="public-assistant.css?v=20261114-1">
-<link rel="stylesheet" href="race-review-tools.css?v=20261115-1">
+<link rel="stylesheet" href="race-review-tools.css?v=20261115-2">
 </head>
 <body>
 <div class="app">
@@ -180986,7 +180986,7 @@ async function saveRaceResult(dayId,venueName,rNum){
   // 同着のため同一着順は許容する。馬番単位で結果を保存する。
   try{
     if(!(await waitForFirebase(5000))) throw new Error('Firebaseに接続できませんでした');
-    const {doc,getDoc,setDoc}=window._fbFns;
+    const {doc,runTransaction}=window._fbFns;
     const {day,venue,race}=getRaceByRef(dayId,venueName,rNum);
     if(!day||!venue||!race) throw new Error('対象レースが端末内に見つかりません');
     const raceId=ensureRaceId(day,venue,race);
@@ -180995,7 +180995,7 @@ async function saveRaceResult(dayId,venueName,rNum){
     const resultRef=doc(window._fbDb,'raceResults',raceId);
     // raceDaysは一切書き換えず、結果専用コレクションだけを更新する。
     // 既存の新形式結果を誤って消さないよう、専用ドキュメントをraceId単位で保存。
-    await setDoc(resultRef,{raceId,dayId,venueName,raceNumber:Number(rNum),raceName:race.name||'',result,resultStatus,updatedAt:result.recordedAt,source:'manual'});
+    await runTransaction(window._fbDb,async tx=>{const snap=await tx.get(resultRef),previous=snap.exists()?snap.data():{};if(previous.result?.payouts)result.payouts=previous.result.payouts;tx.set(resultRef,{...previous,raceId,dayId,venueName,raceNumber:Number(rNum),raceName:race.name||'',result,resultStatus,updatedAt:result.recordedAt,source:'manual'});});
     raceResultsCache.set(raceId,result);
     await bumpSyncVersion();
     closeRaceResultModal();
@@ -182264,7 +182264,8 @@ async function publicHistoryMore(){
 <script src="score-interpretation.js?v=20261114-1"></script>
 <script src="public-assistant.js?v=20261114-2"></script>
 <script src="day-standard-predictions.js?v=20261114-2"></script>
-<script src="weekly-review-model.js?v=20261115-1"></script>
-<script src="race-review-tools.js?v=20261115-1"></script>
+<script src="betting-results-model.js?v=20261115-2"></script>
+<script src="weekly-review-model.js?v=20261115-2"></script>
+<script src="race-review-tools.js?v=20261115-2"></script>
 </body>
 </html>
