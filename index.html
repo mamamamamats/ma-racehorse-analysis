@@ -1844,7 +1844,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
   window._fbReady = true;
 </script>
 <link rel="stylesheet" href="public-assistant.css?v=20261114-1">
-<link rel="stylesheet" href="race-review-tools.css?v=20261115-5">
+<link rel="stylesheet" href="race-review-tools.css?v=20261115-6">
 </head>
 <body>
 <div class="app">
@@ -2047,8 +2047,8 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
     <!-- 分析：編集ページでは編集タブの横に常時表示 -->
     <div class="view" id="view-analysis">
       <div class="analysis-page">
-        <div class="analysis-title">分析・予想蓄積</div>
-        <div class="analysis-sub">編集ページと同じデータを参照して、予想・結果・回顧をraceIdで結び付けて分析します。分析画面だけ別のデータを持つことはありません。</div>
+        <div class="analysis-title">予想分析・改善</div>
+        <div class="analysis-sub">全期間の保存済み予想と着順を照合し、全体成績・条件別傾向・外れたレースの要素差を比較します。比較データは明示的な更新で蓄積します。</div>
         <div id="analysisMain"></div>
       </div>
     </div>
@@ -182268,8 +182268,12 @@ async function publicHistoryMore(){
 <script src="weekly-review-model.js?v=20261115-4"></script>
 <script src="prediction-review-model.js?v=20261115-5"></script>
 <script src="weekly-report-visuals.js?v=20261115-3"></script>
-<script src="race-review-tools.js?v=20261115-5"></script>
 <script src="day-going-model.js?v=20261115-4"></script>
+<script src="weekly-publication-model.js?v=20261115-6"></script>
+<script src="analysis-archive-model.js?v=20261115-6"></script>
+<script src="race-review-tools.js?v=20261115-6"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
+<script src="analysis-workspace.js?v=20261115-6"></script>
+<script src="weekly-publication.js?v=20261115-6"></script>
 </body>
 </html>
