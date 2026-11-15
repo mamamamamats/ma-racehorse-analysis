@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generation": "1a5831ed836376de1c04a489e4c1f828b75343fc34446dedb89f2768bcdda0a5",
-  "startedAt": "2026-11-15T14:22:37.078Z",
-  "exportedAt": "2026-11-15T14:23:19.688Z",
+  "generation": "af695a35c2617888dc5b006c3f3af06765dafec22dc69ddb7f1fb9777e2e5cd7",
+  "startedAt": "2026-11-15T15:03:14.351Z",
+  "exportedAt": "2026-11-15T15:03:27.084Z",
   "files": [
     {
       "collection": "predictions",
@@ -31,10 +31,10 @@
     {
       "collection": "raceResults",
       "month": "2026-11",
-      "path": "raceResults/2026-11-6e7a85977c6c887b.json",
-      "sha256": "6e7a85977c6c887baa2002f5500d8e11bae50d1f2f6a1b4cf9c0ceb8a794a10f",
+      "path": "raceResults/2026-11-475cf910c76b46d1.json",
+      "sha256": "475cf910c76b46d10e197bc9280e5c122c69aa3dfc2832a2f3e7fd949f1f66c6",
       "count": 153,
-      "bytes": 160397
+      "bytes": 160441
     },
     {
       "collection": "raceReviews",
@@ -335,10 +335,10 @@
     {
       "collection": "raceDays",
       "month": "2026-11",
-      "path": "raceDays/2026-11-b7836318b1c5f8cf.json",
-      "sha256": "b7836318b1c5f8cf77c0e8fc7309fc1ce26f8fc0a6a9a87340f5939b757ac2aa",
+      "path": "raceDays/2026-11-b13a55afe4fcbb16.json",
+      "sha256": "b13a55afe4fcbb16082900de44b05ba98e1b1ae21d02edc9aebfee8aca82be33",
       "count": 5,
-      "bytes": 137074
+      "bytes": 137096
     },
     {
       "collection": "positionRecords",
@@ -351,16 +351,16 @@
     {
       "collection": "positionRecords",
       "month": "2026-11",
-      "path": "positionRecords/2026-11-7f16aee0085074f3.json",
-      "sha256": "7f16aee0085074f365fb948768920d697e32d55048e64097631d80b1f7fa75e4",
-      "count": 548,
-      "bytes": 218107
+      "path": "positionRecords/2026-11-1051233dc0c33f66.json",
+      "sha256": "1051233dc0c33f663f99a04a95d0b3abc9b4d5cf911cc0eb01285128a8ef102b",
+      "count": 581,
+      "bytes": 231014
     },
     {
       "collection": "meta",
       "month": "all",
-      "path": "meta/public-f225befd46d68d50.json",
-      "sha256": "f225befd46d68d508b18510d3a10317506e2f091d8dcb709abfaa85221866398",
+      "path": "meta/public-713f4ef059f07b59.json",
+      "sha256": "713f4ef059f07b59fe406b0faa6d5fc6211860aa1f9f8cc7fa80ed14fc40fbb1",
       "count": 2,
       "bytes": 2454
     }
@@ -370,6 +370,6 @@
     "raceResults": 192,
     "raceReviews": 176,
     "raceDays": 317,
-    "positionRecords": 893
+    "positionRecords": 926
   }
 }
