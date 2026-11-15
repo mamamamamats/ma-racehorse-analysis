@@ -26,6 +26,7 @@
   const reviewIdentity = r => r.raceId || r._docId;
   const reviewTitle = r => {const x=ref(r);return `${x.date||''} ${x.venue||''} ${x.raceNumber||x.r||''}R ${x.raceName||x.name||''}`;};
   async function readCollection(name){
+    if(window.DataArchive)return window.DataArchive.read(name);
     if(!(await waitForFirebase(5000)))throw Error('接続できませんでした。時間を置いて再試行してください。');
     const {collection,query,orderBy,limit,startAfter,getDocs}=window._fbFns;
     const items=[];let cursor=null;

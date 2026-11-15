@@ -2,8 +2,8 @@
 (() => {
  'use strict';
  const E=window.SharedPredictionEngine,LM=window.RaceLapMetrics;
- let reviews=null,loading=null,lastResult=null;
- async function ensure(){if(reviews)return reviews;if(loading)return loading;loading=(async()=>{if(!(await waitForFirebase(5000)))throw Error('共通採点用のラップデータを読み込めませんでした');const {collection,query,orderBy,limit,startAfter,getDocs}=window._fbFns;const all=[];let cursor=null;while(true){const cs=[orderBy('__name__'),limit(100)];if(cursor)cs.push(startAfter(cursor));const snap=await getDocs(query(collection(window._fbDb,'raceReviews'),...cs));all.push(...snap.docs.map(d=>({...d.data(),_docId:d.id})));if(snap.docs.length<100)break;cursor=snap.docs.at(-1);}reviews=all;return all;})();try{return await loading;}finally{loading=null;}}
+ let reviews=null,loading=null,lastResult=null;window.addEventListener('prediction-data-changed',event=>{if(event.detail?.collection==='raceReviews')reviews=null;});
+ async function ensure(){if(reviews)return reviews;if(loading)return loading;loading=(async()=>{if(window.DataArchive){reviews=await window.DataArchive.read('raceReviews');return reviews;}if(!(await waitForFirebase(5000)))throw Error('共通採点用のラップデータを読み込めませんでした');const {collection,query,orderBy,limit,startAfter,getDocs}=window._fbFns;const all=[];let cursor=null;while(true){const cs=[orderBy('__name__'),limit(100)];if(cursor)cs.push(startAfter(cursor));const snap=await getDocs(query(collection(window._fbDb,'raceReviews'),...cs));all.push(...snap.docs.map(d=>({...d.data(),_docId:d.id})));if(snap.docs.length<100)break;cursor=snap.docs.at(-1);}reviews=all;return all;})();try{return await loading;}finally{loading=null;}}
  function context(day,venue,race,going,lapClass='auto'){return {date:E.dateKey(day.date||day.id),venue:venue.name,surface:aiExtractSurface(race.track),distance:Number(aiExtractDistance(race.track))||0,grade:race.grade||race.raceClass||race.class||'',going,lapClass};}
  function calculate(day,venue,race,{weights,going,surfaceFilter=false,lapClass='auto'}={}){
   if(!reviews)throw Error('共通採点データを読み込み中です。完了後に再試行してください');
