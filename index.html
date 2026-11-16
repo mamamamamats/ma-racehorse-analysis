@@ -175320,6 +175320,7 @@ async function saveWholeReview(btn) {
       events:panel._wholeImportedEvents||old.events||[],
       uncertainties:panel._wholeImportedUncertainties||old.uncertainties||[],
       updatedAt:new Date().toISOString(),source:'manual-reviewed'};
+    if(panel._wholeImportedEvents&&Object.hasOwn(panel._wholeImportedEvents,'pace')&&['high','middle','mid','slow'].includes(data.events?.pace))data.paceMeta={source:'manual',pace:data.events.pace};
     await setDoc(doc(window._fbDb,'raceReviews',raceId),data,{merge:true});
     raceWholeReviewCache.set(raceId,data);
     horseRaceRefreshEventBadges();
@@ -182261,6 +182262,7 @@ async function publicHistoryMore(){
 
 <script src="data-archive.js?v=20261115-8"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
+<script src="pace-model.js?v=20261116-1"></script>
 <script src="lap-metrics.js?v=20261113-2"></script>
 <script src="shared-prediction-engine.js?v=20261114-2"></script>
 <script src="shared-prediction-runtime.js?v=20261115-8"></script>
@@ -182269,18 +182271,19 @@ async function publicHistoryMore(){
 <script src="public-assistant.js?v=20261115-8"></script>
 <script src="day-standard-predictions.js?v=20261115-4"></script>
 <script src="betting-results-model.js?v=20261115-2"></script>
-<script src="weekly-review-model.js?v=20261115-7"></script>
+<script src="weekly-review-model.js?v=20261116-1"></script>
 <script src="prediction-review-model.js?v=20261115-7"></script>
 <script src="podium-traits-model.js?v=20261115-7"></script>
 <script src="weekly-report-visuals.js?v=20261115-3"></script>
 <script src="day-going-model.js?v=20261115-4"></script>
 <script src="weekly-publication-model.js?v=20261115-6"></script>
 <script src="analysis-archive-model.js?v=20261115-7"></script>
-<script src="race-review-tools.js?v=20261115-8"></script>
+<script src="race-review-tools.js?v=20261116-1"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
-<script src="analysis-workspace.js?v=20261115-8"></script>
+<script src="analysis-workspace.js?v=20261116-1"></script>
 <script src="weekly-publication.js?v=20261115-6"></script>
 <script src="public-condition-traits.js?v=20261115-7"></script>
+<script src="pace-workspace.js?v=20261116-1"></script>
 </body>
 </html>
