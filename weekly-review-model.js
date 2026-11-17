@@ -1,6 +1,7 @@
 /* Pure validation, safe merging and snapshot-based result reporting. */
 (function(root,factory){const api=factory(typeof module==='object'&&module.exports?require('./betting-results-model.js'):root.RaceBettingModel);if(typeof module==='object'&&module.exports)module.exports=api;else root.WeeklyReviewModel=api;})(typeof globalThis!=='undefined'?globalThis:this,(BM)=>{
  'use strict';
+ const AS=typeof module==='object'&&module.exports?require('./analysis-selection.js'):globalThis.AnalysisSelection;
  const own=(x,k)=>Object.prototype.hasOwnProperty.call(x,k);
  const canonical=value=>JSON.stringify(value,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
  const same=(a,b)=>canonical(a)===canonical(b);
@@ -37,6 +38,7 @@
  function configKey(p){return JSON.stringify([p.engineVersion||'custom-ai-v1',weightKeys.map(k=>p.weights?.[k]??null),p.targetGoing||p.conditionMode||'good',!!p.surfaceFilterEnabled,p.lapClass||'auto']);}
  function standard(p){return p.engineVersion==='shared-six-v2'&&weightKeys.every(k=>Number(p.weights?.[k])===3)&&!p.surfaceFilterEnabled&&(p.lapClass||'auto')==='auto';}
  function selectPrediction(predictions,target,config='standard'){
+  if((config.startsWith('engine:')||config.startsWith('setting:'))&&AS){const S=AS;return S.select(predictions,{engineVersion:config.startsWith('engine:')?config.slice(7):'',settingKey:config.startsWith('setting:')?config.slice(8):''},[{...target.day,venues:[{name:target.venue.name,races:[{r:target.race.r,trackCondition:target.going}]}]}]).find(p=>p.raceId===target.raceId||(p.raceRef?.dayId===target.day.id&&p.raceRef?.venue===target.venue.name&&Number(p.raceRef?.raceNumber)===Number(target.race.r)))||null;}
   return predictions.filter(p=>{const ref=p.raceRef||{};const matches=p.raceId===target.raceId||(ref.dayId===target.day.id&&ref.venue===target.venue.name&&Number(ref.raceNumber)===Number(target.race.r));return matches&&(config==='standard'?standard(p)&&p.targetGoing===target.going:configKey(p)===config);}).sort((a,b)=>String(a.createdAt||'9999').localeCompare(String(b.createdAt||'9999'))||String(a._docId||a.predictionId||'').localeCompare(String(b._docId||b.predictionId||'')))[0]||null;
  }
  function outcome(prediction,result,entries){

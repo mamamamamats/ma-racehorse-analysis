@@ -1,0 +1,11 @@
+/* Analysis-only selection; registration and historical snapshot scores are unchanged. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.AnalysisSelection=api;})(globalThis,()=>{
+ const engine=p=>p.engineVersion||'custom-ai-v1',keys=['overall','venue','distance','condition','form','lap'];
+ const setting=p=>JSON.stringify([engine(p),keys.map(k=>p.weights?.[k]??null),!!p.surfaceFilterEnabled,p.lapClass||'auto']);
+ const going=x=>({good:'良',yielding:'稍重',heavy:'重',bad:'不良'})[x]||x||'';
+ const context=p=>{const s=p.raceSnapshot||{},r=p.raceRef||{},track=s.track||r.track||'';return {grade:s.grade||r.grade||'',venue:s.venue||r.venue||'',surface:s.surface||r.surface||(/ダ/.test(track)?'ダート':/芝/.test(track)?'芝':''),distance:String(s.distance||r.distance||track.match(/\d{3,4}/)?.[0]||'')};};
+ const modelLabel=v=>v==='shared-six-v2'?'現行モデル・6項目':v==='custom-ai-v1'?'旧モデル・5項目':v;
+ function actualGoing(p,days=[]){const r=p.raceRef||{},s=p.raceSnapshot||{},day=days.find(d=>d.id===r.dayId),race=day?.venues?.find(v=>v.name===(r.venue||s.venue))?.races?.find(x=>Number(x.r)===Number(r.raceNumber||s.raceNumber));return race?(going(race.trackCondition)||String(race.track||'').match(/稍重|不良|良|重/)?.[0]||''):going(s.trackCondition||p.targetGoing||p.conditionMode);}
+ function select(predictions,{engineVersion='',settingKey='',trackGoing=''}={},days=[]){const groups=new Map();for(const p of predictions){if(engineVersion&&engine(p)!==engineVersion||settingKey&&setting(p)!==settingKey)continue;const ref=p.raceRef||{},key=ref.dayId&&ref.venue&&ref.raceNumber?[ref.dayId,ref.venue,Number(ref.raceNumber)].join('|'):p.raceId||p.raceKey||p._docId||p.predictionId;if(!key)continue;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(p);}const result=[];for(const ps of groups.values()){const desired=actualGoing(ps[0],days),sorted=ps.slice().sort((a,b)=>Number(going(b.targetGoing||b.conditionMode)===desired)-Number(going(a.targetGoing||a.conditionMode)===desired)||String(a.createdAt||'9999').localeCompare(String(b.createdAt||'9999'))||String(a._docId||a.predictionId||'').localeCompare(String(b._docId||b.predictionId||''))),p=sorted[0];if(!trackGoing||actualGoing(p,days)===going(trackGoing))result.push(p);}return result;}
+ return {engine,setting,going,context,modelLabel,actualGoing,select};
+});
