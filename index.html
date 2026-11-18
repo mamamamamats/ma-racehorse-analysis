@@ -177469,6 +177469,7 @@ function renderHistoryMain() {
           <button class="btn-back" onclick="selectedHistoryDate=null;renderHistoryDateList();renderHistoryMain()">← 戻る</button>
           <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;">${day.label}</div>
         </div>
+        ${isEditMode ? `<div class="rr-toolbar" style="margin-bottom:12px"><button type="button" class="review-ai-btn secondary rr-bulk-open" data-review-day="${escHtml(day.id)}" onclick="openDayWholeReviews(this.dataset.reviewDay)">📋 この日の全体回顧・結果を一括登録</button><span class="rr-meta">個別回顧・馬評価・保存済み予想は変更しません。</span></div>` : ''}
         <div class="venue-tabs">${venueTabs}</div>
       </div>
       <div class="race-list-grid">${raceRows}</div>
@@ -182279,7 +182280,7 @@ async function publicHistoryMore(){
 <script src="day-going-model.js?v=20261115-4"></script>
 <script src="weekly-publication-model.js?v=20261115-6"></script>
 <script src="analysis-archive-model.js?v=20261117-1"></script>
-<script src="race-review-tools.js?v=20261116-1"></script>
+<script src="race-review-tools.js?v=20261119-1"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
 <script src="analysis-workspace.js?v=20261117-1"></script>
