@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generation": "aaf7cc9a2b032360f012b38a80c1e4b2e721800c355223b656595b2ef6813004",
-  "startedAt": "2026-11-20T08:52:27.656Z",
-  "exportedAt": "2026-11-20T08:52:43.379Z",
+  "generation": "e483805715a331395c80776a27d4074fd2c21c3dfa4fd51ffaceca3742b01cad",
+  "startedAt": "2026-11-20T14:57:02.701Z",
+  "exportedAt": "2026-11-20T14:57:17.186Z",
   "files": [
     {
       "collection": "predictions",
@@ -15,10 +15,10 @@
     {
       "collection": "predictions",
       "month": "2026-11",
-      "path": "predictions/2026-11-2c4dca5aaba7d6fc.json",
-      "sha256": "2c4dca5aaba7d6fcc712aae04dfa445dfcd09ee73bbd0ff0e9965ebec697bb0c",
-      "count": 122,
-      "bytes": 2042291
+      "path": "predictions/2026-11-fd9ffa5a59701102.json",
+      "sha256": "fd9ffa5a59701102fd873c863718a925a5da6a908fe67136820792d0a6b0d65a",
+      "count": 135,
+      "bytes": 2309708
     },
     {
       "collection": "raceResults",
@@ -38,11 +38,19 @@
     },
     {
       "collection": "raceReviews",
+      "month": "2026-09",
+      "path": "raceReviews/2026-09-014640fcd239fafa.json",
+      "sha256": "014640fcd239fafa2cc987fa92cebe672454c2007cd6e9cf1cf165332522c35a",
+      "count": 23,
+      "bytes": 30289
+    },
+    {
+      "collection": "raceReviews",
       "month": "2026-10",
-      "path": "raceReviews/2026-10-e403c9871dbc30f1.json",
-      "sha256": "e403c9871dbc30f170dd7964c2cf79f7934b13c7af4ff9b7694b4d1139899636",
-      "count": 31,
-      "bytes": 36885
+      "path": "raceReviews/2026-10-131117aff5058955.json",
+      "sha256": "131117aff5058955f39ff2e3204022864a01e00b2e135cea6c12c09dd3994caf",
+      "count": 77,
+      "bytes": 98138
     },
     {
       "collection": "raceReviews",
@@ -342,6 +350,14 @@
     },
     {
       "collection": "positionRecords",
+      "month": "2026-09",
+      "path": "positionRecords/2026-09-5d901d3564dd2a58.json",
+      "sha256": "5d901d3564dd2a5814f785bc0d0905164f704ec79024c357b72bb1cc9ae9eec7",
+      "count": 1,
+      "bytes": 502
+    },
+    {
+      "collection": "positionRecords",
       "month": "2026-10",
       "path": "positionRecords/2026-10-d3db29bdc6a21fb1.json",
       "sha256": "d3db29bdc6a21fb16466e322abcd6452bbd384055c7946d05f02130dec74fc69",
@@ -359,17 +375,17 @@
     {
       "collection": "meta",
       "month": "all",
-      "path": "meta/public-0061aa5441b84da4.json",
-      "sha256": "0061aa5441b84da4daa68709c803e014e9058dcc5ba66b0d548a98a8410f8b57",
+      "path": "meta/public-1142b1fc1f73eb08.json",
+      "sha256": "1142b1fc1f73eb088f4177a46b23a6e2f0a900245035ab56cd692b0294566f98",
       "count": 3,
       "bytes": 22646
     }
   ],
   "counts": {
-    "predictions": 186,
+    "predictions": 199,
     "raceResults": 192,
-    "raceReviews": 176,
+    "raceReviews": 245,
     "raceDays": 318,
-    "positionRecords": 1438
+    "positionRecords": 1439
   }
 }
