@@ -1844,7 +1844,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
   window._fbReady = true;
 </script>
 <link rel="stylesheet" href="public-assistant.css?v=20261114-1">
-<link rel="stylesheet" href="race-review-tools.css?v=20261117-2">
+<link rel="stylesheet" href="race-review-tools.css?v=20261123-2">
 </head>
 <body>
 <div class="app">
@@ -177472,6 +177472,7 @@ function renderHistoryMain() {
         ${isEditMode ? `<div class="rr-toolbar" style="margin-bottom:12px"><button type="button" class="review-ai-btn secondary rr-bulk-open" data-review-day="${escHtml(day.id)}" onclick="openDayWholeReviews(this.dataset.reviewDay)">📋 この日の全体回顧・結果を一括登録</button><span class="rr-meta">個別回顧・馬評価・保存済み予想は変更しません。</span></div>` : ''}
         <div class="venue-tabs">${venueTabs}</div>
       </div>
+      ${isEditMode ? `<details id="pastDayPredictionResults" class="rr-day-report" data-day="${escHtml(day.id)}" ${window.pastDayResultsOpen===day.id?'open':''} ontoggle="togglePastDayPredictionResults(this)"><summary>この日の予想結果・回収率を見る</summary><section id="pastDaySavedResults" class="rr-weekly"></section></details>` : ''}
       <div class="race-list-grid">${raceRows}</div>
       ${detailHTML}
     </div>
@@ -182278,16 +182279,16 @@ async function publicHistoryMore(){
 <script src="weekly-review-model.js?v=20261117-1"></script>
 <script src="prediction-review-model.js?v=20261117-1"></script>
 <script src="podium-traits-model.js?v=20261117-1"></script>
-<script src="weekly-report-visuals.js?v=20261115-3"></script>
+<script src="weekly-report-visuals.js?v=20261123-2"></script>
 <script src="day-going-model.js?v=20261115-4"></script>
 <script src="weekly-publication-model.js?v=20261115-6"></script>
 <script src="analysis-archive-model.js?v=20261117-1"></script>
-<script src="race-review-tools.js?v=20261119-1"></script>
+<script src="race-review-tools.js?v=20261123-2"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
 <script src="weight-research-ui.js?v=20261122-1"></script>
 <script src="analysis-workspace.js?v=20261122-1"></script>
-<script src="weekly-publication.js?v=20261117-2"></script>
+<script src="weekly-publication.js?v=20261123-2"></script>
 <script src="public-condition-traits.js?v=20261117-1"></script>
 <script src="pace-workspace.js?v=20261116-1"></script>
 <script src="review-chronology.js?v=20261116-1"></script>
