@@ -12,7 +12,7 @@
   if(details.dataset.loading)return;details.dataset.loading='1';const body=details.querySelector('.rr-whole-content');body.textContent='全体回顧を読み込み中…';
   try{const r=selectedHorse?.races?.[Number(details.dataset.wholeHorseIndex)];if(!r)throw Error('過去走を開き直してください');
    const id=r.raceId||horseRaceAutoTarget(r);if(!id){body.textContent='この過去走に紐づく全体回顧はまだありません。';details.dataset.loaded='1';return;}
-   if(!(await waitForFirebase(5000)))throw Error('通信できません。時間を置いて再試行してください');const {doc,getDoc}=window._fbFns,snap=await getDoc(doc(window._fbDb,'raceReviews',id));const entry=snap.exists()?snap.data():null;if(entry)raceWholeReviewCache.set(id,entry);
+   if(!(await waitForFirebase(5000)))throw Error('通信できません。時間を置いて再試行してください');const {doc,getDoc}=window._fbFns,snap=await getDoc(doc(window._fbDb,'raceReviews',id));const entry=snap.exists()?snap.data():null;if(entry){raceWholeReviewCache.set(id,{raceId:id,...entry});horseRaceRefreshEventBadges();}
    const ref=entry?.raceRef||{};body.innerHTML=entry?`<div class="rr-meta">${E([ref.date,ref.venue,ref.raceNumber?ref.raceNumber+'R':'',ref.raceName||ref.name,ref.track].filter(Boolean).join(' · '))}</div>${entry.review?`<div class="rr-prose">${E(entry.review)}</div>`:'<p class="rr-meta">全体回顧の本文は未登録です。</p>'}${entry.analysis?`<h4>考察・仮説</h4><div class="rr-prose">${E(entry.analysis)}</div>`:''}`:'<p class="rr-meta">このレースの全体回顧は未登録です。</p>';details.dataset.loaded='1';
   }catch(e){body.innerHTML=`<p role="alert">${E(e.message)}</p><button type="button" class="review-ai-btn secondary rr-retry">再読み込み</button>`;body.querySelector('.rr-retry').onclick=()=>loadHorseReview(details);}finally{delete details.dataset.loading;}
  }

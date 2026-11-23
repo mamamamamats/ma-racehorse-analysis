@@ -1,5 +1,6 @@
 /* Pure lap/profile calculations. No storage or network operations. */
 (function(root){
+  const Link=typeof module==='object'&&module.exports?require('./horse-review-link.js'):root.HorseReviewLink;
   'use strict';
   const SCORE={S:6,A:4,B:3,C:2,D:0,good:4,mid:3,bad:2};
   const LABELS={front_loaded:'前傾',back_loaded:'後傾',even:'平均型'};
@@ -26,11 +27,11 @@
     const raw=record?.events?.lapPattern,values=[...new Set((Array.isArray(raw)?raw:[raw]).filter(x=>Object.hasOwn(LABELS,x)))];return values.length===1?values[0]:null;
   }
   function horseAptitude(horse,reviews,targetPattern,{surface='',before='',parse=()=>null}={}){
-    const map=new Map();for(const r of reviews)for(const id of [r.raceId,r._docId].filter(Boolean))map.set(id,r);
+    const linkIndex=Link.index(reviews);
     const seen=new Set(),values=[],used=[];let linked=0,matching=0;
-    for(const run of horse?.races||[]){const r=run.raceId?map.get(run.raceId):null;if(!r)continue;
+    for(const run of horse?.races||[]){const r=Link.resolve(run,linkIndex).record;if(!r)continue;
       const identity=r.raceId||r._docId;if(seen.has(identity))continue;seen.add(identity);
-      const ref=r.raceRef||{},date=key(ref.date);if(before&&(!date||date>=before))continue;if(surface&&ref.surface!==surface)continue;
+      const ref=r.raceRef||{},date=key(ref.date);if(before&&(!date||date>=key(before)))continue;if(surface&&ref.surface!==surface)continue;
       linked++;if(!targetPattern||recordPattern(r,parse)!==targetPattern)continue;matching++;
       const ev=String(run.eval||'').trim(),value=SCORE[ev];if(value==null)continue;values.push(value);used.push({raceId:identity,eval:ev,value});
     }

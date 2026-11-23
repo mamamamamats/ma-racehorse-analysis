@@ -176001,16 +176001,9 @@ function horseRaceReviewCandidates(r){
 }
 // 厳密な自動照合：名前・コースの一致を必須とし、複数候補は絶対に自動保存しない。
 function horseRaceAutoTarget(r){
-  if(r?.raceId)return null;
-  const name=horseRaceNorm(r?.name),track=horseRaceNorm(r?.track);
-  if(!name||!track)return null;
-  const matches=horseRaceReviewCandidates(r).filter(x=>x.exactName && x.compatibleTrack && horseRaceNorm(x.ref?.track)===track);
-  // 同名・同コースでも複数開催があれば自動では決めない。
-  if(matches.length!==1)return null;
-  const x=matches[0];
-  const rd=String(r.date||r.raceDate||'').replace(/\D/g,''),dd=String(x.ref?.date||'').replace(/\D/g,'');
-  if(rd&&dd&&rd!==dd)return null;
-  return x.record.raceId;
+  if(r?.raceId||!window.HorseReviewLink)return null;
+  const resolved=HorseReviewLink.resolve(r,raceConditionReviewRecords||[...raceWholeReviewCache.values()]);
+  return resolved.status==='inferred'?HorseReviewLink.idOf(resolved.record):null;
 }
 let horseRaceAutoBusy=false;
 async function horseRaceAutoLinkCurrent(){
@@ -176059,9 +176052,9 @@ async function horseRaceBulkApply(){
   if(selectedHorse)renderHorseDetail();
 }
 function horseRaceReviewMatch(r){
-  if(!r?.raceId)return null;
-  const records=raceConditionReviewRecords||[...raceWholeReviewCache.values()];
-  return records.find(x=>String(x.raceId)===String(r.raceId))||null;
+  if(!window.HorseReviewLink)return null;
+  const records=[...raceWholeReviewCache.values(),...(raceConditionReviewRecords||[])];
+  return HorseReviewLink.resolve(r,records).record;
 }
 function horseRaceReviewLinkControl(r,idx){
   if(!isEditMode)return '';
@@ -176070,10 +176063,11 @@ function horseRaceReviewLinkControl(r,idx){
   const found=horseRaceReviewMatch(r);
   const candidates=horseRaceReviewCandidates(r);
   const exact=candidates.filter(x=>x.exactName&&x.compatibleTrack);
-  const status=r.raceId?(found?'ID連携済み':'保存済みIDの回顧が見つかりません'):(exact.length===1?'候補1件（未保存）':exact.length>1?'候補が複数あります':'自動照合できません');
+  const status=r.raceId?(found?'ID連携済み':'保存済みIDの回顧が見つかりません'):(horseRaceAutoTarget(r)?'日付・条件で照合済み（ID未保存）':exact.length===1?'候補1件（要確認）':exact.length>1?'候補が複数あります':'自動照合できません');
+  const selectedLinkId=r.raceId||horseRaceAutoTarget(r)||'';
   const options=candidates.map(x=>{
     const ref=x.ref||{}, label=[ref.date||ref.dayId||'',ref.venue||'',ref.raceName||ref.name||x.record.raceId,ref.track||''].filter(Boolean).join(' / ');
-    return `<option value="${escHtml(String(x.record.raceId))}" ${String(r.raceId||'')===String(x.record.raceId)?'selected':''}>${escHtml(label)}</option>`;
+    return `<option value="${escHtml(String(x.record.raceId))}" ${String(selectedLinkId)===String(x.record.raceId)?'selected':''}>${escHtml(label)}</option>`;
   }).join('');
   return `<details style="margin:5px 0 7px;font-size:11px"><summary style="cursor:pointer;color:var(--muted)">🔗 レース紐づけ：${escHtml(status)}（確認・変更）</summary><div style="margin:7px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><input type="search" class="search-input" style="min-width:170px;flex:1" placeholder="レース名・開催日・コースで候補検索" oninput="horseRaceFilterLinkOptions(this)"/><select class="search-input horse-review-link-select" style="min-width:200px;flex:2"><option value="">レースを選択</option>${options}</select><button type="button" class="review-ai-btn secondary" onclick="horseRaceSaveReviewLink(this,${idx})">紐づけを保存</button></div><div class="horse-review-link-message" style="color:var(--muted)">選択したレースIDをこの馬の近走評価に保存します。候補が複数ある場合は開催日を確認してください。</div></details>`;
 }
@@ -176089,7 +176083,7 @@ async function horseRaceSaveReviewLink(btn,idx){
   const target=select.value;
   if(!horseRaceReviewCandidates(r).some(x=>String(x.record.raceId)===target)){if(msg)msg.textContent='候補を再読み込みしてください。';return;}
   btn.disabled=true;if(msg)msg.textContent='保存中…';
-  const result=await saveHorseRaceChange(h.name,{type:'update',original:{...r},updated:{...r,raceId:target}});
+  const result=await saveHorseRaceChange(h.name,{type:'update',original:{...r},updated:{...r,raceId:target,raceRef:{...(horseRaceReviewCandidates(r).find(x=>String(x.record.raceId)===target)?.ref||{})}}});
   btn.disabled=false;
   if(!result.ok){if(msg)msg.textContent='保存失敗：'+(result.message||'再試行してください');return;}
   applySavedHorseToCurrentState(result.horse);invalidateHorseCache();renderHorseDetail();
@@ -182266,7 +182260,8 @@ async function publicHistoryMore(){
 <script src="data-archive.js?v=20261115-8"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
 <script src="pace-model.js?v=20261116-1"></script>
-<script src="lap-metrics.js?v=20261113-2"></script>
+<script src="horse-review-link.js?v=20261124-1"></script>
+<script src="lap-metrics.js?v=20261124-1"></script>
 <script src="shared-prediction-engine.js?v=20261114-2"></script>
 <script src="weight-research-model.js?v=20261122-1"></script>
 <script src="shared-prediction-runtime.js?v=20261122-1"></script>
@@ -182286,7 +182281,8 @@ async function publicHistoryMore(){
 <script src="analysis-archive-model.js?v=20261117-1"></script>
 <script src="prediction-diagnosis-model.js?v=20261124-1"></script>
 <script src="prediction-diagnosis-ui.js?v=20261124-1"></script>
-<script src="race-review-tools.js?v=20261124-1"></script>
+<script src="horse-review-link-ui.js?v=20261124-1"></script>
+<script src="race-review-tools.js?v=20261124-2"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
 <script src="weight-research-ui.js?v=20261122-1"></script>
