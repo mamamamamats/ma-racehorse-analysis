@@ -177469,6 +177469,7 @@ function renderHistoryMain() {
           <button class="btn-back" onclick="selectedHistoryDate=null;renderHistoryDateList();renderHistoryMain()">← 戻る</button>
           <div style="font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--accent2);letter-spacing:2px;">${day.label}</div>
         </div>
+        ${isEditMode&&window.renderDayStandardControls?window.renderDayStandardControls(day)+'<p class="rr-meta">過去開催への新規登録は、現在の馬評価を使った振り返り用です。当時の評価を再現するものではありません。</p>':''}
         ${isEditMode ? `<div class="rr-toolbar" style="margin-bottom:12px"><button type="button" class="review-ai-btn secondary rr-bulk-open" data-review-day="${escHtml(day.id)}" onclick="openDayWholeReviews(this.dataset.reviewDay)">📋 この日の全体回顧・結果を一括登録</button><span class="rr-meta">個別回顧・馬評価・保存済み予想は変更しません。</span></div>` : ''}
         <div class="venue-tabs">${venueTabs}</div>
       </div>
@@ -182273,7 +182274,7 @@ async function publicHistoryMore(){
 <script src="running-style-presentation.js?v=20261115-7"></script>
 <script src="race-condition-summary.js?v=20261123-1"></script>
 <script src="public-assistant.js?v=20261123-1"></script>
-<script src="day-standard-predictions.js?v=20261115-4"></script>
+<script src="day-standard-predictions.js?v=20261123-3"></script>
 <script src="betting-results-model.js?v=20261115-2"></script>
 <script src="analysis-selection.js?v=20261117-1"></script>
 <script src="weekly-review-model.js?v=20261117-1"></script>

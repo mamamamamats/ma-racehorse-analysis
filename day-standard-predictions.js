@@ -10,6 +10,7 @@
   const state=states.get(day.id),busy=jobs.has(day.id);
   return `<div class="day-standard-controls" onclick="event.stopPropagation()"><button type="button" class="review-ai-btn secondary day-going-button" data-day-going-button="${aiEsc(day.id)}" onclick="event.stopPropagation();openDayGoingSettings(this.dataset.dayGoingButton)">🌦 馬場を登録・変更</button><button type="button" class="edit-btn-save" data-day-prediction-button="${aiEsc(day.id)}" onclick="event.stopPropagation();registerDayStandardPredictions(this.dataset.dayPredictionButton)" ${busy?'disabled':''}>${busy?'⏳ 登録中…':'💾 この日の標準予想を登録'}</button><small>新馬・未勝利を除く／重みは全項目3／馬場はレース設定（不明なら良）・芝ダート除外OFF。共通6項目版の登録済み予想は上書きしません（旧版は保持）。出走馬・評価不足はスキップして件数表示します。</small><div role="status" aria-live="polite" data-day-prediction-status="${aiEsc(day.id)}">${aiEsc(state||'')}</div></div>`;
  }
+ window.renderDayStandardControls=controls;
  function update(dayId,text){states.set(dayId,text);for(const el of document.querySelectorAll('[data-day-prediction-status]'))if(el.dataset.dayPredictionStatus===dayId)el.textContent=text;for(const el of document.querySelectorAll('[data-day-prediction-button]'))if(el.dataset.dayPredictionButton===dayId){el.disabled=jobs.has(dayId);el.textContent=jobs.has(dayId)?'⏳ 登録中…':'💾 この日の標準予想を登録';}}
  function build(day,venue,race){
   const previousWeights=aiCustomWeights,previousMode=aiConditionMode,previousFilter=aiSurfaceFilterEnabled,previousGoing=window.aiSelectedGoing,previousClass=window.aiLapClass;
