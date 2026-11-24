@@ -10,3 +10,18 @@ test('writes and transactions receive server timestamps and invalidate their col
 test('missing archive falls back to paginated Firestore and explicit full refresh remains available',async()=>{const f=fixture();f.offline();const rows=await f.env.DataArchive.read('predictions');assert.equal(rows.length,1);assert.ok(!f.reads[0].cs.some(c=>c.key==='archiveUpdatedAt'));await f.env.DataArchive.read('predictions',{fresh:true});assert.equal(f.reads.length,2);});
 
 test('explicit full refresh also replaces monthly cached results',async()=>{const f=fixture();await f.env.DataArchive.read('predictions',{months:['2026-11']});f.db.predictions=[{_docId:'corrected'}];await f.env.DataArchive.read('predictions',{fresh:true});const rows=await f.env.DataArchive.read('predictions',{months:['2026-11']});assert.equal(rows.length,1);assert.equal(rows[0]._docId,'corrected');assert.equal(f.reads.length,2);});
+
+test('ordinary refresh uses the JSON baseline and timestamp delta, never an unbounded full scan',async()=>{
+ const f=fixture();await f.env.DataArchive.read('predictions');await f.env.DataArchive.read('predictions',{refresh:true});
+ assert.equal(f.reads.length,2);assert.ok(f.reads.every(q=>q.cs.some(c=>c.key==='archiveUpdatedAt')));
+});
+test('quota failures retain published data in editor mode and pause repeated reads',async()=>{
+ const f=fixture();let calls=0;f.env._fbFns.getDocs=async()=>{calls++;throw Object.assign(Error('Quota exceeded.'),{code:'resource-exhausted'});};
+ const rows=await f.env.DataArchive.read('predictions');assert.equal(rows.length,1);assert.equal(rows[0]._docId,'p');assert.match(f.env.DataArchive.status().source,/上限超過/);
+ await f.env.DataArchive.read('predictions',{refresh:true});assert.equal(calls,1);assert.ok(f.env.DataArchive.status().warnings.some(x=>/最新差分/.test(x)));
+ await assert.rejects(f.env.DataArchive.read('predictions',{fresh:true}),/Quota/);assert.equal(calls,1);
+});
+test('editor permission errors are reported rather than hidden as quota fallback',async()=>{
+ const f=fixture();f.env._fbFns.getDocs=async()=>{throw Object.assign(Error('Denied'),{code:'permission-denied'});};
+ await assert.rejects(f.env.DataArchive.read('predictions'),/最新差分を取得できません/);
+});

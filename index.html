@@ -175350,7 +175350,7 @@ async function raceConditionLoadReviews(force=false){
     try{
       if(!(await waitForFirebase(5000)))throw new Error('Firebaseに接続できません');
       const {collection,getDocs}=window._fbFns;
-      if(window.DataArchive)raceConditionReviewRecords=await window.DataArchive.read('raceReviews',{fresh:force});else{const snap=await getDocs(collection(window._fbDb,'raceReviews'));raceConditionReviewRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));}
+      if(window.DataArchive)raceConditionReviewRecords=await window.DataArchive.read('raceReviews',{refresh:force});else{const snap=await getDocs(collection(window._fbDb,'raceReviews'));raceConditionReviewRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));}
       raceConditionReviewError='';
     }catch(e){raceConditionReviewError=e.message||String(e);}
     finally{raceConditionReviewPromise=null;raceConditionRefreshPanels();horseRaceRefreshEventBadges();}
@@ -181740,8 +181740,8 @@ async function loadWholeReviewRanking(){
   try {
     if(!(await waitForFirebase(5000)))throw new Error('Firebase接続待ちがタイムアウトしました');
     const {collection,getDocs}=window._fbFns;
-    const snapshot=await getDocs(collection(window._fbDb,'raceReviews'));
-    wholeReviewRankingRecords=snapshot.docs.map(d=>({raceId:d.id,...d.data()}));
+    if(window.DataArchive)wholeReviewRankingRecords=await DataArchive.read('raceReviews');
+    else{const snapshot=await getDocs(collection(window._fbDb,'raceReviews'));wholeReviewRankingRecords=snapshot.docs.map(d=>({raceId:d.id,...d.data()}));}
     raceConditionReviewRecords=wholeReviewRankingRecords;raceConditionRefreshPanels();
     wholeReviewRankingLoaded=true;
   }catch(e){wholeReviewRankingError=e.message||String(e);}
@@ -181921,8 +181921,8 @@ async function publicLoadReviewData(){
   publicReviewLoading=true;publicReviewError='';renderPublicPredict();
   try{if(!(await waitForFirebase(5000)))throw Error('Firebaseに接続できませんでした');
     const {collection,getDocs}=window._fbFns;
-    const snap=await getDocs(collection(window._fbDb,'raceReviews'));
-    wholeReviewRankingRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));wholeReviewRankingLoaded=true;
+    if(window.DataArchive)wholeReviewRankingRecords=await DataArchive.read('raceReviews');
+    else{const snap=await getDocs(collection(window._fbDb,'raceReviews'));wholeReviewRankingRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));}wholeReviewRankingLoaded=true;
   }catch(e){publicReviewError=e.message||String(e);}
   publicReviewLoading=false;renderPublicPredict();
 }
@@ -182257,7 +182257,7 @@ async function publicHistoryMore(){
 }
 </script>
 
-<script src="data-archive.js?v=20261115-8"></script>
+<script src="data-archive.js?v=20261125-1"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
 <script src="pace-model.js?v=20261124-half1"></script>
 <script src="horse-review-link.js?v=20261124-2"></script>
@@ -182289,7 +182289,7 @@ async function publicHistoryMore(){
 <script src="analysis-workspace.js?v=20261124-1"></script>
 <script src="weekly-publication.js?v=20261123-2"></script>
 <script src="public-condition-traits.js?v=20261117-1"></script>
-<script src="pace-workspace.js?v=20261124-half1"></script>
+<script src="pace-workspace.js?v=20261125-1"></script>
 <script src="review-chronology.js?v=20261116-1"></script>
 <script src="review-chronology-ui.js?v=20261116-1"></script>
 </body>
