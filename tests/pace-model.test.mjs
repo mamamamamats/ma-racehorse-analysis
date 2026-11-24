@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';const require=createRequire(import.meta.url),P=require('../pace-model.js');
 const rec=(i,time=48,extra={})=>({_docId:'r'+i,raceId:'r'+i,raceRef:{date:`2026/11/${i}`,venue:'東京',raceNumber:1,surface:'芝',distance:1600,trackCondition:'良',grade:'1s'},review:'ラップ '+[...Array(4).fill(time/4),12,12,12,12].map(x=>x.toFixed(1)).join('-'),events:{pace:null},...extra});
-test('front time is exact and partial segments are never interpolated',()=>{assert.equal(P.front(P.parse(rec(1)),800),48);const r=rec(1);r.raceRef.distance=1700;r.lapData={times:[6,...Array(8).fill(12)],segments:[100,...Array(8).fill(200)]};assert.equal(P.front(P.parse(r),800),null);assert.equal(P.parse({...r,lapData:{times:[12],segments:[200]}}),null);});
+test('front time preserves exact boundaries and apportions partial segments by distance',()=>{assert.equal(P.front(P.parse(rec(1)),800),48);const r=rec(1);r.raceRef.distance=1700;r.lapData={times:[6,...Array(8).fill(12)],segments:[100,...Array(8).fill(200)]};assert.equal(P.front(P.parse(r),800),48);assert.equal(P.parse({...r,lapData:{times:[12],segments:[200]}}),null);});
 test('same-condition Welford baseline excludes self and classifies absolute front speed',()=>{const records=[rec(1,44),rec(2,47.2),rec(3,48),rec(4,48.8),rec(5,49.2),rec(6,50)],b=P.build(records);const r=P.classify(records[0],b);assert.equal(r.pace,'high');assert.equal(r.sampleSize,5);assert.equal(r.ownRaceExcluded,true);assert.ok(Math.abs(r.baselineMean-48.64)<1e-8);assert.notEqual(r.baselineMean,P.classify(records[5],b).baselineMean);assert.equal(P.classify(rec(7,48.8),b).ownRaceExcluded,false);});
 test('sparse, zero variance and mismatched conditions return null, never borrow another course',()=>{assert.equal(P.classify(rec(1),P.build([rec(1)])).pace,null);assert.equal(P.classify(rec(7),P.build(Array.from({length:6},(_,i)=>rec(i+1)))).reason,'標準偏差0');const r=rec(9);r.raceRef.trackCondition='重';assert.equal(P.classify(r,P.build(Array.from({length:6},(_,i)=>rec(i+1,44+i)))).reason,'基準不足');r.raceRef.surface='障害';assert.equal(P.context(r),null);});
 test('canonical race identity deduplicates different day IDs and corrected laps replace old samples',()=>{const a=rec(1,44),b={...rec(1,48),_docId:'corrected',updatedAt:'2026-11-16'};const base=P.build([a,b,rec(2,50)]);assert.equal(base.count,2);assert.equal([...base.groups.values()][0].mean,49);assert.equal(base.version,P.build([rec(2,50),b,a]).version);});
@@ -8,3 +8,22 @@ test('class and course layouts are isolated; graded races and listed classes nor
 test('initial judgement persists; only label changes add compact history; identical result is idempotent',()=>{const record=rec(1,44,{events:{pace:'slow'},updatedAt:'old'}),r={pace:'high',baselineVersion:'v1'},a=P.patch(record,r,'one');assert.equal(a.paceAnalysis.initial.pace,'slow');assert.deepEqual(a.paceAnalysis.history[0],{at:'one',from:'slow',to:'high',baselineVersion:'v1',reason:null});Object.assign(record,a);assert.equal(P.patch(record,r,'two'),null);const b=P.patch(record,{...r,baselineVersion:'v2'},'two');assert.equal(b.paceAnalysis.history.length,1);Object.assign(record,b);const c=P.patch(record,{pace:'middle',baselineVersion:'v3'},'three');assert.equal(c.paceAnalysis.initial.pace,'slow');assert.equal(c.paceAnalysis.history.at(-1).from,'high');assert.equal(c.paceAnalysis.history.at(-1).to,'middle');});
 test('history is bounded while first judgement and total change count survive',()=>{const r=rec(1);for(let i=0;i<30;i++)Object.assign(r,P.patch(r,{pace:i%2?'slow':'high',baselineVersion:String(i)},String(i)));assert.equal(r.paceAnalysis.history.length,20);assert.equal(r.paceAnalysis.changeCount,30);assert.equal(r.paceAnalysis.initial.pace,null);});
 test('classification thresholds include both exact boundaries',()=>{const records=[rec(1,44),rec(2,46),rec(3,48),rec(4,50),rec(5,52)],b=P.build(records,{minSamples:2}),s=P.stats(records.map(r=>P.sample(r))),fast=rec(8),slow=rec(9);fast.lapData={times:[...Array(4).fill((s.mean-.7*s.std)/4),12,12,12,12],segments:Array(8).fill(200)};slow.lapData={times:[...Array(4).fill((s.mean+.7*s.std)/4),12,12,12,12],segments:Array(8).fill(200)};assert.ok(Math.abs(P.classify(fast,b).zScore+.7)<1e-6);assert.ok(Math.abs(P.classify(slow,b).zScore-.7)<1e-6);});
+
+test('1900m Citrine S splits 950m each; 50m of a 200m interval uses one quarter of its time',()=>{
+ const r={raceRef:{distance:1900},review:'ラップ 7.0-11.0-11.4-12.8-12.9-12.7-12.6-12.3-12.2-11.9'};
+ const h=P.halves(P.parse(r));assert.deepEqual(h,{frontDistance:950,backDistance:950,frontTime:58.275,backTime:58.525,interpolated:true,splitMethod:'distance-proportional'});
+ assert.equal(h.frontTime+h.backTime,116.8);
+});
+test('all supported distances are divided exactly in half and conserve total time',()=>{
+ for(const [distance,front]of Object.entries(P.DEFAULTS.frontDistances)){
+  const d=Number(distance),segments=Array.from({length:Math.ceil(d/200)},(_,i)=>i?200:d%200||200),laps=segments.map(s=>s*.06);
+  const h=P.halves({laps,segments});assert.equal(front,d/2);assert.equal(h.frontDistance,h.backDistance);assert.ok(Math.abs(h.frontTime+h.backTime-laps.reduce((a,b)=>a+b,0))<1e-6);assert.ok(Math.abs(h.frontTime-h.backTime)<1e-6);
+ }
+ assert.equal(P.halves({laps:Array(8).fill(12),segments:Array(8).fill(200)}).interpolated,false);
+});
+test('1700/1900/2100/2500m can form self-excluding baselines with proportional estimates',()=>{
+ for(const distance of [1700,1900,2100,2500]){
+  const rows=Array.from({length:6},(_,i)=>{const r=rec(i+1);r.raceRef.distance=distance;r.lapData={times:Array.from({length:Math.ceil(distance/200)},(_,j)=>(j===0?6:12)+i*.1),segments:Array.from({length:Math.ceil(distance/200)},(_,j)=>j?200:100)};return r;});
+  const result=P.classify(rows[0],P.build(rows));assert.equal(result.pace,'high');assert.equal(result.frontDistance,distance/2);assert.equal(result.backDistance,distance/2);assert.equal(result.interpolated,true);assert.equal(result.sampleSize,5);assert.equal(result.ownRaceExcluded,true);assert.equal(result.computedMethod,'review-pace-v2-half');
+ }
+});
