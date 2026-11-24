@@ -26,10 +26,10 @@
   function recordPattern(record,parse){const parsed=parse(record);if(parsed)return splitPattern(parsed.laps,parsed.segments)?.pattern||null;
     const raw=record?.events?.lapPattern,values=[...new Set((Array.isArray(raw)?raw:[raw]).filter(x=>Object.hasOwn(LABELS,x)))];return values.length===1?values[0]:null;
   }
-  function horseAptitude(horse,reviews,targetPattern,{surface='',before='',parse=()=>null}={}){
-    const linkIndex=Link.index(reviews);
+  function horseAptitude(horse,reviews,targetPattern,{surface='',before='',parse=()=>null,days=[]}={}){
+    const linkIndex=Link.index(reviews,{days});
     const seen=new Set(),values=[],used=[];let linked=0,matching=0;
-    for(const run of horse?.races||[]){const r=Link.resolve(run,linkIndex).record;if(!r)continue;
+    for(const run of horse?.races||[]){const r=Link.resolve(run,linkIndex,{horseName:horse?.name}).record;if(!r)continue;
       const identity=r.raceId||r._docId;if(seen.has(identity))continue;seen.add(identity);
       const ref=r.raceRef||{},date=key(ref.date);if(before&&(!date||date>=key(before)))continue;if(surface&&ref.surface!==surface)continue;
       linked++;if(!targetPattern||recordPattern(r,parse)!==targetPattern)continue;matching++;

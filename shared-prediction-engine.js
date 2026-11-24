@@ -16,7 +16,7 @@
    const allRaces=h.races||[],scoringRaces=input.surfaceFilter?allRaces.filter(r=>extractSurface(r.track)===context.surface):allRaces;
    const overall=scoringRaces.map(r=>evalScore(r.eval)).filter(v=>v!=null&&Number.isFinite(v));factors.overall=overall.length?overall.reduce((a,b)=>a+b,0)/overall.length:null;
    const venueStats=trackStats(h,context.venue,'',context.surface),distanceStats=trackStats(h,'',String(context.distance||''),context.surface),condition=conditionStats(h,'','',context.surface,mode(context.going));
-   const lapStats=LM.horseAptitude(h,input.reviews||[],basis.profile?.pattern,{surface:context.surface,before:context.date,parse:parseLap});
+   const lapStats=LM.horseAptitude(h,input.reviews||[],basis.profile?.pattern,{surface:context.surface,before:context.date,parse:parseLap,days:input.days||[]});
    factors.venue=venueStats.avg;factors.distance=distanceStats.avg;factors.condition=condition.avg;factors.form=formAvg(allRaces.slice(0,3));factors.lap=lapStats.avg;
    let sum=0,den=0;for(const k of KEYS){if(factors[k]==null||!Number.isFinite(factors[k])||weights[k]<=0)continue;sum+=factors[k]*weights[k];den+=weights[k];}
    return {name,num,frame:entry.frame||0,known:true,factors,baseScore:den?sum/den:null,bonusScore:0,venueStats,distanceStats,conditionStats:condition,lapStats,overallAvg:factors.overall,formAvg:factors.form,formCount:allRaces.slice(0,3).filter(r=>evalScore(r.eval)!=null).length,cond:trackStats(h,context.venue,String(context.distance||''),context.surface),shortNote:h.shortNote||'',comments:scoringRaces.slice(0,5).map(r=>r.comment).filter(Boolean),races:scoringRaces,allRaces,surface:context.surface};

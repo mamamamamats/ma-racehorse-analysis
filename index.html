@@ -176002,7 +176002,7 @@ function horseRaceReviewCandidates(r){
 // 厳密な自動照合：名前・コースの一致を必須とし、複数候補は絶対に自動保存しない。
 function horseRaceAutoTarget(r){
   if(r?.raceId||!window.HorseReviewLink)return null;
-  const resolved=HorseReviewLink.resolve(r,raceConditionReviewRecords||[...raceWholeReviewCache.values()]);
+  const resolved=HorseReviewLink.resolve(r,raceConditionReviewRecords||[...raceWholeReviewCache.values()],{horseName:selectedHorse?.races?.includes(r)?selectedHorse.name:'',days:raceDays||[]});
   return resolved.status==='inferred'?HorseReviewLink.idOf(resolved.record):null;
 }
 let horseRaceAutoBusy=false;
@@ -176030,7 +176030,7 @@ function horseRaceBulkPreview(){
   horseRaceBulkPlan=[];let pending=0,linked=0,total=0;
   for(const h of horses){if(h.deleted)continue;for(const r of(h.races||[])){
     total++;if(r.raceId){linked++;continue;}
-    const id=horseRaceAutoTarget(r);
+    const match=HorseReviewLink.resolve(r,raceConditionReviewRecords,{horseName:h.name,days:raceDays||[]}),id=match.status==='inferred'?HorseReviewLink.idOf(match.record):null;
     if(id)horseRaceBulkPlan.push({horseName:h.name,original:{...r},raceId:id});else pending++;
   }}
   out.textContent=`読み込み済み ${total}件：既存ID ${linked}件／自動連携可能 ${horseRaceBulkPlan.length}件／要確認 ${pending}件。※読み込み済みの馬のみ対象。`;
@@ -176054,7 +176054,7 @@ async function horseRaceBulkApply(){
 function horseRaceReviewMatch(r){
   if(!window.HorseReviewLink)return null;
   const records=[...raceWholeReviewCache.values(),...(raceConditionReviewRecords||[])];
-  return HorseReviewLink.resolve(r,records).record;
+  return HorseReviewLink.resolve(r,records,{horseName:selectedHorse?.races?.includes(r)?selectedHorse.name:'',days:raceDays||[]}).record;
 }
 function horseRaceReviewLinkControl(r,idx){
   if(!isEditMode)return '';
@@ -182260,11 +182260,11 @@ async function publicHistoryMore(){
 <script src="data-archive.js?v=20261115-8"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
 <script src="pace-model.js?v=20261116-1"></script>
-<script src="horse-review-link.js?v=20261124-1"></script>
-<script src="lap-metrics.js?v=20261124-1"></script>
-<script src="shared-prediction-engine.js?v=20261114-2"></script>
+<script src="horse-review-link.js?v=20261124-2"></script>
+<script src="lap-metrics.js?v=20261124-2"></script>
+<script src="shared-prediction-engine.js?v=20261124-2"></script>
 <script src="weight-research-model.js?v=20261122-1"></script>
-<script src="shared-prediction-runtime.js?v=20261122-1"></script>
+<script src="shared-prediction-runtime.js?v=20261124-2"></script>
 <script src="score-interpretation.js?v=20261114-1"></script>
 <script src="running-style-presentation.js?v=20261115-7"></script>
 <script src="race-condition-summary.js?v=20261123-1"></script>
@@ -182281,7 +182281,7 @@ async function publicHistoryMore(){
 <script src="analysis-archive-model.js?v=20261117-1"></script>
 <script src="prediction-diagnosis-model.js?v=20261124-1"></script>
 <script src="prediction-diagnosis-ui.js?v=20261124-1"></script>
-<script src="horse-review-link-ui.js?v=20261124-1"></script>
+<script src="horse-review-link-ui.js?v=20261124-2"></script>
 <script src="race-review-tools.js?v=20261124-2"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
