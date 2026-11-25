@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generation": "bc4901c68f2c663d30a32432342eb98c3ed686733e8d953267ec304a6015f7ed",
-  "startedAt": "2026-11-23T14:58:30.455Z",
-  "exportedAt": "2026-11-23T14:58:46.601Z",
+  "generation": "ea46628efbda332b7538de34f08b37389238a5f6680895b7bb046ae034b3e5d2",
+  "startedAt": "2026-11-25T15:02:04.276Z",
+  "exportedAt": "2026-11-25T15:02:38.328Z",
   "files": [
     {
       "collection": "predictions",
@@ -31,202 +31,298 @@
     {
       "collection": "raceResults",
       "month": "2026-11",
-      "path": "raceResults/2026-11-e8187c4e797928ca.json",
-      "sha256": "e8187c4e797928cac5c7c246ee25f2ab21f9fb2102da97312c80e53c428c3fb8",
+      "path": "raceResults/2026-11-d443c0e795851585.json",
+      "sha256": "d443c0e79585158552b98fb4ea6837cc8434bc5f21a02faec00dd4c40d585407",
       "count": 222,
-      "bytes": 281522
+      "bytes": 281390
     },
     {
       "collection": "raceReviews",
       "month": "2023-12",
-      "path": "raceReviews/2023-12-4233116fcc460af9.json",
-      "sha256": "4233116fcc460af927d5ddc7d0785a9d7dbd0440eef52c7b6178b7311f4ab837",
+      "path": "raceReviews/2023-12-f57d6902aaaef518.json",
+      "sha256": "f57d6902aaaef5186e1b6c7bd5b2bbfb071c799fb1397d13a5ae43f9c6cba6f9",
       "count": 272,
-      "bytes": 240664
+      "bytes": 604869
     },
     {
       "collection": "raceReviews",
       "month": "2024-01",
-      "path": "raceReviews/2024-01-1680999fa3d8a6dc.json",
-      "sha256": "1680999fa3d8a6dc47f3ce0d446e988ab3147b7c51100f2ad16f10b58241746e",
+      "path": "raceReviews/2024-01-f8936d932a8a5d73.json",
+      "sha256": "f8936d932a8a5d739c3dc7c298ef01db3e8515daeca81256a137fccfa09dcc44",
       "count": 285,
-      "bytes": 277100
+      "bytes": 674087
     },
     {
       "collection": "raceReviews",
       "month": "2024-02",
-      "path": "raceReviews/2024-02-c5c325958365c2a5.json",
-      "sha256": "c5c325958365c2a5ba16f937d0548dd891ff90cf241e708ad67693c11925dcef",
+      "path": "raceReviews/2024-02-dc71e9cdf0b9da32.json",
+      "sha256": "dc71e9cdf0b9da32c3eede20dac4b57450b95fad364d83c8e24b8b424df033ce",
       "count": 286,
-      "bytes": 277161
+      "bytes": 667981
     },
     {
       "collection": "raceReviews",
       "month": "2024-03",
-      "path": "raceReviews/2024-03-236a134346577810.json",
-      "sha256": "236a134346577810fc5e176b6f972569ee148945d86a26fb2d97440b99486f66",
+      "path": "raceReviews/2024-03-e483fc041fea5f64.json",
+      "sha256": "e483fc041fea5f64be64e668f123fe7b7b243dddfbb6f84006336108bdc1e804",
       "count": 247,
-      "bytes": 238671
+      "bytes": 591968
     },
     {
       "collection": "raceReviews",
       "month": "2024-04",
-      "path": "raceReviews/2024-04-f8bd581b7effce85.json",
-      "sha256": "f8bd581b7effce85a5e9bbf931d5070857289e760a6fea2306ce26ac2cc932f0",
+      "path": "raceReviews/2024-04-a06db50a1d36e935.json",
+      "sha256": "a06db50a1d36e9354b51682a245797aa4f59d7bede4fe906a74760f23d1216cf",
       "count": 169,
-      "bytes": 163657
+      "bytes": 399038
     },
     {
       "collection": "raceReviews",
       "month": "2024-05",
-      "path": "raceReviews/2024-05-da061222fc93d7f0.json",
-      "sha256": "da061222fc93d7f0a983abceb7139c2f6e9c8dd1789b17b5763aed3404d8d9a6",
+      "path": "raceReviews/2024-05-cfb02f4ab05cfab6.json",
+      "sha256": "cfb02f4ab05cfab69321e4fda1260c0d33c9605a9e0db15149653cdc135947cf",
       "count": 156,
-      "bytes": 149213
+      "bytes": 372023
     },
     {
       "collection": "raceReviews",
       "month": "2024-06",
-      "path": "raceReviews/2024-06-27a6de257d2d15c6.json",
-      "sha256": "27a6de257d2d15c6e7827fc121a858afd4a604cb4b34d616eb279223809421a1",
+      "path": "raceReviews/2024-06-c985500439162c8c.json",
+      "sha256": "c985500439162c8c28ce2418ff636dad4e58e3605bffc529be576af44a2736c9",
       "count": 295,
-      "bytes": 283346
+      "bytes": 687387
     },
     {
       "collection": "raceReviews",
       "month": "2024-07",
-      "path": "raceReviews/2024-07-f98eef8201f2741d.json",
-      "sha256": "f98eef8201f2741dcee3a07ed74348fb4d37af886b06437269281beddef2d730",
+      "path": "raceReviews/2024-07-6005e53b91e606bb.json",
+      "sha256": "6005e53b91e606bb82ebd152b8db969849a55dd04ae6a847ad34b352ea9bbe06",
       "count": 232,
-      "bytes": 223505
+      "bytes": 527225
     },
     {
       "collection": "raceReviews",
       "month": "2024-08",
-      "path": "raceReviews/2024-08-1f311a7e16815db8.json",
-      "sha256": "1f311a7e16815db8b2b239d6476e9254ed473ad787edfdec765c35b5bcbace50",
+      "path": "raceReviews/2024-08-aa8f320b87529902.json",
+      "sha256": "aa8f320b87529902965e8a686cea604cbdc3dce96111b30071cb5d0feeb82fe1",
       "count": 273,
-      "bytes": 263661
+      "bytes": 633698
     },
     {
       "collection": "raceReviews",
       "month": "2024-09",
-      "path": "raceReviews/2024-09-1c658143cc9a73af.json",
-      "sha256": "1c658143cc9a73aff4806b689dc3db3b7fdac8256ff2d243a2998ab8eef0215c",
+      "path": "raceReviews/2024-09-c44ba797b29e371a.json",
+      "sha256": "c44ba797b29e371a70305594e82ac960076cfed7ec9a5d4191ef257a79a72cb5",
       "count": 228,
-      "bytes": 220002
+      "bytes": 544650
     },
     {
       "collection": "raceReviews",
       "month": "2024-10",
-      "path": "raceReviews/2024-10-6c179f9d685bb4d7.json",
-      "sha256": "6c179f9d685bb4d7c9daff4dda6af3d44ee90c0169fc9d342547cd9d7f36562b",
+      "path": "raceReviews/2024-10-bcaad5f3a2414322.json",
+      "sha256": "bcaad5f3a2414322d19c75e2a00e835ea82c91d62709a378a9e822dcca47c4be",
       "count": 266,
-      "bytes": 254960
+      "bytes": 635568
     },
     {
       "collection": "raceReviews",
       "month": "2024-11",
-      "path": "raceReviews/2024-11-c13cd9805f42e077.json",
-      "sha256": "c13cd9805f42e0770e99454049f58ece6f508e35ee97706f079ba8677eac2b0b",
+      "path": "raceReviews/2024-11-9a5cd983727dd54d.json",
+      "sha256": "9a5cd983727dd54d61b079547e91523963d92c182779166e7f6a5f2506acf3fc",
       "count": 271,
-      "bytes": 260573
+      "bytes": 635734
     },
     {
       "collection": "raceReviews",
       "month": "2024-12",
-      "path": "raceReviews/2024-12-892f44efeacf8c5d.json",
-      "sha256": "892f44efeacf8c5da7c4843dbfde42eb1bd8af16ab0cc953ca6d53c7ee337544",
+      "path": "raceReviews/2024-12-f1e078ef443f1c86.json",
+      "sha256": "f1e078ef443f1c86e781b158affa814d73e5b7952091e45d0dd010bc23454425",
       "count": 240,
-      "bytes": 230705
+      "bytes": 579439
     },
     {
       "collection": "raceReviews",
       "month": "2025-01",
-      "path": "raceReviews/2025-01-d4918c085203c3f6.json",
-      "sha256": "d4918c085203c3f69b13997a6ea03d336048202a6e80209c2aa64ad09c40b8f8",
+      "path": "raceReviews/2025-01-ac6d9bb6f97eb85c.json",
+      "sha256": "ac6d9bb6f97eb85cf467835ddec6ab03dbfd63f773b0464f3f5ac9f31418fbb1",
       "count": 225,
-      "bytes": 217945
+      "bytes": 542448
     },
     {
       "collection": "raceReviews",
       "month": "2025-02",
-      "path": "raceReviews/2025-02-478fde99d8c265cd.json",
-      "sha256": "478fde99d8c265cd75cd13494cd3a7ef482c48bdcb472d6eb9b5bddd94930070",
+      "path": "raceReviews/2025-02-49f9800f3d512e7e.json",
+      "sha256": "49f9800f3d512e7efe0ef4456610d0d36b9a4fa021dd34015dd92dc5be5de9d1",
       "count": 259,
-      "bytes": 249917
+      "bytes": 608730
     },
     {
       "collection": "raceReviews",
       "month": "2025-03",
-      "path": "raceReviews/2025-03-fd0b662f5fa9ed99.json",
-      "sha256": "fd0b662f5fa9ed99675b7e42287a634fdfc6a9721a3a369621b89821fb50b0b5",
+      "path": "raceReviews/2025-03-b97c60dfde9cb720.json",
+      "sha256": "b97c60dfde9cb7209dc06b39f73126a653b2b7c7fe353bb1de4004f972616039",
       "count": 322,
-      "bytes": 312695
+      "bytes": 775855
     },
     {
       "collection": "raceReviews",
       "month": "2025-04",
-      "path": "raceReviews/2025-04-230a20f5eec392b0.json",
-      "sha256": "230a20f5eec392b09d1cd93f516ffd8765642ef31794e966d301bfcaa750c014",
+      "path": "raceReviews/2025-04-45d5b29bc1304a87.json",
+      "sha256": "45d5b29bc1304a872ad56b6a1ee9015462d8ff5304a420395c0aa144c42e2fb9",
       "count": 253,
-      "bytes": 245430
+      "bytes": 598947
     },
     {
       "collection": "raceReviews",
       "month": "2025-05",
-      "path": "raceReviews/2025-05-1939130625b8751d.json",
-      "sha256": "1939130625b8751d399835305209df248cb109731fec0ebdd340718750847de2",
+      "path": "raceReviews/2025-05-12ed4e08dbb25a05.json",
+      "sha256": "12ed4e08dbb25a05cbc677be7239a3135fff9786c27e6d70756a46d7c2f06f5f",
       "count": 290,
-      "bytes": 281136
+      "bytes": 688022
     },
     {
       "collection": "raceReviews",
       "month": "2025-06",
-      "path": "raceReviews/2025-06-412dc5b164d7a180.json",
-      "sha256": "412dc5b164d7a180486f0f6d867ee490c937b5422032efd951f4fc11bf8f3719",
+      "path": "raceReviews/2025-06-5beb4d8eb0b0a7aa.json",
+      "sha256": "5beb4d8eb0b0a7aa6ea82f6969b4dab949baaa4e407823f9266b6b0fd8d0ce5a",
       "count": 276,
-      "bytes": 267798
+      "bytes": 645924
     },
     {
       "collection": "raceReviews",
       "month": "2025-07",
-      "path": "raceReviews/2025-07-ccfe42f86bb38abf.json",
-      "sha256": "ccfe42f86bb38abf857ec30c4e335704dd920326fb0b557d68f3b9f8032e612b",
+      "path": "raceReviews/2025-07-3dc6b102fd40cdb4.json",
+      "sha256": "3dc6b102fd40cdb46c2e9d47909e2b70cc9b0754c4a705d55637fc228ea63c4a",
       "count": 277,
-      "bytes": 266913
+      "bytes": 632440
     },
     {
       "collection": "raceReviews",
       "month": "2025-08",
-      "path": "raceReviews/2025-08-428ad3b27b6e1fe1.json",
-      "sha256": "428ad3b27b6e1fe1e2a3616213030c84bebcba157d44fcb443c294131168371e",
-      "count": 244,
-      "bytes": 235084
+      "path": "raceReviews/2025-08-bb8d237c6a17cffd.json",
+      "sha256": "bb8d237c6a17cffdd7d1c5307e347cf04f69384d70e9bb310a74cdab68aaaae5",
+      "count": 347,
+      "bytes": 812434
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2025-09",
+      "path": "raceReviews/2025-09-5b57c596d976c1c6.json",
+      "sha256": "5b57c596d976c1c6c254839a41d8a8881a7f8949b25e2229eb99077795aeab66",
+      "count": 231,
+      "bytes": 552422
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2025-10",
+      "path": "raceReviews/2025-10-1d4d6e525041615e.json",
+      "sha256": "1d4d6e525041615ebf14f152b4242b03d663d3ed738eced46a9d7eb94879220b",
+      "count": 254,
+      "bytes": 607583
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2025-11",
+      "path": "raceReviews/2025-11-16bdc738a4b7aa5b.json",
+      "sha256": "16bdc738a4b7aa5bd7ed99f33a002c01a830873f5c05fb5498f718d6734d13f2",
+      "count": 298,
+      "bytes": 699741
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2025-12",
+      "path": "raceReviews/2025-12-4c405dd8668070c8.json",
+      "sha256": "4c405dd8668070c8d91cc2f0fbe488b49be21d2c4614f3bec9c374c766ab19aa",
+      "count": 255,
+      "bytes": 611510
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-01",
+      "path": "raceReviews/2026-01-5a7e746c6e424a7f.json",
+      "sha256": "5a7e746c6e424a7ff605b2751a5a0e6d8b7f30eb1e54c35d7531a90d458c39e8",
+      "count": 189,
+      "bytes": 452493
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-02",
+      "path": "raceReviews/2026-02-7bc30b38a794ebd7.json",
+      "sha256": "7bc30b38a794ebd75fcff7f0cdcaec7eae008dcb6d86686d0ae2bd4411cb00c7",
+      "count": 145,
+      "bytes": 342389
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-03",
+      "path": "raceReviews/2026-03-5f5289869099b169.json",
+      "sha256": "5f5289869099b1690e3c81de691f554acd654489e0d6a1ca3fd72cacbaad42c5",
+      "count": 229,
+      "bytes": 552213
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-04",
+      "path": "raceReviews/2026-04-5ff65e5c89130211.json",
+      "sha256": "5ff65e5c891302119cb66307b229589802565a0f52b35c313ec00fcf95ded622",
+      "count": 227,
+      "bytes": 536500
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-05",
+      "path": "raceReviews/2026-05-dd0060dafd762084.json",
+      "sha256": "dd0060dafd7620844b56ed0c824cd039b19b79dd99b59e9fe856fea67db33b3c",
+      "count": 263,
+      "bytes": 627546
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-06",
+      "path": "raceReviews/2026-06-c6b8a51b5af0bdcd.json",
+      "sha256": "c6b8a51b5af0bdcdde228ada155c3b45763a862dbdfabea252a8d51c095a8bba",
+      "count": 191,
+      "bytes": 446138
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-07",
+      "path": "raceReviews/2026-07-f69315b8f065154c.json",
+      "sha256": "f69315b8f065154c223e1e6ec1877c7c0ce15635a64c15342a9e2bfd1fdeff47",
+      "count": 197,
+      "bytes": 445224
+    },
+    {
+      "collection": "raceReviews",
+      "month": "2026-08",
+      "path": "raceReviews/2026-08-86662a430867f8bc.json",
+      "sha256": "86662a430867f8bc4d71330fcec3515c836eeb699fc3bdb5b786867225d54e89",
+      "count": 332,
+      "bytes": 775545
     },
     {
       "collection": "raceReviews",
       "month": "2026-09",
-      "path": "raceReviews/2026-09-014640fcd239fafa.json",
-      "sha256": "014640fcd239fafa2cc987fa92cebe672454c2007cd6e9cf1cf165332522c35a",
-      "count": 23,
-      "bytes": 30289
+      "path": "raceReviews/2026-09-c56c9c6ab89ab8e5.json",
+      "sha256": "c56c9c6ab89ab8e55c6d673259b641a4c5f047c6dc829eaab6663562f4f2f1e3",
+      "count": 162,
+      "bytes": 381429
     },
     {
       "collection": "raceReviews",
       "month": "2026-10",
-      "path": "raceReviews/2026-10-fe1dca57faf0f905.json",
-      "sha256": "fe1dca57faf0f90535ac9d717b439fc63e1346bb3e90f1fa0d5830bfd5714428",
+      "path": "raceReviews/2026-10-8d20d62ad42b15ea.json",
+      "sha256": "8d20d62ad42b15eab581f27a3b6eb459d526d135df72e285b8a7b243b488ae83",
       "count": 123,
-      "bytes": 185929
+      "bytes": 275938
     },
     {
       "collection": "raceReviews",
       "month": "2026-11",
-      "path": "raceReviews/2026-11-8b8d9a0ee7740f3f.json",
-      "sha256": "8b8d9a0ee7740f3f5064f0a8c4202d62c2f8a0b7816aea488aaccb7572d5ace1",
+      "path": "raceReviews/2026-11-93d58128939ed146.json",
+      "sha256": "93d58128939ed146188b56eaf948eb2b41cbfce54a839cf37a8e20d0171a29a1",
       "count": 214,
-      "bytes": 340181
+      "bytes": 511066
     },
     {
       "collection": "raceDays",
@@ -511,40 +607,40 @@
     {
       "collection": "raceDays",
       "month": "2026-11",
-      "path": "raceDays/2026-11-d67737a76181990f.json",
-      "sha256": "d67737a76181990fb9c530cd71b054d874d4feeaf74b66647448624301446518",
+      "path": "raceDays/2026-11-e118bad327860bff.json",
+      "sha256": "e118bad327860bffff2d0da10b6ac6348f34cb8ca85012121392f91ede35f7d9",
       "count": 8,
       "bytes": 200372
     },
     {
       "collection": "positionRecords",
       "month": "2026-09",
-      "path": "positionRecords/2026-09-5d901d3564dd2a58.json",
-      "sha256": "5d901d3564dd2a5814f785bc0d0905164f704ec79024c357b72bb1cc9ae9eec7",
+      "path": "positionRecords/2026-09-54f11ccbd3e14731.json",
+      "sha256": "54f11ccbd3e14731920b6b6bbbb55d79f8e6423aabd9a5d891d9dc8c37b85294",
       "count": 1,
       "bytes": 502
     },
     {
       "collection": "positionRecords",
       "month": "2026-10",
-      "path": "positionRecords/2026-10-b6d4aa3fefe92899.json",
-      "sha256": "b6d4aa3fefe9289929d424c6afbc24b0a62872eac371ced1c940fb637e15d282",
+      "path": "positionRecords/2026-10-c0058db00988272d.json",
+      "sha256": "c0058db00988272d57b07a46c845d7972307295425351530ac0dea814e23e7da",
       "count": 346,
-      "bytes": 134692
+      "bytes": 135111
     },
     {
       "collection": "positionRecords",
       "month": "2026-11",
-      "path": "positionRecords/2026-11-d35ab0d080c5f40d.json",
-      "sha256": "d35ab0d080c5f40d72f6c4a880d28949d3cc90428f08ca1a5d538deb75d362f8",
-      "count": 1133,
-      "bytes": 474120
+      "path": "positionRecords/2026-11-c575ad1430bf96ac.json",
+      "sha256": "c575ad1430bf96ac95c8101525a613214ab95c196bf79968e77fe8383030e758",
+      "count": 1308,
+      "bytes": 551903
     },
     {
       "collection": "meta",
       "month": "all",
-      "path": "meta/public-1a2671fa64632e16.json",
-      "sha256": "1a2671fa64632e16d75b60ed33764440d11f18d1b4d6b6e0f1617ebe8f9c04c7",
+      "path": "meta/public-a90bf6cfad4e94c4.json",
+      "sha256": "a90bf6cfad4e94c45cf0190400311fb52af1255fc0bba412d3fea504262ba1cb",
       "count": 3,
       "bytes": 22621
     }
@@ -552,8 +648,8 @@
   "counts": {
     "predictions": 233,
     "raceResults": 261,
-    "raceReviews": 5726,
+    "raceReviews": 8779,
     "raceDays": 320,
-    "positionRecords": 1480
+    "positionRecords": 1655
   }
 }
