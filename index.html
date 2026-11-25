@@ -175389,7 +175389,7 @@ function raceConditionAnalysisBody(raceId,venue,surface,distance,condition){
     const top=sorted.slice(0,3).map(([v,n])=>`${f.options[v]} ${n}/${known}件 (${Math.round(n/known*100)}%)`).join('、');
     return `<div style="margin-top:4px"><b>${f.label}</b>：${top}</div>`;
   }).join('');
-  return `<div style="font-size:11px;color:var(--muted);margin:4px 0">同コース ${matches.length}レース（現在のレースは除外）</div><div style="font-size:12px;line-height:1.7">${lines}</div><div style="font-size:10px;color:var(--muted);margin-top:5px">※ 回顧で判定できた事象の記録割合。枠の内外混在は有利不利の判定ではありません。馬場状態は絞り込みに含めていません。</div><button type="button" class="review-ai-btn secondary" style="margin-top:5px" onclick="raceConditionLoadReviews(true)">集計を更新</button>`;
+  return `<div style="font-size:11px;color:var(--muted);margin:4px 0">同コース ${matches.length}レース（現在のレースは除外）</div><div style="font-size:12px;line-height:1.7">${lines}</div><div style="font-size:10px;color:var(--muted);margin-top:5px">※ 保存済み分類と、実数ラップからの自動補完を集計。枠・不利は保存済み情報のみ。枠の内外混在は有利不利の判定ではありません。馬場状態は絞り込みに含めていません。</div><button type="button" class="review-ai-btn secondary" style="margin-top:5px" onclick="raceConditionLoadReviews(true)">集計を更新</button>`;
 }
 function raceConditionAnalysisPanel(day,venue,race){
   const ref=buildRaceRef(day,venue,race);
@@ -176089,18 +176089,19 @@ async function horseRaceSaveReviewLink(btn,idx){
   applySavedHorseToCurrentState(result.horse);invalidateHorseCache();renderHorseDetail();
 }
 function horseRaceEventBadges(r){
-  const record=horseRaceReviewMatch(r),e=record?.events;
+  const record=horseRaceReviewMatch(r),e=window.ReviewClassificationRuntime?.events(record)||record?.events;
   if(!record)return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：未登録</div>';
   if(!e||Array.isArray(e)||typeof e!=='object')return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：連携済み・4分類未登録</div>';
   const labels=[];
   const pace={high:'ハイペース',middle:'ミドルペース',mid:'ミドルペース',slow:'スローペース'};
-  if(pace[e.pace])labels.push(pace[e.pace]);
+  if(pace[e.pace])labels.push(pace[e.pace]);else labels.push('展開：未判定');
   const lap={front_loaded:'前傾',back_loaded:'後傾',even:'平均型',mid_slow:'中盤緩む',long_spurt:'ロングスパート'};
   for(const v of (Array.isArray(e.lapPattern)?e.lapPattern:[e.lapPattern]))if(lap[v]&&!labels.includes(lap[v]))labels.push(lap[v]);
+  if(!(Array.isArray(e.lapPattern)?e.lapPattern:[e.lapPattern]).some(v=>lap[v]))labels.push('ラップ：未判定');
   const frame={inner:'上位枠：内枠のみ',outer:'上位枠：外枠のみ',mixed:'上位枠：内外混在',balanced:'上位枠：内外混在'};
-  if(frame[e.topFinishFrame])labels.push(frame[e.topFinishFrame]);
+  if(frame[e.topFinishFrame])labels.push(frame[e.topFinishFrame]);else labels.push('上位枠：未判定');
   if(e.trouble==='yes')labels.push('不利あり（レース全体）');
-  else if(e.trouble==='no')labels.push('不利なし（レース全体）');
+  else if(e.trouble==='no')labels.push('不利なし（レース全体）');else labels.push('不利：未判定');
   if(!labels.length)return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：判定データなし</div>';
   return '<div class="horse-race-event-badges" style="display:flex;flex-wrap:wrap;gap:5px;margin:7px 0">'+labels.map(label=>'<span style="font-size:10px;padding:3px 7px;border-radius:6px;background:var(--card2);border:1px solid var(--border);color:var(--muted)">'+escHtml(label)+'</span>').join('')+'</div>';
 }
@@ -181761,7 +181762,7 @@ const SIMPLE_REVIEW_FIELDS=[
   {key:'trouble',label:'不利の有無',options:{yes:'あり',no:'なし',unknown:'不明'}}
 ];
 function simpleReviewEvents(r){
-  const e=r?.events;
+  const e=window.ReviewClassificationRuntime?.events(r)||r?.events;
   return e&&!Array.isArray(e)&&typeof e==='object'?e:null;
 }
 function simpleReviewRef(r){
@@ -181817,7 +181818,7 @@ function renderReviewEventRanking(){
   };
   const filteredRecords=records.filter(matchReview);
   const structured=filteredRecords.filter(r=>simpleReviewEvents(r));
-  const overview=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">検索対象の回顧 ${filteredRecords.length}件（全${records.length}件）／4分類データ ${structured.length}件。旧形式のevents配列は集計に混ぜません。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button> <button class="review-ai-btn secondary" onclick="simpleReviewDownload()">分析用JSON出力</button><details style="margin-top:12px"><summary style="cursor:pointer">登録済みの回顧を見る</summary><div style="margin:8px 0"><input type="search" placeholder="レースID・回顧本文を検索" oninput="simpleReviewFilter(this,'.simple-review-record')" style="width:100%;max-width:360px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:inherit"><span class="simple-review-search-count" style="margin-left:8px;font-size:12px"></span></div><div style="max-height:300px;overflow:auto">${filteredRecords.map(r=>`<details class="simple-review-record" style="padding:7px 0;border-top:1px solid var(--border)"><summary>${aiEsc(r.raceId)} ${simpleReviewEvents(r)?'（4分類登録済み）':''}</summary><div style="white-space:pre-wrap;font-size:12px">${aiEsc(r.review||'本文なし')}</div></details>`).join('')}</div></details></div>`;
+  const overview=`<div class="analysis-card"><div class="analysis-card-title">📋 レース全体回顧の集計</div><div class="analysis-sub">検索対象の回顧 ${filteredRecords.length}件（全${records.length}件）／4分類データ ${structured.length}件。旧形式のevents配列は集計に混ぜません。</div><button class="review-ai-btn secondary" onclick="loadWholeReviewRanking()">再読み込み</button> <button class="review-ai-btn secondary" onclick="simpleReviewDownload()">分析用JSON出力</button><details style="margin-top:12px"><summary style="cursor:pointer">登録済みの回顧を見る</summary><div style="margin:8px 0"><input type="search" placeholder="レースID・回顧本文を検索" oninput="simpleReviewFilter(this,'.simple-review-record')" style="width:100%;max-width:360px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:inherit"><span class="simple-review-search-count" style="margin-left:8px;font-size:12px"></span></div><div style="max-height:300px;overflow:auto">${filteredRecords.map(r=>`<details class="simple-review-record" style="padding:7px 0;border-top:1px solid var(--border)"><summary>${aiEsc(r.raceId)} ${simpleReviewEvents(r)?'（分類あり・ラップ自動補完を含む）':''}</summary><div style="white-space:pre-wrap;font-size:12px">${aiEsc(r.review||'本文なし')}</div></details>`).join('')}</div></details></div>`;
   const cards=SIMPLE_REVIEW_FIELDS.map(f=>{
     const counts=new Map(Object.keys(f.options).map(k=>[k,0]));let known=0,unknown=0,missing=0;
     for(const r of structured){
@@ -182257,18 +182258,20 @@ async function publicHistoryMore(){
 }
 </script>
 
-<script src="data-archive.js?v=20261125-1"></script>
+<script src="data-archive.js?v=20261126-1"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
-<script src="pace-model.js?v=20261124-half1"></script>
+<script src="pace-model.js?v=20261126-1"></script>
 <script src="horse-review-link.js?v=20261124-2"></script>
 <script src="lap-metrics.js?v=20261124-2"></script>
+<script src="review-classification-model.js?v=20261126-1"></script>
+<script src="review-classification-runtime.js?v=20261126-1"></script>
 <script src="shared-prediction-engine.js?v=20261124-2"></script>
 <script src="weight-research-model.js?v=20261122-1"></script>
 <script src="shared-prediction-runtime.js?v=20261124-2"></script>
 <script src="score-interpretation.js?v=20261114-1"></script>
 <script src="running-style-presentation.js?v=20261115-7"></script>
 <script src="race-condition-summary.js?v=20261125-position1"></script>
-<script src="public-assistant.js?v=20261125-position1"></script>
+<script src="public-assistant.js?v=20261126-1"></script>
 <script src="day-standard-predictions.js?v=20261123-3"></script>
 <script src="betting-results-model.js?v=20261115-2"></script>
 <script src="analysis-selection.js?v=20261117-1"></script>
@@ -182281,15 +182284,15 @@ async function publicHistoryMore(){
 <script src="analysis-archive-model.js?v=20261117-1"></script>
 <script src="prediction-diagnosis-model.js?v=20261124-1"></script>
 <script src="prediction-diagnosis-ui.js?v=20261124-1"></script>
-<script src="horse-review-link-ui.js?v=20261124-2"></script>
-<script src="race-review-tools.js?v=20261124-2"></script>
+<script src="horse-review-link-ui.js?v=20261126-1"></script>
+<script src="race-review-tools.js?v=20261126-1"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
 <script src="weight-research-ui.js?v=20261122-1"></script>
 <script src="analysis-workspace.js?v=20261124-1"></script>
 <script src="weekly-publication.js?v=20261123-2"></script>
 <script src="public-condition-traits.js?v=20261117-1"></script>
-<script src="pace-workspace.js?v=20261125-1"></script>
+<script src="pace-workspace.js?v=20261126-1"></script>
 <script src="review-chronology.js?v=20261116-1"></script>
 <script src="review-chronology-ui.js?v=20261116-1"></script>
 </body>

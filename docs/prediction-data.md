@@ -24,3 +24,19 @@ node scripts/export-prediction-data.mjs --master-json /tmp/keiba-data.json
 `keiba-data.json.zip` と `prediction-data/**` の変更だけを公開し、変更がなければコミット不要です。manifestの件数・各ファイルのSHA-256、GitHub Pages反映を確認します。
 
 これは閲覧ごとのDB全件取得を削減する仕組みです。定期書き出し時のDB読み取りと差分読み取りは残り、料金が必ずゼロになるものではありません。
+
+
+## ラップから不足分類を補完
+
+1900mは950mずつ、1150mは575mずつの等距離に分割し、境界区間は距離比例で按分します。未登録のラップ構成（前傾・平均型・後傾）は実数ラップから補完できます。ペースは同条件・クラス区分で自身を除く最低5件との比較です。既存の有効な分類は不足補完で置き換えず、枠・不利は推測しません。
+
+表示用の補完は読み取り専用です。編集画面の「ペース基準・過去判定を更新」→「未分類だけを補完プレビュー」→保存で不足分だけ永続化できます。保存前に件数・読み書き目安を確認してください。新規の全体回顧JSON登録時にも同じ補完を適用します。
+
+管理用スクリプトは最初にプレビューとバックアップを作り、適用時は明示的な件数上限とサーバーupdateTime前提条件を使います。上限・競合エラーは再試行せず停止します。
+
+```sh
+node scripts/fill-missing-race-classifications.mjs --backup-dir /tmp/classification-backup
+node scripts/fill-missing-race-classifications.mjs --apply --input /tmp/classification-backup/snapshot.json --backup-dir /tmp/classification-backup --max-writes 2000
+```
+
+回顧のみを新しく公開する場合、再取得したライブスナップショットを `scripts/publish-review-archive.mjs` に渡します。manifestのcollectionStartedAt.raceReviewsだけを進め、馬・予想・結果など他のコレクションの差分取得開始点は維持します。古い馬マスターを新しい取得時刻として扱いません。

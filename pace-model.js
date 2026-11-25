@@ -1,7 +1,7 @@
 /* App-review lap pace baselines. No network, storage, horse scores or lap-pattern changes. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PaceModel=api;})(globalThis,()=>{
  'use strict';
- const VERSION='review-pace-v2-half',DEFAULTS={minSamples:5,threshold:.7,frontDistances:Object.fromEntries([1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2800,3000,3200,3400,3600].map(d=>[d,d/2]))};
+ const VERSION='review-pace-v2-half',DEFAULTS={minSamples:5,threshold:.7,frontDistances:Object.fromEntries([1000,1100,1150,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2800,3000,3200,3400,3600].map(d=>[d,d/2]))};
  const canonical=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
  function hash(x){let h=2166136261;for(const ch of canonical(x))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;return h.toString(16);}
  function dateKey(x){const m=String(x||'').match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);return m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:'';}

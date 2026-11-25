@@ -6,7 +6,8 @@
  horseRaceEventBadges=r=>{
   const records=[...raceWholeReviewCache.values(),...(raceConditionReviewRecords||[])],match=L.resolve(r,records,{horseName:selectedHorse?.races?.includes(r)?selectedHorse.name:'',days:raceDays||[]});
   const text=match.status==='inferred'?'日付・競馬場・コースで照合済み（ラップ採点で照合可能／ID未保存）':match.status==='ambiguous'?'候補が複数あるため未連携。編集モードで開催日・R番号を確認してください。':match.status==='insufficient'?'開催日などが不足しているため未連携。編集モードで対象レースを選択してください。':match.status==='conflict'?'日付・コース・R番号または出馬表との不一致があるため連携保留（ラップ採点対象外）。':match.status==='missing'?'保存済みIDの全体回顧が見つかりません。':match.status==='unmatched'?'一致する全体回顧がありません。':'';
-  return oldBadges(r)+(text?'<p class="rr-meta horse-link-status">'+E(text)+'</p>':'');
+  const completion=match.record&&window.ReviewClassificationRuntime?.get(match.record),auto=completion?.fields?.length?'実数ラップから不足分類を自動補完（枠・不利は補完しません）':match.record?.lapPatternMeta?.source==='auto-half'?'ラップ構成：実数ラップの前後半比較による自動分類':'';
+  return oldBadges(r)+(auto?'<p class="rr-meta">'+E(auto)+'</p>':'')+(text?'<p class="rr-meta horse-link-status">'+E(text)+'</p>':'');
  };
  const oldRefresh=horseRaceRefreshEventBadges;
  horseRaceRefreshEventBadges=()=>{

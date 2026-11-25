@@ -25,3 +25,10 @@ test('editor permission errors are reported rather than hidden as quota fallback
  const f=fixture();f.env._fbFns.getDocs=async()=>{throw Object.assign(Error('Denied'),{code:'permission-denied'});};
  await assert.rejects(f.env.DataArchive.read('predictions'),/最新差分を取得できません/);
 });
+test('a refreshed review archive can advance only its own cutoff without hiding updates to other collections',async()=>{
+ const f=fixture(),fetch=f.env.fetch;
+ f.env.fetch=async url=>{const response=await fetch(url);if(String(url).endsWith('manifest.json'))return {...response,json:async()=>({...await response.json(),collectionStartedAt:{predictions:'2026-11-16T00:00:00Z'}})};return response;};
+ await f.env.DataArchive.read('predictions');await f.env.DataArchive.read('raceResults');
+ assert.equal(f.reads[0].cs.find(c=>c.key==='archiveUpdatedAt').value.toISOString(),'2026-11-15T23:59:00.000Z');
+ assert.equal(f.reads[1].cs.find(c=>c.key==='archiveUpdatedAt').value.toISOString(),'2026-11-14T23:59:00.000Z');
+});

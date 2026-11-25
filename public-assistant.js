@@ -79,7 +79,7 @@
       for(const r of known)for(const v of simpleReviewLabels(f,simpleReviewEvents(r)))counts.set(v,(counts.get(v)||0)+1);
       const groups=[...counts].sort((a,b)=>b[1]-a[1]).map(([v,n])=>({label:f.key==='topFinishFrame'?({inner:'内枠中心',outer:'外枠中心',balanced:'内外混在'}[v]||f.options[v]):f.options[v],hit:n,n:known.length}));
       return panel(E(f.label),groups.length?bars(groups)+`<p class="pa-muted">判定済み ${known.length}件／不明・未記録 ${rows.length-known.length}件${f.multiple?' · 複数分類のため合計は100%を超える場合があります':''}</p>`:empty('この条件では分類データがありません。'));
-    }).join('')}</div>${note('回顧に記録されたレースの傾向です。上位馬の枠の分類は、枠別の出走頭数を分母にした好走率とは異なります。')}${positions?positionCharts(rows):''}`;
+    }).join('')}</div>${note('保存済み分類と、実数ラップから補完したペース・ラップ構成の傾向です。枠・不利は記録のある情報だけを使用します。上位馬の枠の分類は、枠別の出走頭数を分母にした好走率とは異なります。')}${positions?positionCharts(rows):''}`;
   }
   function positionCharts(rows){
     if(!window.RaceConditionSummary)return '';
@@ -134,7 +134,7 @@
     if(!state.reviews){el.innerHTML=`<div class="pa">${body}${panel('回顧から分析を始める',loadReviewsUI())}</div>`;return;}
     const rows=matchingReviews(),laps=rows.map(lapOf).filter(Boolean).sort((a,b)=>dateKey(ref(b.record).date).localeCompare(dateKey(ref(a.record).date))),chosen=laps.find(l=>reviewIdentity(l.record)===state.lapId)||laps[0];
     const cohort=chosen?cohortOf(chosen,rows):[];
-    body+=panel('比較する条件',researchFilters())+`<div class="pa-stats">${stat('条件に一致する回顧',rows.length,'レース')}${stat('実数ラップ抽出候補',laps.length,'レース')}${stat('展開が判定済み',rows.filter(r=>['high','middle','slow'].includes(r.events?.pace)).length,'レース')}</div>`+eventCards(rows);
+    body+=panel('比較する条件',researchFilters())+`<div class="pa-stats">${stat('条件に一致する回顧',rows.length,'レース')}${stat('実数ラップ抽出候補',laps.length,'レース')}${stat('展開が判定済み',rows.filter(r=>['high','middle','slow','mid'].includes(simpleReviewEvents(r)?.pace)).length,'レース')}</div>`+eventCards(rows);
     if(chosen){const options=laps.map(l=>`<option value="${E(reviewIdentity(l.record))}" ${l===chosen?'selected':''}>${E(reviewTitle(l.record))}</option>`).join('');
       body+=panel('区間ラップを比較',`<label class="pa-muted">対象レース<select class="pa-select" aria-label="ラップ比較の対象レース" onchange="PA.pickLap(this.value)">${options}</select></label>${lapChart(chosen,cohort)}<div class="pa-stats">${stat('走破ラップ合計',num(chosen.total),'秒')}${stat('前半600m',num(chosen.front),'秒')}${stat('後半600m',num(chosen.back),'秒')}</div>${note(`本文からの自動抽出候補です。元資料との照合は未実施。比較対象は同競馬場・芝ダート・距離・馬場状態かつ対象日より前の${cohort.length}件（クラス混在）。件数が少ない場合は標準値と断定しません。100m区間は200m換算して描画します。レースラップは各馬自身のラップではありません。`)}<details><summary>元の回顧と区間値を見る</summary><p class="pa-muted">${E(chosen.record.review)}</p><div class="pa-scroll"><table class="pa-table"><thead><tr><th>区間</th><th>距離</th><th>秒</th></tr></thead><tbody>${chosen.laps.map((v,i)=>`<tr><td>${i+1}</td><td>${chosen.segments[i]}m</td><td>${num(v)}</td></tr>`).join('')}</tbody></table></div></details>`);
     }else body+=panel('区間ラップを比較',empty('この条件では、距離・区間数を確認できるラップ列が見つかりません。条件を広げてください。'));
