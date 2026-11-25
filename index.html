@@ -176003,7 +176003,7 @@ function horseRaceReviewCandidates(r){
 function horseRaceAutoTarget(r){
   if(r?.raceId||!window.HorseReviewLink)return null;
   const resolved=HorseReviewLink.resolve(r,raceConditionReviewRecords||[...raceWholeReviewCache.values()],{horseName:selectedHorse?.races?.includes(r)?selectedHorse.name:'',days:raceDays||[]});
-  return resolved.status==='inferred'?HorseReviewLink.idOf(resolved.record):null;
+  return ['inferred','verified'].includes(resolved.status)?HorseReviewLink.idOf(resolved.record):null;
 }
 let horseRaceAutoBusy=false;
 async function horseRaceAutoLinkCurrent(){
@@ -176030,7 +176030,7 @@ function horseRaceBulkPreview(){
   horseRaceBulkPlan=[];let pending=0,linked=0,total=0;
   for(const h of horses){if(h.deleted)continue;for(const r of(h.races||[])){
     total++;if(r.raceId){linked++;continue;}
-    const match=HorseReviewLink.resolve(r,raceConditionReviewRecords,{horseName:h.name,days:raceDays||[]}),id=match.status==='inferred'?HorseReviewLink.idOf(match.record):null;
+    const match=HorseReviewLink.resolve(r,raceConditionReviewRecords,{horseName:h.name,days:raceDays||[]}),id=['inferred','verified'].includes(match.status)?HorseReviewLink.idOf(match.record):null;
     if(id)horseRaceBulkPlan.push({horseName:h.name,original:{...r},raceId:id});else pending++;
   }}
   out.textContent=`読み込み済み ${total}件：既存ID ${linked}件／自動連携可能 ${horseRaceBulkPlan.length}件／要確認 ${pending}件。※読み込み済みの馬のみ対象。`;
@@ -182261,7 +182261,7 @@ async function publicHistoryMore(){
 <script src="data-archive.js?v=20261126-1"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
 <script src="pace-model.js?v=20261126-1"></script>
-<script src="horse-review-link.js?v=20261124-2"></script>
+<script src="horse-review-link.js?v=20261126-official1"></script>
 <script src="lap-metrics.js?v=20261124-2"></script>
 <script src="review-classification-model.js?v=20261126-1"></script>
 <script src="review-classification-runtime.js?v=20261126-1"></script>
@@ -182284,7 +182284,8 @@ async function publicHistoryMore(){
 <script src="analysis-archive-model.js?v=20261117-1"></script>
 <script src="prediction-diagnosis-model.js?v=20261124-1"></script>
 <script src="prediction-diagnosis-ui.js?v=20261124-1"></script>
-<script src="horse-review-link-ui.js?v=20261126-1"></script>
+<script src="verified-review-links.js?v=20261126-1"></script>
+<script src="horse-review-link-ui.js?v=20261126-official1"></script>
 <script src="race-review-tools.js?v=20261126-1"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>

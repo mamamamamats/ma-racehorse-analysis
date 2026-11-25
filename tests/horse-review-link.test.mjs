@@ -33,3 +33,7 @@ test('roster conflicts exclude even saved IDs from lap scoring; no roster is not
  assert.equal(Lap.horseAptitude({name:'馬A',races:[{...run,raceId:'a'}]},reviews,'front_loaded',{days}).count,0);
  assert.equal(L.resolve(run,reviews,{horseName:'馬A',days:[]}).status,'inferred');
 });
+test('officially verified undated reviews resolve by exact horse and review signature without relying on order',()=>{
+ const original={name:'1勝クラス',track:'東京芝1600',eval:'A',comment:'中団から2着。'},entry={horseName:'馬A',original,raceId:'a',verification:{source:'jra-official-history',url:'https://www.jra.go.jp/JRADB/accessU.html?CNAME=example',evidence:['app-starting-list']}};
+ L.installVerifiedLinks([entry]);try{assert.equal(L.resolve(original,[review('a')],{horseName:'馬A'}).status,'verified');assert.equal(L.resolve({...original,comment:'変更後'},[review('a')],{horseName:'馬A'}).status,'insufficient');assert.equal(L.resolve(original,[review('a')],{horseName:'別馬'}).status,'insufficient');}finally{L.installVerifiedLinks([]);}
+});
