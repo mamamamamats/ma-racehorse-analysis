@@ -8,3 +8,21 @@ test('date/venue/race-number resolution handles alternate result IDs without gue
 test('no results or ambiguous/qualitative positions stay unknown; times can still be displayed',()=>{const no=C.summarize([review('r1')]);assert.equal(no.time.average,96);assert.equal(no.winners.average,null);const s=C.summarize([review('r1')],{days,index:new Map([['r1|H1',{position:{last:2},ambiguous:true}]]),results:[{raceId:'r1',result:{horses:[{num:1,name:'H1',finish:1,comment:'中団から差した'}]}}]});assert.equal(s.winners.average,null);});
 test('dead heats count all actual winners and invalid ranks or scratched horses are excluded',()=>{const s=C.summarize([review('r1')],{days,results:[{raceId:'r1',result:{horses:[{num:1,finish:1,passing:[2,2]},{num:2,finish:1,passing:[3,4]},{num:3,finish:3,passing:[9,9]},{num:4,finish:3,status:'取消',passing:[1,1]}]}}]});assert.equal(s.winners.count,2);assert.equal(s.winners.average,3);assert.equal(s.podium.count,2);});
 test('summary is read only and accepts only provided cohort races',()=>{const reviews=[review('r1')],results=[{raceId:'elsewhere',result:{horses:[{num:1,finish:1,passing:[1,1]}]}}],before=JSON.stringify({reviews,results,days});const s=C.summarize(reviews,{results,days});assert.equal(s.winners.count,0);assert.equal(JSON.stringify({reviews,results,days}),before);});
+test('relative distribution uses field-normalized last corner, separates leaders and reports missing coverage',()=>{
+ const results=[{raceId:'r1',result:{horses:[{num:1,finish:1,passing:[2,1]},{num:2,finish:2,passing:[7,4]},{num:3,finish:3}]}},{raceId:'r2',result:{horses:[{num:1,finish:1,passing:[1,3]},{num:2,finish:2,passing:[1,8],reviewEval:'F'},{num:3,finish:3,passing:[3,2]}]}}];
+ const s=C.summarize([review('r1'),review('r2',2)],{days,results});
+ assert.equal(s.winners.targetCount,2);assert.equal(s.winners.relativeCount,2);assert.ok(Math.abs(s.winners.relativeAverage-100/7)<1e-8);
+ assert.deepEqual(s.podium.distribution,[1,2,1,1]);assert.equal(s.podium.targetCount,6);assert.equal(s.podium.relativeCount,5);assert.equal(s.podium.distribution.reduce((a,b)=>a+b),s.podium.relativeCount);
+});
+test('missing field size never produces a relative position or a fabricated distribution',()=>{
+ const s=C.summarize([review('r1')],{results:[{raceId:'r1',result:{horses:[{num:1,finish:1,passing:[1,1]}]}}]});
+ assert.equal(s.winners.average,1);assert.equal(s.winners.relativeAverage,null);assert.equal(s.winners.relativeCount,0);assert.equal(s.winners.targetCount,1);assert.deepEqual(s.winners.distribution,[0,0,0,0]);
+});
+test('imprecise prose ranges and qualitative positions are not numerical observations',()=>{
+ const s=C.summarize([review('r1')],{days,results:[{raceId:'r1',result:{horses:[{num:1,finish:1,comment:'4角2〜4番手から伸びる'},{num:2,finish:2,comment:'中団から差した'}]}}]});
+ assert.equal(s.podium.targetCount,2);assert.equal(s.podium.count,0);assert.equal(s.podium.relativeCount,0);
+});
+test('same rank means different relative positions for different field sizes',()=>{
+ const results=[{raceId:'r1',result:{horses:[{num:1,finish:1,passing:[3,3],fieldSize:5}]}},{raceId:'r2',result:{horses:[{num:1,finish:1,passing:[3,3],fieldSize:17}]}}];
+ const s=C.summarize([review('r1'),review('r2',2)],{results});assert.equal(s.winners.average,3);assert.equal(s.winners.relativeAverage,31.25);assert.deepEqual(s.winners.distribution,[0,1,1,0]);
+});

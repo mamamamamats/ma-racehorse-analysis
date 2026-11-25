@@ -73,13 +73,24 @@
     return `<div class="pa-filters">${keys.map(([k,l])=>{if(k==='lapClass')return `<label>クラス群<select aria-label="研究のクラス群" onchange="PA.researchFilter('lapClass',this.value)"><option value="">全クラス</option>${LM.classOptions.filter(([v])=>['un','winplus','graded'].includes(v)).map(([v,l])=>`<option value="${v}" ${state.research.lapClass===v?'selected':''}>${E(l)}</option>`).join('')}</select></label>`;const vs=[...new Set(rows.map(r=>k==='grade'?publicReviewClass(r):k==='year'?dateKey(ref(r).date).slice(0,4):k==='month'?Number(dateKey(ref(r).date).slice(4,6)):ref(r)[k]).filter(Boolean))].sort((a,b)=>k==='distance'||k==='month'?a-b:String(a).localeCompare(String(b),'ja'));return optionSelect(k,l,vs,state.research[k],`PA.researchFilter('${k}',this.value)`);}).join('')}</div>${btn('条件をリセット','PA.resetResearch()',true)}`;
   }
   function bars(groups){return groups.map(g=>`<div class="pa-bar"><span>${E(g.label)}</span><div class="pa-bar-track"><div class="pa-bar-fill" style="width:${g.n?Math.min(100,100*g.hit/g.n):0}%"></div></div><small>${pct(g.hit,g.n)} · ${g.hit}/${g.n}</small></div>`).join('');}
-  function eventCards(rows){
+  function eventCards(rows,positions=true){
     return `<div class="pa-grid">${SIMPLE_REVIEW_FIELDS.slice(0,3).map(f=>{
       const known=rows.filter(r=>simpleReviewLabels(f,simpleReviewEvents(r)).length),counts=new Map();
       for(const r of known)for(const v of simpleReviewLabels(f,simpleReviewEvents(r)))counts.set(v,(counts.get(v)||0)+1);
       const groups=[...counts].sort((a,b)=>b[1]-a[1]).map(([v,n])=>({label:f.key==='topFinishFrame'?({inner:'内枠中心',outer:'外枠中心',balanced:'内外混在'}[v]||f.options[v]):f.options[v],hit:n,n:known.length}));
       return panel(E(f.label),groups.length?bars(groups)+`<p class="pa-muted">判定済み ${known.length}件／不明・未記録 ${rows.length-known.length}件${f.multiple?' · 複数分類のため合計は100%を超える場合があります':''}</p>`:empty('この条件では分類データがありません。'));
-    }).join('')}</div>${note('回顧に記録されたレースの傾向です。上位馬の枠の分類は、枠別の出走頭数を分母にした好走率とは異なります。')}`;
+    }).join('')}</div>${note('回顧に記録されたレースの傾向です。上位馬の枠の分類は、枠別の出走頭数を分母にした好走率とは異なります。')}${positions?positionCharts(rows):''}`;
+  }
+  function positionCharts(rows){
+    if(!window.RaceConditionSummary)return '';
+    const waiting=!state.conditionData&&!state.conditionError;
+    if(waiting&&!state.conditionPromise)Promise.resolve().then(()=>PA.loadConditionStats());
+    if(waiting)return panel('好走馬の位置取り',empty('位置取りを読み込み中…'));
+    if(state.conditionError)return panel('好走馬の位置取り',empty('取得できません：'+state.conditionError)+btn('位置取りデータを再取得','PA.loadConditionStats(true)',true));
+    const stats=RaceConditionSummary.summarize(rows,state.conditionData||{});
+    const cohort=(key,title)=>{const g=stats[key],known=g.relativeCount,relative=g.relativeAverage;
+      return '<article class="pa-position-cohort"><h4>'+title+'</h4><div class="pa-position-average">'+(relative==null?'平均相対位置 —':'平均相対位置 <b>前から '+num(relative,1)+'%</b>')+'</div>'+(relative==null?empty('数値の最終角順位と頭数が揃うと表示します。'):'<div class="pa-position-line"><i style="left:'+Math.max(0,Math.min(100,relative))+'%"></i></div><div class="pa-position-ends"><span>先頭 0%</span><span>最後方 100%</span></div>'+bars(g.distribution.map((hit,i)=>({label:['先頭','前方','中団','後方'][i],hit,n:known}))))+'<p class="pa-muted">相対位置を確認 '+known+'／対象 '+g.targetCount+'頭（未集計 '+(g.targetCount-known)+'頭）<br>最終角の数値順位あり '+g.count+'頭／平均 '+num(g.average,1)+'番手</p></article>';};
+    return panel('好走馬の位置取り', '<div class="pa-position-grid">'+cohort('winners','勝ち馬（1着）')+cohort('podium','3着以内馬')+'</div>'+note('実際の最終コーナー位置の分布で、位置取り別の好走率ではありません。相対位置＝（順位−1）÷（頭数−1）×100。先頭を分け、それ以外は前方（33.3%以下）・中団（66.7%以下）・後方に分類。数値順位・頭数の不足、範囲表記や文章だけの「中団」は相対位置に含めません。回顧Fも実際の位置として集計し、同じレースは1回だけ数えます。結果がないレースは対象頭数にも含みません。'));
   }
   // Extract candidates from the existing prose; never persist or replace the original review.
   function parseLap(r){
@@ -211,7 +222,7 @@
     const x=i=>L+i*(W-L-15)/Math.max(1,values.length-1),y=v=>T+(v-lo)*(H-T-B)/(hi-lo);
     let distance=0;return `<div class="pa-chart-wrap"><svg class="pa-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="指定クラス群の平均ラップ。下ほど速い">${[0,1,2,3].map(i=>{const v=lo+(hi-lo)*i/3;return `<line class="pa-tick" x1="${L}" x2="${W-15}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-5}" y="${y(v)+4}" text-anchor="end">${num(v)}</text>`;}).join('')}<polyline points="${values.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="${mint}" stroke-width="3"/>${values.map((v,i)=>{distance+=profile.segments[i];return `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${mint}"><title>${distance}m / 元区間平均${num(profile.laps[i],2)}秒</title></circle><text x="${x(i)}" y="${H-10}" text-anchor="middle">${distance}</text>`;}).join('')}<text x="${L}" y="14">200m換算秒 / 下ほど速い</text></svg></div>`;
   }
-  PA.loadConditionStats=async(force=false)=>{if(state.conditionPromise)return state.conditionPromise;if(force){state.conditionData=null;state.conditionError='';for(const name of ['raceResults','raceDays','horses'])window.DataArchive?.invalidate(name);}if(state.conditionData)return state.conditionData;state.conditionError='';state.conditionPromise=(async()=>{try{const [results,days]=await Promise.all([readCollection('raceResults'),readCollection('raceDays')]);const positions=await window.loadRunningStyleIndex({predictions:[],results,days});state.conditionData={results,days,index:positions.index,failed:positions.failed};}catch(e){state.conditionError=e.message;}finally{state.conditionPromise=null;if(currentView==='publicPredict')renderPublicPredict();}})();return state.conditionPromise;};
+  PA.loadConditionStats=async(force=false)=>{if(state.conditionPromise)return state.conditionPromise;if(force){state.conditionData=null;state.conditionError='';for(const name of ['raceResults','raceDays','horses'])window.DataArchive?.invalidate(name);}if(state.conditionData)return state.conditionData;state.conditionError='';state.conditionPromise=(async()=>{try{const [results,days]=await Promise.all([readCollection('raceResults'),readCollection('raceDays')]);const positions=await window.loadRunningStyleIndex({predictions:[],results,days});state.conditionData={results,days,index:positions.index,failed:positions.failed};}catch(e){state.conditionError=e.message;}finally{state.conditionPromise=null;refreshCurrent();}})();return state.conditionPromise;};
   let conditionSummaryCache=null;
   function conditionSummary(context){if(conditionSummaryCache?.context===context&&conditionSummaryCache.data===state.conditionData)return conditionSummaryCache.value;const value=window.RaceConditionSummary.summarize(context.rows,state.conditionData||{});conditionSummaryCache={context,data:state.conditionData,value};return value;}
   function lapBriefing(records,selected,going){
@@ -221,12 +232,12 @@
     html+=`<div class="pa-stats">${stat('平均ラップから見た傾向',profile?LM.LABELS[profile.pattern]:'材料不足')}${stat('平均に使えた実数ラップ',profile?.count||0,'レース')}${stat('前後半の差',profile?num(profile.delta,2):'—','秒 / 200m換算')}</div>`;
     if(window.RaceConditionSummary){const observed=conditionSummary(context),waiting=!state.conditionData&&!state.conditionError;
     html+=`<div class="pa-stats" id="paConditionSummary">${stat('平均走破タイム',RaceConditionSummary.formatTime(observed.time.average),'実数ラップ '+observed.time.count+'R')}${stat('勝ち馬の平均位置取り',num(observed.winners.average,1),waiting?'読み込み中…':'最終角・番手 / '+observed.winners.count+'頭・'+observed.winners.races+'R')}${stat('3着以内馬の平均位置取り',num(observed.podium.average,1),waiting?'読み込み中…':'最終角・番手 / '+observed.podium.count+'頭・'+observed.podium.races+'R')}</div><p class="pa-muted">走破タイムは全区間が揃うレースラップ合計の平均（分:秒）。位置取りは実際の着順と最終コーナー順位を確認できた馬の平均です。勝ち馬は1着、3着以内は1〜3着。同着を含み、回顧評価による除外はしません。不明は0にせず、重複レースは1回だけ数えます。</p>${state.conditionError?`<p role="alert" class="pa-muted">位置取りの集計を取得できません：${E(state.conditionError)}</p>${btn('位置取りデータを再取得','PA.loadConditionStats(true)',true)}`:''}${state.conditionData?.failed?'<p class="pa-muted">一部の位置取りは最新差分を取得できていません。確認できた記録だけで集計しています。</p>':''}`;
-    if(waiting&&!state.conditionPromise)Promise.resolve().then(()=>PA.loadConditionStats());}
+    html+=positionCharts(context.rows);if(waiting&&!state.conditionPromise)Promise.resolve().then(()=>PA.loadConditionStats());}
     html+=note('対象日より前の同競馬場・芝ダート・距離・馬場・指定クラスの区間秒を算術平均。前半と後半を距離の中点で分け、200m換算で後半が0.10秒超遅ければ前傾、逆なら後傾、それ以外は平均型とする暫定基準です。中点をまたぐ区間は一定速度を仮定して按分します。今回の確定的な展開予測ではありません。');
     if(profile)html+=`<details style="margin-top:12px"><summary>平均ラップと計算根拠を見る</summary>${averageLapChart(profile)}<p class="pa-muted">前半 ${num(profile.front200,2)}秒 / 後半 ${num(profile.back200,2)}秒（200m換算）。元回顧からの抽出候補です。ラップ適性は、この平均から求めた型に該当する各馬の過去評価の平均です。</p></details>`;
     else html+=note('実数ラップが不足しているため、ラップ適性は未評価です。0点として計算せず、重みの分母からも除きます。クラス条件を広げると比較材料が増える場合があります。');
     html+=`<details style="margin-top:12px"><summary>自分の展開想定をメモする</summary><label class="pa-muted">今回のペース<select class="pa-select" aria-label="今回の展開想定" onchange="PA.setScenario(this.value)"><option value="">まだ決めない</option>${[['high','ハイペース'],['middle','ミドルペース'],['slow','スローペース']].map(([k,l])=>`<option value="${k}" ${state.scenario===k?'selected':''}>${l}想定</option>`).join('')}</select></label><p class="pa-muted">ペースの高低と前傾・後傾は別の指標です。このメモでは平均ラップ型や点数は変更しません。</p></details>`;
-    html+=`<div class="pa-toolbar">${btn('条件を詳しく研究','PA.researchFromRace()',true)}</div><details style="margin-top:12px"><summary>回顧に記録された展開・枠の内訳</summary>${eventCards(context.rows)}</details>`;
+    html+=`<div class="pa-toolbar">${btn('条件を詳しく研究','PA.researchFromRace()',true)}</div><details style="margin-top:12px"><summary>回顧に記録された展開・枠の内訳</summary>${eventCards(context.rows,false)}</details>`;
     return html;
   }
   renderPublicPredict=()=>{
