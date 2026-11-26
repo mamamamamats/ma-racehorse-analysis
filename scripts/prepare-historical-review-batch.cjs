@@ -9,7 +9,7 @@ const registry=fs.existsSync(registryPath)?JSON.parse(fs.readFileSync(registryPa
 if(registry.batches.some(b=>b.id===id))throw Error('Duplicate batch ID');
 const sig=u=>JSON.stringify([u.horseName,u.original.name||'',u.original.track||'',u.original.eval||'',u.original.comment||'']),existing=new Set(),occupied=new Set();
 for(const b of registry.batches)for(const u of JSON.parse(fs.readFileSync(path.join(root,b.plan))).updates){existing.add(sig(u));occupied.add(u.horseName+'|'+u.raceId);}
-const originalHistories=JSON.parse(fs.readFileSync(path.join(dir,'official-histories.json'))),oldNames=new Set(originalHistories.map(h=>h.name)),byName=new Map(histories.map(h=>[h.name,h])),manifest=JSON.parse(fs.readFileSync(path.join(root,'prediction-data/manifest.json'))),records=new Map(manifest.files.filter(f=>f.collection==='raceReviews').flatMap(f=>JSON.parse(fs.readFileSync(path.join(root,'prediction-data',f.path))).documents).map(r=>[r.raceId||r._docId,r]));
+const originalHistories=registry.batches.flatMap(b=>JSON.parse(fs.readFileSync(path.join(path.dirname(path.join(root,b.plan)),'official-histories.json')))),oldNames=new Set(originalHistories.map(h=>h.name)),byName=new Map(histories.map(h=>[h.name,h])),manifest=JSON.parse(fs.readFileSync(path.join(root,'prediction-data/manifest.json'))),records=new Map(manifest.files.filter(f=>f.collection==='raceReviews').flatMap(f=>JSON.parse(fs.readFileSync(path.join(root,'prediction-data',f.path))).documents).map(r=>[r.raceId||r._docId,r]));
 const accepted=[],rejected=[];
 for(const u of matching.updates){
  if(existing.has(sig(u)))continue;

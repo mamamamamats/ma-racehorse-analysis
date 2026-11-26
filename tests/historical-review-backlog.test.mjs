@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';import {createHash} from 'node:crypto';import M from '../historical-review-matcher.js';
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';import {createHash} from 'node:crypto';import M from '../historical-review-matcher.js';import {gunzipSync} from 'node:zlib';
 const root=fileURLToPath(new URL('../',import.meta.url)),base=path.join(root,'maintenance/historical-review-links'),registry=JSON.parse(fs.readFileSync(path.join(base,'batches.json')));
 test('all immutable batches validate and preview all pending entries offline from any directory',()=>{
  const result=spawnSync(process.execPath,[path.join(root,'scripts/preview-historical-review-backlog.mjs')],{cwd:'/tmp',encoding:'utf8'});assert.equal(result.status,0,result.stderr);const report=JSON.parse(result.stdout);
@@ -11,4 +11,7 @@ test('each newly packaged entry reproduces its unique official match, without du
  if(batch.id==='batch-001')continue;const r=M.match(u.original,byName.get(u.horseName),[{...u.raceRef,name:u.raceRef.raceName,raceId:u.raceId}]);assert.equal(r.status,'confirmed',u.horseName+' '+u.original.name);assert.equal(r.official.date,u.verification.officialDate);assert.equal(r.official.finish,u.verification.officialFinish);
  }
  }
+});
+test('archived source responses retain their hashes and the recorded number of retrievals',()=>{
+ for(const batch of registry.batches){const dir=path.dirname(path.join(root,batch.plan)),file=path.join(dir,'sources-manifest.json');if(!fs.existsSync(file))continue;const source=JSON.parse(fs.readFileSync(file)),archive=fs.readFileSync(path.join(dir,'source-responses.json.gz'));assert.equal(createHash('sha256').update(archive).digest('hex'),source.sourceArchiveSha256);assert.equal(JSON.parse(gunzipSync(archive)).files.length,source.files);}
 });

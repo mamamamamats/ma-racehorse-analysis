@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "files": 123,
+  "requestedHorses": 100,
+  "sourceArchiveSha256": "c846ea8e33ea98907b67e96563195b84a8cd87f4f1bea41a43b8600693e959e8",
+  "masterZipSha256": "e40d626a630b832874884bf8be18d3e1ba53db06accd55090708e536183d475e",
+  "masterExportedAt": "2026-11-25T15:01:56.552Z",
+  "sourceRepositoryCommit": "ca629e1daabcbe481d6a62a37e9ec1cc37fb6250",
+  "note": "Only complete official start tables were used. Public source responses are archived for offline audit. No DB reads or writes."
+}
