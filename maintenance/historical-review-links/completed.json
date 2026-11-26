@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "note": "Previous successful Firestore commits only; quota failure is not counted as saved.",
+  "completed": [
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2026-09-19_%E4%B8%AD%E5%B1%B1_10",
+      "original": {
+        "comment": "行き足つかず後方から伸びきれず5着。直線時点で後ろすぎた。上位とは着差ありスタート課題。広いコースベスト",
+        "eval": "C",
+        "name": "九十九里特別",
+        "track": "中山芝2500"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2026-07-19_%E7%A6%8F%E5%B3%B6_10",
+      "original": {
+        "name": "猪苗代特別",
+        "track": "福島芝2000",
+        "eval": "A",
+        "comment": "後方から早めに動いて伸びて2着。スローペースで勝ち馬がマイペース。大外から伸びており差はない。スタート課題で広いコースベスト"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2026-05-31_%E6%9D%B1%E4%BA%AC_8",
+      "original": {
+        "eval": "B",
+        "comment": "行き足つかず中団後ろから伸びきれず4着。まくる馬はいたが前も止まらない馬場で後ろすぎた。伸びてはいるが届かず。スタート不安",
+        "name": "青嵐賞",
+        "track": "東京芝2400"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2026-02-14_%E6%9D%B1%E4%BA%AC_9",
+      "original": {
+        "name": "箱根特別",
+        "track": "東京芝2400",
+        "eval": "A",
+        "comment": "5番手から伸びて3着。最後まで伸びているが勝ち馬にはきれ負け。2着馬はマイペースすぎた。小頭数で力出せた。"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2025-11-24_%E6%9D%B1%E4%BA%AC_9",
+      "original": {
+        "eval": "S",
+        "comment": "スタート五分で中団から伸びて2着。ロスなく走れてうまく捌けた。勝ち馬と差はない。連戦も力出せて時計は優秀。別のコースでどうか",
+        "track": "東京芝2400",
+        "name": "南武特別"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2025-10-12_%E6%9D%B1%E4%BA%AC_8",
+      "original": {
+        "name": "1勝クラス",
+        "track": "東京芝2400",
+        "comment": "つまづきかけたが中段から伸びて1着。まくる馬がおり持久力戦が向いた。休養明けでいきなり勝ちきれた。他のコースでどうか。",
+        "eval": "S"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2025-02-08_%E6%9D%B1%E4%BA%AC_6",
+      "original": {
+        "track": "東京芝2400",
+        "eval": "A",
+        "name": "未勝利",
+        "comment": "中団から二の足で先行して伸びて1着。2着馬のマイペースでスローペースをしっかり差しきれた。上がり、時計は早いわけではないが長い距離合う。加速早くない。"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2025-01-18_%E4%B8%AD%E5%B1%B1_5",
+      "original": {
+        "eval": "B",
+        "track": "中山芝2000",
+        "comment": "中団から伸びて3着。スローペースの展開で一つ後ろ。広いコースの方が良いか。",
+        "name": "3歳未勝利"
+      }
+    },
+    {
+      "horseName": "アロンズロッド",
+      "raceId": "race_day-2024-11-23_%E6%9D%B1%E4%BA%AC_3",
+      "original": {
+        "comment": "スタート早くなく中団後ろから伸びて2着。勝ち馬が一つ前で位置取りの差であるため悲観する必要はない。勝ち上がるチャンスはある。",
+        "name": "2歳未勝利",
+        "track": "東京芝1800",
+        "eval": "A"
+      }
+    }
+  ]
+}
