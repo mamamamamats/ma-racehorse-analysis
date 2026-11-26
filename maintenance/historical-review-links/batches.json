@@ -49,6 +49,13 @@
       "sha256": "e77170281d42cd9907ebcf72be48c69a532b3d361f919d0f93d7f5896597718a",
       "checkpoint": ".local/historical-review-links/batch-007/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-007/completed.json"
+    },
+    {
+      "id": "batch-008",
+      "plan": "maintenance/historical-review-links/batch-008/plan.json",
+      "sha256": "bf73aac171389b3e42c3a854bac814a29c293bf1a9516de18668e28e5b3473bd",
+      "checkpoint": ".local/historical-review-links/batch-008/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-008/completed.json"
     }
   ]
 }
