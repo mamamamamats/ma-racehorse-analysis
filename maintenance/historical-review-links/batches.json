@@ -19,6 +19,12 @@
       "plan": "maintenance/historical-review-links/batch-003/plan.json",
       "sha256": "3667f9ccdd821a700575411c19b16d40561661029ce603b59ece932c57e13460",
       "checkpoint": ".local/historical-review-links/batch-003/checkpoint.json"
+    },
+    {
+      "id": "batch-004",
+      "plan": "maintenance/historical-review-links/batch-004/plan.json",
+      "sha256": "12d6ecbf758f020c1189a76a127f63768ad1c9a88b12bd856f4413217eac1f30",
+      "checkpoint": ".local/historical-review-links/batch-004/checkpoint.json"
     }
   ]
 }
