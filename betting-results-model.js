@@ -18,10 +18,24 @@
   if(!Object.keys(types).length)return null;return {schemaVersion:1,source:'JRA-transcribed',sourceUrl:raw.sourceUrl||'',types};
  }
  function tickets(nums,type){const size=TYPES[type].size,ordered=TYPES[type].ordered,out=[];function visit(prefix,left,start){if(!left){out.push(prefix);return;}for(let i=start;i<nums.length;i++){if(prefix.includes(nums[i]))continue;visit([...prefix,nums[i]],left-1,ordered?0:i+1);}}visit([],size,0);return out;}
- function simulate(rows,ranks=[1,2,3,4,5],stake=100){
+ const MODES={box:'印BOX',axis:'◎軸フォーメーション'};
+ function strategyTickets(nums,type,mode='box',axis=null){
+  if(!MODES[mode])throw Error('未対応の買い方です');
+  const unique=[...new Set(nums)].filter(n=>Number.isInteger(n)&&n>0);
+  if(mode==='box')return tickets(unique,type);
+  if(!Number.isInteger(axis)||axis<1)return [];
+  const bets=tickets([...new Set([axis,...unique])],type);
+  return bets.filter(b=>TYPES[type].size===1?b[0]===axis:type==='exacta'?b[0]===axis:b.includes(axis));
+ }
+ function methodLabel(type,mode='box'){
+  if(mode==='box')return TYPES[type].size>1?'BOX':'印対象';
+  return ({win:'◎のみ',place:'◎のみ',quinella:'◎軸流し',wide:'◎軸流し',exacta:'◎1着固定',trio:'◎1頭軸流し',trifecta:'◎1頭軸マルチ'})[type];
+ }
+ function simulate(rows,ranks=[1,2,3,4,5],stake=100,mode='box'){
+  if(!MODES[mode])throw Error('未対応の買い方です');
   if(!Number.isSafeInteger(stake)||stake<100||stake>100000||stake%100)throw Error('1点の金額は100〜100,000円の100円単位です');
-  return Object.entries(TYPES).map(([type,meta])=>{const s={type,label:meta.label,races:0,missing:0,insufficient:0,tickets:0,hits:0,hitRaces:0,gross:0,refund:0,net:0,payout:0,profit:0,roi:null,details:[]};
-   for(const row of rows){if(!row.prediction)continue;const picks=(row.prediction.horses||[]).filter(h=>row.prediction.selectionVersion?!!h.selected&&ranks.some(rank=>h.mark===['◎','○','▲','△','☆'][rank-1]):ranks.includes(Number(h.rank))),nums=[...new Set(picks.map(h=>Number(h.num)))],bets=tickets(nums,type);if(!bets.length){s.insufficient++;continue;}const result=row.result,table=result?.payouts?.types?.[type];if(!row.outcome.complete||!table||table.confirmed!==true){s.missing++;continue;}
+  return Object.entries(TYPES).map(([type,meta])=>{const s={type,label:meta.label,mode,method:methodLabel(type,mode),races:0,missing:0,insufficient:0,tickets:0,hits:0,hitRaces:0,gross:0,refund:0,net:0,payout:0,profit:0,roi:null,details:[]};
+   for(const row of rows){if(!row.prediction)continue;const picks=(row.prediction.horses||[]).filter(h=>row.prediction.selectionVersion?!!h.selected&&ranks.some(rank=>h.mark===['◎','○','▲','△','☆'][rank-1]):ranks.includes(Number(h.rank))),nums=[...new Set(picks.map(h=>Number(h.num)))],anchor=(row.prediction.horses||[]).find(h=>row.prediction.selectionVersion?h.selected&&h.mark==='◎':Number(h.rank)===1),bets=strategyTickets(nums,type,mode,anchor?Number(anchor.num):null);if(!bets.length){s.insufficient++;continue;}const result=row.result,table=result?.payouts?.types?.[type];if(!row.outcome.complete||!table||table.confirmed!==true){s.missing++;continue;}
     let valid;try{valid=validate({types:{[type]:table}},row.race.horses||[]);}catch{s.missing++;continue;}if(!valid){s.missing++;continue;}
     const cancellations=new Set((result.horses||[]).filter(h=>h.status==='取消').map(h=>Number(h.num))),amounts=new Map(table.payouts.map(p=>[key(p.numbers,type),p.yen]));let refund=0,payout=0,hits=0;
     for(const bet of bets){if(table.refundAll||bet.some(n=>cancellations.has(n))){refund+=stake;continue;}const amount=amounts.get(key(bet,type));if(amount){payout+=amount*stake/100;hits++;}else if(table.specialPayout)payout+=table.specialPayout*stake/100;}
@@ -30,5 +44,5 @@
    s.net=s.gross-s.refund;s.profit=s.payout-s.net;s.roi=s.net?s.payout/s.net*100:null;return s;
   });
  }
- return {TYPES,key,validate,tickets,simulate};
+ return {TYPES,MODES,key,validate,tickets,strategyTickets,methodLabel,simulate};
 });

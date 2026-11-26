@@ -11,6 +11,7 @@
   if(!record||record.schemaVersion!==1||!record.card)return false;const c=record.card,n=(x)=>typeof x==='number'&&Number.isFinite(x)&&x>=0;if(!c.summary||!['saved','total','wins','places','pending','excluded'].every(k=>n(c.summary[k])))return false;
   if(!Array.isArray(c.marks)||c.marks.length!==5||!c.marks.every((m,i)=>m.mark===['◎','○','▲','△','☆'][i]&&['count','wins','places','excluded'].every(k=>n(m[k]))&&(m.average===null||n(m.average))))return false;
   if(!Array.isArray(c.boxes)||c.boxes.length!==7||!c.boxes.every(b=>typeof b.label==='string'&&['races','missing','insufficient','net','payout'].every(k=>n(b[k]))&&(b.roi===null||n(b.roi))))return false;
+  if(c.betMode!=null&&!['box','axis'].includes(c.betMode))return false;if(c.betLabel!=null&&typeof c.betLabel!=='string')return false;
   return typeof c.dateLabel==='string'&&typeof c.configLabel==='string'&&typeof c.ranksLabel==='string'&&n(c.stake);
  }
  return {day,add,week,japanDay,expiry,visible,validate};

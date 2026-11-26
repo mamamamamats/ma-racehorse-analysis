@@ -11,11 +11,11 @@
   }
   function analyse(rows){
     const known=rows.filter(h=>h.baseScore!=null&&Number.isFinite(h.baseScore)&&Number.isFinite(h.customScore)&&Number.isFinite(h.bonusScore));
-    const n=known.length,complete=n===rows.length;
+    const n=known.length,complete=n===rows.length,coverage=rows.length?n/rows.length:0,canJudge=rows.length>0&&n*5>rows.length*4;
     const rank=(h,key)=>1+known.filter(x=>x[key]>h[key]+EPS).length;
     const cutoff=n<=10?Math.max(1,Math.floor(n/2)):5;
     const candidates=[];
-    if(complete&&n>=3)for(const h of known){
+    if(canJudge&&n>=3)for(const h of known){
       const baseRank=rank(h,'baseScore'),totalRank=rank(h,'customScore'),bonusRank=rank(h,'bonusScore');
       if(h.bonusScore<1-EPS)continue;
       const rise=baseRank>cutoff&&totalRank<=cutoff&&baseRank-totalRank>=2;
@@ -23,7 +23,7 @@
       const special=bonusDistinct&&(n>10?baseRank>=10&&bonusRank<=3:baseRank>Math.floor(n/2)&&bonusRank<=Math.min(2,n));
       if(rise||special)candidates.push({horse:h,baseRank,totalRank,bonusRank,rise,special});
     }
-    return {known,n,complete,cutoff,rank,candidates,allBelow:n>0&&known.every(h=>h.baseScore<3-EPS)};
+    return {known,n,complete,coverage,canJudge,total:rows.length,cutoff,rank,candidates,allBelow:n>0&&known.every(h=>h.baseScore<3-EPS)};
   }
   function interpretation(h){
     const b=band(h.baseScore);if(b.key==='missing')return '採点に使える評価が不足しているため、判断を保留します。';

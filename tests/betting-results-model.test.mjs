@@ -15,3 +15,13 @@ test('new selections use actual marks for BOX: both △ and rank-six ☆; unmark
  const star=B.simulate([r],[5])[0];assert.equal(star.gross,100);assert.equal(star.payout,0);
  const triangles=B.simulate([r],[4])[0];assert.equal(triangles.gross,200);assert.equal(triangles.payout,500);
 });
+test('◎ axis generates singles, flows and one-horse-axis trifecta multi without duplicates',()=>{
+ const counts=Object.keys(B.TYPES).map(type=>B.strategyTickets([1,2,3,4,5],type,'axis',1).length);assert.deepEqual(counts,[1,1,4,4,4,6,36]);
+ const multi=B.strategyTickets([2,2,3], 'trifecta','axis',1);assert.equal(multi.length,6);assert.ok(multi.some(x=>x.join('-')==='2-3-1'));assert.ok(multi.some(x=>x.join('-')==='2-1-3'));assert.equal(new Set(multi.map(x=>x.join('-'))).size,6);
+ assert.deepEqual(B.strategyTickets([2,3], 'exacta','axis',1),[[1,2],[1,3]]);assert.equal(B.strategyTickets([2,3], 'trio','axis',null).length,0);assert.throws(()=>B.simulate([],[],100,'unknown'));
+});
+test('◎ axis settlement uses saved favorite even if unchecked; trifecta includes second/third-place favorite and refunds canceled axis',()=>{
+ const r=row({win:table([2],500),exacta:table([2,1],1800),trifecta:table([2,1,3],10000)});
+ const stats=B.simulate([r],[2,3,4,5],100,'axis');assert.equal(stats[0].gross,100);assert.equal(stats[0].payout,0);assert.equal(stats[4].payout,0);assert.equal(stats[6].tickets,36);assert.equal(stats[6].payout,10000);
+ const canceled=row({trifecta:table([2,3,4],6000)},{canceled:[1]});const multi=B.simulate([canceled],undefined,100,'axis')[6];assert.equal(multi.refund,multi.gross);assert.equal(multi.payout,0);assert.equal(multi.roi,null);
+});

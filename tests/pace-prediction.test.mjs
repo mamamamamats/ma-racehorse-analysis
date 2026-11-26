@@ -17,3 +17,10 @@ test('a real tied alternative winner does not receive a sole-◎ claim',()=>{
  const x=fixture();x.result.weights.overall=0;for(const e of x.evidence)if(e.pattern==='back_loaded'&&e.num===7)e.value=6;
  assert.equal(M.select(x).picks.some(h=>h.mark==='☆'),false);
 });
+test('prediction reasons name base points, specific aptitude conditions and counted evidence without inventing strengths',()=>{
+ const result={context:{venue:'東京',surface:'芝',distance:1600,going:'稍重'},weights:{venue:3,distance:3,condition:3,lap:3}};
+ const horse={baseScore:4.1,bonusScore:1.2,factors:{venue:4.5,distance:4.2,condition:3.8,lap:null},venueStats:{count:5},distanceStats:{count:4},conditionStats:{count:3},highConditionKeys:['venue','condition']};
+ const text=M.explain(horse,result);for(const word of ['基礎点4.10','高評価','東京・芝の競馬場適性4.50（5走）','1600mの距離適性4.20','稍重の馬場適性3.80','条件ボーナスの対象：競馬場・馬場'])assert.ok(text.includes(word),word);
+ result.weights.distance=0;assert.ok(!M.explain(horse,result).includes('距離適性'));
+ assert.match(M.explain({baseScore:2.5,bonusScore:0,factors:{}},result),/標準3.0未満/);
+});
