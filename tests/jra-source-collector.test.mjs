@@ -12,3 +12,10 @@ test('conflicting cached table rows are held and footer help is not a table boun
  const [h]=parse([title+'Total lines: 100\n'+header+row+end,title+'Total lines: 100\n'+row.replace(' | 4 | 2',' | 4 | 3')]);assert.equal(h.complete,false);assert.deepEqual(h.conflictingLines,[11]);
  const [footer]=parse([title+'Total lines: 100\n'+header+row+'L12: ### 出走・出馬投票履歴\n']);assert.equal(footer.complete,false);
 });
+test('all named official URL variants resolve before unnamed table fragments',()=>{
+ const url0='https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud0/01',url1='https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud1/02';
+ const h=parse(['競走馬情報 JRA ('+url1+')\nTotal lines: 100\n'+header+row+end,'競走馬情報 JRA ('+url0+')\n# Image競走馬情報Image: マルチテストホースTestHorse（JPN）\n','競走馬情報 JRA ('+url1+')\n# Image競走馬情報Image: マルチテストホースTestHorse（JPN）\n']);assert.equal(h.length,1);assert.equal(h[0].name,'テストホース');assert.equal(h[0].url,url1);assert.equal(h[0].complete,true);
+});
+test('two explicit horse names for the same official URL never authorize a history',()=>{
+ const h=parse([title+'Total lines: 100\n'+header+row+end,title.replace('テストホース','ベツノウマ')]);assert.deepEqual(h,[]);
+});
