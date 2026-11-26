@@ -1,0 +1,11 @@
+{
+  "automationId": "Automation_270536488a488191a92ec6b5f09b4d93",
+  "title": "競馬回顧の紐付けを継続",
+  "timezone": "Asia/Tokyo",
+  "firstScheduledRun": "2026-11-27T08:00:00+09:00",
+  "finalScheduledRun": "2026-11-27T16:00:00+09:00",
+  "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Tokyo:20261127T080000\nRRULE:FREQ=HOURLY;UNTIL=20261127T070000Z\nEND:VEVENT",
+  "finalRunAction": "進捗確認と最終報告のみ。16時以降に新たな照合・DB操作を開始しない。",
+  "onDatabaseError": "DB読み書きと自動リトライを停止し、公式照合と更新準備だけ続ける。",
+  "onAllHorsesFinished": "継続タスクを早期停止してよい。"
+}
