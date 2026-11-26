@@ -16,6 +16,7 @@ for(const u of matching.updates){
  const h=byName.get(u.horseName),r=h&&M.match(u.original,h,[{...u.raceRef,name:u.raceRef.raceName,raceId:u.raceId}]);
  let reason=null;
  if(!r||r.status!=='confirmed'||r.card.raceId!==u.raceId||h.url!==u.verification.url||r.official.date!==u.verification.officialDate||r.official.finish!==u.verification.officialFinish)reason='official-proof-not-reproducible';
+ else if(L.contradictions(u.original,{raceRef:u.raceRef}).length)reason='review-metadata-conflict';
  else if(occupied.has(u.horseName+'|'+u.raceId))reason='another-prepared-review-occupies-target';
  else if(records.has(u.raceId)&&L.contradictions({raceRef:u.raceRef,track:u.original.track},records.get(u.raceId)).length)reason='whole-review-metadata-conflict';
  if(reason){rejected.push({horse:u.horseName,run:u.original,status:reason,raceId:u.raceId,officialDate:u.verification.officialDate,wholeReviewRef:records.get(u.raceId)?.raceRef});continue;}

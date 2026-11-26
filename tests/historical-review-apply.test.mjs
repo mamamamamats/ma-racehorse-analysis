@@ -64,3 +64,14 @@ test('quota stops immediately; successful checkpoint survives retry and read-onl
   const offline=await main(args,()=>{throw Error('Unexpected network');});assert.equal(offline.pendingReviews,0);assert.equal(offline.knownCompletedReviews,2);
  }finally{await fs.rm(dir,{recursive:true,force:true});}
 });
+test('a later date/course correction cannot be overwritten by a prepared match with identical prose',()=>{
+ const u={...entry,raceRef:{date:'2026/1/1',venue:'東京',surface:'芝',distance:2400,raceNumber:11}};
+ const live=raw([{...original,date:'2026/1/2'}]),before=JSON.stringify(live),result=prepareHorse(live,[u]);assert.equal(result.write,null);assert.ok(result.skipped[0].fields.includes('date'));assert.equal(JSON.stringify(live),before);
+ const changed=raw();changed.fields.races.arrayValue.values[0].mapValue.fields.raceRef={mapValue:{fields:{venue:string('阪神')}}};assert.equal(prepareHorse(changed,[u]).write,null);
+});
+test('compatible live raceRef annotations and their original Firestore types survive linking',()=>{
+ const live=raw(),fields=live.fields.races.arrayValue.values[0].mapValue.fields;
+ fields.raceRef={mapValue:{fields:{date:string('2026/1/1'),note:string('後から追記'),reviewedAt:{timestampValue:'2026-01-02T00:00:00Z'}}}};
+ const result=prepareHorse(live,[entry]),ref=result.write.update.fields.races.arrayValue.values[0].mapValue.fields.raceRef.mapValue.fields;
+ assert.equal(ref.note.stringValue,'後から追記');assert.deepEqual(ref.reviewedAt,{timestampValue:'2026-01-02T00:00:00Z'});assert.equal(result.accepted.length,1);
+});

@@ -1,37 +1,38 @@
 # 最新の更新準備（DB反映は行わない）
 
-2026-11-26追記。今回もDBの読み取り・書き込みはゼロ。次の200頭を優先して検索し、187頭の公式全履歴から183頭・2,152件を第4バッチとして準備した。全バッチ合計は照合確定5,540件、過去にDB保存成功9件、**更新待ち440頭・5,531件**。件数は準備ファイルと既知の保存記録に基づき、DBの最新状態は照会していない。全馬の照合は未完了。
+2026-11-26追記。今回もDBの読み取り・書き込みはゼロ。次の200頭を優先して検索し、181頭の公式全履歴から174頭・1,866件を第5バッチとして準備した。全バッチ合計は照合確定7,406件、過去にDB保存成功9件、**更新待ち614頭・7,397件**。件数は準備ファイルと既知の保存記録に基づき、DBの最新状態は照会していない。全馬の照合は未完了。
 
 - 第1バッチ：`plan.json`、保存済み記録 `completed.json`。97頭・1,233件待ち。既存の固定計画とSHA-256は変更しない。
 - 第2バッチ：`batch-002/plan.json`。66頭・892件待ち。第1バッチとの重複なし。`batch-002/held-cases.json` の441件は更新対象外。
 - 第2バッチでは公式履歴の候補複数88件、着順等の根拠不足59件、出馬表なし69件、公式履歴と一致なし157件、公式ページの履歴が出馬表より古い67件、レース全体回顧のメタデータ矛盾1件を保留。最後の1件はロードトレゾールのゆきつばき賞。IDを無理に付けてラップ採点へ混入させない。
 - 第3バッチ：`batch-003/plan.json`。94頭・1,254件待ち。第1・第2との重複なし。`batch-003/held-cases.json` の512件は更新対象外（公式と一致なし176件、出馬表なし69件、着順等の根拠不足81件、複数候補147件、公式履歴が古い37件、全体回顧メタデータ矛盾2件）。矛盾はレイピアの萌黄賞とビアフォーナウのゆきつばき賞。
 - 第4バッチ：`batch-004/plan.json`。183頭・2,152件待ち。既存バッチとの重複なし。`batch-004/held-cases.json` の937件は更新対象外（出馬表なし179件、公式と一致なし334件、複数候補211件、着順等の根拠不足137件、重複回顧8件、新馬戦等の同定根拠不一致49件、公式履歴が古い17件、全体回顧メタデータ矛盾2件）。矛盾はメイショウサトノヒの2025/4/19の3歳未勝利と、エコロハートの萌黄賞。
-- 第1バッチの保留550件も `held-cases.json` に保存。第1〜4の保留は合計2,440件。再確認が必要な馬は438頭あり、確定済みの回顧を持つ馬でも未解決分を再確認一覧に残す。
+- 第5バッチ：`batch-005/plan.json`。174頭・1,866件待ち。既存バッチとの重複なし。`batch-005/held-cases.json` の817件は更新対象外（出馬表なし138件、着順等の根拠不足133件、複数候補163件、公式と一致なし269件、重複回顧4件、公式履歴が古い45件、新馬戦等の同定根拠不一致62件、全体回顧メタデータ矛盾3件）。矛盾はエイヨーアメジストの萌黄賞、キョウエイカンセとクリノハレルヤのゆきつばき賞。
+- 第1バッチの保留550件も `held-cases.json` に保存。第1〜5の保留は合計3,257件。再確認が必要な馬は617頭あり、確定済みの回顧を持つ馬でも未解決分を再確認一覧に残す。
 - `batches.json` が全固定計画の目録、`backlog-status.json` は今回準備時点の集計。`status.json` は第1バッチの固定記録なので全体件数と混同しない。
-- 次の照合は `remaining-horses.json` の未確認馬10,526頭を回顧数順に進める。保留馬438頭の再確認一覧も別に保持。直近検索したが公式プロフィールの対応を確定できなかった16頭は `recentProfileLookupPending` に記録。続きでは直近再検索済みの馬だけを繰り返さず、未検索分も進める。回顧のない出走を飛ばし、配列順・残った候補の消去法では紐付けない。
+- 次の照合は `remaining-horses.json` の未確認馬10,345頭を回顧数順に進める。保留馬617頭の再確認一覧も別に保持。直近検索したが公式プロフィールの対応を確定できなかった22頭は `recentProfileLookupPending` に記録。続きでは直近再検索済みの馬だけを繰り返さず、未検索分も進める。回顧のない出走を飛ばし、配列順・残った候補の消去法では紐付けない。
 - 予想画面の公開索引 `verified-review-links.json` は今回変更していない。準備件数と現在アプリで利用できる件数は異なる。
 
 ```sh
 # 全バッチの残件確認：オフライン。DBアクセス・ファイル書き込みなし。
 node scripts/preview-historical-review-backlog.mjs
 
-# 第4バッチだけ確認：オフライン。既定のチェックポイントと分離する。
-node scripts/apply-historical-review-links.mjs --plan maintenance/historical-review-links/batch-004/plan.json --backup-dir .local/historical-review-links/batch-004
+# 第5バッチだけ確認：オフライン。既定のチェックポイントと分離する。
+node scripts/apply-historical-review-links.mjs --plan maintenance/historical-review-links/batch-005/plan.json --backup-dir .local/historical-review-links/batch-005
 ```
 
 将来DB反映を指示されたときだけ、対象バッチの確認コマンドに `--apply --limit-horses 1` を加える。**今回の依頼は準備のみ。枠が空いても自動で反映しない。** バッチごとの `--backup-dir` を維持すれば、他バッチの保存済み記録・変更前バックアップを上書きしない。
 
 ## 照合根拠と続きの作り方
 
-`batch-002/official-histories.json` に取得済みの公式全履歴、`source-responses.json.gz` に172ファイル分の公式ページ取得結果（失敗レスポンスも含む）、`sources-manifest.json` にそのハッシュ・参照した馬マスターZIPのハッシュ・元のGitコミットを保存した。JRAの検索結果には関連馬も含まれるため、検索した馬と取得できた馬は必ずしも一致しない。取得不完全・古い履歴は確定扱いしない。第3バッチも同構成で公式履歴・123ファイル分の取得結果・ハッシュを保存した。`batch-003/requested-horses.json` に今回検索した優先100頭を保存。検索結果に関連馬も出るため、取得した103頭とは一致しない。第4バッチも同構成で187頭の公式履歴・222ファイル分の取得結果・ハッシュを保存。`batch-004/requested-horses.json` は優先200頭、`retrieved-profiles.json` は実際に確認した187頭のURL一覧。検索結果中の既確認馬や照合対象の回顧がない馬は取得対象から除外した。
+`batch-002/official-histories.json` に取得済みの公式全履歴、`source-responses.json.gz` に172ファイル分の公式ページ取得結果（失敗レスポンスも含む）、`sources-manifest.json` にそのハッシュ・参照した馬マスターZIPのハッシュ・元のGitコミットを保存した。JRAの検索結果には関連馬も含まれるため、検索した馬と取得できた馬は必ずしも一致しない。取得不完全・古い履歴は確定扱いしない。第3バッチも同構成で公式履歴・123ファイル分の取得結果・ハッシュを保存した。`batch-003/requested-horses.json` に今回検索した優先100頭を保存。検索結果に関連馬も出るため、取得した103頭とは一致しない。第4バッチも同構成で187頭の公式履歴・222ファイル分の取得結果・ハッシュを保存。`batch-004/requested-horses.json` は優先200頭、`retrieved-profiles.json` は実際に確認した187頭のURL一覧。検索結果中の既確認馬や照合対象の回顧がない馬は取得対象から除外した。第5バッチも同構成で181頭の公式履歴・225ファイル分の取得結果・ハッシュを保存。`batch-005/requested-horses.json` は優先200頭、`retrieved-profiles.json` は確認した181頭のURL一覧。
 
 今後は `.local` などの作業領域に公式ツールの結果を `sources/*.json` として保存する。`profile-urls.json` で名前と公式URLを対応させ、下記で解析・照合する。元の馬マスターは記録されたGitコミットのZIPから復元できる。新しいマスターで作る場合はその取得日時も記録する。
 
 ```sh
 node scripts/collect-jra-history-sources.cjs --work-dir 作業ディレクトリ
 node scripts/plan-historical-review-links.cjs --master 馬マスター.json --histories 作業ディレクトリ/histories.json --out 作業ディレクトリ/matching-plan.json
-node scripts/prepare-historical-review-batch.cjs --id batch-005 --matching-plan 作業ディレクトリ/matching-plan.json --histories 作業ディレクトリ/histories.json
+node scripts/prepare-historical-review-batch.cjs --id batch-006 --matching-plan 作業ディレクトリ/matching-plan.json --histories 作業ディレクトリ/histories.json
 node scripts/preview-historical-review-backlog.mjs
 ```
 
@@ -80,7 +81,7 @@ node scripts/apply-historical-review-links.mjs --apply --limit-horses 10
 ## 安全策と実行記録
 
 - 回顧の配列順は使わない。最新DBの名前・コース・評価・本文が一致する唯一の回顧だけ更新。
-- 本文変更、同文の重複、別IDの保存、対象レースに別の回顧が存在する場合は保留。無理に埋めない。
+- 本文変更、同文の重複、別IDの保存、対象レースに別の回顧が存在する場合は保留。準備後に追加・修正された開催日やコース等が準備済みレースと矛盾する場合も保留し、上書きしない。互換のある既存 `raceRef` の追記・型は保持する。準備作成時も回顧自身のメタデータ矛盾を除外する。無理に埋めない。
 - 保存するのは回顧内の `raceId` / `raceRef` / `linkVerification` と馬の `archiveUpdatedAt`。SABCD、本文、回顧順、予想データは変更しない。
 - Firestoreの元の型を保持し、最新 `updateTime` を条件に更新。同時編集・上限エラーでは止まる。
 - 各実行の変更前データ、成功コミット、結果は `.local/historical-review-links/run-*/` に保存。再実行しても以前のバックアップを上書きしない。

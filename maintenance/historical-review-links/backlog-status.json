@@ -34,10 +34,18 @@
       "pendingReviews": 2152,
       "pendingHorses": 183,
       "plan": "maintenance/historical-review-links/batch-004/plan.json"
+    },
+    {
+      "id": "batch-005",
+      "confirmedReviews": 1866,
+      "completedReviews": 0,
+      "pendingReviews": 1866,
+      "pendingHorses": 174,
+      "plan": "maintenance/historical-review-links/batch-005/plan.json"
     }
   ],
-  "confirmedReviews": 5540,
+  "confirmedReviews": 7406,
   "completedReviews": 9,
-  "pendingReviews": 5531,
-  "pendingHorses": 440
+  "pendingReviews": 7397,
+  "pendingHorses": 614
 }

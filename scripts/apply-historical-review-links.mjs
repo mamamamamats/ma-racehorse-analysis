@@ -5,6 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
+import Link from '../horse-review-link.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const base='https://firestore.googleapis.com/v1/projects/ma-racehorse-analysis/databases/(default)/documents';
 const signature=r=>JSON.stringify([r.name||'',r.track||'',r.eval||'',r.comment||'']);
@@ -19,11 +20,13 @@ export function prepareHorse(raw,updates){
  for(const u of updates){
   const found=races.map((r,i)=>signature(r)===signature(u.original)?i:-1).filter(i=>i>=0),key=entryKey(u);
   if(found.length!==1){skipped.push({key,reason:'review changed or duplicated'});continue;}
-  const i=found[0];
+  const i=found[0],conflicts=Link.contradictions(races[i],{raceId:u.raceId,raceRef:u.raceRef});
+  if(conflicts.length){skipped.push({key,reason:'live review metadata conflicts with prepared race',fields:conflicts});continue;}
   if(races[i].raceId){if(races[i].raceId===u.raceId)already.push(u);else skipped.push({key,reason:'different existing race ID'});continue;}
   if(races.some((r,j)=>j!==i&&r.raceId===u.raceId)){skipped.push({key,reason:'target race already has another review'});continue;}
   const fields=rawRaces.arrayValue.values[i].mapValue.fields;
-  fields.raceId=encode(u.raceId);fields.raceRef=encode(u.raceRef);fields.linkVerification=encode(u.verification);
+  const preparedRef=encode(u.raceRef);preparedRef.mapValue.fields={...preparedRef.mapValue.fields,...(fields.raceRef?.mapValue?.fields||{})};
+  fields.raceId=encode(u.raceId);fields.raceRef=preparedRef;fields.linkVerification=encode(u.verification);
   races[i]={...races[i],raceId:u.raceId};accepted.push(u);
  }
  return {accepted,already,skipped,write:accepted.length?{update:{name:raw.name,fields:{races:rawRaces}},updateMask:{fieldPaths:['races']},currentDocument:{updateTime:raw.updateTime},updateTransforms:[{fieldPath:'archiveUpdatedAt',setToServerValue:'REQUEST_TIME'}]}:null};
