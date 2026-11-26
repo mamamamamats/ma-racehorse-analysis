@@ -37,8 +37,11 @@
   }
   for(const star of stars.values()){star.rank=picks.length+1;star.reason=star.conditions.map(c=>`${c.label}想定なら◎／過去評価 ${c.average.toFixed(2)}（${c.count}走）`).join('。');picks.push(star);}
   for(const pick of picks){const row=known.find(h=>String(h.num)===String(pick.num));pick.reason=explain(row,result)+pick.reason;}
+  // Display-only candidates: never append to picks or change saved marks.
+  const markedNums=new Set(picks.map(h=>String(h.num))),lowestMarkedScore=picks.length?Math.min(...picks.map(h=>h.originalScore)):null;
+  const extraCandidates=lowestMarkedScore==null?[]:known.filter(h=>!markedNums.has(String(h.num))&&h.score>=3&&h.score+0.5+1e-9>=lowestMarkedScore).map(h=>({num:h.num,name:h.name,score:h.score,scoreRank:h.rank}));
   const fieldStyles={escape:0,forward:0,mixed:0,unknown:0};for(const h of result.ranked){const s=h.runningStyle;const label=s?.label||'';if(!s?.known)fieldStyles.unknown++;else if(label==='逃げ中心')fieldStyles.escape++;else if(label==='先行中心')fieldStyles.forward++;else fieldStyles.mixed++;}
-  return {version:VERSION,fieldStyles,mainPattern,mainBasis:profile?{pattern:profile.pattern,count:profile.count,delta:profile.delta}:null,counts,referenceRaces:n,minRuns,minRaces,picks,scenarios,notes:'暫定ルール：同条件の平均ラップ5R以上から、6要素のラップ適性と同じ前傾・後傾・平均型を本線にする。各型の過去評価でラップ軸を置換し二重加点しない。逃げ・先行頭数から型は変更しない。☆は全評価馬に2走以上の比較根拠がある場合の単独1位のみ。'};
+  return {version:VERSION,fieldStyles,mainPattern,mainBasis:profile?{pattern:profile.pattern,count:profile.count,delta:profile.delta}:null,counts,referenceRaces:n,minRuns,minRaces,picks,extraCandidates,lowestMarkedScore,scenarios,notes:'暫定ルール：同条件の平均ラップ5R以上から、6要素のラップ適性と同じ前傾・後傾・平均型を本線にする。各型の過去評価でラップ軸を置換し二重加点しない。逃げ・先行頭数から型は変更しない。☆は全評価馬に2走以上の比較根拠がある場合の単独1位のみ。'};
  }
  return {VERSION,labels,pattern,explain,select};
 });

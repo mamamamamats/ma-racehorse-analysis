@@ -24,3 +24,10 @@ test('prediction reasons name base points, specific aptitude conditions and coun
  result.weights.distance=0;assert.ok(!M.explain(horse,result).includes('距離適性'));
  assert.match(M.explain({baseScore:2.5,bonusScore:0,factors:{}},result),/標準3.0未満/);
 });
+test('display-only extra candidates meet standard and 0.5-point boundary without changing marks',()=>{
+ const x=fixture();x.evidence=[];x.result.ranked.forEach((h,i)=>h.score=[5,4.8,4.6,4.4,4.2,3.7,3.699][i]);
+ const s=M.select(x);assert.deepEqual(s.extraCandidates.map(h=>h.num),[6]);assert.equal(s.lowestMarkedScore,4.2);assert.equal(s.picks.length,5);assert.ok(!s.picks.some(h=>h.num===6));
+ x.result.ranked.forEach((h,i)=>h.score=[3.6,3.5,3.4,3.3,3.2,3,2.9][i]);assert.deepEqual(M.select(x).extraCandidates.map(h=>h.num),[6]);
+ assert.deepEqual(M.select({...x,result:{...x.result,ranked:[]}}).extraCandidates,[]);
+ const star=M.select(fixture());assert.ok(!star.extraCandidates.some(h=>star.picks.some(p=>p.num===h.num)));
+});
