@@ -24,3 +24,5 @@
 .pd-flags p{margin:6px 0;overflow-wrap:anywhere}.pd-flags small{line-height:1.6;display:block}
 .pd-notes{margin-top:16px}.pd-notes>label{display:block;margin:10px 0}.pd-notes textarea{display:block;width:100%;box-sizing:border-box;margin-top:5px;color:inherit;background:var(--bg,#fff);border:1px solid #aab3bf;border-radius:5px;padding:8px}
 .pd-notes fieldset{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}.pd-notes summary{cursor:pointer;font-weight:600}.pd-notes [role=status]{display:inline-block;margin:8px}
+
+.rr-box-controls>label{max-width:100%;flex-wrap:wrap}.rr-box-controls fieldset{max-width:100%;box-sizing:border-box}.rr-box-controls select{max-width:100%;min-width:0;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px}

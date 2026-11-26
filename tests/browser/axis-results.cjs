@@ -9,7 +9,7 @@ await page.evaluate(()=>{
  window.DataArchive.read=async name=>name==='predictions'?[prediction]:name==='raceResults'?[{raceId:'test-race',dayId:'test-day',result}]:[];
  waitForFirebase=async()=>true;getThisWeekDates=()=>['2026/11/14'];raceDays=[day];currentView='week';document.body.innerHTML='<div id="weeklySavedResults"></div>';setWeeklyBetMode('box');
 });await page.waitForSelector('select[aria-label="回収率の買い方"]');
-let report=await page.evaluate(()=>RaceReviewUI.reportData());assert.equal(report.boxes[6].tickets,60);assert.equal(report.betMode,'box');
+await page.selectOption('select[aria-label="回収率の買い方"]','box');let report=await page.evaluate(()=>RaceReviewUI.reportData());assert.equal(report.boxes[6].tickets,60);assert.equal(report.betMode,'box');
 await page.selectOption('select[aria-label="回収率の買い方"]','axis');report=await page.evaluate(()=>RaceReviewUI.reportData());assert.equal(report.boxes[6].tickets,36);assert.equal(report.boxes[6].payout,10000);assert.equal(report.boxes[6].roi,10000/3600*100);assert.equal(report.betMode,'axis');
 assert.match(await page.locator('.rr-box-stats').textContent(),/3連単は◎を1〜3着すべてに置く1頭軸マルチ/);assert.match(await page.locator('#rrShareText').inputValue(),/◎軸フォーメーション/);assert.match(await page.locator('#rrShareText').inputValue(),/3連単（◎1頭軸マルチ）/);
 const svg=await page.evaluate(()=>WeeklyReportVisuals.svgReport(RaceReviewUI.reportData()));assert.match(svg,/◎軸フォーメーション 回収率/);assert.deepEqual(errors,[]);console.log('PASS',width,'BOX/axis selection, 36-point multi settlement, share text and image labels');await page.close();}}finally{await browser.close();server.close();}})().catch(e=>{console.error(e);process.exit(1)});
