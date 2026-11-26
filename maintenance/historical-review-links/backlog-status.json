@@ -6,46 +6,62 @@
     {
       "id": "batch-001",
       "confirmedReviews": 1242,
-      "completedReviews": 9,
-      "pendingReviews": 1233,
-      "pendingHorses": 97,
+      "completedReviews": 1242,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/plan.json"
     },
     {
       "id": "batch-002",
       "confirmedReviews": 892,
-      "completedReviews": 0,
-      "pendingReviews": 892,
-      "pendingHorses": 66,
+      "completedReviews": 892,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/batch-002/plan.json"
     },
     {
       "id": "batch-003",
       "confirmedReviews": 1254,
-      "completedReviews": 0,
-      "pendingReviews": 1254,
-      "pendingHorses": 94,
+      "completedReviews": 1254,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/batch-003/plan.json"
     },
     {
       "id": "batch-004",
       "confirmedReviews": 2152,
-      "completedReviews": 0,
-      "pendingReviews": 2152,
-      "pendingHorses": 183,
+      "completedReviews": 2152,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/batch-004/plan.json"
     },
     {
       "id": "batch-005",
       "confirmedReviews": 1866,
-      "completedReviews": 0,
-      "pendingReviews": 1866,
-      "pendingHorses": 174,
+      "completedReviews": 1866,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/batch-005/plan.json"
+    },
+    {
+      "id": "batch-006",
+      "confirmedReviews": 124,
+      "completedReviews": 124,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
+      "plan": "maintenance/historical-review-links/batch-006/plan.json"
+    },
+    {
+      "id": "batch-007",
+      "confirmedReviews": 51,
+      "completedReviews": 51,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
+      "plan": "maintenance/historical-review-links/batch-007/plan.json"
     }
   ],
-  "confirmedReviews": 7406,
-  "completedReviews": 9,
-  "pendingReviews": 7397,
-  "pendingHorses": 614
+  "confirmedReviews": 7581,
+  "completedReviews": 7581,
+  "pendingReviews": 0,
+  "pendingHorses": 0
 }

@@ -3,9 +3,15 @@
   "planSha256": "44f087bf8a0849598f61ba966e5ef98324936e17f432a97f3c62199f0bd506a3",
   "confirmedHorses": 98,
   "confirmedReviews": 1242,
-  "savedReviews": 9,
-  "remainingReviews": 1233,
-  "lastStop": "Firestore HTTP 429 RESOURCE_EXHAUSTED / Quota exceeded on next horse read",
+  "savedReviews": 1242,
+  "remainingReviews": 0,
+  "lastStop": null,
   "officialHistories": 113,
-  "fullDatabaseMatchingComplete": false
+  "fullDatabaseMatchingComplete": false,
+  "completedReviews": 1242,
+  "pendingReviews": 0,
+  "pendingHorses": 0,
+  "lastAppliedAt": "2026-11-26T15:28:06.115Z",
+  "stopped": null,
+  "previousStop": "Firestore HTTP 429 RESOURCE_EXHAUSTED / Quota exceeded on next horse read"
 }

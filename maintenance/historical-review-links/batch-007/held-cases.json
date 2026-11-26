@@ -1,0 +1,373 @@
+[
+  {
+    "horse": "ナンナンプー",
+    "index": 1,
+    "run": {
+      "track": "札幌芝1200稍重",
+      "name": "3歳以上1勝クラス",
+      "comment": "後方まま。致命的な出遅れで直線時点で後ろすぎた。",
+      "eval": "F"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/8/29"
+    ]
+  },
+  {
+    "horse": "ナンナンプー",
+    "index": 5,
+    "run": {
+      "name": "1勝クラス",
+      "track": "福島芝1200",
+      "comment": "先行して伸びきれず11着。逃げ馬勝利する展開でジリ足。時計早かった？",
+      "eval": "C"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/4/26",
+      "2026/4/18"
+    ]
+  },
+  {
+    "horse": "ナンナンプー",
+    "index": 8,
+    "run": {
+      "eval": "B",
+      "comment": "先行して伸びて2着。ペース流れていたがスムーズな競馬。",
+      "track": "新潟芝1400稍重",
+      "name": "3歳未勝利"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ナンナンプー",
+    "index": 12,
+    "run": {
+      "eval": "D",
+      "track": "中山芝1200",
+      "name": "1勝クラス",
+      "comment": "後方まま。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/1/13"
+    ]
+  },
+  {
+    "horse": "ジャスパーソレイユ",
+    "index": 3,
+    "run": {
+      "eval": "A",
+      "track": "中山ダ1200",
+      "name": "2勝クラス",
+      "comment": "先行して2着。タフな展開も前目の馬が残る展開が向いた。スムーズに走れた。揉まれてどうか"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/1/4",
+      "2025/12/7"
+    ]
+  },
+  {
+    "horse": "ジャスパーソレイユ",
+    "index": 6,
+    "run": {
+      "eval": "D",
+      "track": "札幌ダ1000不良",
+      "name": "1勝クラス",
+      "comment": "出遅れて二の足で先行したが伸びきれず。足使ったがジリ足。オッズほど抜けていなかった。スタート"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/7/27"
+    ]
+  },
+  {
+    "horse": "シルフズミスチーフ",
+    "index": 8,
+    "run": {
+      "eval": "D",
+      "comment": "行き足つかず後方から伸びきれず。ジリ足。",
+      "track": "阪神ダ1400稍重",
+      "name": "1勝クラス"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/9/6"
+    ]
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 0,
+    "run": {
+      "comment": "後方まま。ほぼポツンで後ろすぎ。もう少し時計かかった方がいいかも。展開待ち",
+      "name": "安達太良S",
+      "eval": "F",
+      "track": "福島芝1200"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/7/11",
+      "2025/7/12"
+    ]
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 1,
+    "run": {
+      "name": "タンザナイトS",
+      "eval": "F",
+      "comment": "後方から伸びきれず10着。後ろすぎた。足は使っているが上位の上がりもかなり早くノーチャンス。差しの届く馬場、展開で",
+      "track": "阪神芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 7,
+    "run": {
+      "eval": "C",
+      "track": "中山芝1200",
+      "name": "オーシャンS",
+      "comment": "中団から伸びきれず6着。内前の有利の展開と馬場で隊列のままの決着。足は使えている。ロスなく走れた。"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/3/1",
+      "2024/3/2"
+    ]
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 9,
+    "run": {
+      "track": "小倉芝1200稍重",
+      "comment": "スタート五分もやや行き足つかず中断後方から伸びきれず5着。上位2頭には完全に抜け出されていたため着差は悲観する必要はないがハイペースで追い出しはスムーズだったため高評価はできない。スムーズに走ることができれば力はある。",
+      "name": "北九州記念",
+      "eval": "D"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/6/30"
+    ]
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 12,
+    "run": {
+      "comment": "スタートそこまで早くなく中団後方内から伸びてはいたが6着。終始内をロスなく立ち回れていたが直線外に出した馬の伸びがよかったため直線外に出せていればもう少し接戦だったかも？ほとんどベストのレースはできており展開がハマればどこかでチャンスはありそう。",
+      "name": "オーシャンS",
+      "eval": "C",
+      "track": "中山芝1200"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/3/1",
+      "2024/3/2"
+    ]
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 13,
+    "run": {
+      "track": "京都芝1200 次走注目",
+      "comment": "出遅れて最後方から伸びて5着。やや前有利の展開が向いていないため見直しは可能。大外枠と出遅れが痛かった。次走人気が落ちるようなら",
+      "name": "シルクロードS",
+      "eval": "C"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ショウナンハクラク",
+    "index": 15,
+    "run": {
+      "track": "京都芝1200",
+      "name": "京阪杯",
+      "eval": "C",
+      "comment": "中団から伸びきれず。展開は向いていたため高評価はできない。OPから出直しか。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2023/11/26"
+    ]
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 0,
+    "run": {
+      "eval": "C",
+      "comment": "中団後ろから伸びきれず10着。砂被りすぎず走れたが差を詰めれず。前有利ではあったが着差ある。",
+      "name": "3歳以上2勝クラス",
+      "track": "東京ダ1600"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 1,
+    "run": {
+      "track": "中京ダ1400",
+      "name": "大垣特別",
+      "comment": "後方から伸びきれず９着。直線時点で後ろすぎた。追い出しも待たされており初ダート。参考外可能もスタート課題",
+      "eval": "F"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 2,
+    "run": {
+      "eval": "C",
+      "comment": "中団後ろまま。スローペースの展開が向かず直線も進路なく追えず。止まっているわけではない。展開向くまで待ち。",
+      "track": "東京芝1400",
+      "name": "2勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 3,
+    "run": {
+      "eval": "D",
+      "comment": "行き足つかず後方から伸びきれず6着。ペース流れてタフな高速馬場の中、コーナーで外から動いてぶん回し。流石に厳しかった。スタート課題で展開待ち。",
+      "name": "岡崎特別",
+      "track": "中京芝1400"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 4,
+    "run": {
+      "track": "東京芝1400",
+      "comment": "中団後ろから伸びきれず7着。ペース流れたが縦長の展開で直線時点で後ろすぎた。最後までジリジリと伸びてはいる。スタートもう少し改善必須。",
+      "name": "2勝クラス",
+      "eval": "C"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 5,
+    "run": {
+      "eval": "S",
+      "track": "東京芝1400",
+      "comment": "スタート五分で中団から伸びて3着。スローペースで勝ち馬は前のうま。早い足は使えたがもう少し展開向けば。",
+      "name": "2勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 6,
+    "run": {
+      "eval": "S",
+      "name": "1勝クラス",
+      "comment": "中団前目から伸びて1着。スムーズな競馬で優秀な時計で勝ちきれた。距離対応できた。力つけているか。",
+      "track": "東京芝1400"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 7,
+    "run": {
+      "eval": "B",
+      "track": "札幌芝1200稍重",
+      "comment": "スタート五分で中団やや後ろから伸びきれず4着。内前残りの展開が向かず直線時点で位置悪すぎた。足は使えている。スタート",
+      "name": "1勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 8,
+    "run": {
+      "comment": "スタート早くなく中団後方から伸びて3着。大外回すロス。外伸び始めてはいたがペースはやくなく直線時点で前の馬が上位。スタートやや課題あるかも",
+      "eval": "B",
+      "name": "小樽特別",
+      "track": "札幌芝1200稍重"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 9,
+    "run": {
+      "comment": "スタート悪くなく5,6番手から伸びきれず4着。内を走った馬が上位の中終始やや外を回すロス。大きく負けてはいない。次走もスタート出られれば。",
+      "name": "1勝クラス",
+      "track": "函館芝1200",
+      "eval": "C"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 10,
+    "run": {
+      "name": "下北半島特別",
+      "track": "函館芝1200",
+      "eval": "B",
+      "comment": "出遅れたが二の足で3番手につけて伸びて3着。最後まで止まってはいない。内前が止まらない馬場。スタートからよくリカバリーできた。スタート"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 11,
+    "run": {
+      "comment": "位置取れず中団後ろから伸びきれず4着。折り合い欠いており直線も内を走っていた。ペースはかなり楽だった。条件戦ならチャンスあり。",
+      "track": "京都芝1200重",
+      "eval": "C",
+      "name": "1勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 12,
+    "run": {
+      "eval": "B",
+      "track": "中山芝1200",
+      "comment": "5,6番手から伸びて3着。前の馬が止まらない展開。差を詰められず。止まってはいない。",
+      "name": "1勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 13,
+    "run": {
+      "eval": "C",
+      "comment": "二の足で先行して3着。うまくいい位置につけてスムーズな競馬。ペース流れている中足使ってしまい上位は追い込み馬。悲観する必要はない。",
+      "track": "中山芝1200稍重",
+      "name": "1勝クラス"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 14,
+    "run": {
+      "eval": "D",
+      "name": "1勝クラス",
+      "track": "東京芝1400",
+      "comment": "中団後ろから伸びきれず7着。止まってはいないがきれ負け。スタート"
+    },
+    "status": "official-history-not-current"
+  },
+  {
+    "horse": "ミクストベリーズ",
+    "index": 15,
+    "run": {
+      "track": "中山芝1200",
+      "name": "2歳未勝利",
+      "eval": "A",
+      "comment": "中団から伸びて1着。差しの届く展開が向いていた。スタート一歩目"
+    },
+    "status": "official-history-not-current"
+  }
+]

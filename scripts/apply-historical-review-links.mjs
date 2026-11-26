@@ -43,7 +43,8 @@ export async function main(args=process.argv.slice(2),transport=request){
  // The checked-in manifest pins the default queue; unrelated website changes cannot alter it.
  const isDefault=planFile===path.join(dir,'plan.json');
  if(isDefault){const manifest=JSON.parse(await fs.readFile(path.join(dir,'status.json'),'utf8'));if(hash!==manifest.planSha256)throw Error('Prepared plan hash mismatch');}
- const seed=isDefault?JSON.parse(await fs.readFile(path.join(dir,'completed.json'),'utf8')):{completed:[]};
+ const seed=await optional(path.join(path.dirname(planFile),'completed.json'),{completed:[]});
+ if(seed.planSha256&&seed.planSha256!==hash)throw Error('Persisted completion record belongs to another plan');
  const checkpointFile=path.join(out,'checkpoint.json'),checkpoint=await optional(checkpointFile,{schemaVersion:1,planSha256:hash,completed:[]});
  if(checkpoint.planSha256!==hash)throw Error('Checkpoint belongs to another plan; use another --backup-dir');
  const completed=new Map([...seed.completed,...checkpoint.completed].map(u=>[entryKey(u),u])),groups=new Map();

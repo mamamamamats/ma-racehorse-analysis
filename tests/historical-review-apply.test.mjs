@@ -37,7 +37,7 @@ test('changed reviews, duplicate text, other saved IDs, and an occupied target a
 test('prepared default preview works from another directory without Firestore reads or writes',()=>{
  const script=fileURLToPath(new URL('../scripts/apply-historical-review-links.mjs',import.meta.url));
  const result=spawnSync(process.execPath,[script],{cwd:'/tmp',encoding:'utf8'});assert.equal(result.status,0,result.stderr);
- const report=JSON.parse(result.stdout);assert.equal(report.mode,'offline-preview');assert.equal(report.readHorses,0);assert.equal(report.savedHorses,0);assert.equal(report.knownCompletedReviews,9);assert.equal(report.pendingReviews,1233);assert.equal(report.pendingHorses,97);
+ const report=JSON.parse(result.stdout);assert.equal(report.mode,'offline-preview');assert.equal(report.readHorses,0);assert.equal(report.savedHorses,0);assert.equal(report.knownCompletedReviews,1242);assert.equal(report.pendingReviews,0);assert.equal(report.pendingHorses,0);
 });
 test('quota stops immediately; successful checkpoint survives retry and read-only check never commits',async()=>{
  const fs=await import('node:fs/promises'),os=await import('node:os'),path=await import('node:path');
@@ -74,4 +74,13 @@ test('compatible live raceRef annotations and their original Firestore types sur
  fields.raceRef={mapValue:{fields:{date:string('2026/1/1'),note:string('後から追記'),reviewedAt:{timestampValue:'2026-01-02T00:00:00Z'}}}};
  const result=prepareHorse(live,[entry]),ref=result.write.update.fields.races.arrayValue.values[0].mapValue.fields.raceRef.mapValue.fields;
  assert.equal(ref.note.stringValue,'後から追記');assert.deepEqual(ref.reviewedAt,{timestampValue:'2026-01-02T00:00:00Z'});assert.equal(result.accepted.length,1);
+});
+test('persisted non-default completion records survive a fresh workspace without live reads',async()=>{
+ const fs=await import('node:fs/promises'),os=await import('node:os'),path=await import('node:path'),crypto=await import('node:crypto');const {main}=await import('../scripts/apply-historical-review-links.mjs');
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'historical-persisted-'));try{
+  const u={...entry,verification:{source:'jra-official-history',url:'https://www.jra.go.jp/JRADB/accessU.html?CNAME=example/01',evidence:['app-starting-list']}},bytes=JSON.stringify({updates:[u]}),hash=crypto.createHash('sha256').update(bytes).digest('hex');
+  await fs.writeFile(path.join(dir,'plan.json'),bytes);await fs.writeFile(path.join(dir,'completed.json'),JSON.stringify({planSha256:hash,completed:[u]}));
+  const args=['--plan',path.join(dir,'plan.json'),'--backup-dir',path.join(dir,'fresh')];const r=await main(args,()=>{throw Error('Unexpected DB read');});assert.equal(r.knownCompletedReviews,1);assert.equal(r.pendingReviews,0);
+  await fs.writeFile(path.join(dir,'completed.json'),JSON.stringify({planSha256:'wrong',completed:[u]}));await assert.rejects(main(args),/another plan/);
+ }finally{await fs.rm(dir,{recursive:true,force:true});}
 });
