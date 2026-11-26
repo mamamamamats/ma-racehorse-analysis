@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "batches": [
+    {
+      "id": "batch-001",
+      "plan": "maintenance/historical-review-links/plan.json",
+      "sha256": "44f087bf8a0849598f61ba966e5ef98324936e17f432a97f3c62199f0bd506a3",
+      "completed": "maintenance/historical-review-links/completed.json",
+      "checkpoint": ".local/historical-review-links/checkpoint.json"
+    },
+    {
+      "id": "batch-002",
+      "plan": "maintenance/historical-review-links/batch-002/plan.json",
+      "sha256": "32593d7010adb3df13d2d0ee22ebf2c29f818aed04149a7b919f884057f2d54c",
+      "checkpoint": ".local/historical-review-links/batch-002/checkpoint.json"
+    }
+  ]
+}

@@ -1,3 +1,43 @@
+# 最新の更新準備（DB反映は行わない）
+
+2026-11-26追記。今回もDBの読み取り・書き込みはゼロ。新規照合78頭の公式履歴から、66頭・892件を第2バッチとして準備した。全バッチ合計は照合確定2,134件、過去にDB保存成功9件、**更新待ち163頭・2,125件**。全馬の照合は未完了。
+
+- 第1バッチ：`plan.json`、保存済み記録 `completed.json`。97頭・1,233件待ち。既存の固定計画とSHA-256は変更しない。
+- 第2バッチ：`batch-002/plan.json`。66頭・892件待ち。第1バッチとの重複なし。`batch-002/held-cases.json` の441件は更新対象外。
+- 公式履歴の候補複数88件、着順等の根拠不足59件、出馬表なし69件、公式履歴と一致なし157件、公式ページの履歴が出馬表より古い67件、レース全体回顧のメタデータ矛盾1件を保留。最後の1件はロードトレゾールのゆきつばき賞。IDを無理に付けてラップ採点へ混入させない。
+- `batches.json` が全固定計画の目録、`backlog-status.json` は今回準備時点の集計。`status.json` は第1バッチの固定記録なので全体件数と混同しない。
+- 次の照合は `remaining-horses.json` の未確認馬10,809頭を回顧数順に進める。保留馬68頭の再確認一覧も別に保持。回顧のない出走を飛ばし、配列順・残った候補の消去法では紐付けない。
+- 予想画面の公開索引 `verified-review-links.json` は今回変更していない。準備件数と現在アプリで利用できる件数は異なる。
+
+```sh
+# 全バッチの残件確認：オフライン。DBアクセス・ファイル書き込みなし。
+node scripts/preview-historical-review-backlog.mjs
+
+# 第2バッチだけ確認：オフライン。既定のチェックポイントと分離する。
+node scripts/apply-historical-review-links.mjs --plan maintenance/historical-review-links/batch-002/plan.json --backup-dir .local/historical-review-links/batch-002
+```
+
+将来DB反映を指示されたときだけ、対象バッチの確認コマンドに `--apply --limit-horses 1` を加える。**今回の依頼は準備のみ。枠が空いても自動で反映しない。** バッチごとの `--backup-dir` を維持すれば、他バッチの保存済み記録・変更前バックアップを上書きしない。
+
+## 照合根拠と続きの作り方
+
+`batch-002/official-histories.json` に取得済みの公式全履歴、`source-responses.json.gz` に172ファイル分の公式ページ取得結果（失敗レスポンスも含む）、`sources-manifest.json` にそのハッシュ・参照した馬マスターZIPのハッシュ・元のGitコミットを保存した。JRAの検索結果には関連馬も含まれるため、検索した馬と取得できた馬は必ずしも一致しない。取得不完全・古い履歴は確定扱いしない。
+
+今後は `.local` などの作業領域に公式ツールの結果を `sources/*.json` として保存する。`profile-urls.json` で名前と公式URLを対応させ、下記で解析・照合する。元の馬マスターは記録されたGitコミットのZIPから復元できる。新しいマスターで作る場合はその取得日時も記録する。
+
+```sh
+node scripts/collect-jra-history-sources.cjs --work-dir 作業ディレクトリ
+node scripts/plan-historical-review-links.cjs --master 馬マスター.json --histories 作業ディレクトリ/histories.json --out 作業ディレクトリ/matching-plan.json
+node scripts/prepare-historical-review-batch.cjs --id batch-003 --matching-plan 作業ディレクトリ/matching-plan.json --histories 作業ディレクトリ/histories.json
+node scripts/preview-historical-review-backlog.mjs
+```
+
+パッケージ化時も、既存バッチとの重複、公式照合の再現性、出馬表と全体回顧の矛盾を確認する。既存バッチの内容は上書きせず、新バッチ・根拠資料・保留理由を追加し、全体集計とTODOを更新してGitへ保存する。新規バッチの元レスポンスも保存する。
+
+---
+
+以下は第1バッチを準備した際の記録・個別再開手順。
+
 # 過去回顧のレース紐付け：DB更新待ち
 
 2026-11-26時点。ユーザーの最新指示は「準備のみ。枠が解放されてから更新できるよう、別の依頼を挟んでも準備を残す」。この準備作業ではDBを読み書きしていない。自動実行・予約はしていない。

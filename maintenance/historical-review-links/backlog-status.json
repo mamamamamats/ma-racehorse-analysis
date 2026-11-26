@@ -1,0 +1,27 @@
+{
+  "mode": "offline-preview-all-batches",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "batches": [
+    {
+      "id": "batch-001",
+      "confirmedReviews": 1242,
+      "completedReviews": 9,
+      "pendingReviews": 1233,
+      "pendingHorses": 97,
+      "plan": "maintenance/historical-review-links/plan.json"
+    },
+    {
+      "id": "batch-002",
+      "confirmedReviews": 892,
+      "completedReviews": 0,
+      "pendingReviews": 892,
+      "pendingHorses": 66,
+      "plan": "maintenance/historical-review-links/batch-002/plan.json"
+    }
+  ],
+  "confirmedReviews": 2134,
+  "completedReviews": 9,
+  "pendingReviews": 2125,
+  "pendingHorses": 163
+}

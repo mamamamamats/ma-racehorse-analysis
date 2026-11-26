@@ -1,6 +1,6 @@
 # DB更新待ち（別の依頼後も引き継ぐ）
 
-- [ ] 過去回顧のJRA照合済み分をDBへ保存：残り97頭・1,233件。現在は準備のみ。固定計画・公式履歴・保存済み記録・再開コマンドは [更新待ちの手順](maintenance/historical-review-links/README.md)。枠の回復確認前に一括実行しない。オフライン残件確認はDBアクセス不要。
+- [ ] 過去回顧のJRA照合済み分をDBへ保存：残り163頭・2,125件（第1バッチ1,233件＋第2バッチ892件）。現在は準備のみ。固定計画・公式履歴・保存済み記録・再開コマンドは [更新待ちの手順](maintenance/historical-review-links/README.md)。枠の回復確認前に一括実行しない。全バッチのオフライン残件確認は `node scripts/preview-historical-review-backlog.mjs`（DBアクセス不要）。
 
 # 予想改善のやることリスト
 
