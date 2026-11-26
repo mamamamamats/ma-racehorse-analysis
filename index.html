@@ -1843,7 +1843,7 @@ html[data-keiba-mode="admin"] #navAnalysisTab { display: flex !important; }
 
   window._fbReady = true;
 </script>
-<link rel="stylesheet" href="public-assistant.css?v=20261125-position1">
+<link rel="stylesheet" href="public-assistant.css?v=pace1-20261125-position1">
 <link rel="stylesheet" href="race-review-tools.css?v=20261124-1">
 </head>
 <body>
@@ -181031,7 +181031,7 @@ function buildPredictionOutcome(p){
   });
   const ranked=horses.filter(h=>h.rank&&!h.excluded).sort((a,b)=>a.rank-b.rank);
   const complete=result.schemaVersion===1&&result.horses.length>0&&result.horses.every(h=>(h.finish!=null&&Number.isFinite(Number(h.finish))&&Number(h.finish)>0)||['取消','中止'].includes(h.status));
-  return {prediction:p,race:x,complete,horses,topPick:ranked[0]||null,top5:ranked.slice(0,5)};
+  return {prediction:p,race:x,complete,horses,topPick:p.selectionVersion?(horses.find(h=>h.mark==='◎')||null):(ranked[0]||null),top5:p.selectionVersion?ranked.filter(h=>h.selected):ranked.slice(0,5)};
 }
 let analysisPredictionCache=[];
 let analysisSelectedPrediction=null;
@@ -181217,7 +181217,7 @@ function renderConditionAnalysis(){
   const top10=rows.filter(g=>g.n>=3).map(g=>({...g,...analysisConditionMetrics(g)})).sort((a,b)=>b.top5Rate-a.top5Rate||b.top3Rate-a.top3Rate||b.winRate-a.winRate||b.n-a.n).slice(0,10);
   const rowHTML=rows.map(g=>`<tr><td>${aiEsc(g.condition)}</td><td>${g.n}</td><td>${(g.win/g.n*100).toFixed(1)}%</td><td>${(g.top3/g.n*100).toFixed(1)}%</td><td>${(g.top5/g.n*100).toFixed(1)}%</td></tr>`).join('');
   const topHTML=top10.map((g,i)=>`<tr><td>${i+1}</td><td>${aiEsc(g.condition)}</td><td>${g.n}</td><td>${(g.winRate*100).toFixed(1)}%</td><td>${(g.top3Rate*100).toFixed(1)}%</td><td>${(g.top5Rate*100).toFixed(1)}%</td></tr>`).join('');
-  el.innerHTML=`${analysisFilterHTML('conditions')}<div class="analysis-card"><div class="analysis-card-title">🗺 条件別分析</div><div class="analysis-sub">条件に一致する結果確定済み予想 ${outs.length} 件。距離は距離帯にまとめず、1400m・1600mのように完全一致で集計します。</div>${rows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rowHTML}</tbody></table>`:'<div class="analysis-empty">この条件に該当する結果付き予想はありません。</div>'}<div class="analysis-note">各率の分母は該当条件の結果確定済み予想数です。同じレースで異なる重みの予想を複数保存した場合は、それぞれ別の予想記録として集計します。</div></div><div class="analysis-card"><div class="analysis-card-title">🏆 現在のAI予想・得意条件ランキング TOP10</div><div class="analysis-sub">選択条件に該当する条件組合せを、予想5頭の3着内率を主指標にランキング。少数データによる過大評価を避けるため3予想以上の条件だけを掲載します。</div>${top10.length?`<table class="analysis-table"><thead><tr><th>順位</th><th>条件</th><th>予想数</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭3着内率</th></tr></thead><tbody>${topHTML}</tbody></table>`:'<div class="analysis-empty">ランキングを作成できる条件がまだありません（条件ごとに結果付き予想が3件以上必要です）。</div>'}</div>`;
+  el.innerHTML=`${analysisFilterHTML('conditions')}<div class="analysis-card"><div class="analysis-card-title">🗺 条件別分析</div><div class="analysis-sub">条件に一致する結果確定済み予想 ${outs.length} 件。距離は距離帯にまとめず、1400m・1600mのように完全一致で集計します。</div>${rows.length?`<table class="analysis-table"><thead><tr><th>条件</th><th>レース</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭の誰かが3着内</th></tr></thead><tbody>${rowHTML}</tbody></table>`:'<div class="analysis-empty">この条件に該当する結果付き予想はありません。</div>'}<div class="analysis-note">各率の分母は該当条件の結果確定済み予想数です。同じレースで異なる重みの予想を複数保存した場合は、それぞれ別の予想記録として集計します。</div></div><div class="analysis-card"><div class="analysis-card-title">🏆 現在のAI予想・得意条件ランキング TOP10</div><div class="analysis-sub">選択条件に該当する条件組合せを、印を付けた馬の3着内率を主指標にランキング。少数データによる過大評価を避けるため3予想以上の条件だけを掲載します。</div>${top10.length?`<table class="analysis-table"><thead><tr><th>順位</th><th>条件</th><th>予想数</th><th>本命1着率</th><th>本命3着内率</th><th>予想5頭3着内率</th></tr></thead><tbody>${topHTML}</tbody></table>`:'<div class="analysis-empty">ランキングを作成できる条件がまだありません（条件ごとに結果付き予想が3件以上必要です）。</div>'}</div>`;
 }
 function scoreWithWeights(h,w){const vals=['overall','venue','distance','condition','form']; let s=0,ws=0; for(const k of vals){const v=h.factors?.[k]; const ww=Number(w[k])||0;if(v==null||ww<=0)continue;s+=Number(v)*ww;ws+=ww;}return ws?s/ws:null;}
 function evaluateWeightSet(outs,w){let races=0,top3=0,win=0,effectiveRaces=0; for(const o of outs){const usable=o.horses.filter(h=>!h.excluded&&scoreWithWeights(h,w)!=null&&h.finish!=null); if(!usable.length)continue; const ranked=usable.slice().sort((a,b)=>scoreWithWeights(b,w)-scoreWithWeights(a,w)); const top=ranked[0],rw=analysisLearningWeight(o);if(rw<=0)continue;races++;effectiveRaces+=rw;if(top.finish===1)win+=rw;if(top.finish<=3)top3+=rw;} return {races,effectiveRaces,win,top3,winRate:effectiveRaces?win/effectiveRaces:0,top3Rate:effectiveRaces?top3/effectiveRaces:0};}
@@ -181364,7 +181364,7 @@ function showPredictionDetail(i){
     : (resultRaceRef?.day&&resultRaceRef?.venue&&resultRaceRef?.race
       ? `<button type="button" class="result-entry-btn" style="margin-top:10px" onclick="openRaceResultModal('${aiEsc(resultRaceRef.day.id)}','${aiEsc(resultRaceRef.venue.name)}',${Number(resultRaceRef.race.r)})">📋 ${outcome?'結果を確認・修正':'結果を入力'}</button>`
       : `<div class="analysis-note">対応する開催レースが見つからないため、ここから結果入力を開けません。開催データとの紐づけを確認してください。</div>`);
-  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>予想5頭の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/${outcome.top5.length}</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
+  const outcomeHTML = outcome ? `<div class="analysis-card" style="margin-top:12px"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-kpi-grid"><div class="analysis-kpi"><span>本命の着順</span><b>${outcome.topPick?.finish ?? '—'}</b></div><div class="analysis-kpi"><span>本命3着以内</span><b>${outcome.topPick ? (outcome.topPick.top3 ? '○' : '×') : '—'}</b></div><div class="analysis-kpi"><span>印を付けた馬の3着内</span><b>${outcome.top5.filter(x=>x.top3).length}/${outcome.top5.length}</b></div><div class="analysis-kpi"><span>結果状態</span><b>${outcome.complete ? '完了' : '一部'}</b></div></div><div class="analysis-note">同じレースの結果は、重みの異なる予想記録にも共通して適用されます。</div>${outcome.complete?'':resultEntryButton}</div>` : `<div class="analysis-card"><div class="analysis-card-title">📋 結果照合</div><div class="analysis-empty">この予想に対応する確定結果がまだ登録されていません。</div>${resultEntryButton}</div>`;
   const rows=(p.horses||[]).slice().sort((a,b)=>(a.rank||999)-(b.rank||999));
   el.innerHTML=`<div class="analysis-card"><button class="analysis-back" onclick="renderPredictionHistoryList()">← 履歴へ戻る</button><div style="margin-top:14px;font-size:16px;font-weight:700;color:var(--accent2)">${aiEsc(r.date||'')} ${aiEsc(r.venue||'')} ${r.raceNumber||''}R ${aiEsc(r.raceName||'')}</div><div class="analysis-detail" style="color:var(--muted)">${aiEsc(r.surface||'')} ${r.distance?`${r.distance}m`:''}・${aiEsc(r.trackCondition||'')}・${r.horseCount||0}頭${r.grade?`・${aiEsc(r.grade)}`:''}</div><div class="analysis-detail-grid"><div class="analysis-weight">総合評価<b>${w.overall??0}</b></div><div class="analysis-weight">競馬場適性<b>${w.venue??0}</b></div><div class="analysis-weight">距離適性<b>${w.distance??0}</b></div><div class="analysis-weight">馬場適性<b>${w.condition??0}</b></div><div class="analysis-weight">調子指数<b>${w.form??0}</b></div></div><div class="analysis-detail" style="margin-top:14px"><b>予想馬</b></div><div class="analysis-horse-row analysis-table-head"><div>印</div><div>馬名</div><div>総合</div><div>場</div><div>距離</div><div>馬場</div><div>調子</div><div>最終</div></div>${rows.map(x=>`<div class="analysis-horse-row"><div style="font-size:15px;color:var(--accent2)">${aiEsc(x.mark||'')}</div><div>${x.num}番 ${aiEsc(x.name)}</div><div>${x.factors?.overall==null?'—':Number(x.factors.overall).toFixed(1)}</div><div>${x.factors?.venue==null?'—':Number(x.factors.venue).toFixed(1)}</div><div>${x.factors?.distance==null?'—':Number(x.factors.distance).toFixed(1)}</div><div>${x.factors?.condition==null?'—':Number(x.factors.condition).toFixed(1)}</div><div>${x.factors?.form==null?'—':Number(x.factors.form).toFixed(1)}</div><div>${x.score==null?'—':Number(x.score).toFixed(2)}</div></div>`).join('')}</div>${outcomeHTML}`;
 }
@@ -182267,15 +182267,17 @@ async function publicHistoryMore(){
 <script src="review-classification-runtime.js?v=20261126-1"></script>
 <script src="shared-prediction-engine.js?v=20261124-2"></script>
 <script src="weight-research-model.js?v=20261122-1"></script>
-<script src="shared-prediction-runtime.js?v=20261124-2"></script>
+<script src="pace-prediction-model.js?v=20261126-1"></script>
+<script src="pace-prediction-ui.js?v=20261126-1"></script>
+<script src="shared-prediction-runtime.js?v=20261126-pace1"></script>
 <script src="score-interpretation.js?v=20261114-1"></script>
 <script src="running-style-presentation.js?v=20261115-7"></script>
 <script src="race-condition-summary.js?v=20261125-position1"></script>
-<script src="public-assistant.js?v=20261126-1"></script>
+<script src="public-assistant.js?v=20261126-pace1"></script>
 <script src="day-standard-predictions.js?v=20261123-3"></script>
-<script src="betting-results-model.js?v=20261115-2"></script>
+<script src="betting-results-model.js?v=pace1-20261115-2"></script>
 <script src="analysis-selection.js?v=20261117-1"></script>
-<script src="weekly-review-model.js?v=20261117-1"></script>
+<script src="weekly-review-model.js?v=pace1-20261117-1"></script>
 <script src="prediction-review-model.js?v=20261117-1"></script>
 <script src="podium-traits-model.js?v=20261117-1"></script>
 <script src="weekly-report-visuals.js?v=20261123-2"></script>

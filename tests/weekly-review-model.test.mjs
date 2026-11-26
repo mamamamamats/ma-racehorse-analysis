@@ -15,3 +15,10 @@ test('standard analysis selects the saved snapshot matching the current per-race
 test('structured classifications reject invalid labels instead of saving unusable analytics',()=>{assert.throws(()=>M.importRows(input({raceReview:{summary:'x',events:{pace:'typo'}}}),[target]),/分類が不正/);const [i]=M.importRows(input({raceReview:{events:{pace:'mid',lapPattern:['even'],trouble:'no'}}}),[target]);assert.equal(i.review.events.pace,'mid');});
 
 test('a different going never silently substitutes for a missing matching standard prediction',()=>{assert.equal(M.selectPrediction([pred('good')],{...target,going:'稍重'}),null);});
+test('new scenario selections retain a sixth ☆ and count repeated △ by actual mark, never by fixed rank',()=>{
+ const hs=Array.from({length:7},(_,i)=>({num:i+1,rank:i+1,selected:i<6,mark:['◎','○','▲','△','△','☆',''][i]}));
+ const prediction=pred('new',{selectionVersion:'pace-selection-v1',horses:hs});
+ const entries=hs.map(h=>({num:h.num})),result={schemaVersion:1,horses:hs.map(h=>({num:h.num,finish:h.num}))};
+ const o=M.outcome(prediction,result,entries);assert.equal(o.top5.length,6);assert.equal(o.top5[5].mark,'☆');
+ const stats=M.markStats([{prediction,outcome:o}]);assert.equal(stats.find(s=>s.mark==='△').count,2);assert.equal(stats.find(s=>s.mark==='☆').count,1);assert.equal(stats.find(s=>s.mark==='☆').average,6);
+});
