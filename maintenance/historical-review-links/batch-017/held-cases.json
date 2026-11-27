@@ -1,0 +1,1438 @@
+[
+  {
+    "horse": "カンカール",
+    "index": 0,
+    "run": {
+      "comment": "後方から伸びきれず11着。位置悪く内ついたが差を詰めれず。砂被った。",
+      "track": "京都ダ1400",
+      "name": "1勝クラス",
+      "eval": "B"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/1/24"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 4,
+    "run": {
+      "track": "札幌ダ1700",
+      "name": "1勝クラス",
+      "comment": "後方まま。",
+      "eval": "D"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/9/6",
+      "2025/8/24",
+      "2025/8/9"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 5,
+    "run": {
+      "track": "札幌ダ1700重",
+      "comment": "後方まま。後ろすぎた。",
+      "name": "1勝クラス",
+      "eval": "C"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/8/9"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 6,
+    "run": {
+      "comment": "後方まま。",
+      "name": "1勝クラス",
+      "track": "小倉ダ1700",
+      "eval": "D"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/6/28"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 9,
+    "run": {
+      "track": "札幌芝1500",
+      "name": "未勝利",
+      "eval": "D",
+      "comment": "ほぼ大敗"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/8/24"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 10,
+    "run": {
+      "track": "京都ダ1400",
+      "comment": "スタート行き足つかず後方まま。伸びに欠ける",
+      "eval": "D",
+      "name": "未勝利"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/5/4"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 11,
+    "run": {
+      "name": "未勝利",
+      "eval": "D",
+      "track": "小倉ダ1700",
+      "comment": "中団前目内から伸びきれず。競り合いは激しかったが前の馬が残っているため評価はできない。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/2/10"
+    ]
+  },
+  {
+    "horse": "カンカール",
+    "index": 12,
+    "run": {
+      "comment": "中団前目外から伸びきれず。やや外を回すロスはあったが評価できない。",
+      "eval": "C",
+      "track": "京都ダ1800",
+      "name": "未勝利"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/1/14"
+    ]
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 0,
+    "run": {
+      "eval": "B",
+      "name": "カーバンクルS",
+      "comment": "スタートよく先行して伸びて2着。スムーズな競馬も外枠で外を回したぶん勝ち馬に届かず。自力は見せた。",
+      "track": "中山芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 1,
+    "run": {
+      "comment": "除外",
+      "name": "タンザナイトS",
+      "eval": "F",
+      "track": "阪神芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 2,
+    "run": {
+      "track": "中山芝1200",
+      "name": "ラピスラズリS",
+      "eval": "B",
+      "comment": "先行して2着。スムーズな競馬で前有利の展開が向いた。勝ち馬に完敗も斤量1キロ重かった。高速馬場にも対応できた。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 3,
+    "run": {
+      "eval": "B",
+      "comment": "先行して伸びて2着。スムーズな競馬も勝馬させず。外枠から力は出し切った。プラス12キロ。",
+      "name": "ルミエールAD",
+      "track": "新潟芝1000稍重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 4,
+    "run": {
+      "track": "札幌芝1200",
+      "comment": "中断前目から伸びきれず6着。うまく走れたが内前の馬が上位。ほとんど差はないがこの馬も展開は向いた方。",
+      "eval": "C",
+      "name": "キーンランドC"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 7,
+    "run": {
+      "comment": "先行して伸びきれず。ロスなく走れたが時計早すぎた。地力たりず。",
+      "name": "京王杯スプリングC",
+      "track": "東京芝1400",
+      "eval": "C"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルロヴェローチェ",
+    "index": 12,
+    "run": {
+      "comment": "スタートやや良くなく直後から折り合いをかいて後方外から伸びきれず。内前有利の展開と馬場も向いていないため度外視可能。気性難が直らないと狙えない。スプリント路線か。",
+      "track": "阪神芝1400重",
+      "name": "阪急杯",
+      "eval": "F"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/2/25"
+    ]
+  },
+  {
+    "horse": "クムシラコ",
+    "index": 4,
+    "run": {
+      "eval": "B",
+      "name": "カーバンクルS",
+      "track": "中山芝1200",
+      "comment": "中団後ろから伸びきれず11着。終始外を回すロスあり前有利の展開が向かず。内枠欲しい"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クムシラコ",
+    "index": 5,
+    "run": {
+      "name": "ルミエールAD",
+      "eval": "F",
+      "comment": "後方から伸びきれず8着。また内枠。外つけたが詰まった。",
+      "track": "新潟芝1000稍重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クムシラコ",
+    "index": 10,
+    "run": {
+      "track": "小倉芝1200",
+      "eval": "B",
+      "name": "北九州短距離S",
+      "comment": "中団後ろから伸びず。後ろすぎたがジリ足。着順ほど差はない。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クムシラコ",
+    "index": 11,
+    "run": {
+      "name": "ルミエールAD",
+      "eval": "C",
+      "track": "新潟芝1000",
+      "comment": "中断後ろから伸びきれず4着。後ろすぎ。枠"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クムシラコ",
+    "index": 13,
+    "run": {
+      "comment": "スタート早くなく後方から伸びきれず7着。うまく外ラチにつけることができた。進路がなく追いづらかった印象で悲観する必要はない。",
+      "track": "新潟芝1000",
+      "eval": "B",
+      "name": "アイビスSD"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/7/28"
+    ]
+  },
+  {
+    "horse": "キャッスルレイク",
+    "index": 2,
+    "run": {
+      "eval": "B",
+      "name": "中京スポニチ賞",
+      "track": "中京芝1400",
+      "comment": "逃げて粘りきれず5着。ペース流れて時計かなり早い決着も前も残る馬場で伸び負け。上位力ある馬でハマる必要はあるが展開向けば"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャッスルレイク",
+    "index": 6,
+    "run": {
+      "track": "小倉芝1200",
+      "name": "耶馬溪特別",
+      "eval": "B",
+      "comment": "スタート悪くなかったが控えて中団から伸びきれず11着。休み明けで外回すロス。2走目どうかも評価はできない。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャッスルレイク",
+    "index": 8,
+    "run": {
+      "comment": "後方内から詰まって伸びず。度外視可能。",
+      "eval": "F",
+      "name": "フィリーズレビュー",
+      "track": "阪神芝1400"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャッスルレイク",
+    "index": 11,
+    "run": {
+      "comment": "やや出遅れたが二の足で中団につけて伸びきれず7着。終始外を回すロスがあり前有利の展開が向いていないため度外視可能。止まっていたわけではない。スタート",
+      "track": "京都芝1400不",
+      "eval": "F",
+      "name": "ファンタジーS"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クリーンエア",
+    "index": 0,
+    "run": {
+      "track": "東京ダ1400重",
+      "name": "1勝クラス",
+      "eval": "C",
+      "comment": "中団後ろまま。内前有利の展開と馬場が向かずもじり足。ダートイマイチ。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/11/2"
+    ]
+  },
+  {
+    "horse": "クリーンエア",
+    "index": 7,
+    "run": {
+      "comment": "スタートよく先行して直線伸びたが3着。スムーズな競馬ではあったがペースが流れて持続力を要するタフな展開で差し馬が上位のため評価を下げる必要はない。もち時計通りには走れており展開向けば。",
+      "track": "東京芝1600",
+      "name": "1勝クラス",
+      "eval": "C"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/6/22",
+      "2024/6/9"
+    ]
+  },
+  {
+    "horse": "クリーンエア",
+    "index": 8,
+    "run": {
+      "comment": "スタート悪くなく中団前目につけて直線伸びたが3着。やや持続力を問われる展開ではあったがスムーズな競馬で素直に高評価はできない。やや外伸び傾向になっていたのでもう少し前が止まらない馬場ならチャンスありそう。",
+      "name": "1勝クラス",
+      "eval": "C",
+      "track": "東京芝1600"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/6/22",
+      "2024/6/9"
+    ]
+  },
+  {
+    "horse": "クリーンエア",
+    "index": 9,
+    "run": {
+      "name": "NZT",
+      "eval": "S",
+      "track": "中山芝1600稍重",
+      "comment": "スタートよく先行して伸びきれず6着。やや外を回してはいたがほぼ完璧なレースで2,3着とは走った位置の差の印象もあるが高評価はできない。ほぼ完璧に走っての結果のため条件戦なら。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/4/6"
+    ]
+  },
+  {
+    "horse": "クリーンエア",
+    "index": 12,
+    "run": {
+      "comment": "出遅れて二の足で中団後方から。勝ち馬のすぐ後ろを通れたが伸び負け。高評価はできない。スタートが五分に出られればもう少しやれそう。伸びない内を走っていた",
+      "track": "京都1600",
+      "eval": "C",
+      "name": "デイリー杯２歳S"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "グランディア",
+    "index": 3,
+    "run": {
+      "track": "中山芝2000",
+      "comment": "スタート五分で中団から伸びて3着。直線大外に持ち出すロス。内目を走った馬が上位。展開向けばチャンスある。",
+      "name": "中山金杯",
+      "eval": "S"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "グランディア",
+    "index": 4,
+    "run": {
+      "comment": "スタート五分で中団から伸びて2着。内をロスなく走って足ためれた。勝ち馬がマイペースすぎた。差はない。",
+      "eval": "S",
+      "name": "ディセンバーS",
+      "track": "中山芝1800重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "グランディア",
+    "index": 5,
+    "run": {
+      "track": "函館芝2000",
+      "comment": "中団から伸びず。ペース早すぎて足たまらず。ベストは1800に対して上位は2000より長い距離が適正の馬たち。",
+      "eval": "C",
+      "name": "函館記念"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/6/29",
+      "2024/7/14"
+    ]
+  },
+  {
+    "horse": "グランディア",
+    "index": 8,
+    "run": {
+      "track": "東京芝2000",
+      "eval": "B",
+      "name": "オクトーバーS",
+      "comment": "スタート五分で中団から伸びきれず4着。ペース流れてタフな展開だったが前の馬が止まらなすぎた。最後まで止まってはいないがややきれ負け。東京での長い足を使う展開はベストではないか。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "グランディア",
+    "index": 9,
+    "run": {
+      "track": "函館芝2000",
+      "eval": "S",
+      "name": "函館記念",
+      "comment": "スタート五分で中断内から伸びて2着。内有利の馬場で足をためることができて完璧な競馬だった。勝ち馬には先に抜け出されたが完敗。足をためる競馬ができれば足使える。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/7/14"
+    ]
+  },
+  {
+    "horse": "グランディア",
+    "index": 10,
+    "run": {
+      "track": "東京芝1800",
+      "eval": "C",
+      "name": "エプソムC",
+      "comment": "スタート早くなく中団後ろから伸びきれず6着。持続力が問われる展開はこの馬に向いていたがやや枠が悪く位置取りが後ろになってしまったか。最後までジリジリ伸びており重賞で走れた。大きな差はないため展開次第。中山のOPで見たい"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/6/9"
+    ]
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 2,
+    "run": {
+      "track": "東京ダ2100不良",
+      "eval": "B",
+      "name": "スレイプニルS",
+      "comment": "スタート五分も内枠から先行して伸びて2着。ロスなく走れてスムーズな競馬。馬場対応できたが勝ち馬完璧すぎた。立て直せた。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 3,
+    "run": {
+      "comment": "スタート五分で中団から伸びきれず8着。進路あいたがイマイチ伸びず。やや不可解な敗戦でハンデが影響したかも。",
+      "name": "ブリリアントS",
+      "eval": "D",
+      "track": "東京ダ2100稍重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 4,
+    "run": {
+      "track": "阪神ダ2000",
+      "comment": "中団内から伸びて3着。内をロスなく立ち回れて上位に届かずも最後までジリジリ伸びており上位と差はない。展開は向いて力は出しきれた。",
+      "name": "仁川S",
+      "eval": "B"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/2/28",
+      "2025/3/1"
+    ]
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 5,
+    "run": {
+      "name": "ベテルギウスS",
+      "eval": "D",
+      "track": "阪神ダ1800重",
+      "comment": "二の足で中団につけて早めに仕掛けて伸びきれず5着。勝ち馬の後ろを走れていたが伸び負け。上がり早すぎた印象で良馬場の方がベスト。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 8,
+    "run": {
+      "eval": "A",
+      "name": "スレイプニルS",
+      "comment": "中団後ろから伸びて1着。タフなペースで差しの届く展開が向いた。タフなペースや長い距離あっている。スタート課題",
+      "track": "東京ダ2100"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 10,
+    "run": {
+      "name": "仁川S",
+      "eval": "C",
+      "track": "阪神ダ2000",
+      "comment": "二の足で先行して早めに仕掛けて粘って3着。スタートでれた。タフな展開だったがスムーズな競馬。スタート出られるなら粘りづよい。"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/2/28",
+      "2025/3/1"
+    ]
+  },
+  {
+    "horse": "クールミラボー",
+    "index": 12,
+    "run": {
+      "comment": "後方まま。後ろすぎてノーチャンス。",
+      "track": "中山芝3600",
+      "name": "ステイヤーズS",
+      "eval": "F"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ブーケドグレイス",
+    "index": 2,
+    "run": {
+      "name": "3歳以上1勝クラス",
+      "eval": "D",
+      "comment": "後方まま。",
+      "track": "札幌ダ2400"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/8/23"
+    ]
+  },
+  {
+    "horse": "ブーケドグレイス",
+    "index": 12,
+    "run": {
+      "comment": "出遅れて後方まま。",
+      "eval": "D",
+      "name": "未勝利",
+      "track": "函館芝1800"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/6/15"
+    ]
+  },
+  {
+    "horse": "ブーケドグレイス",
+    "index": 13,
+    "run": {
+      "eval": "F",
+      "track": "中京芝2000重",
+      "name": "未勝利",
+      "comment": "スタート行き足つかず中団後方から全く伸びず。度外視可能"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/3/24"
+    ]
+  },
+  {
+    "horse": "クーデール",
+    "index": 2,
+    "run": {
+      "comment": "スタートよく先行して伸びず。外枠から足使ったが伸びにかける。中山合わない？",
+      "eval": "C",
+      "name": "ブラッドストーンS",
+      "track": "中山ダ1200重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クーデール",
+    "index": 3,
+    "run": {
+      "name": "初春S",
+      "eval": "D",
+      "comment": "先行して伸びきれず13着。ハイペースで上位強かったがジリ足。内枠ダメか。",
+      "track": "中山ダ1200"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/1/12"
+    ]
+  },
+  {
+    "horse": "クーデール",
+    "index": 5,
+    "run": {
+      "comment": "除外",
+      "track": "京都ダ1200稍重",
+      "eval": "F",
+      "name": "2勝クラス"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/11/2"
+    ]
+  },
+  {
+    "horse": "クーデール",
+    "index": 6,
+    "run": {
+      "eval": "C",
+      "name": "2勝クラス",
+      "track": "札幌ダ1000",
+      "comment": "先行したがズルズル後退。何かあったか。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/8/3"
+    ]
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 1,
+    "run": {
+      "comment": "スタート悪くなく4,5番手から伸びきれず4着。内をロスなく走れて足ためれたが上がり早く、外の方が伸びる馬場で内を走っていた。大きな差はない。",
+      "eval": "B",
+      "name": "シルクロードS",
+      "track": "京都芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 2,
+    "run": {
+      "eval": "C",
+      "name": "ラピスラズリS",
+      "track": "中山芝1200",
+      "comment": "中団から伸びきれず5着。外枠で位置取りきれず直線外に出すロス。内前を走った馬が上位。評価下げず。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 3,
+    "run": {
+      "eval": "B",
+      "name": "キーンランドC",
+      "comment": "先行して粘って3着。大外枠も位置取れて展開向いた。勝ち馬には完敗。4,5,6,7着とも差はない。OPから",
+      "track": "札幌芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 8,
+    "run": {
+      "track": "京都芝1200",
+      "comment": "5番手から伸びて3着。スローペースで前残りの展開が向かず。足ためた方が走れるため1200ではないかも？",
+      "name": "マーガレットS",
+      "eval": "B"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 11,
+    "run": {
+      "comment": "スタートよく先行して伸びきれず11着。前有利の展開が向いており評価できない。馬場か？",
+      "track": "京都芝1400不",
+      "eval": "B",
+      "name": "ファンタジーS"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カルプスペルシュ",
+    "index": 12,
+    "run": {
+      "track": "函館芝1200",
+      "eval": "D",
+      "name": "函館2歳S",
+      "comment": "スタート五分で中団から早めに仕掛けて伸びきれず5着。内前有利の展開で一つ後ろの位置だったため評価を下げる必要はないが新馬戦ほどのキレはなかった。距離伸ばしてはどうか。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/7/13"
+    ]
+  },
+  {
+    "horse": "カラマティアノス",
+    "index": 5,
+    "run": {
+      "name": "中山金杯",
+      "eval": "A",
+      "track": "中山芝2000",
+      "comment": "先行して伸びて1着。外回すロスも位置取れて前有利の展開が向いた。位置取れてようやく自力見せれた。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カラマティアノス",
+    "index": 8,
+    "run": {
+      "eval": "C",
+      "name": "日本ダービー",
+      "comment": "中団後ろから伸びきれず12着。前残りの展開が向かずも着差ある。内でもっと足貯めたかったか。",
+      "track": "東京芝2400"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クラウディアイ",
+    "index": 8,
+    "run": {
+      "name": "1勝クラス",
+      "comment": "スタート五分で中団から伸びきれず5着。直線進路なく完全に詰まっており折り合いも欠いていた。2000前後現状ベスト。",
+      "eval": "D",
+      "track": "阪神芝2400"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クラウディアイ",
+    "index": 9,
+    "run": {
+      "track": "東京芝2000",
+      "eval": "B",
+      "name": "プリンシパルS",
+      "comment": "中団後方から伸びきれず5着。内前残りの展開が向かず。足は使えているためもう少し展開向けば。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クラウディアイ",
+    "index": 10,
+    "run": {
+      "track": "中山芝2000稍重",
+      "eval": "D",
+      "name": "弥生賞",
+      "comment": "後方まま。直線時点で後ろすぎた。大外ぶんまわしもジリ足。馬場ダメか。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クレイヴィンオナー",
+    "index": 0,
+    "run": {
+      "eval": "D",
+      "track": "東京ダ1300稍重",
+      "name": "2勝クラス",
+      "comment": "出遅れて後方まま。ポツンで後ろすぎ。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/5/3"
+    ]
+  },
+  {
+    "horse": "クレイヴィンオナー",
+    "index": 3,
+    "run": {
+      "comment": "後方まま。流石に後ろすぎ。",
+      "eval": "D",
+      "track": "東京ダ1400",
+      "name": "2勝クラス"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/10/18"
+    ]
+  },
+  {
+    "horse": "クレイヴィンオナー",
+    "index": 12,
+    "run": {
+      "comment": "スタート出遅れて後方から伸びて４着。内前有利の展開が向いていないため悲観する必要はなくむしろよく伸びてきた。見直しは可能もスタート悪いため改善必須。人気ないなら。",
+      "name": "1勝クラス中山ダ1800重",
+      "eval": "C",
+      "track": ""
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キョウエイボニータ",
+    "index": 4,
+    "run": {
+      "eval": "B",
+      "name": "袖ヶ浦特別",
+      "track": "中山芝1200",
+      "comment": "スタート悪くなく先行して伸びて2着。ロスなく走れてスムーズな競馬。内有利の高速馬場向いていた。状態上がった。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 1,
+    "run": {
+      "comment": "中団から伸びて2着。前残りの展開が向かず。1,3,4着は全て前。自力は見せており展開向けばチャンスある",
+      "name": "安田記念",
+      "eval": "S",
+      "track": "東京芝1600"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 2,
+    "run": {
+      "track": "京都芝1600",
+      "name": "マイルCS",
+      "eval": "A",
+      "comment": "スタート悪くなく中団前目から伸びて2着。位置取れたが勝ち馬には完敗。自力見せている。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 3,
+    "run": {
+      "track": "東京芝1600",
+      "eval": "A",
+      "name": "富士S",
+      "comment": "行き足ついて先行して伸びて1着。スムーズな競馬でスローペースの展開が向いた。前目から競馬する方があっているか。2着馬とは2キロ斤量の差があったため本番ではどうか。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 4,
+    "run": {
+      "comment": "スタート五分で中団から伸びて2着。4コーナーややごちゃついたがうまく外に出してからはよく伸びてきた。やはりコースはベスト。初ブリンカー",
+      "track": "東京芝1600",
+      "eval": "A",
+      "name": "安田記念"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 5,
+    "run": {
+      "eval": "B",
+      "name": "フェブラリーS",
+      "track": "東京ダ1600",
+      "comment": "スタート悪くなかったが控えて後方から伸びきれず7着。ペース早くなく後ろすぎた。評価下げず。先行したいか。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 6,
+    "run": {
+      "name": "チャンピオンズC",
+      "eval": "F",
+      "track": "中京ダ1800",
+      "comment": "大外ぶんまわしで流石に厳しすぎた。度外視可能。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 7,
+    "run": {
+      "comment": "スタート悪くなく中団内から伸びきれず4着。直線進路がまく外に切り替えるロスがあった。しかし終始内をロスなく立ち回れており位置取りはほぼ完璧だった。もう少し流れてワンペースな方が良かったが地力の高さは見せた。ワンターンはやはりあっている。天皇賞・秋本命候補",
+      "track": "東京芝1600稍重",
+      "name": "安田記念",
+      "eval": "S"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 8,
+    "run": {
+      "name": "フェブラリーS",
+      "eval": "C",
+      "track": "東京ダ1600",
+      "comment": "中団やや後ろから追い込んで２着。ハイペースの展開は向いたが初ダートで追い込んできたのは評価できる。やはり力はありダートでも走れた。ワンターンでワンペースのレースがやはりあっている。個人的には芝適性の方が高いと感じる。ダートもトップクラスで走れるが。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 9,
+    "run": {
+      "comment": "先行していいところにいたが直線伸びず６着。やはり小回りは合わないのか。自分で逃げてハイペースにするなど工夫が入りそう。それをしないのであれば広いコースでしか買えない。やはりマイルなのか？",
+      "track": "阪神芝2000 良",
+      "name": "チャレンジC",
+      "eval": "C"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 10,
+    "run": {
+      "track": "東京2000",
+      "eval": "B",
+      "name": "天皇賞・秋",
+      "comment": "ジャックドールの逃げについて行ってよく粘った。後方の馬に展開は向いていたため五着は高評価。高速馬場はやはり向いている。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 11,
+    "run": {
+      "name": "オールカマー",
+      "eval": "C",
+      "track": "中山芝2200 良",
+      "comment": "先行したが伸びず５着、中山は全く向いていない印象。"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 12,
+    "run": {
+      "track": "",
+      "comment": "中団追走して最後伸びてきていたが４着。生粋のマイラーには負けたものの能力の高さが見られた。東京コースは合っている。跳びが大きいため小回りは合わないか。",
+      "name": "安田記念",
+      "eval": "C"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "ガイアフォース",
+    "index": 13,
+    "run": {
+      "comment": "開幕週の京都、初マイルで前残りを中団後方から伸びて２着。高速馬場、マイル適正が見られた。",
+      "eval": "C",
+      "track": "京都芝1600 良",
+      "name": "マイラーズC"
+    },
+    "status": "incomplete-official-history"
+  },
+  {
+    "horse": "カンチェンジュンガ",
+    "index": 3,
+    "run": {
+      "name": "スプリンターズS",
+      "eval": "F",
+      "track": "中山芝1200",
+      "comment": "後方から伸びきれず9着。前残りの展開で後ろすぎた。ノーチャンス。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カンチェンジュンガ",
+    "index": 5,
+    "run": {
+      "name": "京王杯スプリングC",
+      "track": "東京芝1400",
+      "eval": "F",
+      "comment": "後方から伸びきれず。この馬場ではノーチャンス。流石に厳しい。"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カンチェンジュンガ",
+    "index": 8,
+    "run": {
+      "track": "京都芝1200",
+      "eval": "C",
+      "name": "京阪杯",
+      "comment": "後方から伸びきれず6着。直線進路を切り替えるロスもあり内前有利の展開がむかず。足は使えている。スタート"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "カンチェンジュンガ",
+    "index": 12,
+    "run": {
+      "comment": "スタート悪くなかったが控えて中団後ろから伸びきれず4着。詰まって進路を切り替える不利なければ3着あったかも。ハンデは軽かったため素直に高評価はできないが力を出せば戦えそう。OPからか。",
+      "name": "北九州記念",
+      "eval": "C",
+      "track": "小倉芝1200稍重"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/6/30"
+    ]
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 1,
+    "run": {
+      "comment": "スタート五分で中団につけて伸びきれず8着。外差し馬が上位もロスなく走れて上位に完敗。休み明けももっと走れるイメージだが?",
+      "name": "アイルランドT",
+      "eval": "C",
+      "track": "東京芝1800"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 2,
+    "run": {
+      "comment": "スタート五分で中団から伸びて3着。外には出せていい足使えたが前の馬が止まらない展開で差を詰めれず。自力は見せた。",
+      "name": "ヴィクトリアマイル",
+      "eval": "A",
+      "track": "東京芝1600"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 6,
+    "run": {
+      "name": "ヴィクトリアマイル",
+      "eval": "A",
+      "comment": "スタート五分も控えて後方から伸びて2着。ハイペースで差し有利の展開が向いた。久々のマイルも地力見せた。",
+      "track": "東京芝1600"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 11,
+    "run": {
+      "name": "オークス",
+      "eval": "S",
+      "track": "東京芝2400",
+      "comment": "スタートよく先行して直線伸びきれず4着。ペースは早かったが離れた追走であったたためスムーズな競馬であった。前走から巻き返して良い競馬をしていた。完璧な競馬で力を出し切った印象。中距離がベストか"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 12,
+    "run": {
+      "name": "桜花賞",
+      "eval": "D",
+      "comment": "スタート五分で中断内から伸び切れず8着。直線やや進路は狭かったが内をロスなく立ち回れており評価はできない。上位の馬が強すぎるか。距離伸びた方が良いタイプと言われているためオークスで見直したいがやや力劣るような印象あり",
+      "track": "阪神芝1600"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/4/7"
+    ]
+  },
+  {
+    "horse": "クイーンズウォーク",
+    "index": 13,
+    "run": {
+      "comment": "中断後方外から差し切って１着。内前有利の馬場と展開が向かない中で強い勝ち方。ややメンバーレベルに疑問があるもののトラックバイアスに逆らっており時計面も優秀。桜花賞でも楽しみな一頭。",
+      "name": "クイーンC",
+      "track": "東京芝1600",
+      "eval": "B"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/2/10"
+    ]
+  },
+  {
+    "horse": "キャプテンネキ",
+    "index": 3,
+    "run": {
+      "track": "中京ダ1400",
+      "name": "中京スポーツ杯",
+      "eval": "C",
+      "comment": "スタートよく先行して粘って3着。ペース早くなく前残りの展開向いたが折り合い欠いた。京都の方が合う"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャプテンネキ",
+    "index": 5,
+    "run": {
+      "comment": "先行してのびず。差し有利の展開が向いていないが稍重馬場でやや負けすぎ。",
+      "name": "シャングリラS",
+      "eval": "D",
+      "track": "東京ダ1400稍重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャプテンネキ",
+    "index": 8,
+    "run": {
+      "eval": "S",
+      "name": "九州スポーツ杯",
+      "comment": "スタートよく先行したが粘りきれず5着。やや外を回すロスが厳しかったか。かなり完璧でないと厳しいか。",
+      "track": "小倉芝1200"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キャプテンネキ",
+    "index": 10,
+    "run": {
+      "comment": "スタートよく先行したが伸びきれず。３着から大きくは負けていないもののスムーズな競馬で内を立ち回れていたため評価はできない。やはり重賞ではやや厳しい印象。1200？",
+      "name": "ファルコンS",
+      "track": "中京芝1400",
+      "eval": "D"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/3/16"
+    ]
+  },
+  {
+    "horse": "キャプテンネキ",
+    "index": 12,
+    "run": {
+      "comment": "ハイペースを中団前目で競馬。展開は向いておらず次走見直しは可能も、高評価はできない。",
+      "track": "京都芝1400m 良 牝馬限定",
+      "eval": "C",
+      "name": "ファンタジーS"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ヒルビリーエレジー",
+    "index": 5,
+    "run": {
+      "comment": "スタート悪くなかったが追走怪しく直線時点で後ろすぎた。ジリ足。",
+      "eval": "C",
+      "name": "3歳未勝利",
+      "track": "中山ダ1200"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/4/13",
+      "2025/3/29",
+      "2025/1/26"
+    ]
+  },
+  {
+    "horse": "ヒルビリーエレジー",
+    "index": 6,
+    "run": {
+      "eval": "D",
+      "name": "2歳未勝利",
+      "track": "中山ダ1200",
+      "comment": "中断後ろまま。ジリ足。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/12/14"
+    ]
+  },
+  {
+    "horse": "ヒルビリーエレジー",
+    "index": 7,
+    "run": {
+      "comment": "中団前目からのびず8着。伸びに欠ける。",
+      "track": "東京ダ1600",
+      "eval": "D",
+      "name": "2歳未勝利"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2024/10/26"
+    ]
+  },
+  {
+    "horse": "ジャスタパーティー",
+    "index": 0,
+    "run": {
+      "eval": "D",
+      "name": "未勝利",
+      "track": "小倉芝1800重",
+      "comment": "後方まま"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/3/2"
+    ]
+  },
+  {
+    "horse": "ヴァンショー",
+    "index": 0,
+    "run": {
+      "name": "未勝利",
+      "eval": "D",
+      "track": "札幌ダ1700",
+      "comment": "ほぼ大敗"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/8/10",
+      "2024/7/27"
+    ]
+  },
+  {
+    "horse": "ヴァンショー",
+    "index": 1,
+    "run": {
+      "comment": "ほぼ大敗",
+      "eval": "D",
+      "name": "未勝利",
+      "track": "札幌ダ1700"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/8/10",
+      "2024/7/27"
+    ]
+  },
+  {
+    "horse": "ヴァンショー",
+    "index": 3,
+    "run": {
+      "name": "未勝利",
+      "eval": "C",
+      "track": "東京芝2000",
+      "comment": "スタート悪くなかったがやや行き足つかず中断からのびず。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/6/1"
+    ]
+  },
+  {
+    "horse": "グディンナ",
+    "index": 1,
+    "run": {
+      "track": "京都ダ1400",
+      "comment": "スタート早くなく中団後ろから伸びて3着。ペース流れて差しの届く展開が向いた。スタート課題で展開待ち。",
+      "eval": "C",
+      "name": "1勝クラス"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/5/24",
+      "2026/5/9"
+    ]
+  },
+  {
+    "horse": "グディンナ",
+    "index": 2,
+    "run": {
+      "comment": "スタート悪くなかったが行き足つかず中団後方から伸びて3着。控えすぎた印象もいい足使えた。逃げ番手が上位で末脚見せた。スタート",
+      "track": "京都ダ1400",
+      "eval": "A",
+      "name": "1勝クラス"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/5/24",
+      "2026/5/9"
+    ]
+  },
+  {
+    "horse": "グディンナ",
+    "index": 5,
+    "run": {
+      "track": "札幌ダ1700",
+      "comment": "中団から伸び切れず。ジリ足で評価はできない。かなり離されている。未勝利がメイチだった？",
+      "name": "1勝クラス",
+      "eval": "D"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/8/11"
+    ]
+  },
+  {
+    "horse": "グディンナ",
+    "index": 12,
+    "run": {
+      "track": "京都ダ1400",
+      "comment": "やや出遅れて後方から伸びず。前残りの展開が向いていないがやや伸びなさすぎ。先行できないと勝負にならない。",
+      "name": "未勝利",
+      "eval": "C"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/1/6"
+    ]
+  },
+  {
+    "horse": "キタノライブリー",
+    "index": 2,
+    "run": {
+      "name": "3歳以上2勝クラス",
+      "eval": "F",
+      "comment": "後方まま。後ろすぎてどん詰まり参考外",
+      "track": "京都ダ1400稍重"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/10/4"
+    ]
+  },
+  {
+    "horse": "キタノライブリー",
+    "index": 5,
+    "run": {
+      "track": "阪神ダ1400",
+      "comment": "スタート悪くなく中団前目からズルズル後退。折り合いかいたが伸びに欠ける。",
+      "name": "2勝クラス",
+      "eval": "C"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/3/15"
+    ]
+  },
+  {
+    "horse": "キタノライブリー",
+    "index": 7,
+    "run": {
+      "comment": "行き足ついて逃げて粘って2着。ペース早くなくマイペースの競馬で展開向いた。後ろは離しているためマイペースなら",
+      "track": "中山ダ1200",
+      "name": "未勝利",
+      "eval": "B"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/4/20",
+      "2025/3/29",
+      "2025/3/8"
+    ]
+  },
+  {
+    "horse": "キタノライブリー",
+    "index": 8,
+    "run": {
+      "track": "中山ダ1200",
+      "comment": "行き足ついて先行して2着。スムーズな競馬で展開は向いたがペース流れていた。勝ち馬には完敗。時計は悪くない。",
+      "name": "未勝利",
+      "eval": "B"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/4/20",
+      "2025/3/29",
+      "2025/3/8"
+    ]
+  },
+  {
+    "horse": "キントラダンサー",
+    "index": 6,
+    "run": {
+      "comment": "先行して伸びきれず9着。前残りの展開が向いて伸び負け。ジリ足。",
+      "track": "阪神芝1200",
+      "name": "讃岐特別",
+      "eval": "D"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キントラダンサー",
+    "index": 11,
+    "run": {
+      "comment": "逃げて粘りきれず8着。ペースやや早かったが前目の馬が上位。",
+      "track": "新潟芝1400稍重",
+      "name": "3歳未勝利",
+      "eval": "D"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "キントラダンサー",
+    "index": 13,
+    "run": {
+      "comment": "先行して粘って3着。スムーズな競馬も外伸び馬場で上位にきれ負け。ペースもややタフで前残りの馬場なら。",
+      "track": "京都芝1600",
+      "eval": "C",
+      "name": "2歳未勝利"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/12/22",
+      "2024/12/1"
+    ]
+  },
+  {
+    "horse": "キントラダンサー",
+    "index": 14,
+    "run": {
+      "track": "京都芝1600",
+      "name": "2歳未勝利",
+      "eval": "C",
+      "comment": "スタート悪くなかったが控えて中団から伸びて3着。展開向いたが折り合い欠いていた。"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2024/12/22",
+      "2024/12/1"
+    ]
+  }
+]

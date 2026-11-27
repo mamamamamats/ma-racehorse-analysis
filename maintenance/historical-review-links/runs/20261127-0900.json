@@ -1,10 +1,10 @@
 {
-  "at": "2026-11-27T00:13:23.806206+00:00",
+  "at": "2026-11-27T00:34:02.664170+00:00",
   "scheduledFor": "2026-11-27T09:00:00+09:00",
   "baseCompletedReviews": 8114,
   "batches": [
     {
-      "at": "2026-11-27T00:13:23.806206+00:00",
+      "at": "2026-11-27T00:34:02.664170+00:00",
       "batch": "batch-011",
       "savedHorses": 34,
       "savedReviews": 305,
@@ -15,7 +15,7 @@
       "skippedLiveReviews": 0
     },
     {
-      "at": "2026-11-27T00:13:23.806206+00:00",
+      "at": "2026-11-27T00:34:02.664170+00:00",
       "batch": "batch-012",
       "savedHorses": 29,
       "savedReviews": 284,
@@ -26,7 +26,7 @@
       "skippedLiveReviews": 0
     },
     {
-      "at": "2026-11-27T00:13:23.806206+00:00",
+      "at": "2026-11-27T00:34:02.664170+00:00",
       "batch": "batch-013",
       "savedHorses": 21,
       "savedReviews": 157,
@@ -37,7 +37,7 @@
       "skippedLiveReviews": 0
     },
     {
-      "at": "2026-11-27T00:13:23.806206+00:00",
+      "at": "2026-11-27T00:34:02.664170+00:00",
       "batch": "batch-014",
       "savedHorses": 22,
       "savedReviews": 184,
@@ -46,16 +46,84 @@
       "heldReviewsInThisBatch": 75,
       "dbErrors": 0,
       "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-015",
+      "savedHorses": 38,
+      "savedReviews": 293,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 9337,
+      "heldReviewsInThisBatch": 139,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-016",
+      "savedHorses": 27,
+      "savedReviews": 185,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 9522,
+      "heldReviewsInThisBatch": 106,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-017",
+      "savedHorses": 24,
+      "savedReviews": 181,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 9703,
+      "heldReviewsInThisBatch": 111,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-018",
+      "savedHorses": 34,
+      "savedReviews": 233,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 9936,
+      "heldReviewsInThisBatch": 120,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-019",
+      "savedHorses": 25,
+      "savedReviews": 199,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 10135,
+      "heldReviewsInThisBatch": 101,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "at": "2026-11-27T00:34:02.664170+00:00",
+      "batch": "batch-020",
+      "savedHorses": 21,
+      "savedReviews": 177,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 10312,
+      "heldReviewsInThisBatch": 82,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
     }
   ],
-  "savedHorses": 106,
-  "savedReviews": 930,
-  "totalSavedReviews": 9044,
-  "heldReviewsThisRun": 374,
-  "unprocessedHorses": 10144,
-  "heldHorses": 807,
-  "officialHistories": 864,
-  "completeHistories": 861,
+  "savedHorses": 275,
+  "savedReviews": 2198,
+  "totalSavedReviews": 10312,
+  "heldReviewsThisRun": 1033,
+  "unprocessedHorses": 9963,
+  "heldHorses": 981,
+  "officialHistories": 1047,
+  "completeHistories": 1043,
   "dbErrors": 0,
-  "skippedLiveReviews": 0
+  "skippedLiveReviews": 0,
+  "status": "completed",
+  "completedAt": "2026-11-27T00:35:12.823749+00:00"
 }

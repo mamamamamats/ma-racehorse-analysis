@@ -1,0 +1,61 @@
+{
+  "at": "2026-11-27T00:34:01.281957+00:00",
+  "mode": "offline-source-replay",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "batches": [
+    {
+      "batch": "batch-011",
+      "histories": 34,
+      "reproduced": 34
+    },
+    {
+      "batch": "batch-012",
+      "histories": 30,
+      "reproduced": 30
+    },
+    {
+      "batch": "batch-013",
+      "histories": 23,
+      "reproduced": 23
+    },
+    {
+      "batch": "batch-014",
+      "histories": 28,
+      "reproduced": 28
+    },
+    {
+      "batch": "batch-015",
+      "histories": 40,
+      "reproduced": 40
+    },
+    {
+      "batch": "batch-016",
+      "histories": 29,
+      "reproduced": 29
+    },
+    {
+      "batch": "batch-017",
+      "histories": 25,
+      "reproduced": 25
+    },
+    {
+      "batch": "batch-018",
+      "histories": 37,
+      "reproduced": 37
+    },
+    {
+      "batch": "batch-019",
+      "histories": 28,
+      "reproduced": 28
+    },
+    {
+      "batch": "batch-020",
+      "histories": 24,
+      "reproduced": 24
+    }
+  ],
+  "failures": [],
+  "parserSha256": "29a834ea5fc525c8b25f5bd79afae6c64ac0431a9cea6f1d73988e2f61c42a36",
+  "status": "passed"
+}
