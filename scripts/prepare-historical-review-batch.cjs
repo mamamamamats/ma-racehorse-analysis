@@ -16,6 +16,7 @@ for(const u of matching.updates){
  const h=byName.get(u.horseName),r=h&&M.match(u.original,h,[{...u.raceRef,name:u.raceRef.raceName,raceId:u.raceId}]);
  let reason=null;
  if(!r||r.status!=='confirmed'||r.card.raceId!==u.raceId||h.url!==u.verification.url||r.official.date!==u.verification.officialDate||r.official.finish!==u.verification.officialFinish)reason='official-proof-not-reproducible';
+ else if(u.verification.officialGoing!=null&&(!['良','稍重','重','不良'].includes(r.official.going)||u.verification.officialGoing!==r.official.going||u.raceRef.trackCondition!==r.official.going))reason='official-going-not-reproducible';
  else if(L.contradictions(u.original,{raceRef:u.raceRef}).length)reason='review-metadata-conflict';
  else if(occupied.has(u.horseName+'|'+u.raceId))reason='another-prepared-review-occupies-target';
  else if(records.has(u.raceId)&&L.contradictions({raceRef:u.raceRef,track:u.original.track},records.get(u.raceId)).length)reason='whole-review-metadata-conflict';

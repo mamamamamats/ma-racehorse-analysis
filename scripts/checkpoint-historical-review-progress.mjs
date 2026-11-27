@@ -23,4 +23,21 @@ for(const b of registry.batches){
  }
 }
 await fs.writeFile(path.join(dir,'batches.json'),JSON.stringify(registry,null,2));
+const repairDir=path.join(dir,'going-repair'),repairStatus=await optional(path.join(repairDir,'status.json'),null);
+if(repairStatus){
+ const bytes=await fs.readFile(path.join(repairDir,'plan.json'));
+ if(createHash('sha256').update(bytes).digest('hex')!==repairStatus.planSha256)throw Error('Repair plan hash mismatch');
+ const completed=await optional(path.join(repairDir,'completed.json'),{planSha256:repairStatus.planSha256,completed:[]});
+ if(completed.planSha256!==repairStatus.planSha256)throw Error('Repair completion hash mismatch');
+ const lock=await optional(path.join(root,'.local/historical-review-links/queue.lock'),null);
+ if(lock)throw Error('Cannot archive repair receipts while a DB queue is active');
+ for(const run of (await fs.readdir(repairDir)).filter(n=>n.startsWith('run-'))){
+  const dest=path.join(repairDir,'receipts-'+run+'.json.gz');
+  try{await fs.access(dest);continue;}catch(e){if(e.code!=='ENOENT')throw e;}
+  const files=[];
+  for(const name of (await fs.readdir(path.join(repairDir,run))).filter(n=>n.endsWith('.json')))
+   files.push({name,content:await fs.readFile(path.join(repairDir,run,name),'utf8')});
+  if(files.length)await fs.writeFile(dest,gzipSync(JSON.stringify({schemaVersion:1,planSha256:repairStatus.planSha256,files})),{flag:'wx'});
+ }
+}
 console.log('Persisted completion records and immutable run receipts for '+registry.batches.length+' batches.');

@@ -1,2 +1,5 @@
 # Local maintenance run checkpoints and raw Firestore backups.
 .local/
+
+# Going correction raw backups are retained locally and archived as immutable gzip receipts.
+maintenance/historical-review-links/going-repair/run-*/

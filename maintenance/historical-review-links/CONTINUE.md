@@ -10,6 +10,16 @@
 2. `db-write-pause.json` があり `paused:true` ならDBの読み取り・書き込みをしない。公式資料からの準備だけ行う。エラー後の自動リトライや全件再取得はしない。
 3. `.local/historical-review-links/queue.lock` がある場合は進行中の作業を確認し、並行保存しない。中断したロックを確認せず削除しない。
 
+## 馬場の補足情報の修正（2026-11-27 10時回で発見）
+
+出馬表の初期値「良」が古い紐付けの raceRef.trackCondition に入っていたため、公式履歴と成功コミットの保存前バックアップから、私たちが導入した項目だけを修正する。補正2,451件は全件保存・監査済み。going-repair/plan.json は不変の固定計画。元々存在した注記、ユーザーが変更した値、本文・評価・順序・レースIDは変更しない。
+
+- DB停止フラグがなければ、先に `node scripts/apply-review-going-repair.mjs` で残件確認し、待ちがあれば `--apply --limit-horses 1000` を付けて続ける。通常の紐付けと同じqueue.lockを使うため並行保存しない。
+- 最初のDBエラーで停止フラグを作る。以後はDBを読み書きせず準備だけ行う。勝手に再開しない。
+- 新しい紐付けは公式履歴の馬場を使うよう修正済み。raceRefに元々異なる馬場注記がある場合は上書きせず保留。
+- 公開索引は必ず `node scripts/export-verified-review-index.mjs` で生成する。古い不変計画から直接JSONを作るだけでは、修正済み馬場を古い初期値に戻してしまう。
+- going-repair/completed.json と、新たなrunディレクトリの変更前データ・コミット応答・結果をgzipに退避してGitへ保存する。`checkpoint-historical-review-progress.mjs` がgzipを自動保存する。未圧縮runは.gitignore対象で保持し、削除や上書きをしない。
+
 ## 新しい照合を進める
 
 - `remaining-horses.json` の `unprocessed` から回顧数の多い馬を優先する。公式プロフィールが取得できない馬だけを繰り返さず、新しい馬も進める。`heldHorseRechecks` は別に保留を残す。
@@ -34,7 +44,7 @@ node scripts/run-historical-review-queue.mjs --apply --limit-horses 1000
 
 - `node scripts/checkpoint-historical-review-progress.mjs` で成功記録と変更前のバックアップをGit管理下へ残す。新バッチの completed.json も次回の再開で利用する。バックアップや固定計画を上書き・削除しない。
 - `node scripts/preview-historical-review-backlog.mjs > maintenance/historical-review-links/backlog-status.json`。未確認馬一覧から今回履歴を検証した馬を除き、保留のある馬は再確認一覧へ残す。確定ゼロや未取得の検索結果も記録する。
-- 公開照合索引は成功確認した計画のエントリから追加し、同じ回顧に別IDがあれば停止する。`verified-review-links.json` の追加は馬券の印や予想スコアの保存し直しを意味しない。
+- 公開照合索引は `node scripts/export-verified-review-index.mjs` で生成し、同じ回顧に別IDがあれば停止する。`verified-review-links.json` の追加は馬券の印や予想スコアの保存し直しを意味しない。
 - 関連テスト、差分チェック、Gitへコミット・push、公開索引の反映確認まで行う。準備だけになった場合も公式根拠・保留理由・再開位置を必ずコミットする。
 - 日本語で今回の保存件数、累計、保留、未処理、上限エラーの有無を報告する。全頭未完了なのに完了とは言わない。全頭の確認が済めば継続タスクを停止してよい。
 

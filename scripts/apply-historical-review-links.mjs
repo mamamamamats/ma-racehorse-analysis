@@ -10,8 +10,8 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const base='https://firestore.googleapis.com/v1/projects/ma-racehorse-analysis/databases/(default)/documents';
 const signature=r=>JSON.stringify([r.name||'',r.track||'',r.eval||'',r.comment||'']);
 export const entryKey=u=>JSON.stringify([u.horseName,u.raceId,signature(u.original)]);
-function decode(v){if('mapValue'in v)return Object.fromEntries(Object.entries(v.mapValue.fields||{}).map(([k,x])=>[k,decode(x)]));if('arrayValue'in v)return (v.arrayValue.values||[]).map(decode);if('nullValue'in v)return null;for(const k of ['stringValue','timestampValue','booleanValue','integerValue','doubleValue'])if(k in v)return k==='integerValue'?Number(v[k]):v[k];return null;}
-function encode(v){if(v==null)return {nullValue:null};if(Array.isArray(v))return {arrayValue:{values:v.map(encode)}};if(typeof v==='object')return {mapValue:{fields:Object.fromEntries(Object.entries(v).map(([k,x])=>[k,encode(x)]))}};if(typeof v==='boolean')return {booleanValue:v};if(typeof v==='number')return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};return {stringValue:String(v)};}
+export function decode(v){if('mapValue'in v)return Object.fromEntries(Object.entries(v.mapValue.fields||{}).map(([k,x])=>[k,decode(x)]));if('arrayValue'in v)return (v.arrayValue.values||[]).map(decode);if('nullValue'in v)return null;for(const k of ['stringValue','timestampValue','booleanValue','integerValue','doubleValue'])if(k in v)return k==='integerValue'?Number(v[k]):v[k];return null;}
+export function encode(v){if(v==null)return {nullValue:null};if(Array.isArray(v))return {arrayValue:{values:v.map(encode)}};if(typeof v==='object')return {mapValue:{fields:Object.fromEntries(Object.entries(v).map(([k,x])=>[k,encode(x)]))}};if(typeof v==='boolean')return {booleanValue:v};if(typeof v==='number')return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};return {stringValue:String(v)};}
 export function prepareHorse(raw,updates){
  const horse=Object.fromEntries(Object.entries(raw.fields||{}).map(([k,v])=>[k,decode(v)])),accepted=[],already=[],skipped=[];
  if(horse.deleted)return {accepted,already,skipped:updates.map(u=>({key:entryKey(u),reason:'deleted horse'})),write:null};
@@ -22,6 +22,7 @@ export function prepareHorse(raw,updates){
   if(found.length!==1){skipped.push({key,reason:'review changed or duplicated'});continue;}
   const i=found[0],conflicts=Link.contradictions(races[i],{raceId:u.raceId,raceRef:u.raceRef});
   if(conflicts.length){skipped.push({key,reason:'live review metadata conflicts with prepared race',fields:conflicts});continue;}
+  if(u.verification?.officialGoing&&Object.hasOwn(races[i].raceRef||{},'trackCondition')&&races[i].raceRef.trackCondition!==u.verification.officialGoing){skipped.push({key,reason:'existing going annotation differs from official history'});continue;}
   if(races[i].raceId){if(races[i].raceId===u.raceId)already.push(u);else skipped.push({key,reason:'different existing race ID'});continue;}
   if(races.some((r,j)=>j!==i&&r.raceId===u.raceId)){skipped.push({key,reason:'target race already has another review'});continue;}
   const fields=rawRaces.arrayValue.values[i].mapValue.fields;
@@ -32,9 +33,9 @@ export function prepareHorse(raw,updates){
  return {accepted,already,skipped,write:accepted.length?{update:{name:raw.name,fields:{races:rawRaces}},updateMask:{fieldPaths:['races']},currentDocument:{updateTime:raw.updateTime},updateTransforms:[{fieldPath:'archiveUpdatedAt',setToServerValue:'REQUEST_TIME'}]}:null};
 }
 const py="import urllib.request,urllib.error,json,sys\np=sys.stdin.read()\nr=urllib.request.Request(sys.argv[1],data=p.encode() if p else None,headers={'Content-Type':'application/json'})\ntry:\n v=urllib.request.urlopen(r,timeout=50);print(json.dumps({'status':v.status,'data':json.load(v)}))\nexcept urllib.error.HTTPError as e: print(json.dumps({'status':e.code,'body':e.read().decode()}))";
-async function request(url,payload){const c=spawn('python',['-c',py,url],{stdio:['pipe','pipe','pipe']});let out='',err='';c.stdout.on('data',d=>out+=d);c.stderr.on('data',d=>err+=d);c.stdin.end(payload?JSON.stringify(payload):'');await new Promise((ok,no)=>{c.on('error',no);c.on('close',code=>code?no(Error(err)):ok());});const v=JSON.parse(out);if(v.status<200||v.status>=300)throw Error('Firestore HTTP '+v.status+' '+(v.body||'').slice(0,300));return v.data;}
-async function atomic(file,data){await fs.writeFile(file+'.tmp',JSON.stringify(data,null,2));await fs.rename(file+'.tmp',file);}
-async function optional(file,fallback){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return fallback;throw e;}}
+export async function request(url,payload){const c=spawn('python',['-c',py,url],{stdio:['pipe','pipe','pipe']});let out='',err='';c.stdout.on('data',d=>out+=d);c.stderr.on('data',d=>err+=d);c.stdin.end(payload?JSON.stringify(payload):'');await new Promise((ok,no)=>{c.on('error',no);c.on('close',code=>code?no(Error(err)):ok());});const v=JSON.parse(out);if(v.status<200||v.status>=300)throw Error('Firestore HTTP '+v.status+' '+(v.body||'').slice(0,300));return v.data;}
+export async function atomic(file,data){await fs.writeFile(file+'.tmp',JSON.stringify(data,null,2));await fs.rename(file+'.tmp',file);}
+export async function optional(file,fallback){try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return fallback;throw e;}}
 export async function main(args=process.argv.slice(2),transport=request){
  const arg=(k,f)=>{const n=args.indexOf(k);return n<0?f:args[n+1];};
  const dir=path.join(root,'maintenance/historical-review-links'),planFile=path.resolve(arg('--plan',path.join(dir,'plan.json'))),out=path.resolve(arg('--backup-dir',path.join(root,'.local/historical-review-links'))),apply=args.includes('--apply'),check=args.includes('--check-live');

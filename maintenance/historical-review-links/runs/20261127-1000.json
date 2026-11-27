@@ -1,0 +1,62 @@
+{
+  "at": "2026-11-27T01:20:24.843115+00:00",
+  "scheduledFor": "2026-11-27T10:00:00+09:00",
+  "baseCompletedReviews": 10312,
+  "batches": [
+    {
+      "at": "2026-11-27T01:20:24.843115+00:00",
+      "batch": "batch-021",
+      "savedHorses": 36,
+      "savedReviews": 274,
+      "alreadyLinkedReviews": 0,
+      "totalSavedReviews": 10586,
+      "heldReviewsInThisBatch": 100,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    }
+  ],
+  "savedHorses": 36,
+  "savedReviews": 274,
+  "totalSavedReviews": 10586,
+  "heldReviewsThisRun": 100,
+  "unprocessedHorses": 9926,
+  "heldHorses": 1011,
+  "officialHistories": 1084,
+  "completeHistories": 1080,
+  "dbErrors": 0,
+  "skippedLiveReviews": 0,
+  "metadataGoingRepair": {
+    "runs": [
+      {
+        "mode": "apply",
+        "plannedReviews": 2451,
+        "pendingHorses": 836,
+        "pendingReviews": 2450,
+        "readHorses": 836,
+        "savedHorses": 836,
+        "repairedReviews": 2450,
+        "alreadyCorrectReviews": 0,
+        "skipped": [],
+        "stopped": null,
+        "backupDirectory": "/workspace/work/ma-racehorse-analysis/maintenance/historical-review-links/going-repair/run-bP3wCI"
+      },
+      {
+        "mode": "apply",
+        "plannedReviews": 2451,
+        "pendingHorses": 837,
+        "pendingReviews": 2451,
+        "readHorses": 1,
+        "savedHorses": 1,
+        "repairedReviews": 1,
+        "alreadyCorrectReviews": 0,
+        "skipped": [],
+        "stopped": null,
+        "backupDirectory": "/workspace/work/ma-racehorse-analysis/maintenance/historical-review-links/going-repair/run-k6ODya"
+      }
+    ],
+    "completedReviews": 2451,
+    "savedReviews": 2451,
+    "readHorses": 837
+  },
+  "status": "completed"
+}

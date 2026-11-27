@@ -140,6 +140,13 @@
       "sha256": "d008c04c6ac97f026d326870ecb7af722378c878f5ac5ce9ec94d2485cc87fdc",
       "checkpoint": ".local/historical-review-links/batch-020/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-020/completed.json"
+    },
+    {
+      "id": "batch-021",
+      "plan": "maintenance/historical-review-links/batch-021/plan.json",
+      "sha256": "5115074294cd7284ed8a4a0b3ed5ef4a01359e6e8c42169093d02b8155e20ad0",
+      "checkpoint": ".local/historical-review-links/batch-021/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-021/completed.json"
     }
   ]
 }
