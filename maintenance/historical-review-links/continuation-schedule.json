@@ -1,11 +1,23 @@
 {
   "automationId": "Automation_270536488a488191a92ec6b5f09b4d93",
-  "title": "競馬回顧の紐付けを継続",
+  "title": "11/29全出走馬の紐付け準備",
   "timezone": "Asia/Tokyo",
-  "firstScheduledRun": "2026-11-27T08:00:00+09:00",
-  "finalScheduledRun": "2026-11-27T16:00:00+09:00",
-  "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Tokyo:20261127T080000\nRRULE:FREQ=HOURLY;UNTIL=20261127T070000Z\nEND:VEVENT",
-  "finalRunAction": "進捗確認と最終報告のみ。16時以降に新たな照合・DB操作を開始しない。",
-  "onDatabaseError": "DB読み書きと自動リトライを停止し、公式照合と更新準備だけ続ける。",
-  "onAllHorsesFinished": "継続タスクを早期停止してよい。"
+  "firstScheduledRun": "2026-11-28T03:00:00+09:00",
+  "finalScheduledRun": "2026-11-28T09:00:00+09:00",
+  "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Tokyo:20261128T030000\nRRULE:FREQ=HOURLY;UNTIL=20261128T000000Z\nEND:VEVENT",
+  "finalRunAction": "09:00以降は進捗集計・最終報告のみ。新しい照合を開始しない。",
+  "databasePolicy": "Firestoreへの接続・読み取り・書き込みを行わない。公開JSON/ZIP・保存済みマスター・JRA公式を使う。停止フラグを解除しない。",
+  "scope": "2026/11/29 東京・京都 全24レースの全出走馬。JCのみで完了としない。",
+  "progressDirectory": "maintenance/historical-review-links/nov29-all-runners",
+  "previousSchedule": {
+    "automationId": "Automation_270536488a488191a92ec6b5f09b4d93",
+    "title": "競馬回顧の紐付けを継続",
+    "timezone": "Asia/Tokyo",
+    "firstScheduledRun": "2026-11-27T08:00:00+09:00",
+    "finalScheduledRun": "2026-11-27T16:00:00+09:00",
+    "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Tokyo:20261127T080000\nRRULE:FREQ=HOURLY;UNTIL=20261127T070000Z\nEND:VEVENT",
+    "finalRunAction": "進捗確認と最終報告のみ。16時以降に新たな照合・DB操作を開始しない。",
+    "onDatabaseError": "DB読み書きと自動リトライを停止し、公式照合と更新準備だけ続ける。",
+    "onAllHorsesFinished": "継続タスクを早期停止してよい。"
+  }
 }

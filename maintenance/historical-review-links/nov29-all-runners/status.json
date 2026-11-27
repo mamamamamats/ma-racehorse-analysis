@@ -1,0 +1,36 @@
+{
+  "mode": "preparation-only-no-db-access",
+  "targetDate": "2026/11/29",
+  "deadlineJst": "2026-11-28T09:00:00+09:00",
+  "venues": [
+    "東京",
+    "京都"
+  ],
+  "expectedRaces": 24,
+  "officialRosterRacesLoaded": [
+    "東京1R"
+  ],
+  "officialRosterRaceCount": 1,
+  "remainingRaceRosterCount": 23,
+  "allRunnersKnown": false,
+  "totalTargetHorseCount": null,
+  "additionalRosterHorses": 16,
+  "additionalInitialAuditHorseCount": 16,
+  "additionalHorsesWithoutAppReviews": 11,
+  "additionalAwaitingHistoryCheck": 5,
+  "previousJcWork": {
+    "runners": 18,
+    "newPreparedReviews": 17,
+    "batches": [
+      "batch-069",
+      "batch-070"
+    ],
+    "note": "Local app roster previously checked; current full-day official roster collection remains incomplete."
+  },
+  "newPreparedReviewsThisRun": 0,
+  "dbReads": 0,
+  "dbWrites": 0,
+  "masterExportedAt": "2026-11-27T15:00:48.103Z",
+  "masterZipSha256": "1aec1c3ee8c6bcbc2e572e92e2678fe50cb860c757ba5d786e587944753027f3",
+  "nextAction": "Collect remaining official rosters for Tokyo 2–12R and Kyoto 1–12R. Cross-check JC roster, classify each horse against saved JSON, reuse complete histories, then prepare confirmed links only. Do not declare all horses complete until 24 official rosters collected and every horse examined."
+}
