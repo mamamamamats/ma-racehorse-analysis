@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-27T06:40:23.081634+00:00",
+  "mode": "offline-only-invariants-audit",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "validatedImmutablePlans": 68,
+  "officialProofsRechecked": 24034,
+  "successfulLinksUnchanged": 19615,
+  "newPreparedBatchesWithNoCompletions": 14,
+  "sourceArchiveHashesVerified": 14,
+  "publicIndexUnchangedSha256": "e51e18f4c53a5df52e337bdf032b3bc3730929b562f1d2004a55d53f183ce1d9",
+  "databasePauseUnchangedSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850",
+  "pendingImmutablePlanReviews": 4419,
+  "pendingImmutablePlanHorses": 1069
+}

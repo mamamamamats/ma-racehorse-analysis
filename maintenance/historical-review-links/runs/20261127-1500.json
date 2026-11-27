@@ -1,7 +1,7 @@
 {
-  "at": "2026-11-27T06:27:09.664906+00:00",
+  "at": "2026-11-27T06:39:24.149657+00:00",
   "scheduledFor": "2026-11-27T15:00:00+09:00",
-  "status": "in_progress",
+  "status": "completed",
   "mode": "official-matching-and-offline-preparation-only",
   "dbReads": 0,
   "dbWrites": 0,
@@ -17,9 +17,9 @@
     "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
   },
   "totalSavedReviews": 19615,
-  "newPreparedHorses": 634,
-  "newPreparedReviews": 2679,
-  "heldReviewsThisRun": 1621,
+  "newPreparedHorses": 994,
+  "newPreparedReviews": 4035,
+  "heldReviewsThisRun": 2413,
   "batches": [
     {
       "batch": "batch-055",
@@ -101,12 +101,69 @@
       "planSha256": "ebc06048f5594b3d35e3ef94bd8d1a367259c6acc117cde02a6267566c0fc1c8",
       "dbReads": 0,
       "dbWrites": 0
+    },
+    {
+      "batch": "batch-064",
+      "preparedHorses": 75,
+      "preparedReviews": 288,
+      "heldReviews": 168,
+      "planSha256": "12e1836f2f132d292b0ae92538e49099cca769d63d5cc27750323e60841a8108",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-065",
+      "preparedHorses": 72,
+      "preparedReviews": 288,
+      "heldReviews": 175,
+      "planSha256": "3458427f7ef4cc67f14cfbb3c9af327c837c02bbadf67bfbf494645955c6d3ba",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-066",
+      "preparedHorses": 78,
+      "preparedReviews": 304,
+      "heldReviews": 147,
+      "planSha256": "0a4ce7d706abbc4b8627b60562caf183f29786f3d6242602b6694af7297aa40a",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-067",
+      "preparedHorses": 71,
+      "preparedReviews": 275,
+      "heldReviews": 164,
+      "planSha256": "da2dfcc7385e4a058f24df2da5c8053dc5d7b2b0ea6f537a6a129f876fe7290d",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-068",
+      "preparedHorses": 64,
+      "preparedReviews": 201,
+      "heldReviews": 138,
+      "planSha256": "26f60995ec936c88c36d6ec79c5ba790f79a7fa60d1ef4235609d564133319f9",
+      "dbReads": 0,
+      "dbWrites": 0
     }
   ],
-  "unprocessedHorses": 7747,
-  "heldHorses": 2968,
-  "officialHistories": 3278,
-  "completeHistories": 3266,
+  "unprocessedHorses": 7359,
+  "heldHorses": 3296,
+  "officialHistories": 3670,
+  "completeHistories": 3658,
   "unchangedPublicIndexSha256": "e51e18f4c53a5df52e337bdf032b3bc3730929b562f1d2004a55d53f183ce1d9",
-  "unchangedDbPauseSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850"
+  "unchangedDbPauseSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850",
+  "totalReadyPreparedReviews": 4417,
+  "totalReadyPreparedHorses": 1068,
+  "pendingImmutablePlanReviews": 4419,
+  "pendingImmutablePlanHorses": 1069,
+  "manualContentMismatchHoldReviews": 2,
+  "sourceReproducedProfiles": 1077,
+  "independentMasterProofsVerified": 4035,
+  "testsPassed": 204,
+  "databaseOperationsAttempted": false,
+  "pauseFlagUnchanged": true,
+  "publishedIndexUnchanged": true,
+  "nextBatch": "batch-069"
 }

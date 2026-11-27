@@ -441,6 +441,41 @@
       "sha256": "ebc06048f5594b3d35e3ef94bd8d1a367259c6acc117cde02a6267566c0fc1c8",
       "checkpoint": ".local/historical-review-links/batch-063/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-063/completed.json"
+    },
+    {
+      "id": "batch-064",
+      "plan": "maintenance/historical-review-links/batch-064/plan.json",
+      "sha256": "12e1836f2f132d292b0ae92538e49099cca769d63d5cc27750323e60841a8108",
+      "checkpoint": ".local/historical-review-links/batch-064/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-064/completed.json"
+    },
+    {
+      "id": "batch-065",
+      "plan": "maintenance/historical-review-links/batch-065/plan.json",
+      "sha256": "3458427f7ef4cc67f14cfbb3c9af327c837c02bbadf67bfbf494645955c6d3ba",
+      "checkpoint": ".local/historical-review-links/batch-065/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-065/completed.json"
+    },
+    {
+      "id": "batch-066",
+      "plan": "maintenance/historical-review-links/batch-066/plan.json",
+      "sha256": "0a4ce7d706abbc4b8627b60562caf183f29786f3d6242602b6694af7297aa40a",
+      "checkpoint": ".local/historical-review-links/batch-066/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-066/completed.json"
+    },
+    {
+      "id": "batch-067",
+      "plan": "maintenance/historical-review-links/batch-067/plan.json",
+      "sha256": "da2dfcc7385e4a058f24df2da5c8053dc5d7b2b0ea6f537a6a129f876fe7290d",
+      "checkpoint": ".local/historical-review-links/batch-067/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-067/completed.json"
+    },
+    {
+      "id": "batch-068",
+      "plan": "maintenance/historical-review-links/batch-068/plan.json",
+      "sha256": "26f60995ec936c88c36d6ec79c5ba790f79a7fa60d1ef4235609d564133319f9",
+      "checkpoint": ".local/historical-review-links/batch-068/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-068/completed.json"
     }
   ]
 }

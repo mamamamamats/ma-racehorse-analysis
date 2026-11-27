@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-27T06:39:23.661870+00:00",
+  "mode": "offline-public-master-starting-list-and-official-history-replay",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "masterJsonSha256": "b6509433a412d710a772f2efc23d727cb8c24b1e24638efe548f7bf5de432608",
+  "verifiedPreparedReviews": 4035,
+  "batches": [
+    {
+      "batch": "batch-055",
+      "verifiedPreparedReviews": 238,
+      "matchingCandidates": 240
+    },
+    {
+      "batch": "batch-056",
+      "verifiedPreparedReviews": 312,
+      "matchingCandidates": 312
+    },
+    {
+      "batch": "batch-057",
+      "verifiedPreparedReviews": 331,
+      "matchingCandidates": 331
+    },
+    {
+      "batch": "batch-058",
+      "verifiedPreparedReviews": 328,
+      "matchingCandidates": 328
+    },
+    {
+      "batch": "batch-059",
+      "verifiedPreparedReviews": 352,
+      "matchingCandidates": 353
+    },
+    {
+      "batch": "batch-060",
+      "verifiedPreparedReviews": 322,
+      "matchingCandidates": 323
+    },
+    {
+      "batch": "batch-061",
+      "verifiedPreparedReviews": 268,
+      "matchingCandidates": 271
+    },
+    {
+      "batch": "batch-062",
+      "verifiedPreparedReviews": 266,
+      "matchingCandidates": 267
+    },
+    {
+      "batch": "batch-063",
+      "verifiedPreparedReviews": 262,
+      "matchingCandidates": 263
+    },
+    {
+      "batch": "batch-064",
+      "verifiedPreparedReviews": 288,
+      "matchingCandidates": 288
+    },
+    {
+      "batch": "batch-065",
+      "verifiedPreparedReviews": 288,
+      "matchingCandidates": 288
+    },
+    {
+      "batch": "batch-066",
+      "verifiedPreparedReviews": 304,
+      "matchingCandidates": 304
+    },
+    {
+      "batch": "batch-067",
+      "verifiedPreparedReviews": 275,
+      "matchingCandidates": 275
+    },
+    {
+      "batch": "batch-068",
+      "verifiedPreparedReviews": 201,
+      "matchingCandidates": 201
+    }
+  ]
+}

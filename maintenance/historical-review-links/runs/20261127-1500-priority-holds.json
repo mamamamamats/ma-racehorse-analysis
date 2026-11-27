@@ -1,0 +1,299 @@
+[
+  {
+    "batch": 55,
+    "horse": "オリージネアリア",
+    "run": {
+      "name": "3歳1勝クラス",
+      "comment": "中団後ろから伸びきれず4着。最後まで止まってはいない。頭数少なかった。",
+      "track": "京都ダ1400",
+      "eval": "C"
+    },
+    "status": "official-going-not-reproducible",
+    "raceId": "race_day-2025-02-02_%E4%BA%AC%E9%83%BD_4",
+    "officialDate": "2025/2/2",
+    "wholeReviewRef": {
+      "date": "2025/2/2",
+      "dayId": "day-2025-02-02",
+      "distance": 1400,
+      "grade": "1s",
+      "name": "3歳1勝クラス",
+      "otherConditions": {
+        "grade": "1s",
+        "surface": "ダート",
+        "track": "ダート1400",
+        "trackCondition": "稍重"
+      },
+      "r": 4,
+      "raceName": "3歳1勝クラス",
+      "raceNumber": 4,
+      "surface": "ダート",
+      "track": "ダート1400",
+      "trackCondition": "稍重",
+      "venue": "京都"
+    }
+  },
+  {
+    "batch": 55,
+    "horse": "オロスコピオ",
+    "run": {
+      "eval": "C",
+      "track": "札幌芝2600",
+      "name": "北辰特別",
+      "comment": "中団からズルズル後退。"
+    },
+    "status": "official-going-not-reproducible",
+    "raceId": "race_day-2025-08-31_%E6%9C%AD%E5%B9%8C_9",
+    "officialDate": "2025/8/31",
+    "wholeReviewRef": {
+      "date": "2025/8/31",
+      "dayId": "day-2025-08-31",
+      "distance": 2600,
+      "grade": "1s",
+      "name": "北辰特別",
+      "otherConditions": {
+        "grade": "1s",
+        "surface": "芝",
+        "track": "芝2600",
+        "trackCondition": "稍重"
+      },
+      "r": 9,
+      "raceName": "北辰特別",
+      "raceNumber": 9,
+      "surface": "芝",
+      "track": "芝2600",
+      "trackCondition": "稍重",
+      "venue": "札幌"
+    }
+  },
+  {
+    "batch": 59,
+    "horse": "ラスマドレス",
+    "run": {
+      "name": "パールS",
+      "comment": "スタート五分で中団から直線のびず。終始外を回すロスがあり流石にロスが多すぎた印象もやや負けすぎな印象も？休み明けであったことが影響したか",
+      "eval": "B",
+      "track": "京都芝2000"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2024-05-19_%E4%BA%AC%E9%83%BD_11",
+    "officialDate": "2024/5/19",
+    "wholeReviewRef": {
+      "date": "2024/5/19",
+      "dayId": "day-2024-05-19",
+      "distance": 1400,
+      "grade": "g3",
+      "name": "パールS",
+      "otherConditions": {
+        "grade": "g3",
+        "surface": "ダート",
+        "track": "ダート1400",
+        "trackCondition": "良"
+      },
+      "r": 11,
+      "raceName": "パールS",
+      "raceNumber": 11,
+      "surface": "ダート",
+      "track": "ダート1400",
+      "trackCondition": "良",
+      "venue": "京都"
+    }
+  },
+  {
+    "batch": 60,
+    "horse": "アスクハッピーモア",
+    "run": {
+      "name": "未勝利",
+      "eval": "C",
+      "track": "中山ダ1800 次走注目",
+      "comment": "スタートよく先行して早めに先頭に立ったがすぐ後ろの馬に差されて２着。後ろとは大きく離しており時計も悪くないため次走も好勝負は可能。今回も砂はかぶっていない。"
+    },
+    "status": "official-going-not-reproducible",
+    "raceId": "race_day-2024-02-24_%E4%B8%AD%E5%B1%B1_6",
+    "officialDate": "2024/2/24",
+    "wholeReviewRef": {
+      "date": "2024/2/24",
+      "dayId": "day-2024-02-24",
+      "distance": 1800,
+      "grade": "un",
+      "name": "3歳未勝利",
+      "otherConditions": {
+        "grade": "un",
+        "surface": "ダート",
+        "track": "ダート1800",
+        "trackCondition": "稍重"
+      },
+      "r": 6,
+      "raceName": "3歳未勝利",
+      "raceNumber": 6,
+      "surface": "ダート",
+      "track": "ダート1800",
+      "trackCondition": "稍重",
+      "venue": "中山"
+    }
+  },
+  {
+    "batch": 61,
+    "horse": "インザオベーション",
+    "run": {
+      "track": "京都芝2000",
+      "comment": "スタート良かったが控えて中団から伸びて3着。スローペースの展開で終始外を回しながらの競馬で上位と差はない。坂ない方が良い走りする。",
+      "eval": "S",
+      "name": "パールS"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2024-05-19_%E4%BA%AC%E9%83%BD_11",
+    "officialDate": "2024/5/19",
+    "wholeReviewRef": {
+      "date": "2024/5/19",
+      "dayId": "day-2024-05-19",
+      "distance": 1400,
+      "grade": "g3",
+      "name": "パールS",
+      "otherConditions": {
+        "grade": "g3",
+        "surface": "ダート",
+        "track": "ダート1400",
+        "trackCondition": "良"
+      },
+      "r": 11,
+      "raceName": "パールS",
+      "raceNumber": 11,
+      "surface": "ダート",
+      "track": "ダート1400",
+      "trackCondition": "良",
+      "venue": "京都"
+    }
+  },
+  {
+    "batch": 61,
+    "horse": "エベリンテソーロ",
+    "run": {
+      "comment": "先行して早めに抜け出して1着。展開向いた。外枠で芝スタート活かせた。",
+      "eval": "A",
+      "name": "未勝利",
+      "track": "中山ダ1200"
+    },
+    "status": "official-going-not-reproducible",
+    "raceId": "race_day-2025-01-11_%E4%B8%AD%E5%B1%B1_1",
+    "officialDate": "2025/1/11",
+    "wholeReviewRef": {
+      "date": "2025/1/11",
+      "dayId": "day-2025-01-11",
+      "distance": 1200,
+      "grade": "un",
+      "name": "3歳未勝利",
+      "otherConditions": {
+        "grade": "un",
+        "surface": "ダート",
+        "track": "ダート1200",
+        "trackCondition": "稍重"
+      },
+      "r": 1,
+      "raceName": "3歳未勝利",
+      "raceNumber": 1,
+      "surface": "ダート",
+      "track": "ダート1200",
+      "trackCondition": "稍重",
+      "venue": "中山"
+    }
+  },
+  {
+    "batch": 61,
+    "horse": "アースノイド",
+    "run": {
+      "comment": "先行して粘りきれず6着。スムーズな競馬で評価はできない。1200は忙しい？評価はできない。",
+      "name": "3歳未勝利",
+      "eval": "D",
+      "track": "阪神ダ1200"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2025-04-19_%E9%98%AA%E7%A5%9E_3",
+    "officialDate": "2025/4/19",
+    "wholeReviewRef": {
+      "date": "2025/4/19",
+      "dayId": "day-2025-04-19",
+      "distance": 2000,
+      "grade": "un",
+      "name": "3歳未勝利",
+      "otherConditions": {
+        "grade": "un",
+        "surface": "ダート",
+        "track": "ダート2000",
+        "trackCondition": "良"
+      },
+      "r": 3,
+      "raceName": "3歳未勝利",
+      "raceNumber": 3,
+      "surface": "ダート",
+      "track": "ダート2000",
+      "trackCondition": "良",
+      "venue": "阪神"
+    }
+  },
+  {
+    "batch": 62,
+    "horse": "カーペンタリア",
+    "run": {
+      "name": "パールS",
+      "eval": "D",
+      "track": "京都芝2000",
+      "comment": "スタート行き足ついて中団前目につけたが直線失速。力んで走っているようにも見えたが負けすぎな印象。走るのをやめたらしい。被されるとダメか"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2024-05-19_%E4%BA%AC%E9%83%BD_11",
+    "officialDate": "2024/5/19",
+    "wholeReviewRef": {
+      "date": "2024/5/19",
+      "dayId": "day-2024-05-19",
+      "distance": 1400,
+      "grade": "g3",
+      "name": "パールS",
+      "otherConditions": {
+        "grade": "g3",
+        "surface": "ダート",
+        "track": "ダート1400",
+        "trackCondition": "良"
+      },
+      "r": 11,
+      "raceName": "パールS",
+      "raceNumber": 11,
+      "surface": "ダート",
+      "track": "ダート1400",
+      "trackCondition": "良",
+      "venue": "京都"
+    }
+  },
+  {
+    "batch": 63,
+    "horse": "ジュリアバローズ",
+    "run": {
+      "track": "京都芝2000",
+      "comment": "スタート出遅れたが二の足で中団後方につけて直線伸びて2着。スタートであのロスがありながら最後まで伸びてきたのは力がある証。勝ち馬はスローペースの展開が向いていたため差はない。地力はやはりある。スタート",
+      "name": "パールS",
+      "eval": "S"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2024-05-19_%E4%BA%AC%E9%83%BD_11",
+    "officialDate": "2024/5/19",
+    "wholeReviewRef": {
+      "date": "2024/5/19",
+      "dayId": "day-2024-05-19",
+      "distance": 1400,
+      "grade": "g3",
+      "name": "パールS",
+      "otherConditions": {
+        "grade": "g3",
+        "surface": "ダート",
+        "track": "ダート1400",
+        "trackCondition": "良"
+      },
+      "r": 11,
+      "raceName": "パールS",
+      "raceNumber": 11,
+      "surface": "ダート",
+      "track": "ダート1400",
+      "trackCondition": "良",
+      "venue": "京都"
+    }
+  }
+]
