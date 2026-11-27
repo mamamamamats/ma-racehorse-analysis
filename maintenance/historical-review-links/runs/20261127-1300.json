@@ -1,0 +1,171 @@
+{
+  "at": "2026-11-27T04:08:12.492415+00:00",
+  "scheduledFor": "2026-11-27T13:00:00+09:00",
+  "baseCompletedReviews": 13401,
+  "status": "completed",
+  "batches": [
+    {
+      "batch": "batch-032",
+      "savedHorses": 37,
+      "savedReviews": 264,
+      "readHorses": 38,
+      "heldReviewsInThisBatch": 179,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-033",
+      "savedHorses": 43,
+      "savedReviews": 294,
+      "readHorses": 43,
+      "heldReviewsInThisBatch": 154,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-034",
+      "savedHorses": 40,
+      "savedReviews": 294,
+      "readHorses": 40,
+      "heldReviewsInThisBatch": 147,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-035",
+      "savedHorses": 35,
+      "savedReviews": 265,
+      "readHorses": 35,
+      "heldReviewsInThisBatch": 147,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-036",
+      "savedHorses": 38,
+      "savedReviews": 236,
+      "readHorses": 38,
+      "heldReviewsInThisBatch": 124,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-037",
+      "savedHorses": 38,
+      "savedReviews": 267,
+      "readHorses": 38,
+      "heldReviewsInThisBatch": 115,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    }
+  ],
+  "savedHorses": 231,
+  "confirmedLinkedHorses": 232,
+  "savedReviews": 1620,
+  "totalSavedReviews": 15026,
+  "readHorses": 232,
+  "heldReviewsThisRun": 866,
+  "unprocessedHorses": 9325,
+  "heldHorses": 1575,
+  "officialHistories": 1687,
+  "completeHistories": 1676,
+  "dbErrors": 0,
+  "skippedLiveReviews": 0,
+  "identityRechecks": [
+    {
+      "name": "ボエーム",
+      "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud101998101908/A3",
+      "reason": "The returned same-name profile is for a 1998-born horse. It is not evidence of the app's current horse identity; all reviews remain held and the horse stays unprocessed for identity recheck."
+    }
+  ],
+  "alreadyLinkedReviews": 5,
+  "heldLiveReviews": [],
+  "dbReadHorseRequests": 238,
+  "carriedOverHeldReviewChecks": [
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    },
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    },
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    },
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    },
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    },
+    {
+      "batch": "batch-030",
+      "readHorses": 1,
+      "skipped": [
+        {
+          "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+          "reason": "review changed or duplicated"
+        },
+        {
+          "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+          "reason": "review changed or duplicated"
+        }
+      ]
+    }
+  ],
+  "pendingImmutablePlanReviews": 2
+}

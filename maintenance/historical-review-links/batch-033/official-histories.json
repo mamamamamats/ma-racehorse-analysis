@@ -1,0 +1,7552 @@
+[
+  {
+    "name": "ハピアーザンエバー",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106854/88",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.536Z",
+    "tableStart": 435,
+    "tableEnd": 458,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/7/18",
+        "venue": "小倉",
+        "name": "熊本城特別",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/5/16",
+        "venue": "京都",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/5/2",
+        "venue": "京都",
+        "name": "京極特別",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/4/18",
+        "venue": "阪神",
+        "name": "丹波特別",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/3/28",
+        "venue": "阪神",
+        "name": "仲春特別",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/12/20",
+        "venue": "阪神",
+        "name": "3歳上2勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/11/15",
+        "venue": "京都",
+        "name": "深草特別",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/9/21",
+        "venue": "阪神",
+        "name": "北摂特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/5/4",
+        "venue": "新潟",
+        "name": "邁進特別",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/3/1",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/2/2",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/7/28",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/7/6",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/6/16",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/4/13",
+        "venue": "福島",
+        "name": "雪うさぎ賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/2/3",
+        "venue": "小倉",
+        "name": "かささぎ賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2023/12/2",
+        "venue": "阪神",
+        "name": "さざんか賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2023/11/11",
+        "venue": "福島",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/7/22",
+        "venue": "札幌",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/7/2",
+        "venue": "中京",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 6,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "バビット",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002017103000/F4",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.538Z",
+    "tableStart": 437,
+    "tableEnd": 464,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/2/15",
+        "venue": "京都",
+        "name": "京都記念",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/11/22",
+        "venue": "福島",
+        "name": "福島記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/3/29",
+        "venue": "中山",
+        "name": "日経賞",
+        "track": "芝2500",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/2/16",
+        "venue": "京都",
+        "name": "京都記念",
+        "track": "芝2200",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/11/30",
+        "venue": "京都",
+        "name": "チャレンジC",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/10/6",
+        "venue": "京都",
+        "name": "京都大賞典",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/7/7",
+        "venue": "福島",
+        "name": "七夕賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/6/1",
+        "venue": "京都",
+        "name": "鳴尾記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/4/14",
+        "venue": "福島",
+        "name": "福島民報杯",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2024/2/11",
+        "venue": "京都",
+        "name": "京都記念",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/1/21",
+        "venue": "京都",
+        "name": "東海S",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2023/11/12",
+        "venue": "福島",
+        "name": "福島記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2023/10/8",
+        "venue": "東京",
+        "name": "毎日王冠",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2023/1/22",
+        "venue": "中山",
+        "name": "AJCC",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2022/10/30",
+        "venue": "東京",
+        "name": "天皇賞(秋)",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2022/9/25",
+        "venue": "中山",
+        "name": "オールカマー",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2021/2/28",
+        "venue": "中山",
+        "name": "中山記念",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2020/12/27",
+        "venue": "中山",
+        "name": "有馬記念",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2020/10/25",
+        "venue": "京都",
+        "name": "菊花賞",
+        "track": "芝3000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2020/9/21",
+        "venue": "中山",
+        "name": "セントライト",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2020/7/5",
+        "venue": "福島",
+        "name": "ラジNIK賞",
+        "track": "芝1800",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2020/5/23",
+        "venue": "新潟",
+        "name": "早苗賞",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2020/4/26",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2019/12/14",
+        "venue": "阪神",
+        "name": "2歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2019/11/24",
+        "venue": "京都",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "フィオライア",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021101924/DE",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.539Z",
+    "tableStart": 437,
+    "tableEnd": 460,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/25",
+        "venue": "新潟",
+        "name": "ルミエAD",
+        "track": "芝1000",
+        "going": "不良",
+        "fieldSize": 17,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2026/10/3",
+        "venue": "京都",
+        "name": "オパールS",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/8/9",
+        "venue": "中京",
+        "name": "CBC賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2026/3/29",
+        "venue": "中京",
+        "name": "高松宮記念",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 18,
+        "status": ""
+      },
+      {
+        "date": "2026/2/28",
+        "venue": "中山",
+        "name": "オーシャンS",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/2/1",
+        "venue": "京都",
+        "name": "シルクロード",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/1/11",
+        "venue": "京都",
+        "name": "淀短距離S",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/12/7",
+        "venue": "中山",
+        "name": "ラピスラズリ",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/10/26",
+        "venue": "新潟",
+        "name": "ルミエAD",
+        "track": "芝1000",
+        "going": "稍重",
+        "fieldSize": 17,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/10/4",
+        "venue": "京都",
+        "name": "オパールS",
+        "track": "芝1200",
+        "going": "重",
+        "fieldSize": 18,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/8/24",
+        "venue": "札幌",
+        "name": "キーンランド",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/8/10",
+        "venue": "札幌",
+        "name": "UHB賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/6/14",
+        "venue": "函館",
+        "name": "函館SS",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/3/16",
+        "venue": "阪神",
+        "name": "米子城S",
+        "track": "芝1200",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/2/1",
+        "venue": "小倉",
+        "name": "巌流島S",
+        "track": "芝1200",
+        "going": "重",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/12/1",
+        "venue": "中山",
+        "name": "南総S",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/9/21",
+        "venue": "中京",
+        "name": "賢島特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/8/25",
+        "venue": "札幌",
+        "name": "小樽特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/6/9",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/5/19",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/10/1",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "フルール",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002020105656/91",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.539Z",
+    "tableStart": 435,
+    "tableEnd": 467,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/12/27",
+        "venue": "中山",
+        "name": "グレイトフル",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/11/2",
+        "venue": "京都",
+        "name": "古都S",
+        "track": "芝3000",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/9/7",
+        "venue": "札幌",
+        "name": "丹頂S",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/7/27",
+        "venue": "札幌",
+        "name": "札幌日経賞",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/5/17",
+        "venue": "東京",
+        "name": "六社S",
+        "track": "芝2400",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/5/11",
+        "venue": "京都",
+        "name": "烏丸S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/3/30",
+        "venue": "阪神",
+        "name": "御堂筋S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/3/9",
+        "venue": "中山",
+        "name": "湾岸S",
+        "track": "芝2500",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/1/6",
+        "venue": "中京",
+        "name": "万葉S",
+        "track": "芝3000",
+        "going": "稍重",
+        "fieldSize": 17,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/12/21",
+        "venue": "中山",
+        "name": "グレイトフル",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/11/30",
+        "venue": "中山",
+        "name": "ステイヤーズ",
+        "track": "芝3600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "京都",
+        "name": "古都S",
+        "track": "芝3000",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/8/3",
+        "venue": "札幌",
+        "name": "札幌日経OP",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/5/5",
+        "venue": "京都",
+        "name": "烏丸S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/4/14",
+        "venue": "福島",
+        "name": "奥の細道特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/3/31",
+        "venue": "中山",
+        "name": "安房特別",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/2/17",
+        "venue": "小倉",
+        "name": "皿倉山特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/1/21",
+        "venue": "小倉",
+        "name": "海の中道特別",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/1/14",
+        "venue": "小倉",
+        "name": "玄海特別",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2023/12/17",
+        "venue": "中山",
+        "name": "3歳上2勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2023/12/10",
+        "venue": "中山",
+        "name": "チバテレ杯",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2023/11/19",
+        "venue": "福島",
+        "name": "五色沼特別",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2023/9/9",
+        "venue": "中山",
+        "name": "紫苑S",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 17,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2023/7/22",
+        "venue": "福島",
+        "name": "伊達特別",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/7/9",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/5/14",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2023/4/16",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/2/4",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/1/29",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "重",
+        "fieldSize": 13,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2023/1/15",
+        "venue": "中京",
+        "name": "3歳新馬",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "チャックネイト",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102018104609/87",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.539Z",
+    "tableStart": 437,
+    "tableEnd": 464,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/6/28",
+        "venue": "函館",
+        "name": "函館記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2026/3/28",
+        "venue": "中山",
+        "name": "日経賞",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/1/25",
+        "venue": "中山",
+        "name": "AJCC",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/12/6",
+        "venue": "中山",
+        "name": "ステイヤーズ",
+        "track": "芝3600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/6/15",
+        "venue": "阪神",
+        "name": "宝塚記念",
+        "track": "芝2200",
+        "going": "稍重",
+        "fieldSize": 17,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/3/29",
+        "venue": "中山",
+        "name": "日経賞",
+        "track": "芝2500",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/1/26",
+        "venue": "中山",
+        "name": "AJCC",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2024/8/18",
+        "venue": "札幌",
+        "name": "札幌記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/7/14",
+        "venue": "函館",
+        "name": "函館記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/4/28",
+        "venue": "京都",
+        "name": "天皇賞(春)",
+        "track": "芝3200",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/1/21",
+        "venue": "中山",
+        "name": "AJCC",
+        "track": "芝2200",
+        "going": "不良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/11/5",
+        "venue": "東京",
+        "name": "アルゼンチン",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/10/9",
+        "venue": "東京",
+        "name": "六社S",
+        "track": "芝2400",
+        "going": "重",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/6/24",
+        "venue": "東京",
+        "name": "江の島S",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/2/4",
+        "venue": "東京",
+        "name": "早春S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/1/7",
+        "venue": "中京",
+        "name": "長良川特別",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/8/20",
+        "venue": "札幌",
+        "name": "札幌日刊S杯",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2022/2/12",
+        "venue": "東京",
+        "name": "箱根特別",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2022/1/15",
+        "venue": "中山",
+        "name": "4歳上2勝クラス",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2021/12/18",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2021/8/28",
+        "venue": "札幌",
+        "name": "ルスツ特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2021/7/18",
+        "venue": "函館",
+        "name": "3歳未勝利",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2021/4/4",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2021/3/7",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2021/2/6",
+        "venue": "東京",
+        "name": "3歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 3,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "デビットバローズ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102019104878/72",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.539Z",
+    "tableStart": 437,
+    "tableEnd": 461,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/17",
+        "venue": "東京",
+        "name": "富士S",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2026/6/28",
+        "venue": "函館",
+        "name": "函館記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/4/5",
+        "venue": "阪神",
+        "name": "大阪杯",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/12/6",
+        "venue": "阪神",
+        "name": "鳴尾記念",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/6/22",
+        "venue": "阪神",
+        "name": "しらさぎS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/5/10",
+        "venue": "東京",
+        "name": "エプソムC",
+        "track": "芝1800",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/3/9",
+        "venue": "阪神",
+        "name": "大阪城S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/2/15",
+        "venue": "京都",
+        "name": "洛陽S",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/7/14",
+        "venue": "函館",
+        "name": "函館記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2024/6/30",
+        "venue": "函館",
+        "name": "巴賞",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/5/5",
+        "venue": "新潟",
+        "name": "新潟大賞典",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/3/3",
+        "venue": "阪神",
+        "name": "大阪城S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/1/8",
+        "venue": "京都",
+        "name": "寿ステークス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/9/17",
+        "venue": "中山",
+        "name": "レインボーS",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2023/6/17",
+        "venue": "阪神",
+        "name": "垂水S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": null,
+        "status": "取消"
+      },
+      {
+        "date": "2023/5/28",
+        "venue": "東京",
+        "name": "むらさき賞",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2023/2/11",
+        "venue": "阪神",
+        "name": "須磨特別",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/6/11",
+        "venue": "中京",
+        "name": "春日井特別",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/5/21",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/1/16",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2021/12/28",
+        "venue": "阪神",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2021/10/16",
+        "venue": "阪神",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ダンツエラン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103304/E9",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.539Z",
+    "tableStart": 435,
+    "tableEnd": 454,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/14",
+        "venue": "京都",
+        "name": "アンドロメダ",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/10/18",
+        "venue": "新潟",
+        "name": "新潟牝馬S",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/8/9",
+        "venue": "札幌",
+        "name": "UHB賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/6/27",
+        "venue": "函館",
+        "name": "青函S",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/4/11",
+        "venue": "福島",
+        "name": "吾妻小富士S",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2026/2/15",
+        "venue": "小倉",
+        "name": "北九州短距離",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 18,
+        "status": ""
+      },
+      {
+        "date": "2025/11/2",
+        "venue": "京都",
+        "name": "まほろばS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/10/13",
+        "venue": "京都",
+        "name": "MBSスワン",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/9/14",
+        "venue": "阪神",
+        "name": "ローズS",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 17,
+        "status": ""
+      },
+      {
+        "date": "2025/6/22",
+        "venue": "阪神",
+        "name": "しらさぎS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/5/31",
+        "venue": "京都",
+        "name": "葵ステークス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/4/13",
+        "venue": "阪神",
+        "name": "桜花賞",
+        "track": "芝1600",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2025/3/8",
+        "venue": "阪神",
+        "name": "Fレビュー",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/12/8",
+        "venue": "京都",
+        "name": "阪神JF",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 17,
+        "status": ""
+      },
+      {
+        "date": "2024/11/2",
+        "venue": "京都",
+        "name": "ファンタジー",
+        "track": "芝1400",
+        "going": "不良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/5",
+        "venue": "京都",
+        "name": "りんどう賞",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/8/4",
+        "venue": "新潟",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ダンツティアラ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021104314/5C",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/9/27",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/2/21",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/11/29",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/11/9",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/3/2",
+        "venue": "中山",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/12/22",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/9/29",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/9/7",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/5/4",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/4/13",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/3/24",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/1/13",
+        "venue": "中山",
+        "name": "3歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": null,
+        "status": "取消"
+      }
+    ]
+  },
+  {
+    "name": "ニシノミチアキ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104403/96",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/7/12",
+        "venue": "小倉",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/4/19",
+        "venue": "阪神",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/2/15",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "ダ2400",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2026/1/17",
+        "venue": "京都",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/12/13",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1900",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/11/15",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/10/25",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/5/18",
+        "venue": "京都",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 13,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/3/8",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/2/23",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/12/1",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/9/28",
+        "venue": "中京",
+        "name": "2歳新馬",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 15,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ニシノヒナアラレ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022100678/04",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/11/9",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/9/14",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/8/30",
+        "venue": "新潟",
+        "name": "新発田城特別",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/8/10",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "芝1400",
+        "going": "重",
+        "fieldSize": 18,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/5/18",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "ダ1600",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/4/27",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/2/8",
+        "venue": "東京",
+        "name": "春菜賞",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/1/11",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/12/15",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/10/20",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/10/5",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/9/15",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "バースデイフライト",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102023102906/92",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 438,
+    "tableEnd": 453,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/18",
+        "venue": "京都",
+        "name": "秋華賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/9/27",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/9/6",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/7/26",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/6/13",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2026/5/31",
+        "venue": "京都",
+        "name": "白百合S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/4/12",
+        "venue": "阪神",
+        "name": "忘れな草賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/3/21",
+        "venue": "中山",
+        "name": "フラワーC",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/12/20",
+        "venue": "中山",
+        "name": "ひいらぎ賞",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/11/30",
+        "venue": "京都",
+        "name": "白菊賞",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/10/25",
+        "venue": "東京",
+        "name": "アルテミスS",
+        "track": "芝1600",
+        "going": "稍重",
+        "fieldSize": 10,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/7/26",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 6,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/6/22",
+        "venue": "阪神",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 3,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "パッションリッチ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022105390/A4",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 450,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/8/15",
+        "venue": "新潟",
+        "name": "阿賀野川特別",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": null,
+        "status": "中止"
+      },
+      {
+        "date": "2026/5/17",
+        "venue": "新潟",
+        "name": "信濃川特別",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/2/22",
+        "venue": "東京",
+        "name": "4歳上2勝クラス",
+        "track": "ダ2100",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/11/24",
+        "venue": "東京",
+        "name": "南武特別",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/10/26",
+        "venue": "新潟",
+        "name": "村上特別",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/9/21",
+        "venue": "阪神",
+        "name": "神戸新聞杯",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/8/3",
+        "venue": "新潟",
+        "name": "燕特別",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/4/26",
+        "venue": "東京",
+        "name": "青葉賞",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/3/15",
+        "venue": "阪神",
+        "name": "ゆきやなぎ賞",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/1/19",
+        "venue": "中山",
+        "name": "京成杯",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/11/30",
+        "venue": "中山",
+        "name": "葉牡丹賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/10/19",
+        "venue": "東京",
+        "name": "アイビーS",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/8/18",
+        "venue": "新潟",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "パーティーガール",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022106420/3B",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 462,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/22",
+        "venue": "東京",
+        "name": "3歳上2勝クラス",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/11/1",
+        "venue": "京都",
+        "name": "3歳上2勝クラス",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/10/18",
+        "venue": "新潟",
+        "name": "飛翼特別",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/9/5",
+        "venue": "中山",
+        "name": "白井特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/8/23",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/8/8",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/7/5",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/6/21",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/6/14",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/5/16",
+        "venue": "新潟",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/2/21",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2026/1/22",
+        "venue": "",
+        "name": "JRAへ転入",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2026/1/1",
+        "venue": "川崎",
+        "name": "初詣(はつもうで)賞",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/12/15",
+        "venue": "川崎",
+        "name": "ベルリン賞",
+        "track": "ダ1400",
+        "going": "重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/11/19",
+        "venue": "川崎",
+        "name": "普通C2三四五",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/10/15",
+        "venue": "川崎",
+        "name": "長谷(はせ)賞",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/8/6",
+        "venue": "",
+        "name": "JRAより転出",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2025/8/3",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/7/27",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/6/7",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1300",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/12/7",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/11/17",
+        "venue": "福島",
+        "name": "2歳未勝利",
+        "track": "ダ1150",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/11/2",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1300",
+        "going": "重",
+        "fieldSize": 14,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/19",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/9/21",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "フォーゲル",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102023105273/1F",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 437,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/3",
+        "venue": "東京",
+        "name": "白秋S",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/8/15",
+        "venue": "中京",
+        "name": "知多特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/5/30",
+        "venue": "京都",
+        "name": "葵ステークス",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/5/10",
+        "venue": "京都",
+        "name": "橘ステークス",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2026/3/21",
+        "venue": "中京",
+        "name": "ファルコンS",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2026/2/28",
+        "venue": "阪神",
+        "name": "マーガレット",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/12/20",
+        "venue": "中京",
+        "name": "報知杯CRS",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 9,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/12/6",
+        "venue": "阪神",
+        "name": "さざんか賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/9/27",
+        "venue": "阪神",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/9/14",
+        "venue": "阪神",
+        "name": "2歳未勝利",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/7/26",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 6,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/7/6",
+        "venue": "小倉",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 4,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "フェニーチェドーロ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101408/08",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/8/15",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/8/1",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "芝1500",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/7/19",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "不良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/6/21",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/3/14",
+        "venue": "阪神",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/11/16",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/8/16",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/8/3",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/4/20",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/1/12",
+        "venue": "中京",
+        "name": "3歳1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/12/8",
+        "venue": "京都",
+        "name": "2歳1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/11/9",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/8/3",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/7/7",
+        "venue": "小倉",
+        "name": "2歳新馬",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 7,
+        "finish": 5,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ブリヤディアマンテ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022104856/1C",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 452,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/15",
+        "venue": "福島",
+        "name": "三陸特別",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2026/9/19",
+        "venue": "中山",
+        "name": "九十九里特別",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/8/16",
+        "venue": "札幌",
+        "name": "阿寒湖特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/7/5",
+        "venue": "函館",
+        "name": "横津岳特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/2/7",
+        "venue": "京都",
+        "name": "4歳上2勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/1/24",
+        "venue": "小倉",
+        "name": "海の中道特別",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/11/15",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/11/9",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/8/31",
+        "venue": "札幌",
+        "name": "北辰特別",
+        "track": "芝2600",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/5/17",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/4/19",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/3/15",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/2/22",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/1/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/10/14",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ブルックリンダンス",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022105791/DB",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 433,
+    "tableEnd": 448,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/8/22",
+        "venue": "中京",
+        "name": "大府特別",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2026/8/9",
+        "venue": "中京",
+        "name": "揖斐川特別",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/7/12",
+        "venue": "小倉",
+        "name": "八女特別",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/5/31",
+        "venue": "京都",
+        "name": "與杼特別",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/3/21",
+        "venue": "阪神",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/2/1",
+        "venue": "京都",
+        "name": "衣笠特別",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2026/1/4",
+        "venue": "京都",
+        "name": "天ケ瀬特別",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/3/15",
+        "venue": "中京",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/2/9",
+        "venue": "京都",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/11/23",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/26",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/9/16",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/8/31",
+        "venue": "中京",
+        "name": "2歳新馬",
+        "track": "ダ1400",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ブラックトルネード",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022106418/DC",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 453,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/6/27",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "重",
+        "fieldSize": 11,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/6/13",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2026/3/14",
+        "venue": "中京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2026/1/5",
+        "venue": "中山",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/9/25",
+        "venue": "浦和",
+        "name": "Mヒーロ特別",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/9/13",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "不良",
+        "fieldSize": 15,
+        "finish": null,
+        "status": "除外"
+      },
+      {
+        "date": "2025/6/29",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1150",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/3/23",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/3/9",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "ダ1200",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/12/21",
+        "venue": "中山",
+        "name": "2歳1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "中京",
+        "name": "中京2歳S",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/12/1",
+        "venue": "中山",
+        "name": "2歳1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/10/6",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/9/21",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/8/17",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/6/15",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ブラーブデシジョン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103763/9A",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/12/14",
+        "venue": "中京",
+        "name": "大須特別",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/10/18",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/10/4",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/6/14",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/4/19",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/4/12",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/3/30",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/3/16",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/9/28",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/9/8",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "テイオームサシ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101936/47",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/10/11",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/8/17",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/7/27",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "不良",
+        "fieldSize": 9,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/7/6",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/5/24",
+        "venue": "京都",
+        "name": "3歳1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/12/8",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/11/3",
+        "venue": "福島",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/9/14",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/8/10",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/7/20",
+        "venue": "福島",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2024/6/1",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 8,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "チュラビックタイム",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022102097/69",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.540Z",
+    "tableStart": 435,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/14",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/10/25",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "不良",
+        "fieldSize": 11,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/2/14",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ2100",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/7/20",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/5/25",
+        "venue": "京都",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/5/10",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/4/20",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/2/15",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/1/25",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "福島",
+        "name": "2歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/10/20",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 9,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/5",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/9/16",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/8/17",
+        "venue": "新潟",
+        "name": "2歳新馬",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 9,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "トライデント",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021102793/4F",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.541Z",
+    "tableStart": 435,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/12/7",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/10/30",
+        "venue": "浦和",
+        "name": "Mフェア特別",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 11,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/9/6",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/5/24",
+        "venue": "新潟",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/3/2",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "芝2000",
+        "going": "重",
+        "fieldSize": 18,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/2/22",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/2/1",
+        "venue": "小倉",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/1/6",
+        "venue": "中山",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/7/20",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/6/11",
+        "venue": "川崎",
+        "name": "ジューンF賞",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/5/11",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/2/17",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/1/21",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2200",
+        "going": "不良",
+        "fieldSize": 17,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2023/12/28",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 5,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "デリュージョン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022107106/29",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.541Z",
+    "tableStart": 435,
+    "tableEnd": 452,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/10",
+        "venue": "金沢",
+        "name": "加賀粟津賞",
+        "track": "ダ1500",
+        "going": "重",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2026/10/4",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/9/12",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2026/5/17",
+        "venue": "京都",
+        "name": "4歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/4/26",
+        "venue": "京都",
+        "name": "4歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2026/4/19",
+        "venue": "福島",
+        "name": "4歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/10/19",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/10/12",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 17,
+        "status": ""
+      },
+      {
+        "date": "2025/9/6",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/6/21",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/4/6",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/3/22",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/1/5",
+        "venue": "中山",
+        "name": "ジュニアC",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/12/8",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "京都",
+        "name": "2歳新馬",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "チェルヴィニア",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021105643/B4",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.541Z",
+    "tableStart": 437,
+    "tableEnd": 455,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/15",
+        "venue": "京都",
+        "name": "エリザベス杯",
+        "track": "芝2200",
+        "going": "重",
+        "fieldSize": 18,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2026/8/30",
+        "venue": "新潟",
+        "name": "新潟記念",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 11,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/5/17",
+        "venue": "東京",
+        "name": "ヴィクトリア",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 16,
+        "status": ""
+      },
+      {
+        "date": "2026/3/1",
+        "venue": "中山",
+        "name": "中山記念",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/11/23",
+        "venue": "京都",
+        "name": "マイルCS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/10/5",
+        "venue": "東京",
+        "name": "毎日王冠",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/6/22",
+        "venue": "阪神",
+        "name": "しらさぎS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/4/5",
+        "venue": "ア首",
+        "name": "ドバイシーマ",
+        "track": "芝2410",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/2/16",
+        "venue": "京都",
+        "name": "京都記念",
+        "track": "芝2200",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/11/24",
+        "venue": "東京",
+        "name": "ジャパンC",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/10/13",
+        "venue": "京都",
+        "name": "秋華賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/5/19",
+        "venue": "東京",
+        "name": "優駿牝馬",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/4/7",
+        "venue": "阪神",
+        "name": "桜花賞",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2023/10/28",
+        "venue": "東京",
+        "name": "アルテミスS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/8/12",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/6/4",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "稍重",
+        "fieldSize": 11,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "チェイスザドリーム",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102019105968/82",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.541Z",
+    "tableStart": 433,
+    "tableEnd": 459,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2024/12/8",
+        "venue": "中山",
+        "name": "カペラS",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/11/24",
+        "venue": "京都",
+        "name": "京阪杯",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "新潟",
+        "name": "ルミエAD",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/5",
+        "venue": "京都",
+        "name": "オパールS",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/9/21",
+        "venue": "中山",
+        "name": "ながつきS",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/7/28",
+        "venue": "新潟",
+        "name": "アイビスSD",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/5/19",
+        "venue": "新潟",
+        "name": "韋駄天S",
+        "track": "芝1000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/3/17",
+        "venue": "中山",
+        "name": "千葉S",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/2/18",
+        "venue": "京都",
+        "name": "大和S",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2023/12/24",
+        "venue": "阪神",
+        "name": "りんくうS",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2023/12/10",
+        "venue": "中山",
+        "name": "カペラS",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2023/11/12",
+        "venue": "京都",
+        "name": "室町S",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2023/10/7",
+        "venue": "京都",
+        "name": "藤森S",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2023/8/20",
+        "venue": "新潟",
+        "name": "NST賞",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2023/7/23",
+        "venue": "福島",
+        "name": "安達太良S",
+        "track": "ダ1150",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/6/4",
+        "venue": "阪神",
+        "name": "松風月S",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2023/4/12",
+        "venue": "船橋",
+        "name": "マリーンC",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/2/19",
+        "venue": "阪神",
+        "name": "大和S",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2022/12/25",
+        "venue": "中山",
+        "name": "フェアウェル",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/10/2",
+        "venue": "中山",
+        "name": "外房S",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2022/7/10",
+        "venue": "函館",
+        "name": "3歳上2勝クラス",
+        "track": "ダ1000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/6/11",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1000",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/4/24",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2022/3/12",
+        "venue": "阪神",
+        "name": "3歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ハーツコンチェルト",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002020105681/82",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.542Z",
+    "tableStart": 433,
+    "tableEnd": 452,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/7/25",
+        "venue": "中京",
+        "name": "関ケ原S",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/5/31",
+        "venue": "東京",
+        "name": "目黒記念",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/5/16",
+        "venue": "東京",
+        "name": "六社S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/11/30",
+        "venue": "東京",
+        "name": "ウェルカムS",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": null,
+        "status": "取消"
+      },
+      {
+        "date": "2025/2/8",
+        "venue": "東京",
+        "name": "早春S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/6/8",
+        "venue": "東京",
+        "name": "ジューンS",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/5/11",
+        "venue": "東京",
+        "name": "六社S",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/2/24",
+        "venue": "サウ",
+        "name": "ネオムターフ",
+        "track": "芝2100",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/1/14",
+        "venue": "京都",
+        "name": "日経新春杯",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2023/10/22",
+        "venue": "京都",
+        "name": "菊花賞",
+        "track": "芝3000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2023/9/24",
+        "venue": "阪神",
+        "name": "神戸新聞杯",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/5/28",
+        "venue": "東京",
+        "name": "東京優駿",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/4/29",
+        "venue": "東京",
+        "name": "青葉賞",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2023/3/18",
+        "venue": "阪神",
+        "name": "若葉S",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 8,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2022/12/28",
+        "venue": "中山",
+        "name": "ホープフルS",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2022/11/19",
+        "venue": "東京",
+        "name": "東スポ2歳S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2022/9/18",
+        "venue": "中京",
+        "name": "2歳新馬",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "バースクライ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102020101827/61",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.542Z",
+    "tableStart": 435,
+    "tableEnd": 456,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/12/20",
+        "venue": "阪神",
+        "name": "タンザナイト",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/11/9",
+        "venue": "福島",
+        "name": "みちのくS",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/8/10",
+        "venue": "札幌",
+        "name": "UHB賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/7/12",
+        "venue": "福島",
+        "name": "安達太良S",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/1/18",
+        "venue": "中山",
+        "name": "カーバンクル",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "京都",
+        "name": "タンザナイト",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/26",
+        "venue": "京都",
+        "name": "MBSスワン",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/8/18",
+        "venue": "中京",
+        "name": "CBC賞",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2024/6/30",
+        "venue": "小倉",
+        "name": "北九州記念",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/3/2",
+        "venue": "中山",
+        "name": "オーシャンS",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/1/28",
+        "venue": "京都",
+        "name": "シルクロード",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2023/12/3",
+        "venue": "中山",
+        "name": "南総S",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/9/23",
+        "venue": "阪神",
+        "name": "北摂特別",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/9/2",
+        "venue": "小倉",
+        "name": "3歳上1勝クラス",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/5/27",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2023/4/2",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2023/3/4",
+        "venue": "阪神",
+        "name": "チューリップ",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2023/1/15",
+        "venue": "中京",
+        "name": "紅梅S",
+        "track": "芝1400",
+        "going": "稍重",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2022/11/6",
+        "venue": "阪神",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "パンジャ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021105155/9C",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.542Z",
+    "tableStart": 435,
+    "tableEnd": 459,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/9/20",
+        "venue": "中山",
+        "name": "オールカマー",
+        "track": "芝2200",
+        "going": "重",
+        "fieldSize": 13,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/4/19",
+        "venue": "中山",
+        "name": "サンシャイン",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/3/14",
+        "venue": "阪神",
+        "name": "難波S",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/2/22",
+        "venue": "東京",
+        "name": "ベストR記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/11/30",
+        "venue": "東京",
+        "name": "ウェルカムS",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/9/6",
+        "venue": "中山",
+        "name": "白井特別",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 7,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/4/26",
+        "venue": "東京",
+        "name": "石和特別",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/3/29",
+        "venue": "中山",
+        "name": "4歳上2勝クラス",
+        "track": "芝1800",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/3/2",
+        "venue": "中山",
+        "name": "富里特別",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/12/28",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/12/7",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/11/16",
+        "venue": "福島",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "新潟",
+        "name": "湯沢特別",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/9/16",
+        "venue": "中山",
+        "name": "セントライト",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/8/31",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/7/13",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/6/15",
+        "venue": "函館",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/5/19",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/4/28",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/4/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/3/16",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/8/20",
+        "venue": "札幌",
+        "name": "2歳新馬",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 9,
+        "finish": 7,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ドウデュース",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102019105283/0C",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 455,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2024/12/22",
+        "venue": "中山",
+        "name": "有馬記念",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": null,
+        "status": "取消"
+      },
+      {
+        "date": "2024/11/24",
+        "venue": "東京",
+        "name": "ジャパンC",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "東京",
+        "name": "天皇賞(秋)",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/6/23",
+        "venue": "京都",
+        "name": "宝塚記念",
+        "track": "芝2200",
+        "going": "重",
+        "fieldSize": 13,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/3/30",
+        "venue": "ア首",
+        "name": "ドバイターフ",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2023/12/24",
+        "venue": "中山",
+        "name": "有馬記念",
+        "track": "芝2500",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2023/11/26",
+        "venue": "東京",
+        "name": "ジャパンC",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2023/10/29",
+        "venue": "東京",
+        "name": "天皇賞(秋)",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2023/3/25",
+        "venue": "ア首",
+        "name": "ドバイターフ",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": null,
+        "status": "取消"
+      },
+      {
+        "date": "2023/2/12",
+        "venue": "阪神",
+        "name": "京都記念",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/10/2",
+        "venue": "仏",
+        "name": "凱旋門賞",
+        "track": "芝2400",
+        "going": "重",
+        "fieldSize": 20,
+        "finish": 19,
+        "status": ""
+      },
+      {
+        "date": "2022/9/11",
+        "venue": "仏",
+        "name": "ニエル賞",
+        "track": "芝2400",
+        "going": "重",
+        "fieldSize": 7,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2022/5/29",
+        "venue": "東京",
+        "name": "東京優駿",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2022/4/17",
+        "venue": "中山",
+        "name": "皐月賞",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2022/3/6",
+        "venue": "中山",
+        "name": "ディープ記念",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2021/12/19",
+        "venue": "阪神",
+        "name": "朝日杯FS",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2021/10/23",
+        "venue": "東京",
+        "name": "アイビーS",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2021/9/5",
+        "venue": "小倉",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 1,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ナムラリーナ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021104304/4C",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 448,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2024/8/10",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/7/21",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/7/7",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/6/22",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/6/8",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/5/26",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/4/21",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/3/31",
+        "venue": "阪神",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/3/17",
+        "venue": "阪神",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/3/2",
+        "venue": "阪神",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/2/10",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ルヴァレドクール",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022100994/D2",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 437,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/14",
+        "venue": "東京",
+        "name": "武蔵野S",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/10/3",
+        "venue": "東京",
+        "name": "グリーンCC",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/6/13",
+        "venue": "東京",
+        "name": "夏至S",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/5/2",
+        "venue": "東京",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/2/21",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/11/29",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/11/2",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/2/2",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/11/9",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/8/17",
+        "venue": "新潟",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 3,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "イサチルカムカム",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022102698/E9",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 447,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/7/22",
+        "venue": "浦和",
+        "name": "Tマッチ特別",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/6/14",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/5/25",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/5/4",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/2/23",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/12/15",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/12/1",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/11/10",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/9/15",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/6/9",
+        "venue": "函館",
+        "name": "2歳新馬",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 14,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ネクストダンサー",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022103753/A3",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/8/9",
+        "venue": "札幌",
+        "name": "富良野特別",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/6/28",
+        "venue": "函館",
+        "name": "渡島特別",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 11,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/5/23",
+        "venue": "東京",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2026/4/19",
+        "venue": "阪神",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/3/14",
+        "venue": "中京",
+        "name": "中京スポーツ",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/1/18",
+        "venue": "中山",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/6/22",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/5/24",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/4/5",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/3/16",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/2/1",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/12/21",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/11/30",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/11/2",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "ダ1600",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ニューファウンド",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022104643/51",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/5/24",
+        "venue": "東京",
+        "name": "三峰山特別",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/3/8",
+        "venue": "中山",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 13,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/1/12",
+        "venue": "中山",
+        "name": "成田特別",
+        "track": "ダ2400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/11/29",
+        "venue": "東京",
+        "name": "3歳上2勝クラス",
+        "track": "ダ2100",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/8/10",
+        "venue": "新潟",
+        "name": "レパードS",
+        "track": "ダ1800",
+        "going": "不良",
+        "fieldSize": 15,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/6/14",
+        "venue": "東京",
+        "name": "日野特別",
+        "track": "ダ2100",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/4/13",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/3/15",
+        "venue": "中山",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/1/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/9/14",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/8/31",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/6/15",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 5,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ハクシンブライアン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022106975/BF",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 453,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/8",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/6/14",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/5/16",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/4/26",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/3/22",
+        "venue": "中山",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2026/2/21",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/2/1",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/12/27",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/6/15",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/5/25",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/1/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/11/24",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/26",
+        "venue": "新潟",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/9/28",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": null,
+        "status": "取消"
+      },
+      {
+        "date": "2024/9/7",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 7,
+        "finish": 7,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ノーブルゲイル",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021104283/28",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/11/16",
+        "venue": "福島",
+        "name": "福島民友C",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/9/20",
+        "venue": "中山",
+        "name": "イサ殿下来場",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/7/13",
+        "venue": "福島",
+        "name": "天の川S",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/3/29",
+        "venue": "中山",
+        "name": "ブラッドスト",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/3/2",
+        "venue": "中山",
+        "name": "4歳上2勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "中山",
+        "name": "3歳上2勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2024/9/16",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/8/24",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/5/26",
+        "venue": "京都",
+        "name": "3歳1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/5/12",
+        "venue": "東京",
+        "name": "3歳1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2024/3/31",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/1/28",
+        "venue": "東京",
+        "name": "3歳新馬",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ガジュノリホワイト",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101730/33",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 449,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/8/23",
+        "venue": "札幌",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/7/19",
+        "venue": "函館",
+        "name": "3歳未勝利",
+        "track": "芝1200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/7/6",
+        "venue": "函館",
+        "name": "3歳未勝利",
+        "track": "芝1200",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/6/21",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/5/31",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "芝1400",
+        "going": "稍重",
+        "fieldSize": 18,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/2/8",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": null,
+        "status": "除外"
+      },
+      {
+        "date": "2025/1/25",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2025/1/5",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/12/8",
+        "venue": "中京",
+        "name": "2歳未勝利",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/11/23",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "東京",
+        "name": "2歳未勝利",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/7/13",
+        "venue": "福島",
+        "name": "2歳新馬",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 6,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ベイビーベリッシモ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022102728/AA",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 455,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/3",
+        "venue": "東京",
+        "name": "障害3歳上オープン",
+        "track": "芝ダ3100",
+        "going": "良/良",
+        "fieldSize": 12,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/8/8",
+        "venue": "中京",
+        "name": "障害3歳上オープン",
+        "track": "芝3000",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/5/31",
+        "venue": "京都",
+        "name": "障害4歳上オープン",
+        "track": "芝ダ3170",
+        "going": "良/良",
+        "fieldSize": 9,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/5/2",
+        "venue": "新潟",
+        "name": "障害4歳上オープン",
+        "track": "芝2890",
+        "going": "重",
+        "fieldSize": 11,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2026/2/14",
+        "venue": "小倉",
+        "name": "障害4歳上未勝利",
+        "track": "芝2860",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/1/31",
+        "venue": "小倉",
+        "name": "障害4歳上未勝利",
+        "track": "芝2860",
+        "going": "良",
+        "fieldSize": 10,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/11/9",
+        "venue": "福島",
+        "name": "障害3歳上未勝利",
+        "track": "芝2750",
+        "going": "良",
+        "fieldSize": 9,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/9/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/8/24",
+        "venue": "札幌",
+        "name": "3歳未勝利",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": null,
+        "status": "除外"
+      },
+      {
+        "date": "2025/7/26",
+        "venue": "札幌",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/7/6",
+        "venue": "函館",
+        "name": "3歳未勝利",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 13,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/6/14",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/4/20",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/3/29",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "ダ1900",
+        "going": "稍重",
+        "fieldSize": 13,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/3/16",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "ダ1900",
+        "going": "重",
+        "fieldSize": 13,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/2/23",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ2100",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/12/1",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/11/17",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ダンスデュヴァン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022105841/BC",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 444,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/8/24",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "ダ1900",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2025/7/20",
+        "venue": "小倉",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/5/17",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "芝2400",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/5/3",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/4/13",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/11/23",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2024/11/9",
+        "venue": "京都",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 7,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ロードトライデント",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102023102171/3B",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 444,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/10/12",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1300",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2026/9/19",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/6/21",
+        "venue": "東京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2026/4/12",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1200",
+        "going": "稍重",
+        "fieldSize": 15,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/3/28",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1200",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2026/2/14",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/12/28",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "デュピュイドローム",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104838/C9",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 440,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/6/14",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2025/6/1",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/3/2",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ネクストヒロイン",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021100070/A1",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.543Z",
+    "tableStart": 435,
+    "tableEnd": 454,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/8/24",
+        "venue": "札幌",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/7/13",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/5/3",
+        "venue": "新潟",
+        "name": "4歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/2/8",
+        "venue": "東京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2025/1/18",
+        "venue": "中山",
+        "name": "4歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2024/12/15",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/10/30",
+        "venue": "",
+        "name": "JRAへ転入",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2024/10/15",
+        "venue": "門別",
+        "name": "翔けろ!浦河産馬特別",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/3",
+        "venue": "門別",
+        "name": "3歳以上C4-3",
+        "track": "ダ1200",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/9/18",
+        "venue": "門別",
+        "name": "3歳以上C4-3",
+        "track": "ダ1000",
+        "going": "稍重",
+        "fieldSize": 11,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2024/7/24",
+        "venue": "",
+        "name": "JRAより転出",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2024/7/20",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2024/5/5",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2024/4/7",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "重",
+        "fieldSize": 17,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/3/2",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 13,
+        "status": ""
+      },
+      {
+        "date": "2024/1/27",
+        "venue": "東京",
+        "name": "3歳未勝利",
+        "track": "ダ1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2023/12/24",
+        "venue": "中山",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 6,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ハヤブサオヒメサマ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022105973/EA",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.544Z",
+    "tableStart": 435,
+    "tableEnd": 451,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/8/23",
+        "venue": "札幌",
+        "name": "WASJ3",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2026/8/1",
+        "venue": "札幌",
+        "name": "大倉山特別",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 8,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2026/6/13",
+        "venue": "函館",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "稍重",
+        "fieldSize": 12,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2026/4/25",
+        "venue": "福島",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2026/3/15",
+        "venue": "中京",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2026/1/12",
+        "venue": "京都",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/12/20",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/12/7",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2025/7/26",
+        "venue": "中京",
+        "name": "3歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2025/5/10",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1400",
+        "going": "重",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/3/8",
+        "venue": "阪神",
+        "name": "3歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/2/15",
+        "venue": "京都",
+        "name": "3歳未勝利",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/12/14",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/10/6",
+        "venue": "京都",
+        "name": "2歳新馬",
+        "track": "芝1400",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 8,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "ハルノドゥミプリエ",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021103198/70",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.544Z",
+    "tableStart": 435,
+    "tableEnd": 458,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2025/10/18",
+        "venue": "新潟",
+        "name": "岩船特別",
+        "track": "芝2200",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/9/20",
+        "venue": "中山",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 15,
+        "status": ""
+      },
+      {
+        "date": "2025/5/18",
+        "venue": "新潟",
+        "name": "4歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2025/4/27",
+        "venue": "福島",
+        "name": "4歳上1勝クラス",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2025/1/18",
+        "venue": "",
+        "name": "JRAへ転入",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2024/12/24",
+        "venue": "金沢",
+        "name": "普通C23",
+        "track": "ダ1400",
+        "going": "不良",
+        "fieldSize": 8,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2024/12/10",
+        "venue": "金沢",
+        "name": "相模原の種馬!ハセ氏",
+        "track": "ダ1500",
+        "going": "重",
+        "fieldSize": 12,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2024/12/3",
+        "venue": "金沢",
+        "name": "さやちゃん二十歳のお",
+        "track": "ダ1400",
+        "going": "重",
+        "fieldSize": 9,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/11/18",
+        "venue": "金沢",
+        "name": "金沢競馬C1プレミア",
+        "track": "ダ1500",
+        "going": "不良",
+        "fieldSize": 9,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/10/27",
+        "venue": "金沢",
+        "name": "拓は愛の王子様!勝馬",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/15",
+        "venue": "金沢",
+        "name": "おかげ様で30周年競",
+        "track": "ダ1500",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2024/9/30",
+        "venue": "金沢",
+        "name": "祝!結婚浩太・菜摘フ",
+        "track": "ダ1400",
+        "going": "良",
+        "fieldSize": 11,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/8/28",
+        "venue": "",
+        "name": "JRAより転出",
+        "track": "",
+        "going": "",
+        "fieldSize": null,
+        "finish": null,
+        "status": ""
+      },
+      {
+        "date": "2024/8/18",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 18,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2024/7/6",
+        "venue": "福島",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 12,
+        "status": ""
+      },
+      {
+        "date": "2024/5/18",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/5/4",
+        "venue": "新潟",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 5,
+        "status": ""
+      },
+      {
+        "date": "2024/4/7",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "重",
+        "fieldSize": 17,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2024/1/6",
+        "venue": "中山",
+        "name": "3歳未勝利",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 17,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2023/12/9",
+        "venue": "中山",
+        "name": "2歳未勝利",
+        "track": "芝1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 9,
+        "status": ""
+      },
+      {
+        "date": "2023/11/18",
+        "venue": "東京",
+        "name": "2歳新馬",
+        "track": "芝1600",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 12,
+        "status": ""
+      }
+    ]
+  },
+  {
+    "name": "バレンシア",
+    "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022106663/4F",
+    "complete": true,
+    "retrievedAt": "2026-11-27T04:00:48.544Z",
+    "tableStart": 435,
+    "tableEnd": 453,
+    "missingLines": [],
+    "conflictingLines": [],
+    "races": [
+      {
+        "date": "2026/11/15",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 11,
+        "status": ""
+      },
+      {
+        "date": "2026/10/18",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/7/5",
+        "venue": "小倉",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "不良",
+        "fieldSize": 16,
+        "finish": 14,
+        "status": ""
+      },
+      {
+        "date": "2026/5/23",
+        "venue": "京都",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2026/4/26",
+        "venue": "福島",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 10,
+        "status": ""
+      },
+      {
+        "date": "2026/3/29",
+        "venue": "阪神",
+        "name": "4歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 15,
+        "finish": 4,
+        "status": ""
+      },
+      {
+        "date": "2025/11/22",
+        "venue": "京都",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/10/25",
+        "venue": "新潟",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2025/9/15",
+        "venue": "阪神",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 3,
+        "status": ""
+      },
+      {
+        "date": "2025/8/23",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 8,
+        "finish": 6,
+        "status": ""
+      },
+      {
+        "date": "2025/8/2",
+        "venue": "中京",
+        "name": "3歳上1勝クラス",
+        "track": "芝2000",
+        "going": "良",
+        "fieldSize": 13,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/7/13",
+        "venue": "小倉",
+        "name": "3歳上1勝クラス",
+        "track": "ダ1700",
+        "going": "良",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      },
+      {
+        "date": "2025/4/6",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 14,
+        "finish": 8,
+        "status": ""
+      },
+      {
+        "date": "2025/3/8",
+        "venue": "阪神",
+        "name": "3歳1勝クラス",
+        "track": "ダ1800",
+        "going": "良",
+        "fieldSize": 12,
+        "finish": 7,
+        "status": ""
+      },
+      {
+        "date": "2024/11/3",
+        "venue": "京都",
+        "name": "2歳未勝利",
+        "track": "ダ1800",
+        "going": "重",
+        "fieldSize": 14,
+        "finish": 1,
+        "status": ""
+      },
+      {
+        "date": "2024/10/19",
+        "venue": "京都",
+        "name": "2歳新馬",
+        "track": "ダ1800",
+        "going": "稍重",
+        "fieldSize": 16,
+        "finish": 2,
+        "status": ""
+      }
+    ]
+  }
+]

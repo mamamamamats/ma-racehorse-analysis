@@ -1,0 +1,89 @@
+{
+  "at": "2026-11-27T04:08:14.295Z",
+  "mode": "offline-success-receipt-content-order-type-and-precondition-audit",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "totalSuccessfulNewReviews": 4430,
+  "batches": [
+    {
+      "batch": "batch-022",
+      "successfulNewReviews": 221,
+      "savedHorses": 26
+    },
+    {
+      "batch": "batch-023",
+      "successfulNewReviews": 202,
+      "savedHorses": 22
+    },
+    {
+      "batch": "batch-024",
+      "successfulNewReviews": 276,
+      "savedHorses": 30
+    },
+    {
+      "batch": "batch-025",
+      "successfulNewReviews": 264,
+      "savedHorses": 32
+    },
+    {
+      "batch": "batch-026",
+      "successfulNewReviews": 286,
+      "savedHorses": 37
+    },
+    {
+      "batch": "batch-027",
+      "successfulNewReviews": 306,
+      "savedHorses": 37
+    },
+    {
+      "batch": "batch-028",
+      "successfulNewReviews": 371,
+      "savedHorses": 42
+    },
+    {
+      "batch": "batch-029",
+      "successfulNewReviews": 318,
+      "savedHorses": 35
+    },
+    {
+      "batch": "batch-030",
+      "successfulNewReviews": 287,
+      "savedHorses": 34
+    },
+    {
+      "batch": "batch-031",
+      "successfulNewReviews": 279,
+      "savedHorses": 37
+    },
+    {
+      "batch": "batch-032",
+      "successfulNewReviews": 264,
+      "savedHorses": 37
+    },
+    {
+      "batch": "batch-033",
+      "successfulNewReviews": 294,
+      "savedHorses": 43
+    },
+    {
+      "batch": "batch-034",
+      "successfulNewReviews": 294,
+      "savedHorses": 40
+    },
+    {
+      "batch": "batch-035",
+      "successfulNewReviews": 265,
+      "savedHorses": 35
+    },
+    {
+      "batch": "batch-036",
+      "successfulNewReviews": 236,
+      "savedHorses": 38
+    },
+    {
+      "batch": "batch-037",
+      "successfulNewReviews": 267,
+      "savedHorses": 38
+    }
+  ]
+}

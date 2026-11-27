@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-27T04:07:11.694503+00:00",
+  "mode": "offline-source-replay",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "batches": [
+    {
+      "batch": "batch-032",
+      "histories": 42,
+      "reproduced": 42
+    },
+    {
+      "batch": "batch-033",
+      "histories": 45,
+      "reproduced": 45
+    },
+    {
+      "batch": "batch-034",
+      "histories": 44,
+      "reproduced": 44
+    },
+    {
+      "batch": "batch-035",
+      "histories": 38,
+      "reproduced": 38
+    },
+    {
+      "batch": "batch-036",
+      "histories": 38,
+      "reproduced": 38
+    },
+    {
+      "batch": "batch-037",
+      "histories": 41,
+      "reproduced": 41
+    }
+  ],
+  "totalReproduced": 248
+}
