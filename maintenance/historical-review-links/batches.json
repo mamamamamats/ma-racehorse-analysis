@@ -315,6 +315,69 @@
       "sha256": "01d8dbb8da29d56afa5019f9d0204bc3f72f4dd9a77e0dd2beb46b850cd28e5e",
       "checkpoint": ".local/historical-review-links/batch-045/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-045/completed.json"
+    },
+    {
+      "id": "batch-046",
+      "plan": "maintenance/historical-review-links/batch-046/plan.json",
+      "sha256": "cfb1390b0d4718a6b34a79988205819948364117e1b031583dbe147411a2d8b1",
+      "checkpoint": ".local/historical-review-links/batch-046/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-046/completed.json"
+    },
+    {
+      "id": "batch-047",
+      "plan": "maintenance/historical-review-links/batch-047/plan.json",
+      "sha256": "6e2f0b310f626d9999a63d2a47e0b448d65de94a91405a57efaf70ac1e890c6e",
+      "checkpoint": ".local/historical-review-links/batch-047/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-047/completed.json"
+    },
+    {
+      "id": "batch-048",
+      "plan": "maintenance/historical-review-links/batch-048/plan.json",
+      "sha256": "c64dbeb08d6cf9df434468af64edea5091f0af84a133c9adffbb312f82c71132",
+      "checkpoint": ".local/historical-review-links/batch-048/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-048/completed.json"
+    },
+    {
+      "id": "batch-049",
+      "plan": "maintenance/historical-review-links/batch-049/plan.json",
+      "sha256": "e926f20820d3c89ab8f33df7b1f7cd915e5d3b98d7d3627e5dd5db5ede452986",
+      "checkpoint": ".local/historical-review-links/batch-049/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-049/completed.json"
+    },
+    {
+      "id": "batch-050",
+      "plan": "maintenance/historical-review-links/batch-050/plan.json",
+      "sha256": "b400a52aa7089c2c8a308879901ce4d097a35b66c15fe4c93baed497fa5f9313",
+      "checkpoint": ".local/historical-review-links/batch-050/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-050/completed.json"
+    },
+    {
+      "id": "batch-051",
+      "plan": "maintenance/historical-review-links/batch-051/plan.json",
+      "sha256": "1c39c99dada0548f35c6b98efe645bf58392931f5df5c564aedd75dab8d25af8",
+      "checkpoint": ".local/historical-review-links/batch-051/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-051/completed.json"
+    },
+    {
+      "id": "batch-052",
+      "plan": "maintenance/historical-review-links/batch-052/plan.json",
+      "sha256": "e3754e15a2293468989f1a452889dcddbe62351ff5dc6634b7424f030ef78b78",
+      "checkpoint": ".local/historical-review-links/batch-052/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-052/completed.json"
+    },
+    {
+      "id": "batch-053",
+      "plan": "maintenance/historical-review-links/batch-053/plan.json",
+      "sha256": "9ea295f987879e693c032fe8185322e4d3db6c717e206d360838f9c2a7ae0c80",
+      "checkpoint": ".local/historical-review-links/batch-053/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-053/completed.json"
+    },
+    {
+      "id": "batch-054",
+      "plan": "maintenance/historical-review-links/batch-054/plan.json",
+      "sha256": "1ec0409998184737305b79d1a8f703fb91916ffdddaf0417487317ee2c71956d",
+      "checkpoint": ".local/historical-review-links/batch-054/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-054/completed.json"
     }
   ]
 }

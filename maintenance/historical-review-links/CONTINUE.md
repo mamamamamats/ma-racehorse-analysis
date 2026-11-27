@@ -4,6 +4,8 @@
 
 現在のリポジトリ：`mamamamamats/ma-racehorse-analysis`。作業ディレクトリは `/workspace/work/ma-racehorse-analysis`。このファイルとREADME、最新main、`batches.json`、`backlog-status.json`、`remaining-horses.json` を確認する。別タスクやJSON更新と競合するときは他の変更を保持する。
 
+**最新の停止状態（14時回）**：14:37:32 JSTに第53バッチのマイネルオデーサ取得で Firestore HTTP 429 / Quota exceeded。`db-write-pause.json` は paused:true。DBの読み書き・再試行はしない。フラグを勝手に解除しない。保存済み累計19,615件、公式照合済みの更新準備382件、内容不一致保留2件。第54バッチまでの根拠・準備を保存済み。次は第55バッチから新しい未確認馬の公式照合と準備だけを進める。16時以降は確認と報告のみ。
+
 ## まず状態を確認
 
 1. `node scripts/preview-historical-review-backlog.mjs` で保存済みと更新待ちを確認する。件数は固定せず、コマンド出力と最新backlog-status.jsonを正とする。

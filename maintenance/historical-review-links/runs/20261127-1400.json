@@ -1,8 +1,8 @@
 {
-  "at": "2026-11-27T05:21:48.191564+00:00",
+  "at": "2026-11-27T05:39:44.911141+00:00",
   "scheduledFor": "2026-11-27T14:00:00+09:00",
   "baseCompletedReviews": 15026,
-  "status": "in_progress",
+  "status": "completed",
   "batches": [
     {
       "batch": "batch-038",
@@ -75,19 +75,100 @@
       "heldReviewsInThisBatch": 156,
       "dbErrors": 0,
       "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-046",
+      "savedHorses": 56,
+      "savedReviews": 325,
+      "readHorses": 56,
+      "heldReviewsInThisBatch": 172,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-047",
+      "savedHorses": 55,
+      "savedReviews": 354,
+      "readHorses": 55,
+      "heldReviewsInThisBatch": 168,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-048",
+      "savedHorses": 56,
+      "savedReviews": 324,
+      "readHorses": 56,
+      "heldReviewsInThisBatch": 174,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-049",
+      "savedHorses": 51,
+      "savedReviews": 266,
+      "readHorses": 51,
+      "heldReviewsInThisBatch": 153,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-050",
+      "savedHorses": 55,
+      "savedReviews": 281,
+      "readHorses": 55,
+      "heldReviewsInThisBatch": 185,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-051",
+      "savedHorses": 57,
+      "savedReviews": 319,
+      "readHorses": 57,
+      "heldReviewsInThisBatch": 163,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-052",
+      "savedHorses": 54,
+      "savedReviews": 283,
+      "readHorses": 54,
+      "heldReviewsInThisBatch": 184,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-053",
+      "savedHorses": 36,
+      "savedReviews": 181,
+      "readHorses": 36,
+      "heldReviewsInThisBatch": 185,
+      "dbErrors": 1,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-054",
+      "savedHorses": 0,
+      "savedReviews": 0,
+      "readHorses": 0,
+      "heldReviewsInThisBatch": 134,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
     }
   ],
-  "savedHorses": 340,
-  "confirmedLinkedHorses": 340,
-  "savedReviews": 2256,
-  "totalSavedReviews": 17282,
-  "readHorses": 340,
-  "heldReviewsThisRun": 1069,
-  "unprocessedHorses": 8966,
-  "heldHorses": 1908,
-  "officialHistories": 2049,
-  "completeHistories": 2038,
-  "dbErrors": 0,
+  "savedHorses": 760,
+  "confirmedLinkedHorses": 760,
+  "savedReviews": 4589,
+  "totalSavedReviews": 19615,
+  "readHorses": 760,
+  "heldReviewsThisRun": 2587,
+  "unprocessedHorses": 8425,
+  "heldHorses": 2389,
+  "officialHistories": 2593,
+  "completeHistories": 2582,
+  "dbErrors": 1,
   "skippedLiveReviews": 0,
   "identityRechecks": [
     {
@@ -97,5 +178,30 @@
     }
   ],
   "alreadyLinkedReviews": 0,
-  "heldLiveReviews": []
+  "heldLiveReviews": [],
+  "databasePaused": {
+    "paused": true,
+    "stoppedAt": "2026-11-27T05:37:32.459Z",
+    "batch": "batch-053",
+    "reason": {
+      "name": "マイネルオデーサ",
+      "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
+  },
+  "successfulHorseGetRequests": 776,
+  "failedHorseGetRequests": 1,
+  "carryOverLiveHolds": {
+    "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]": {
+      "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+      "reason": "review changed or duplicated"
+    },
+    "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]": {
+      "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+      "reason": "review changed or duplicated"
+    }
+  },
+  "pendingImmutablePlanReviews": 384,
+  "pendingImmutablePlanHorses": 75,
+  "masterExportedAt": "2026-11-27T04:23:53.518Z"
 }

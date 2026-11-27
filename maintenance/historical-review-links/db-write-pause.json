@@ -1,0 +1,10 @@
+{
+  "paused": true,
+  "stoppedAt": "2026-11-27T05:37:32.459Z",
+  "batch": "batch-053",
+  "reason": {
+    "name": "マイネルオデーサ",
+    "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+  },
+  "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
+}

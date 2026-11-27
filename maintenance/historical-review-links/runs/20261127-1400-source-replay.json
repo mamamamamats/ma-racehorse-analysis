@@ -1,0 +1,94 @@
+{
+  "at": "2026-11-27T05:39:03.973293+00:00",
+  "mode": "offline-source-replay",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "batches": [
+    {
+      "batch": "batch-038",
+      "histories": 43,
+      "reproduced": 43
+    },
+    {
+      "batch": "batch-039",
+      "histories": 41,
+      "reproduced": 41
+    },
+    {
+      "batch": "batch-040",
+      "histories": 40,
+      "reproduced": 40
+    },
+    {
+      "batch": "batch-041",
+      "histories": 41,
+      "reproduced": 41
+    },
+    {
+      "batch": "batch-042",
+      "histories": 41,
+      "reproduced": 41
+    },
+    {
+      "batch": "batch-043",
+      "histories": 35,
+      "reproduced": 35
+    },
+    {
+      "batch": "batch-044",
+      "histories": 62,
+      "reproduced": 62
+    },
+    {
+      "batch": "batch-045",
+      "histories": 59,
+      "reproduced": 59
+    },
+    {
+      "batch": "batch-046",
+      "histories": 58,
+      "reproduced": 58
+    },
+    {
+      "batch": "batch-047",
+      "histories": 60,
+      "reproduced": 60
+    },
+    {
+      "batch": "batch-048",
+      "histories": 64,
+      "reproduced": 64
+    },
+    {
+      "batch": "batch-049",
+      "histories": 56,
+      "reproduced": 56
+    },
+    {
+      "batch": "batch-050",
+      "histories": 61,
+      "reproduced": 61
+    },
+    {
+      "batch": "batch-051",
+      "histories": 63,
+      "reproduced": 63
+    },
+    {
+      "batch": "batch-052",
+      "histories": 60,
+      "reproduced": 60
+    },
+    {
+      "batch": "batch-053",
+      "histories": 68,
+      "reproduced": 68
+    },
+    {
+      "batch": "batch-054",
+      "histories": 54,
+      "reproduced": 54
+    }
+  ],
+  "totalReproduced": 906
+}
