@@ -378,6 +378,34 @@
       "sha256": "1ec0409998184737305b79d1a8f703fb91916ffdddaf0417487317ee2c71956d",
       "checkpoint": ".local/historical-review-links/batch-054/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-054/completed.json"
+    },
+    {
+      "id": "batch-055",
+      "plan": "maintenance/historical-review-links/batch-055/plan.json",
+      "sha256": "9e136b548d464236c09d5507302235fc9e95879a905313fa2bec581aea74a007",
+      "checkpoint": ".local/historical-review-links/batch-055/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-055/completed.json"
+    },
+    {
+      "id": "batch-056",
+      "plan": "maintenance/historical-review-links/batch-056/plan.json",
+      "sha256": "24e59684aee4421c99ef3945f8fa47ca2bff576afbb252b5f8ca3a12375436a6",
+      "checkpoint": ".local/historical-review-links/batch-056/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-056/completed.json"
+    },
+    {
+      "id": "batch-057",
+      "plan": "maintenance/historical-review-links/batch-057/plan.json",
+      "sha256": "d458826a30b51112f4acbb39b947436fbf99cd50aaf4658b8aab473f0a1e5d06",
+      "checkpoint": ".local/historical-review-links/batch-057/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-057/completed.json"
+    },
+    {
+      "id": "batch-058",
+      "plan": "maintenance/historical-review-links/batch-058/plan.json",
+      "sha256": "c759b7c54490867c92275395795060bd4b3b4f5b113f6fd75d7f6159c70ea4e1",
+      "checkpoint": ".local/historical-review-links/batch-058/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-058/completed.json"
     }
   ]
 }

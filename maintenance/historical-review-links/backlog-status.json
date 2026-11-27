@@ -434,10 +434,42 @@
       "pendingReviews": 266,
       "pendingHorses": 50,
       "plan": "maintenance/historical-review-links/batch-054/plan.json"
+    },
+    {
+      "id": "batch-055",
+      "confirmedReviews": 238,
+      "completedReviews": 0,
+      "pendingReviews": 238,
+      "pendingHorses": 57,
+      "plan": "maintenance/historical-review-links/batch-055/plan.json"
+    },
+    {
+      "id": "batch-056",
+      "confirmedReviews": 312,
+      "completedReviews": 0,
+      "pendingReviews": 312,
+      "pendingHorses": 71,
+      "plan": "maintenance/historical-review-links/batch-056/plan.json"
+    },
+    {
+      "id": "batch-057",
+      "confirmedReviews": 331,
+      "completedReviews": 0,
+      "pendingReviews": 331,
+      "pendingHorses": 73,
+      "plan": "maintenance/historical-review-links/batch-057/plan.json"
+    },
+    {
+      "id": "batch-058",
+      "confirmedReviews": 328,
+      "completedReviews": 0,
+      "pendingReviews": 328,
+      "pendingHorses": 70,
+      "plan": "maintenance/historical-review-links/batch-058/plan.json"
     }
   ],
-  "confirmedReviews": 19999,
+  "confirmedReviews": 21208,
   "completedReviews": 19615,
-  "pendingReviews": 384,
-  "pendingHorses": 75
+  "pendingReviews": 1593,
+  "pendingHorses": 346
 }

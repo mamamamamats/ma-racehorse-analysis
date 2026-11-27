@@ -1,0 +1,67 @@
+{
+  "at": "2026-11-27T06:14:51.143802+00:00",
+  "scheduledFor": "2026-11-27T15:00:00+09:00",
+  "status": "in_progress",
+  "mode": "official-matching-and-offline-preparation-only",
+  "dbReads": 0,
+  "dbWrites": 0,
+  "newDbErrors": 0,
+  "databasePause": {
+    "paused": true,
+    "stoppedAt": "2026-11-27T05:37:32.459Z",
+    "batch": "batch-053",
+    "reason": {
+      "name": "マイネルオデーサ",
+      "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
+  },
+  "totalSavedReviews": 19615,
+  "newPreparedHorses": 271,
+  "newPreparedReviews": 1209,
+  "heldReviewsThisRun": 736,
+  "batches": [
+    {
+      "batch": "batch-055",
+      "preparedHorses": 57,
+      "preparedReviews": 238,
+      "heldReviews": 147,
+      "planSha256": "9e136b548d464236c09d5507302235fc9e95879a905313fa2bec581aea74a007",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-056",
+      "preparedHorses": 71,
+      "preparedReviews": 312,
+      "heldReviews": 201,
+      "planSha256": "24e59684aee4421c99ef3945f8fa47ca2bff576afbb252b5f8ca3a12375436a6",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-057",
+      "preparedHorses": 73,
+      "preparedReviews": 331,
+      "heldReviews": 208,
+      "planSha256": "d458826a30b51112f4acbb39b947436fbf99cd50aaf4658b8aab473f0a1e5d06",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-058",
+      "preparedHorses": 70,
+      "preparedReviews": 328,
+      "heldReviews": 180,
+      "planSha256": "c759b7c54490867c92275395795060bd4b3b4f5b113f6fd75d7f6159c70ea4e1",
+      "dbReads": 0,
+      "dbWrites": 0
+    }
+  ],
+  "unprocessedHorses": 8136,
+  "heldHorses": 2631,
+  "officialHistories": 2887,
+  "completeHistories": 2875,
+  "unchangedPublicIndexSha256": "e51e18f4c53a5df52e337bdf032b3bc3730929b562f1d2004a55d53f183ce1d9",
+  "unchangedDbPauseSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850"
+}
