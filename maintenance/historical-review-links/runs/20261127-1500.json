@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T06:20:04.728235+00:00",
+  "at": "2026-11-27T06:27:09.664906+00:00",
   "scheduledFor": "2026-11-27T15:00:00+09:00",
   "status": "in_progress",
   "mode": "official-matching-and-offline-preparation-only",
@@ -17,9 +17,9 @@
     "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
   },
   "totalSavedReviews": 19615,
-  "newPreparedHorses": 423,
-  "newPreparedReviews": 1883,
-  "heldReviewsThisRun": 1103,
+  "newPreparedHorses": 634,
+  "newPreparedReviews": 2679,
+  "heldReviewsThisRun": 1621,
   "batches": [
     {
       "batch": "batch-055",
@@ -74,12 +74,39 @@
       "planSha256": "80bab8868f12610acafe0b884935b47ad7d6fe711bee72eadad6fa4fd8a041a6",
       "dbReads": 0,
       "dbWrites": 0
+    },
+    {
+      "batch": "batch-061",
+      "preparedHorses": 71,
+      "preparedReviews": 268,
+      "heldReviews": 187,
+      "planSha256": "032bd7f74812f1cab27de4c14b30f23f3e2b713be09ad417597f06ba309d1dd0",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-062",
+      "preparedHorses": 68,
+      "preparedReviews": 266,
+      "heldReviews": 157,
+      "planSha256": "98865c12389be9e80200276889d77b5e460f0ea19e2ca3ce0b9781c684eb6831",
+      "dbReads": 0,
+      "dbWrites": 0
+    },
+    {
+      "batch": "batch-063",
+      "preparedHorses": 72,
+      "preparedReviews": 262,
+      "heldReviews": 174,
+      "planSha256": "ebc06048f5594b3d35e3ef94bd8d1a367259c6acc117cde02a6267566c0fc1c8",
+      "dbReads": 0,
+      "dbWrites": 0
     }
   ],
-  "unprocessedHorses": 7975,
-  "heldHorses": 2769,
-  "officialHistories": 3048,
-  "completeHistories": 3036,
+  "unprocessedHorses": 7747,
+  "heldHorses": 2968,
+  "officialHistories": 3278,
+  "completeHistories": 3266,
   "unchangedPublicIndexSha256": "e51e18f4c53a5df52e337bdf032b3bc3730929b562f1d2004a55d53f183ce1d9",
   "unchangedDbPauseSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850"
 }
