@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-27T07:04:11.987265+00:00",
+  "localTime": "2026-11-27T16:04:11.987265+09:00",
+  "scheduledFor": "2026-11-27T16:00:00+09:00",
+  "status": "completed_final_report_only",
+  "observedMainCommit": "95f8895b61c7a9f49de00d6105f8aa821879580b",
+  "newOfficialMatching": 0,
+  "newPreparedReviews": 0,
+  "dbReads": 0,
+  "dbWrites": 0,
+  "newDbErrors": 0,
+  "totalSavedReviews": 19615,
+  "totalReadyPreparedHorses": 1068,
+  "totalReadyPreparedReviews": 4417,
+  "manualContentMismatchHoldReviews": 2,
+  "pendingImmutablePlanHorses": 1069,
+  "pendingImmutablePlanReviews": 4419,
+  "unprocessedHorses": 7359,
+  "heldHorses": 3296,
+  "immutableBatches": 68,
+  "publicIndexUnchangedSha256": "e51e18f4c53a5df52e337bdf032b3bc3730929b562f1d2004a55d53f183ce1d9",
+  "databasePauseUnchangedSha256": "8f478801b2c87f5ada9e27a4293a5868f8e45469fc9f1e56c6cace17683a6850",
+  "databasePause": {
+    "paused": true,
+    "stoppedAt": "2026-11-27T05:37:32.459Z",
+    "batch": "batch-053",
+    "reason": {
+      "name": "マイネルオデーサ",
+      "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    "note": "Continue official-history preparation without DB reads or writes. Do not automatically retry."
+  },
+  "allHorsesComplete": false,
+  "nextBatchIfNewResumeInstruction": "batch-069",
+  "resumeRequiresLatestLiveContentAndUpdateTimeRecheck": true,
+  "scheduledWorkEnded": true
+}
