@@ -1,0 +1,7 @@
+{
+  "reason": "An interim local receipt snapshot was archived before queue completion. It is preserved unchanged. The separately named final archive contains every successful commit and backup. The checkpoint now refuses an active queue before writing any file.",
+  "interimLinkedReviews": 271,
+  "finalLinkedReviews": 286,
+  "finalArchive": "receipts-run-LqnGxl-final.json.gz",
+  "finalArchiveSha256": "aca02b09f5653fa76ac3450046ff324edb93029607c318d8a1907e4f60d785b3"
+}

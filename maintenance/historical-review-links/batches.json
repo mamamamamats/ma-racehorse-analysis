@@ -147,6 +147,48 @@
       "sha256": "5115074294cd7284ed8a4a0b3ed5ef4a01359e6e8c42169093d02b8155e20ad0",
       "checkpoint": ".local/historical-review-links/batch-021/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-021/completed.json"
+    },
+    {
+      "id": "batch-022",
+      "plan": "maintenance/historical-review-links/batch-022/plan.json",
+      "sha256": "beb313d3dd247cd738005d975afb8362f1bc4653ea41bee317a69ff9e643d4a0",
+      "checkpoint": ".local/historical-review-links/batch-022/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-022/completed.json"
+    },
+    {
+      "id": "batch-023",
+      "plan": "maintenance/historical-review-links/batch-023/plan.json",
+      "sha256": "a02d96c6c69f52887bb2135105f0b558f3a09a6cfbff3ab245a51a89a75fbabc",
+      "checkpoint": ".local/historical-review-links/batch-023/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-023/completed.json"
+    },
+    {
+      "id": "batch-024",
+      "plan": "maintenance/historical-review-links/batch-024/plan.json",
+      "sha256": "cec6ae9eaff97fa0643ffea856a6667e3df5945163d5ec75cd86322a1326fb4e",
+      "checkpoint": ".local/historical-review-links/batch-024/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-024/completed.json"
+    },
+    {
+      "id": "batch-025",
+      "plan": "maintenance/historical-review-links/batch-025/plan.json",
+      "sha256": "4662e97893d7c854006610fb244ddc72852bf018b501d288bc54361e2b3ac1c0",
+      "checkpoint": ".local/historical-review-links/batch-025/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-025/completed.json"
+    },
+    {
+      "id": "batch-026",
+      "plan": "maintenance/historical-review-links/batch-026/plan.json",
+      "sha256": "2ed9c7d997ab51222ad64f7e530a944a9a0d77325540d07b243d69785d268b8f",
+      "checkpoint": ".local/historical-review-links/batch-026/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-026/completed.json"
+    },
+    {
+      "id": "batch-027",
+      "plan": "maintenance/historical-review-links/batch-027/plan.json",
+      "sha256": "0b765464c7f534bb101e5939407737008a3edf2d32508edf2f84136a35408da9",
+      "checkpoint": ".local/historical-review-links/batch-027/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-027/completed.json"
     }
   ]
 }

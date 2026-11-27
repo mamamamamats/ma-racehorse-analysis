@@ -8,6 +8,7 @@ import {gzipSync} from 'node:zlib';
 import {entryKey} from './apply-historical-review-links.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),dir=path.join(root,'maintenance/historical-review-links'),registry=JSON.parse(await fs.readFile(path.join(dir,'batches.json'),'utf8'));
 const optional=async(file,fallback)=>{try{return JSON.parse(await fs.readFile(file,'utf8'));}catch(e){if(e.code==='ENOENT')return fallback;throw e;}};
+if(await optional(path.join(root,'.local/historical-review-links/queue.lock'),null))throw Error('Cannot checkpoint or archive receipts while a DB queue is active');
 for(const b of registry.batches){
  const planBytes=await fs.readFile(path.join(root,b.plan));if(createHash('sha256').update(planBytes).digest('hex')!==b.sha256)throw Error('Plan hash mismatch');
  const plan=JSON.parse(planBytes),allowed=new Set(plan.updates.map(entryKey)),seed=b.completed?await optional(path.join(root,b.completed),{completed:[]}):{completed:[]},cp=await optional(path.join(root,b.checkpoint),{planSha256:b.sha256,completed:[]});
@@ -29,8 +30,6 @@ if(repairStatus){
  if(createHash('sha256').update(bytes).digest('hex')!==repairStatus.planSha256)throw Error('Repair plan hash mismatch');
  const completed=await optional(path.join(repairDir,'completed.json'),{planSha256:repairStatus.planSha256,completed:[]});
  if(completed.planSha256!==repairStatus.planSha256)throw Error('Repair completion hash mismatch');
- const lock=await optional(path.join(root,'.local/historical-review-links/queue.lock'),null);
- if(lock)throw Error('Cannot archive repair receipts while a DB queue is active');
  for(const run of (await fs.readdir(repairDir)).filter(n=>n.startsWith('run-'))){
   const dest=path.join(repairDir,'receipts-'+run+'.json.gz');
   try{await fs.access(dest);continue;}catch(e){if(e.code!=='ENOENT')throw e;}

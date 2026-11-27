@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-27T02:11:52.579372+00:00",
+  "scheduledFor": "2026-11-27T11:00:00+09:00",
+  "baseCompletedReviews": 10586,
+  "status": "in_progress",
+  "batches": [
+    {
+      "batch": "batch-022",
+      "savedHorses": 26,
+      "savedReviews": 221,
+      "readHorses": 26,
+      "heldReviewsInThisBatch": 104,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-023",
+      "savedHorses": 22,
+      "savedReviews": 202,
+      "readHorses": 22,
+      "heldReviewsInThisBatch": 123,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-024",
+      "savedHorses": 30,
+      "savedReviews": 276,
+      "readHorses": 30,
+      "heldReviewsInThisBatch": 124,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-025",
+      "savedHorses": 32,
+      "savedReviews": 264,
+      "readHorses": 32,
+      "heldReviewsInThisBatch": 164,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-026",
+      "savedHorses": 37,
+      "savedReviews": 286,
+      "readHorses": 37,
+      "heldReviewsInThisBatch": 168,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-027",
+      "savedHorses": 37,
+      "savedReviews": 306,
+      "readHorses": 37,
+      "heldReviewsInThisBatch": 131,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    }
+  ],
+  "savedHorses": 184,
+  "savedReviews": 1555,
+  "totalSavedReviews": 12141,
+  "readHorses": 184,
+  "heldReviewsThisRun": 814,
+  "unprocessedHorses": 9729,
+  "heldHorses": 1199,
+  "officialHistories": 1282,
+  "completeHistories": 1275,
+  "dbErrors": 0,
+  "skippedLiveReviews": 0,
+  "identityRechecks": [
+    {
+      "name": "ボエーム",
+      "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud101998101908/A3",
+      "reason": "The returned same-name profile is for a 1998-born horse. It is not evidence of the app's current horse identity; all reviews remain held and the horse stays unprocessed for identity recheck."
+    }
+  ]
+}
