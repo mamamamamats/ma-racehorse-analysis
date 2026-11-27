@@ -301,6 +301,20 @@
       "sha256": "f987334d67d4c7f2ab5971c28146928e25d60d8c0a6e8899439db05c4f0f6313",
       "checkpoint": ".local/historical-review-links/batch-043/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-043/completed.json"
+    },
+    {
+      "id": "batch-044",
+      "plan": "maintenance/historical-review-links/batch-044/plan.json",
+      "sha256": "f14d638fb9c1c2a74f144ff83a40be3faa4e2aaa9978aabc8fda46c6b677febc",
+      "checkpoint": ".local/historical-review-links/batch-044/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-044/completed.json"
+    },
+    {
+      "id": "batch-045",
+      "plan": "maintenance/historical-review-links/batch-045/plan.json",
+      "sha256": "01d8dbb8da29d56afa5019f9d0204bc3f72f4dd9a77e0dd2beb46b850cd28e5e",
+      "checkpoint": ".local/historical-review-links/batch-045/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-045/completed.json"
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "id": "batch-044",
+  "preparedAt": "2026-11-27T05:18:02.771Z",
+  "officialHistories": 62,
+  "completeOfficialHistories": 62,
+  "confirmedHorses": 57,
+  "confirmedReviews": 357,
+  "heldReviews": 175,
+  "heldReasons": {
+    "missing-app-race": 23,
+    "no-official-match": 43,
+    "generic-without-own-finish": 58,
+    "ambiguous-official-races": 24,
+    "official-history-not-current": 18,
+    "horse-identity-anchor-mismatch": 9
+  },
+  "dbReads": 0,
+  "dbWrites": 0,
+  "planSha256": "f14d638fb9c1c2a74f144ff83a40be3faa4e2aaa9978aabc8fda46c6b677febc",
+  "fullDatabaseMatchingComplete": false
+}

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T05:17:28.274911+00:00",
+  "at": "2026-11-27T05:21:48.191564+00:00",
   "scheduledFor": "2026-11-27T14:00:00+09:00",
   "baseCompletedReviews": 15026,
   "status": "in_progress",
@@ -57,18 +57,36 @@
       "heldReviewsInThisBatch": 97,
       "dbErrors": 0,
       "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-044",
+      "savedHorses": 57,
+      "savedReviews": 357,
+      "readHorses": 57,
+      "heldReviewsInThisBatch": 175,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-045",
+      "savedHorses": 57,
+      "savedReviews": 367,
+      "readHorses": 57,
+      "heldReviewsInThisBatch": 156,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
     }
   ],
-  "savedHorses": 226,
-  "confirmedLinkedHorses": 226,
-  "savedReviews": 1532,
-  "totalSavedReviews": 16558,
-  "readHorses": 226,
-  "heldReviewsThisRun": 738,
-  "unprocessedHorses": 9087,
-  "heldHorses": 1798,
-  "officialHistories": 1928,
-  "completeHistories": 1917,
+  "savedHorses": 340,
+  "confirmedLinkedHorses": 340,
+  "savedReviews": 2256,
+  "totalSavedReviews": 17282,
+  "readHorses": 340,
+  "heldReviewsThisRun": 1069,
+  "unprocessedHorses": 8966,
+  "heldHorses": 1908,
+  "officialHistories": 2049,
+  "completeHistories": 2038,
   "dbErrors": 0,
   "skippedLiveReviews": 0,
   "identityRechecks": [
