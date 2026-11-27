@@ -32,3 +32,9 @@ test('a refreshed review archive can advance only its own cutoff without hiding 
  assert.equal(f.reads[0].cs.find(c=>c.key==='archiveUpdatedAt').value.toISOString(),'2026-11-15T23:59:00.000Z');
  assert.equal(f.reads[1].cs.find(c=>c.key==='archiveUpdatedAt').value.toISOString(),'2026-11-14T23:59:00.000Z');
 });
+
+test('editor can display published baseline while Firebase connection is unavailable',async()=>{
+ const f=fixture();f.env._fbFns.getDocs=async()=>{throw Object.assign(Error('Firebaseに接続できません'),{code:'unavailable'});};
+ const rows=await f.env.DataArchive.read('predictions');assert.equal(rows.length,1);assert.equal(rows[0]._docId,'p');
+ assert.ok(f.env.DataArchive.status().warnings.some(x=>/Firebase/.test(x)));
+});

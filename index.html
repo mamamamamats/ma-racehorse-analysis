@@ -174098,7 +174098,7 @@ async function lazyRefreshHorse(name) {
     // Firestore上に現役データがあれば、従来どおり最新情報を取得して
     // IndexedDBキャッシュも更新する。削除済みフラグは解除される。
     if (!snap.exists()) return;
-    const fresh = { ...(snap.data() || {}), name, deleted:false, deletedAt:null };
+    const fresh = { ...(snap.data() || {}), name, deleted:false, deletedAt:null, _dbVerifiedAt:new Date().toISOString() };
     removeDeletedHorseName(name);
     const idx = horses.findIndex(h => h.name === name);
     if (idx >= 0) horses[idx] = fresh; else horses.push(fresh);
@@ -174131,6 +174131,7 @@ async function lazyRefreshDay(dayId) {
 
 // 馬1頭を保存（IndexedDBとFirestoreの両方にawaitで確実に書き込む）
 async function saveHorse(horse) {
+  horse._localSavedAt = new Date().toISOString();
   try { await idbPut('horses', horse); } catch(e) { console.warn('馬保存失敗(IDB):', horse.name, e); }
   try { await fbSaveHorse(horse); } catch(e) { console.warn('馬保存失敗(Firestore):', horse.name, e); }
 }
@@ -174550,6 +174551,23 @@ async function restoreMissingAdminRecordsSafely() {
   } catch(e) { console.warn('[keiba] 管理者キャッシュ補完をスキップ:', e); }
 }
 
+// 公開キャッシュは最新版で更新するが、公開後の編集・確認結果は巻き戻さない。
+function publicCacheTime(value) {
+  if (value && typeof value === 'object') return Number(value.seconds ?? value._seconds ?? 0) * 1000;
+  return Date.parse(value || '') || 0;
+}
+function publicCacheUpdates(incoming, existing, key, exportedAt) {
+  const cutoff = publicCacheTime(exportedAt), known = new Map(existing.map(row => [row[key], row]));
+  return incoming.flatMap(row => {
+    const local = known.get(row[key]);
+    if (!local) return [{...row, _publicSnapshotAt: exportedAt}];
+    if (!cutoff || Math.max(publicCacheTime(local.archiveUpdatedAt), publicCacheTime(local._localSavedAt),
+      publicCacheTime(local._dbVerifiedAt), publicCacheTime(local._publicSnapshotAt)) > cutoff) return [];
+    const candidate = {...row, _publicSnapshotAt: exportedAt};
+    return JSON.stringify(local) === JSON.stringify(candidate) ? [] : [candidate];
+  });
+}
+
 async function fetchGitHubData() {
   if (isEditMode) return;
   try {
@@ -174557,21 +174575,18 @@ async function fetchGitHubData() {
     if (!payload || !Array.isArray(payload.raceDays) || !Array.isArray(payload.horses)) return;
     const existingDays = await idbGetAll('raceDays');
     const existingHorses = await idbGetAll('horses');
-    const currentNames = new Set(existingHorses.map(h => h.name));
-    const currentDayIds = new Set(existingDays.map(d => d.id));
     const deletedHorseNames = getDeletedHorseNames();
     const validHorses = payload.horses.filter(h => h && h.name && h.deleted !== true && !deletedHorseNames.has(h.name));
-    const missingHorses = validHorses.filter(h => !currentNames.has(h.name));
-    const missingDays = payload.raceDays.filter(d => d && d.id && !currentDayIds.has(d.id));
-    const payloadVersion = (payload.exportedAt || '') + '_r' + payload.raceDays.length + '_h' + payload.horses.length + '_v5-jsonfirst';
-    // バージョンが同じでも不足分は必ず補完する。途中で書き込みが止まっても次回再試行。
-    if (missingHorses.length) await idbPutAll('horses', missingHorses);
-    if (missingDays.length) await idbPutAll('raceDays', missingDays);
-    // 公開スナップショットは不足レコードのみ補完。既存レコードの新旧は判定できないため上書きしない。
+    const horseUpdates = publicCacheUpdates(validHorses, existingHorses, 'name', payload.exportedAt);
+    const dayUpdates = publicCacheUpdates(payload.raceDays.filter(d => d && d.id), existingDays, 'id', payload.exportedAt);
+    const payloadVersion = (payload.exportedAt || '') + '_r' + payload.raceDays.length + '_h' + payload.horses.length + '_v6-refresh';
+    // 同じ公開版でも壊れた・空の端末キャッシュを復旧。取得失敗時は既存データを保持する。
+    if (horseUpdates.length) await idbPutAll('horses', horseUpdates);
+    if (dayUpdates.length) await idbPutAll('raceDays', dayUpdates);
     // 保存完了後にだけバージョン記録する。
     localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion);
     invalidateHorseCache();
-    console.log('[keiba] 公開JSON照合: JSON馬', validHorses.length, '頭 / ローカル', existingHorses.length, '頭 / 補完', missingHorses.length, '頭');
+    console.log('[keiba] 公開JSON照合: JSON馬', validHorses.length, '頭 / ローカル', existingHorses.length, '頭 / 更新', horseUpdates.length, '頭');
   } catch(e) {
     console.error('[keiba] 公開データ読み込みに失敗。既存データは保持:', e);
   }
@@ -175348,9 +175363,13 @@ async function raceConditionLoadReviews(force=false){
   if(!force&&raceConditionReviewRecords!==null)return;
   raceConditionReviewPromise=(async()=>{
     try{
-      if(!(await waitForFirebase(5000)))throw new Error('Firebaseに接続できません');
-      const {collection,getDocs}=window._fbFns;
-      if(window.DataArchive)raceConditionReviewRecords=await window.DataArchive.read('raceReviews',{refresh:force});else{const snap=await getDocs(collection(window._fbDb,'raceReviews'));raceConditionReviewRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));}
+      if(window.DataArchive)raceConditionReviewRecords=await window.DataArchive.read('raceReviews',{refresh:force});
+      else {
+        if(!(await waitForFirebase(5000)))throw new Error('Firebaseに接続できません');
+        const {collection,getDocs}=window._fbFns;
+        const snap=await getDocs(collection(window._fbDb,'raceReviews'));
+        raceConditionReviewRecords=snap.docs.map(d=>({raceId:d.id,...d.data()}));
+      }
       raceConditionReviewError='';
     }catch(e){raceConditionReviewError=e.message||String(e);}
     finally{raceConditionReviewPromise=null;raceConditionRefreshPanels();horseRaceRefreshEventBadges();}
@@ -176090,7 +176109,11 @@ async function horseRaceSaveReviewLink(btn,idx){
 }
 function horseRaceEventBadges(r){
   const record=horseRaceReviewMatch(r),e=window.ReviewClassificationRuntime?.events(record)||record?.events;
-  if(!record)return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：未登録</div>';
+  if(!record){
+    const status=raceConditionReviewRecords===null
+      ? (raceConditionReviewError?'取得できませんでした。再読み込みしてください':'読み込み中…') : '未登録・紐づけ未確認';
+    return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：'+status+'</div>';
+  }
   if(!e||Array.isArray(e)||typeof e!=='object')return '<div style="font-size:10px;color:var(--muted);margin:6px 0">レース4分類：連携済み・4分類未登録</div>';
   const labels=[];
   const pace={high:'ハイペース',middle:'ミドルペース',mid:'ミドルペース',slow:'スローペース'};
@@ -176492,6 +176515,7 @@ async function saveHorseRaceChange(horseName, change) {
 
     if (!finalHorse) return { ok:false, code:'unknown', message:'保存結果を取得できませんでした' };
     if (typeof bumpSyncVersion === 'function') bumpSyncVersion();
+    finalHorse._localSavedAt = new Date().toISOString();
     await idbPut('horses', finalHorse);
     return { ok:true, horse:finalHorse };
   } catch(e) {
@@ -182258,7 +182282,7 @@ async function publicHistoryMore(){
 }
 </script>
 
-<script src="data-archive.js?v=20261126-1"></script>
+<script src="data-archive.js?v=20261127-2"></script>
 <script src="running-style-model.js?v=20261115-7"></script>
 <script src="pace-model.js?v=20261126-1"></script>
 <script src="horse-review-link.js?v=20261126-official1"></script>
