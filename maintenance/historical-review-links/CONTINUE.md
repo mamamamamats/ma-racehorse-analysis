@@ -20,6 +20,8 @@
 - 公開索引は必ず `node scripts/export-verified-review-index.mjs` で生成する。古い不変計画から直接JSONを作るだけでは、修正済み馬場を古い初期値に戻してしまう。
 - going-repair/completed.json と、新たなrunディレクトリの変更前データ・コミット応答・結果をgzipに退避してGitへ保存する。`checkpoint-historical-review-progress.mjs` がgzipを自動保存する。未圧縮runは.gitignore対象で保持し、削除や上書きをしない。
 
+第30バッチの未保存2件（アーバンシック）は最新回顧と準備時内容が一致しない保留。本文を元に戻したり、不変計画を書き換えたりしない。再照合が必要。第23バッチのボエームは同名1998年生プロフィールが返ったため対象馬の根拠には使わず、未確認一覧とidentity-holds.jsonへ残している。
+
 ## 新しい照合を進める
 
 - `remaining-horses.json` の `unprocessed` から回顧数の多い馬を優先する。公式プロフィールが取得できない馬だけを繰り返さず、新しい馬も進める。`heldHorseRechecks` は別に保留を残す。

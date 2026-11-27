@@ -218,10 +218,42 @@
       "pendingReviews": 0,
       "pendingHorses": 0,
       "plan": "maintenance/historical-review-links/batch-027/plan.json"
+    },
+    {
+      "id": "batch-028",
+      "confirmedReviews": 371,
+      "completedReviews": 371,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
+      "plan": "maintenance/historical-review-links/batch-028/plan.json"
+    },
+    {
+      "id": "batch-029",
+      "confirmedReviews": 318,
+      "completedReviews": 318,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
+      "plan": "maintenance/historical-review-links/batch-029/plan.json"
+    },
+    {
+      "id": "batch-030",
+      "confirmedReviews": 294,
+      "completedReviews": 292,
+      "pendingReviews": 2,
+      "pendingHorses": 1,
+      "plan": "maintenance/historical-review-links/batch-030/plan.json"
+    },
+    {
+      "id": "batch-031",
+      "confirmedReviews": 279,
+      "completedReviews": 279,
+      "pendingReviews": 0,
+      "pendingHorses": 0,
+      "plan": "maintenance/historical-review-links/batch-031/plan.json"
     }
   ],
-  "confirmedReviews": 12141,
-  "completedReviews": 12141,
-  "pendingReviews": 0,
-  "pendingHorses": 0
+  "confirmedReviews": 13403,
+  "completedReviews": 13401,
+  "pendingReviews": 2,
+  "pendingHorses": 1
 }

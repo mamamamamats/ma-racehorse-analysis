@@ -1,8 +1,8 @@
 {
-  "at": "2026-11-27T02:11:52.579372+00:00",
+  "at": "2026-11-27T03:56:41.111148+00:00",
   "scheduledFor": "2026-11-27T11:00:00+09:00",
   "baseCompletedReviews": 10586,
-  "status": "in_progress",
+  "status": "completed",
   "batches": [
     {
       "batch": "batch-022",
@@ -57,24 +57,73 @@
       "heldReviewsInThisBatch": 131,
       "dbErrors": 0,
       "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-028",
+      "savedHorses": 42,
+      "savedReviews": 371,
+      "readHorses": 42,
+      "heldReviewsInThisBatch": 114,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-029",
+      "savedHorses": 35,
+      "savedReviews": 318,
+      "readHorses": 35,
+      "heldReviewsInThisBatch": 116,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-030",
+      "savedHorses": 34,
+      "savedReviews": 287,
+      "readHorses": 36,
+      "heldReviewsInThisBatch": 119,
+      "dbErrors": 0,
+      "skippedLiveReviews": 4
+    },
+    {
+      "batch": "batch-031",
+      "savedHorses": 37,
+      "savedReviews": 279,
+      "readHorses": 37,
+      "heldReviewsInThisBatch": 164,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
     }
   ],
-  "savedHorses": 184,
-  "savedReviews": 1555,
-  "totalSavedReviews": 12141,
-  "readHorses": 184,
-  "heldReviewsThisRun": 814,
-  "unprocessedHorses": 9729,
-  "heldHorses": 1199,
-  "officialHistories": 1282,
-  "completeHistories": 1275,
+  "savedHorses": 333,
+  "savedReviews": 2810,
+  "totalSavedReviews": 13401,
+  "readHorses": 334,
+  "heldReviewsThisRun": 1327,
+  "unprocessedHorses": 9572,
+  "heldHorses": 1344,
+  "officialHistories": 1439,
+  "completeHistories": 1431,
   "dbErrors": 0,
-  "skippedLiveReviews": 0,
+  "skippedLiveReviews": 4,
   "identityRechecks": [
     {
       "name": "ボエーム",
       "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud101998101908/A3",
       "reason": "The returned same-name profile is for a 1998-born horse. It is not evidence of the app's current horse identity; all reviews remain held and the horse stays unprocessed for identity recheck."
+    }
+  ],
+  "alreadyLinkedReviews": 5,
+  "heldLiveReviews": [
+    {
+      "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+      "reason": "review changed or duplicated",
+      "batch": "batch-030"
+    },
+    {
+      "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+      "reason": "review changed or duplicated",
+      "batch": "batch-030"
     }
   ]
 }
