@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "masterZipSha256": "1aec1c3ee8c6bcbc2e572e92e2678fe50cb860c757ba5d786e587944753027f3",
+  "masterJsonSha256": "a36fff71ef011c86b118ffc452d22379b2eb7df67e8929c14ce2dc7463bcef2c",
+  "masterExportedAt": "2026-11-27T15:00:48.103Z",
+  "sourceRepositoryCommit": "a54e0a374aac42320049da8d515f37618d388dfe",
+  "sourceArchiveSha256": "629671faeb5a699cbae02808edfd53b24ec8a978c536c0aec6fc1e3bada1fa6e",
+  "masterSelectionSha256": "95085307922c5bfc52e6d43612e6c57ac697b75d6e80449c73dba43b6d194dec",
+  "newSourceFiles": {
+    "open-01.json": "bb9a06f5dd535677c08cc285a48699bd83731c7f385f93faf68158b65c3bad95",
+    "open-02.json": "2240a3712cbd2fd31fd9317f592b660035626186bc94de25470a66f35741d039",
+    "open-03.json": "e9423750bc3728b346fbaf930bfa5e4b8b211f17a53328323f2a3579bd0b2150",
+    "race-pages-01.json": "ff718aeb4ae492f00266d85e67d14bc52d1190f3111f1a035eb5bf491a0ede78",
+    "race-pages-02.json": "156a2c90ba3e3dae8b94c20c4f9e5e43cb5364515e5f633d0bf2e64a33659e46",
+    "race-pages-03.json": "4b4dc41f78be2718529866f306b3ad2509308e25c6b84cfc3ff3fb2240c7b416",
+    "race-pages-04.json": "3d8074124b4047260cd16f065d4fe59148ce3bdfd0df68e9737e4381759a143d",
+    "search-01.json": "7f879e8a3026b030138c5379b3bc443322695d950ee1f2a47ab04df4c46d5bd7",
+    "search-02.json": "83d24093c065b501322ae8f8ae5052a518c61bb9b248627786df099426e753d5",
+    "tagano-profile-refresh.json": "3b6749760882371f8c64f8e8b0e773ba244d65573dcb19e711ce950475df8fd4"
+  },
+  "reusedHistories": [
+    {
+      "horse": "ファイアンクランツ",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-046/official-histories.json",
+        "sha256": "76fe678ae2277832ddd4cdc92fd1f739d57a129be2c2efae95a47b3393b60868",
+        "sourceArchive": "maintenance/historical-review-links/batch-046/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-067/official-histories.json",
+        "sha256": "f8eac91ed49f8df8c630ec44804a9009ead6047646caecc945485bcc7c3fc643",
+        "sourceArchive": "maintenance/historical-review-links/batch-067/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "アーバンシック",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-030/official-histories.json",
+        "sha256": "c45275da5f445901d3ace3b9e9b94d61bf3d7ca92aae553527f6ae2dbf008a8d",
+        "sourceArchive": "maintenance/historical-review-links/batch-030/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "コスモキュランダ",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-003/official-histories.json",
+        "sha256": "8ae803018613532f5e2cd8c70ea80924a500f0ea8c43b7bf72a3a54fa2deb002",
+        "sourceArchive": "maintenance/historical-review-links/batch-003/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "ヘデントール",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-034/official-histories.json",
+        "sha256": "4b7b7256027381e2924bb6bc7913227bacdc323c2a638954354630b7aca8100c",
+        "sourceArchive": "maintenance/historical-review-links/batch-034/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "エキサイトバイオ",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-049/official-histories.json",
+        "sha256": "933b169f611e159693c2daa297e3d8a2ad8585cdc221252f621545c0f16d4ff8",
+        "sourceArchive": "maintenance/historical-review-links/batch-049/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "ダノンデサイル",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-032/official-histories.json",
+        "sha256": "81cd24a4b4d9261a8ac7be78f0b0bd75fe87c1479907fff315eafde37e7ff941",
+        "sourceArchive": "maintenance/historical-review-links/batch-032/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "メイショウタバル",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-041/official-histories.json",
+        "sha256": "5f4c54105cafe337d0c318a3f11821e67cbfc3e8e4431932ac1a71c3115cb8fd",
+        "sourceArchive": "maintenance/historical-review-links/batch-041/source-responses.json.gz"
+      }
+    },
+    {
+      "horse": "タガノデュード",
+      "source": {
+        "file": "maintenance/historical-review-links/official-histories.json",
+        "sha256": "38220ba8fd6670dc2c530e096798f24d0e16c9248cd275057cae341f48765818",
+        "sourceArchive": "maintenance/historical-review-links/batch-069/source-responses.json.gz",
+        "note": "Initial batch retained parsed history only; full profile response reacquired and retained in this batch."
+      }
+    },
+    {
+      "horse": "シェイクユアハート",
+      "source": {
+        "file": "maintenance/historical-review-links/batch-050/official-histories.json",
+        "sha256": "01093f80fd738e2f1721d8a3120a1eba52634d38c47f2e62e737edc93ef106ee",
+        "sourceArchive": "maintenance/historical-review-links/batch-050/source-responses.json.gz"
+      }
+    }
+  ],
+  "note": "Official raw history names are retained in official-histories-raw.json. Date-scoped, manually checked name expansions are in official-name-aliases.json. Normalized histories carry officialName and canonicalNameEvidence; no application or DB data is changed.",
+  "files": 10
+}

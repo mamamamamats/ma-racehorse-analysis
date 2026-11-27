@@ -1,0 +1,57 @@
+{
+  "report": {
+    "masterExportedAt": "2026-11-27T15:00:48.103Z"
+  },
+  "updates": [
+    {
+      "horseName": "タガノデュード",
+      "original": {
+        "comment": "行き足ついて逃げて粘って3着。スローペースで内前有利の展開が向いていたため素直に高評価はできない。この距離は長いような印象。控えた方が",
+        "eval": "B",
+        "name": "**揖斐川特別**",
+        "track": "中京芝2200"
+      },
+      "raceId": "race_day-2024-08-24_%E4%B8%AD%E4%BA%AC_9",
+      "raceRef": {
+        "date": "2024/8/24",
+        "dayId": "day-2024-08-24",
+        "venue": "中京",
+        "raceName": "**揖斐川特別**",
+        "name": "**揖斐川特別**",
+        "raceNumber": 9,
+        "r": 9,
+        "track": "芝2200",
+        "surface": "芝",
+        "distance": 2200,
+        "grade": "op",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106548/B1",
+        "officialDate": "2024/8/24",
+        "officialFinish": 3,
+        "officialFieldSize": 12,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "formatting-only-title-alias"
+        ],
+        "verifiedAt": "2026-11-27T17:09:42.970Z",
+        "officialRaceName": "揖斐川特別",
+        "canonicalNameEvidence": {
+          "date": "2024/8/24",
+          "officialName": "揖斐川特別",
+          "comparisonName": "**揖斐川特別**",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1007202402050920240824/A7",
+          "note": "Markdown bold markers in both app review and starting card; race name itself unchanged."
+        }
+      }
+    }
+  ],
+  "cases": []
+}

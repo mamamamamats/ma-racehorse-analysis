@@ -476,6 +476,20 @@
       "sha256": "26f60995ec936c88c36d6ec79c5ba790f79a7fa60d1ef4235609d564133319f9",
       "checkpoint": ".local/historical-review-links/batch-068/checkpoint.json",
       "completed": "maintenance/historical-review-links/batch-068/completed.json"
+    },
+    {
+      "id": "batch-069",
+      "plan": "maintenance/historical-review-links/batch-069/plan.json",
+      "sha256": "e86998b43d266a12d2e1eb8f7204991319d9e2eaa52a1da663b12bac914c4dd1",
+      "checkpoint": ".local/historical-review-links/batch-069/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-069/completed.json"
+    },
+    {
+      "id": "batch-070",
+      "plan": "maintenance/historical-review-links/batch-070/plan.json",
+      "sha256": "a181131c7b2a40cf1a9f2b9ebc2fdabd54e9e88190c5aab760daad91c42632cf",
+      "checkpoint": ".local/historical-review-links/batch-070/checkpoint.json",
+      "completed": "maintenance/historical-review-links/batch-070/completed.json"
     }
   ]
 }

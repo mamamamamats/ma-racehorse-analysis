@@ -1,0 +1,1266 @@
+{
+  "report": {
+    "masterExportedAt": "2026-11-27T15:00:48.103Z",
+    "officialHorses": 12,
+    "updates": 17,
+    "counts": {
+      "confirmed": 17,
+      "ambiguous-official-races": 3,
+      "no-official-match": 11,
+      "missing-app-race": 4,
+      "generic-without-own-finish": 1,
+      "horse-identity-anchor-mismatch": 3
+    }
+  },
+  "updates": [
+    {
+      "horseName": "エキサイトバイオ",
+      "original": {
+        "eval": "A",
+        "track": "福島芝1800",
+        "comment": "スタート五分で中団から伸びて1着。終始内をロスなく立ち回れて開幕週の馬場も向いた。斤量も軽買った。",
+        "name": "ラジオNIKKEI賞"
+      },
+      "raceId": "race_day-2025-06-29_%E7%A6%8F%E5%B3%B6_11",
+      "raceRef": {
+        "date": "2025/6/29",
+        "dayId": "day-2025-06-29",
+        "venue": "福島",
+        "raceName": "ラジオNIKKEI賞",
+        "name": "ラジオNIKKEI賞",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝1800",
+        "surface": "芝",
+        "distance": 1800,
+        "grade": "g3",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104614/7B",
+        "officialDate": "2025/6/29",
+        "officialFinish": 1,
+        "officialFieldSize": 14,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T05:28:28.847Z",
+        "officialRaceName": "ラジNIK賞",
+        "canonicalNameEvidence": {
+          "date": "2025/6/29",
+          "officialName": "ラジNIK賞",
+          "comparisonName": "ラジオNIKKEI賞",
+          "sourceUrl": "https://www.jra.go.jp/datafile/seiseki/replay/2025/059.html"
+        }
+      }
+    },
+    {
+      "horseName": "エキサイトバイオ",
+      "original": {
+        "track": "京都芝2000",
+        "name": "新馬2024/10/12",
+        "eval": "F",
+        "comment": "行き足つかず後方から伸びきえず8着。後ろすぎたため度外視可能。足は使えている。"
+      },
+      "raceId": "race_day-2024-10-12_%E4%BA%AC%E9%83%BD_5",
+      "raceRef": {
+        "date": "2024/10/12",
+        "dayId": "day-2024-10-12",
+        "venue": "京都",
+        "raceName": "2歳新馬",
+        "name": "2歳新馬",
+        "raceNumber": 5,
+        "r": 5,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "new",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104614/7B",
+        "officialDate": "2024/10/12",
+        "officialFinish": 8,
+        "officialFieldSize": 13,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "date-in-review"
+        ],
+        "verifiedAt": "2026-11-27T05:28:28.847Z"
+      }
+    },
+    {
+      "horseName": "クロワデュノール",
+      "original": {
+        "eval": "S",
+        "track": "東京芝1800",
+        "comment": "スタートよく先行して直線伸びて1着。スムーズな競馬でスローペースで前有利の展開は向いていたが勝ち時計、ラップが非常に優秀で確実に重賞に出てくる、クラシックにも出てきそうな一頭",
+        "name": "新馬2024/6/9"
+      },
+      "raceId": "race_day-2024-06-09_%E6%9D%B1%E4%BA%AC_5",
+      "raceRef": {
+        "date": "2024/6/9",
+        "dayId": "day-2024-06-09",
+        "venue": "東京",
+        "raceName": "2歳新馬",
+        "name": "2歳新馬",
+        "raceNumber": 5,
+        "r": 5,
+        "track": "芝1800",
+        "surface": "芝",
+        "distance": 1800,
+        "grade": "new",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022105102/7F",
+        "officialDate": "2024/6/9",
+        "officialFinish": 1,
+        "officialFieldSize": 11,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "date-in-review"
+        ],
+        "verifiedAt": "2026-11-27T17:02:57.227Z"
+      }
+    },
+    {
+      "horseName": "コスモキュランダ",
+      "original": {
+        "track": "中山芝2200",
+        "name": "セントライト記念",
+        "comment": "スタート早くなく中断後ろからまくっていって直線伸びて2着。内前有利の馬場で外から動いていくロスの多い競馬で伸びてきた。地力は上位だった。勝ち馬は足をうまくためていた。スタートはやはり課題。",
+        "eval": "A"
+      },
+      "raceId": "race_day-2024-09-16_%E4%B8%AD%E5%B1%B1_11",
+      "raceRef": {
+        "date": "2024/9/16",
+        "dayId": "day-2024-09-16",
+        "venue": "中山",
+        "raceName": "セントライト記念",
+        "name": "セントライト記念",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝2200",
+        "surface": "芝",
+        "distance": 2200,
+        "grade": "g2",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106787/E0",
+        "officialDate": "2024/9/16",
+        "officialFinish": 2,
+        "officialFieldSize": 14,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-26T10:01:23.649Z",
+        "officialRaceName": "セントライト",
+        "canonicalNameEvidence": {
+          "date": "2024/9/16",
+          "officialName": "セントライト",
+          "comparisonName": "セントライト記念",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1006202404051120240916/04"
+        }
+      }
+    },
+    {
+      "horseName": "シェイクユアハート",
+      "original": {
+        "track": "京都芝2000",
+        "name": "アンドロメダS",
+        "comment": "中団から伸びて2着。かなり外回したが外のび馬場は向いた。やや抜け出し早かったか。プラス14キロと斤量の分。スムーズなら",
+        "eval": "A"
+      },
+      "raceId": "race_day-2025-11-15_%E4%BA%AC%E9%83%BD_10",
+      "raceRef": {
+        "date": "2025/11/15",
+        "dayId": "day-2025-11-15",
+        "venue": "京都",
+        "raceName": "アンドロメダS",
+        "name": "アンドロメダS",
+        "raceNumber": 10,
+        "r": 10,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "g3",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002020103101/2F",
+        "officialDate": "2025/11/15",
+        "officialFinish": 2,
+        "officialFieldSize": 16,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T05:30:37.217Z",
+        "officialRaceName": "アンドロメダ",
+        "canonicalNameEvidence": {
+          "date": "2025/11/15",
+          "officialName": "アンドロメダ",
+          "comparisonName": "アンドロメダS",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1008202504031020251115/87"
+        }
+      }
+    },
+    {
+      "horseName": "タガノデュード",
+      "original": {
+        "track": "中京芝2000",
+        "eval": "A",
+        "name": "関ヶ原S",
+        "comment": "スタート五分もやや挟まれて中団後ろから伸びて3着。スローペースで開幕週の馬場で流石に前が止まらなかった。足は使えている。"
+      },
+      "raceId": "race_day-2025-07-26_%E4%B8%AD%E4%BA%AC_7",
+      "raceRef": {
+        "date": "2025/7/26",
+        "dayId": "day-2025-07-26",
+        "venue": "中京",
+        "raceName": "関ヶ原S",
+        "name": "関ヶ原S",
+        "raceNumber": 7,
+        "r": 7,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "g3",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106548/B1",
+        "officialDate": "2025/7/26",
+        "officialFinish": 3,
+        "officialFieldSize": 10,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-25T23:44:13.201Z",
+        "officialRaceName": "関ケ原S",
+        "canonicalNameEvidence": {
+          "date": "2025/7/26",
+          "officialName": "関ケ原S",
+          "comparisonName": "関ヶ原S",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1007202503010720250726/A8"
+        }
+      }
+    },
+    {
+      "horseName": "タガノデュード",
+      "original": {
+        "eval": "S",
+        "track": "中京芝2000",
+        "comment": "スタート五分で中団から伸びて2着。終始外を回すロスがあり勝ち馬はロス少なかった。差はないが小頭数だった。",
+        "name": "茶臼山高原特別"
+      },
+      "raceId": "race_day-2025-01-26_%E4%B8%AD%E4%BA%AC_9",
+      "raceRef": {
+        "date": "2025/1/26",
+        "dayId": "day-2025-01-26",
+        "venue": "中京",
+        "raceName": "茶臼山高原特別",
+        "name": "茶臼山高原特別",
+        "raceNumber": 9,
+        "r": 9,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "op",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106548/B1",
+        "officialDate": "2025/1/26",
+        "officialFinish": 2,
+        "officialFieldSize": 9,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-25T23:44:13.201Z",
+        "officialRaceName": "茶臼山高原特",
+        "canonicalNameEvidence": {
+          "date": "2025/1/26",
+          "officialName": "茶臼山高原特",
+          "comparisonName": "茶臼山高原特別",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1007202501090920250126/66"
+        }
+      }
+    },
+    {
+      "horseName": "タガノデュード",
+      "original": {
+        "track": "中京芝2000",
+        "eval": "A",
+        "name": "ヤングJSFR第1戦",
+        "comment": "スタートよく先行して伸びて1着。スローペースで前有利にの展開向いた。早めに仕掛けて横綱競馬。馬体戻った。"
+      },
+      "raceId": "race_day-2024-12-14_%E4%B8%AD%E4%BA%AC_8",
+      "raceRef": {
+        "date": "2024/12/14",
+        "dayId": "day-2024-12-14",
+        "venue": "中京",
+        "raceName": "ヤングJSFR第1戦",
+        "name": "ヤングJSFR第1戦",
+        "raceNumber": 8,
+        "r": 8,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "op",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106548/B1",
+        "officialDate": "2024/12/14",
+        "officialFinish": 1,
+        "officialFieldSize": 16,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-25T23:44:13.201Z",
+        "officialRaceName": "YJSF名1",
+        "canonicalNameEvidence": {
+          "date": "2024/12/14",
+          "officialName": "YJSF名1",
+          "comparisonName": "ヤングJSFR第1戦",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1007202404050820241214/30"
+        }
+      }
+    },
+    {
+      "horseName": "タガノデュード",
+      "original": {
+        "name": "セントライト記念",
+        "eval": "D",
+        "comment": "スタートよく先行して伸び切れず9着。内をロスなく立ち回れており評価できない。マイナス16キロも影響したか。",
+        "track": "中山芝2200"
+      },
+      "raceId": "race_day-2024-09-16_%E4%B8%AD%E5%B1%B1_11",
+      "raceRef": {
+        "date": "2024/9/16",
+        "dayId": "day-2024-09-16",
+        "venue": "中山",
+        "raceName": "セントライト記念",
+        "name": "セントライト記念",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝2200",
+        "surface": "芝",
+        "distance": 2200,
+        "grade": "g2",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106548/B1",
+        "officialDate": "2024/9/16",
+        "officialFinish": 9,
+        "officialFieldSize": 14,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-25T23:44:13.201Z",
+        "officialRaceName": "セントライト",
+        "canonicalNameEvidence": {
+          "date": "2024/9/16",
+          "officialName": "セントライト",
+          "comparisonName": "セントライト記念",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1006202404051120240916/04"
+        }
+      }
+    },
+    {
+      "horseName": "ファイアンクランツ",
+      "original": {
+        "name": "セントライト記念",
+        "track": "中山芝2200",
+        "comment": "後方から伸びず。鼻出血。ゲートで暴れて外枠発走。",
+        "eval": "F"
+      },
+      "raceId": "race_day-2025-09-15_%E4%B8%AD%E5%B1%B1_11",
+      "raceRef": {
+        "date": "2025/9/15",
+        "dayId": "day-2025-09-15",
+        "venue": "中山",
+        "raceName": "セントライト記念",
+        "name": "セントライト記念",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝2200",
+        "surface": "芝",
+        "distance": 2200,
+        "grade": "g2",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+        "officialDate": "2025/9/15",
+        "officialFinish": 12,
+        "officialFieldSize": 12,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T05:22:22.903Z",
+        "officialRaceName": "セントライト",
+        "canonicalNameEvidence": {
+          "date": "2025/9/15",
+          "officialName": "セントライト",
+          "comparisonName": "セントライト記念",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1006202504051120250915/4E"
+        }
+      }
+    },
+    {
+      "horseName": "ファイアンクランツ",
+      "original": {
+        "comment": "スタート悪くなく二の足で先行して伸びきれず9着。終始やや外を回すロスがあったが前有利の展開が向いており評価はできない。内枠で足ためるなど恩恵必要も条件戦なら。",
+        "eval": "C",
+        "track": "東京芝2400",
+        "name": "日本ダービー"
+      },
+      "raceId": "race_day-2025-06-01_%E6%9D%B1%E4%BA%AC_11",
+      "raceRef": {
+        "date": "2025/6/1",
+        "dayId": "day-2025-06-01",
+        "venue": "東京",
+        "raceName": "日本ダービー",
+        "name": "日本ダービー",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝2400",
+        "surface": "芝",
+        "distance": 2400,
+        "grade": "g1",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+        "officialDate": "2025/6/1",
+        "officialFinish": 9,
+        "officialFieldSize": 18,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T05:22:22.903Z",
+        "officialRaceName": "東京優駿",
+        "canonicalNameEvidence": {
+          "date": "2025/6/1",
+          "officialName": "東京優駿",
+          "comparisonName": "日本ダービー",
+          "sourceUrl": "https://www.jra.go.jp/datafile/ranking/jyusyo/2025/06-g1.html"
+        }
+      }
+    },
+    {
+      "horseName": "ファイアンクランツ",
+      "original": {
+        "comment": "スタート早くなく二の足で中団につけて伸びきれず4着。最後まで伸びているが直線の加速少し遅かった。伸びている。スタート",
+        "eval": "C",
+        "name": "東スポ杯2歳S",
+        "track": "東京芝1800"
+      },
+      "raceId": "race_day-2024-11-16_%E6%9D%B1%E4%BA%AC_11",
+      "raceRef": {
+        "date": "2024/11/16",
+        "dayId": "day-2024-11-16",
+        "venue": "東京",
+        "raceName": "東スポ杯2歳S",
+        "name": "東スポ杯2歳S",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝1800",
+        "surface": "芝",
+        "distance": 1800,
+        "grade": "g3",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+        "officialDate": "2024/11/16",
+        "officialFinish": 4,
+        "officialFieldSize": 9,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T05:22:22.903Z",
+        "officialRaceName": "東スポ2歳S",
+        "canonicalNameEvidence": {
+          "date": "2024/11/16",
+          "officialName": "東スポ2歳S",
+          "comparisonName": "東スポ杯2歳S",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1005202405051120241116/2B"
+        }
+      }
+    },
+    {
+      "horseName": "ファイアンクランツ",
+      "original": {
+        "eval": "A",
+        "name": "新馬2024/7/28",
+        "comment": "スタートよく先行して早めに進出して直線伸びて1着。スムーズな競馬も自分から動いて3着以下は離している。ノーステッキ。2着馬の次走注目。",
+        "track": "札幌芝1800重"
+      },
+      "raceId": "race_day-2024-07-28_%E6%9C%AD%E5%B9%8C_5",
+      "raceRef": {
+        "date": "2024/7/28",
+        "dayId": "day-2024-07-28",
+        "venue": "札幌",
+        "raceName": "2歳新馬",
+        "name": "2歳新馬",
+        "raceNumber": 5,
+        "r": 5,
+        "track": "芝1800",
+        "surface": "芝",
+        "distance": 1800,
+        "grade": "new",
+        "trackCondition": "重"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+        "officialDate": "2024/7/28",
+        "officialFinish": 1,
+        "officialFieldSize": 12,
+        "officialGoing": "重",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "going",
+          "date-in-review"
+        ],
+        "verifiedAt": "2026-11-27T05:22:22.903Z"
+      }
+    },
+    {
+      "horseName": "マスカレードボール",
+      "original": {
+        "name": "新馬2024/8/11",
+        "track": "新潟芝1600",
+        "eval": "S",
+        "comment": "スタート早くなく中団後方から伸びて1着。追い出しはスムーズだったがスローペースを外から差し切れたのは評価できる。やや横を向きながら走っており幼さも見えたため成長すれば楽しみか。"
+      },
+      "raceId": "race_day-2024-08-11_%E6%96%B0%E6%BD%9F_5",
+      "raceRef": {
+        "date": "2024/8/11",
+        "dayId": "day-2024-08-11",
+        "venue": "新潟",
+        "raceName": "2歳新馬",
+        "name": "2歳新馬",
+        "raceNumber": 5,
+        "r": 5,
+        "track": "芝1600",
+        "surface": "芝",
+        "distance": 1600,
+        "grade": "new",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022105519/91",
+        "officialDate": "2024/8/11",
+        "officialFinish": 1,
+        "officialFieldSize": 13,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "date-in-review"
+        ],
+        "verifiedAt": "2026-11-27T17:02:57.229Z"
+      }
+    },
+    {
+      "horseName": "ヴェルテンベルク",
+      "original": {
+        "name": "ダイヤモンドS",
+        "comment": "スタート五分も位置取れず中団後ろから伸びきれず4着。直線時点で後ろすぎた。最後まで止まってはいないが展開待ち。",
+        "eval": "C",
+        "track": "東京芝3400"
+      },
+      "raceId": "race_day-2026-02-21_%E6%9D%B1%E4%BA%AC_11",
+      "raceRef": {
+        "date": "2026/2/21",
+        "dayId": "day-2026-02-21",
+        "venue": "東京",
+        "raceName": "ダイヤモンドS",
+        "name": "ダイヤモンドS",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝3400",
+        "surface": "芝",
+        "distance": 3400,
+        "grade": "g3",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102020103060/D2",
+        "officialDate": "2026/2/21",
+        "officialFinish": 4,
+        "officialFieldSize": 15,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T06:36:03.465Z",
+        "officialRaceName": "ダイヤモンド",
+        "canonicalNameEvidence": {
+          "date": "2026/2/21",
+          "officialName": "ダイヤモンド",
+          "comparisonName": "ダイヤモンドS",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1005202601071120260221/67"
+        }
+      }
+    },
+    {
+      "horseName": "ヴェルテンベルク",
+      "original": {
+        "eval": "S",
+        "comment": "中団前目うちから伸びきれず6着。ロスなく走れて完璧な競馬で伸び負け。力は出しきれて伸び負けているわけではない。スローすぎて上がり早かったか。",
+        "name": "ステイヤーズS",
+        "track": "中山芝3600"
+      },
+      "raceId": "race_day-2025-12-06_%E4%B8%AD%E5%B1%B1_11",
+      "raceRef": {
+        "date": "2025/12/6",
+        "dayId": "day-2025-12-06",
+        "venue": "中山",
+        "raceName": "ステイヤーズS",
+        "name": "ステイヤーズS",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝3600",
+        "surface": "芝",
+        "distance": 3600,
+        "grade": "g2",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102020103060/D2",
+        "officialDate": "2025/12/6",
+        "officialFinish": 6,
+        "officialFieldSize": 14,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish",
+          "official-race-name-alias"
+        ],
+        "verifiedAt": "2026-11-27T06:36:03.465Z",
+        "officialRaceName": "ステイヤーズ",
+        "canonicalNameEvidence": {
+          "date": "2025/12/6",
+          "officialName": "ステイヤーズ",
+          "comparisonName": "ステイヤーズS",
+          "sourceUrl": "https://www.jra.go.jp/JRADB/accessS.html?CNAME=pw01sde1006202505011120251206/D1"
+        }
+      }
+    },
+    {
+      "horseName": "ヴェルテンベルク",
+      "original": {
+        "eval": "D",
+        "comment": "中団から伸びきれず9着。スムーズな競馬で伸び負け。大きく負けているわけではないがOPから出直し。",
+        "track": "阪神芝2000",
+        "name": "チャレンジC"
+      },
+      "raceId": "race_day-2025-09-13_%E9%98%AA%E7%A5%9E_11",
+      "raceRef": {
+        "date": "2025/9/13",
+        "dayId": "day-2025-09-13",
+        "venue": "阪神",
+        "raceName": "チャレンジC",
+        "name": "チャレンジC",
+        "raceNumber": 11,
+        "r": 11,
+        "track": "芝2000",
+        "surface": "芝",
+        "distance": 2000,
+        "grade": "g2",
+        "trackCondition": "良"
+      },
+      "verification": {
+        "source": "jra-official-history",
+        "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102020103060/D2",
+        "officialDate": "2025/9/13",
+        "officialFinish": 9,
+        "officialFieldSize": 15,
+        "officialGoing": "良",
+        "evidence": [
+          "official-horse-history",
+          "app-starting-list",
+          "race-name",
+          "course",
+          "own-finish"
+        ],
+        "verifiedAt": "2026-11-27T06:36:03.465Z"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "horse": "エキサイトバイオ",
+      "index": 2,
+      "run": {
+        "eval": "A",
+        "track": "福島芝1800",
+        "comment": "スタート五分で中団から伸びて1着。終始内をロスなく立ち回れて開幕週の馬場も向いた。斤量も軽買った。",
+        "name": "ラジオNIKKEI賞"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "エキサイトバイオ",
+      "index": 5,
+      "run": {
+        "eval": "S",
+        "comment": "スタートよく先行して伸び切れず4着。ペースそこまで遅くなかったが早くもなく逃げ馬も粘っていた。外枠でやや外回されたか。内で完璧なら",
+        "track": "中京芝2000",
+        "name": "未勝利"
+      },
+      "status": "ambiguous-official-races",
+      "candidateDates": [
+        "2025/3/15",
+        "2024/12/14"
+      ]
+    },
+    {
+      "horse": "エキサイトバイオ",
+      "index": 8,
+      "run": {
+        "track": "京都芝2000",
+        "name": "新馬2024/10/12",
+        "eval": "F",
+        "comment": "行き足つかず後方から伸びきえず8着。後ろすぎたため度外視可能。足は使えている。"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "クロワデュノール",
+      "index": 8,
+      "run": {
+        "eval": "S",
+        "track": "東京芝1800",
+        "comment": "スタートよく先行して直線伸びて1着。スムーズな競馬でスローペースで前有利の展開は向いていたが勝ち時計、ラップが非常に優秀で確実に重賞に出てくる、クラシックにも出てきそうな一頭",
+        "name": "新馬2024/6/9"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "コスモキュランダ",
+      "index": 12,
+      "run": {
+        "track": "中山芝2200",
+        "name": "セントライト記念",
+        "comment": "スタート早くなく中断後ろからまくっていって直線伸びて2着。内前有利の馬場で外から動いていくロスの多い競馬で伸びてきた。地力は上位だった。勝ち馬は足をうまくためていた。スタートはやはり課題。",
+        "eval": "A"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "コスモキュランダ",
+      "index": 13,
+      "run": {
+        "track": "東京芝2400",
+        "name": "日本ダービー",
+        "eval": "D",
+        "comment": "スタート出遅れて後方からまくっていったが直線伸びきれず6着。スローペースで前目有利の展開が向いておらずまくるロスの多い競馬であったため見直しは可能。スタートなどを考えるとやはり中山向きの印象。しかし6着まできているため地力は高い。"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "コスモキュランダ",
+      "index": 14,
+      "run": {
+        "comment": "スタート早くなかったが中団につけて直線外から伸びて２着。ハイペースのタフな展開は向いていたが外を回すロスの多い競馬であった。この展開がベストの印象。",
+        "track": "中山芝2000",
+        "name": "皐月賞",
+        "eval": "C"
+      },
+      "status": "missing-app-race",
+      "candidateDates": [
+        "2024/4/14"
+      ]
+    },
+    {
+      "horse": "コスモキュランダ",
+      "index": 15,
+      "run": {
+        "eval": "S",
+        "comment": "スタートよくなく後方からまくっていってそのまま押し切って１着。内前有利の馬場の中まくって勝ち切ったのは評価できるがこの馬のリズムで完璧な競馬だったか。多頭数になってもこれができるとは限らない。",
+        "track": "中山芝2000",
+        "name": "弥生賞"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "コスモキュランダ",
+      "index": 17,
+      "run": {
+        "track": "芝2000",
+        "eval": "C",
+        "comment": "直線で挟まれる不利。次走見直し可能。条件戦なら狙える。",
+        "name": "京都２歳S"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "シェイクユアハート",
+      "index": 5,
+      "run": {
+        "track": "京都芝2000",
+        "name": "アンドロメダS",
+        "comment": "中団から伸びて2着。かなり外回したが外のび馬場は向いた。やや抜け出し早かったか。プラス14キロと斤量の分。スムーズなら",
+        "eval": "A"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 2,
+      "run": {
+        "name": "天皇賞（春）京都芝3200",
+        "comment": "行き足つかず後方から伸びきれず6着。意図的に控えたかもしれないが差し有利な展開は向いて上位には伸び負け。距離長かったか。2000前後で",
+        "track": "",
+        "eval": "D"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 8,
+      "run": {
+        "track": "中京芝2000",
+        "eval": "A",
+        "name": "関ヶ原S",
+        "comment": "スタート五分もやや挟まれて中団後ろから伸びて3着。スローペースで開幕週の馬場で流石に前が止まらなかった。足は使えている。"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 13,
+      "run": {
+        "eval": "S",
+        "track": "中京芝2000",
+        "comment": "スタート五分で中団から伸びて2着。終始外を回すロスがあり勝ち馬はロス少なかった。差はないが小頭数だった。",
+        "name": "茶臼山高原特別"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 14,
+      "run": {
+        "track": "中京芝2000",
+        "eval": "A",
+        "name": "ヤングJSFR第1戦",
+        "comment": "スタートよく先行して伸びて1着。スローペースで前有利にの展開向いた。早めに仕掛けて横綱競馬。馬体戻った。"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 15,
+      "run": {
+        "name": "セントライト記念",
+        "eval": "D",
+        "comment": "スタートよく先行して伸び切れず9着。内をロスなく立ち回れており評価できない。マイナス16キロも影響したか。",
+        "track": "中山芝2200"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 16,
+      "run": {
+        "comment": "行き足ついて逃げて粘って3着。スローペースで内前有利の展開が向いていたため素直に高評価はできない。この距離は長いような印象。控えた方が",
+        "eval": "B",
+        "name": "**揖斐川特別**",
+        "track": "中京芝2200"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 17,
+      "run": {
+        "track": "中京芝2000",
+        "name": "1勝クラス",
+        "eval": "C",
+        "comment": "取り消し"
+      },
+      "status": "generic-without-own-finish",
+      "candidateDates": [
+        "2024/8/11"
+      ]
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 19,
+      "run": {
+        "eval": "C",
+        "comment": "スタート出遅れて後方外から伸びきれず7着。内前有利の展開が向いていないため見直しは可能。足は使えているためタフな展開または捲るなどの工夫が必要。スタート直後やや折り合いを欠いていたため距離短くしたいか",
+        "name": "京都新聞杯",
+        "track": "京都芝2200"
+      },
+      "status": "missing-app-race",
+      "candidateDates": [
+        "2024/5/4"
+      ]
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 20,
+      "run": {
+        "eval": "C",
+        "name": "アーリントンC",
+        "track": "阪神芝1600",
+        "comment": "スタート早くなく中団後方外から伸びず。スローペースの展開で終始外を回すロスがあったため大きく評価を下げる必要はない。展開恩恵欲しい"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "タガノデュード",
+      "index": 21,
+      "run": {
+        "name": "フローラルウォーク賞",
+        "track": "中京芝1600",
+        "comment": "スタート五分で4,5番手につけて直線内から伸びたが3着。スローペースで逃げ、番手が上位のため大きく評価を下げる必要はない。折り合いをやや欠いてもいたか。内を立ち回れてはいたが。",
+        "eval": "C"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "ダノンデサイル",
+      "index": 10,
+      "run": {
+        "track": "芝2000",
+        "name": "京都２歳S",
+        "comment": "後方から追い込んで４着。良い伸び足だったが位置が若干後ろすぎた。展開は向いていたため高評価はできない。",
+        "eval": "B"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "ファイアンクランツ",
+      "index": 2,
+      "run": {
+        "name": "ダイヤモンドS",
+        "eval": "B",
+        "track": "東京芝3400",
+        "comment": "中団後ろから伸びて3着。終始内で足ためることができたが古馬戦で好走できた。斤量は軽かった。"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "ファイアンクランツ",
+      "index": 3,
+      "run": {
+        "name": "セントライト記念",
+        "track": "中山芝2200",
+        "comment": "後方から伸びず。鼻出血。ゲートで暴れて外枠発走。",
+        "eval": "F"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ファイアンクランツ",
+      "index": 4,
+      "run": {
+        "comment": "スタート悪くなく二の足で先行して伸びきれず9着。終始やや外を回すロスがあったが前有利の展開が向いており評価はできない。内枠で足ためるなど恩恵必要も条件戦なら。",
+        "eval": "C",
+        "track": "東京芝2400",
+        "name": "日本ダービー"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ファイアンクランツ",
+      "index": 8,
+      "run": {
+        "comment": "スタート早くなく二の足で中団につけて伸びきれず4着。最後まで伸びているが直線の加速少し遅かった。伸びている。スタート",
+        "eval": "C",
+        "name": "東スポ杯2歳S",
+        "track": "東京芝1800"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ファイアンクランツ",
+      "index": 10,
+      "run": {
+        "eval": "A",
+        "name": "新馬2024/7/28",
+        "comment": "スタートよく先行して早めに進出して直線伸びて1着。スムーズな競馬も自分から動いて3着以下は離している。ノーステッキ。2着馬の次走注目。",
+        "track": "札幌芝1800重"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ヘデントール",
+      "index": 9,
+      "run": {
+        "track": "中山芝2000",
+        "comment": "後方外からまくって一気の足で差し切り勝ち。差し決着であったため高評価はできるかわからないが伸びはとても良かった。スタートもそこまで悪くなかった。意図的に控えた？道中は内をロスなく立ち回れていたため外外を回した時にどうか。",
+        "name": "1勝クラス",
+        "eval": "B"
+      },
+      "status": "horse-identity-anchor-mismatch"
+    },
+    {
+      "horse": "ヘデントール",
+      "index": 10,
+      "run": {
+        "eval": "B",
+        "comment": "中団後方から早めに進出して快勝。時計も優秀で次走も期待。スタートの改善は必須。",
+        "track": "",
+        "name": "未勝利中山芝2000"
+      },
+      "status": "horse-identity-anchor-mismatch"
+    },
+    {
+      "horse": "ヘデントール",
+      "index": 11,
+      "run": {
+        "comment": "終始外を追走でロスの多い競馬。スローペースで前目にいたため高評価はできないものの次走も買える。スタート出遅れてまくっていたため",
+        "eval": "C",
+        "track": "東京5R",
+        "name": "新馬2023/11/18"
+      },
+      "status": "horse-identity-anchor-mismatch"
+    },
+    {
+      "horse": "マスカレードボール",
+      "index": 8,
+      "run": {
+        "name": "新馬2024/8/11",
+        "track": "新潟芝1600",
+        "eval": "S",
+        "comment": "スタート早くなく中団後方から伸びて1着。追い出しはスムーズだったがスローペースを外から差し切れたのは評価できる。やや横を向きながら走っており幼さも見えたため成長すれば楽しみか。"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "メイショウタバル",
+      "index": 7,
+      "run": {
+        "name": "日本ダービー",
+        "track": "東京芝2400",
+        "comment": "出走取り消し",
+        "eval": "C"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "メイショウタバル",
+      "index": 8,
+      "run": {
+        "eval": "F",
+        "track": "中山芝2000",
+        "comment": "スタートよく逃げたが超ハイペースで失速。度外視可能も気性心配",
+        "name": "皐月賞"
+      },
+      "status": "missing-app-race",
+      "candidateDates": [
+        "2024/4/14"
+      ]
+    },
+    {
+      "horse": "メイショウタバル",
+      "index": 9,
+      "run": {
+        "eval": "S",
+        "track": "阪神芝1800重",
+        "name": "毎日杯",
+        "comment": "スタートよく逃げて圧勝。馬場適性、内前有利の展開など全てがハマった印象はあるが強い勝ち方。ワンターンの印象はあるがかなり強いか。"
+      },
+      "status": "missing-app-race",
+      "candidateDates": [
+        "2024/3/23"
+      ]
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 0,
+      "run": {
+        "comment": "出遅れて後方から早めに仕掛けて伸びきれず7着。内前有利の展開が向かずロスも多い競馬。止まってはいないがスタート課題で展開待ち。もっと距離あってもいい",
+        "name": "京都大賞典",
+        "track": "京都芝2400稍重",
+        "eval": "B"
+      },
+      "status": "ambiguous-official-races",
+      "candidateDates": [
+        "2026/10/4",
+        "2025/10/5"
+      ]
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 1,
+      "run": {
+        "track": "",
+        "name": "天皇賞（春）京都芝3200",
+        "comment": "行き足つかず後方から伸びて2着。後ろすぎたが足溜めれて差し有利の展開が向いた。これまでスローペースばかりだったがタフな長距離の持続力勝負が得意か。力見せた",
+        "eval": "S"
+      },
+      "status": "no-official-match",
+      "candidateDates": []
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 2,
+      "run": {
+        "name": "ダイヤモンドS",
+        "comment": "スタート五分も位置取れず中団後ろから伸びきれず4着。直線時点で後ろすぎた。最後まで止まってはいないが展開待ち。",
+        "eval": "C",
+        "track": "東京芝3400"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 3,
+      "run": {
+        "eval": "S",
+        "comment": "中団前目うちから伸びきれず6着。ロスなく走れて完璧な競馬で伸び負け。力は出しきれて伸び負けているわけではない。スローすぎて上がり早かったか。",
+        "name": "ステイヤーズS",
+        "track": "中山芝3600"
+      },
+      "status": "confirmed"
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 4,
+      "run": {
+        "track": "京都芝2400稍重",
+        "name": "京都大賞典",
+        "comment": "スタート五分も位置とれず中断後ろから伸びきれず7着。控えた分足溜まったが後ろすぎたかつ内を走った馬がしかこない展開で外走った。ショウナンラプンタらに伸び負けていなかった。位置取り課題もハマれば通用はする",
+        "eval": "C"
+      },
+      "status": "ambiguous-official-races",
+      "candidateDates": [
+        "2026/10/4",
+        "2025/10/5"
+      ]
+    },
+    {
+      "horse": "ヴェルテンベルク",
+      "index": 5,
+      "run": {
+        "eval": "D",
+        "comment": "中団から伸びきれず9着。スムーズな競馬で伸び負け。大きく負けているわけではないがOPから出直し。",
+        "track": "阪神芝2000",
+        "name": "チャレンジC"
+      },
+      "status": "confirmed"
+    }
+  ]
+}

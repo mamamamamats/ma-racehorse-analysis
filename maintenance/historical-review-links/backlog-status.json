@@ -546,10 +546,26 @@
       "pendingReviews": 201,
       "pendingHorses": 64,
       "plan": "maintenance/historical-review-links/batch-068/plan.json"
+    },
+    {
+      "id": "batch-069",
+      "confirmedReviews": 16,
+      "completedReviews": 0,
+      "pendingReviews": 16,
+      "pendingHorses": 8,
+      "plan": "maintenance/historical-review-links/batch-069/plan.json"
+    },
+    {
+      "id": "batch-070",
+      "confirmedReviews": 1,
+      "completedReviews": 0,
+      "pendingReviews": 1,
+      "pendingHorses": 1,
+      "plan": "maintenance/historical-review-links/batch-070/plan.json"
     }
   ],
-  "confirmedReviews": 24034,
+  "confirmedReviews": 24051,
   "completedReviews": 19615,
-  "pendingReviews": 4419,
-  "pendingHorses": 1069
+  "pendingReviews": 4436,
+  "pendingHorses": 1076
 }
