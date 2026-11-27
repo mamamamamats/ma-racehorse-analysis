@@ -1,0 +1,83 @@
+{
+  "at": "2026-11-27T05:17:28.274911+00:00",
+  "scheduledFor": "2026-11-27T14:00:00+09:00",
+  "baseCompletedReviews": 15026,
+  "status": "in_progress",
+  "batches": [
+    {
+      "batch": "batch-038",
+      "savedHorses": 38,
+      "savedReviews": 263,
+      "readHorses": 38,
+      "heldReviewsInThisBatch": 133,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-039",
+      "savedHorses": 37,
+      "savedReviews": 253,
+      "readHorses": 37,
+      "heldReviewsInThisBatch": 128,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-040",
+      "savedHorses": 38,
+      "savedReviews": 278,
+      "readHorses": 38,
+      "heldReviewsInThisBatch": 112,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-041",
+      "savedHorses": 39,
+      "savedReviews": 267,
+      "readHorses": 39,
+      "heldReviewsInThisBatch": 132,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-042",
+      "savedHorses": 40,
+      "savedReviews": 256,
+      "readHorses": 40,
+      "heldReviewsInThisBatch": 136,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    },
+    {
+      "batch": "batch-043",
+      "savedHorses": 34,
+      "savedReviews": 215,
+      "readHorses": 34,
+      "heldReviewsInThisBatch": 97,
+      "dbErrors": 0,
+      "skippedLiveReviews": 0
+    }
+  ],
+  "savedHorses": 226,
+  "confirmedLinkedHorses": 226,
+  "savedReviews": 1532,
+  "totalSavedReviews": 16558,
+  "readHorses": 226,
+  "heldReviewsThisRun": 738,
+  "unprocessedHorses": 9087,
+  "heldHorses": 1798,
+  "officialHistories": 1928,
+  "completeHistories": 1917,
+  "dbErrors": 0,
+  "skippedLiveReviews": 0,
+  "identityRechecks": [
+    {
+      "name": "ボエーム",
+      "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud101998101908/A3",
+      "reason": "The returned same-name profile is for a 1998-born horse. It is not evidence of the app's current horse identity; all reviews remain held and the horse stays unprocessed for identity recheck."
+    }
+  ],
+  "alreadyLinkedReviews": 0,
+  "heldLiveReviews": []
+}
