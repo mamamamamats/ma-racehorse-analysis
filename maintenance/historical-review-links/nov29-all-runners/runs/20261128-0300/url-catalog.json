@@ -1,0 +1,188 @@
+[
+  {
+    "venue": "京都",
+    "raceNumber": 1,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080120261129/DB",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/menus.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 2,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080220261129/90",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0108202605080220261129/56",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 3,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080320261129/45",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-tokyo.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0108202605080320261129/0B",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 4,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080420261129/FA",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-tokyo.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 5,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080520261129/AF",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-tokyo.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 6,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080620261129/64",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-tokyo.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0108202605080620261129/2A",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 7,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080720261129/19",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0108202605080720261129/DF",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 8,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080820261129/CE",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 9,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080920261129/83",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 10,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081020261129/78",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 11,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081120261129/2D",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json"
+  },
+  {
+    "venue": "京都",
+    "raceNumber": 12,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081220261129/E2",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 1,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080120261129/FD",
+    "format": "d",
+    "source": "maintenance/historical-review-links/nov29-all-runners/sources/initial-discovery.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 2,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080220261129/B2",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-tokyo.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 3,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080320261129/67",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-tokyo.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0105202605080320261129/2D",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 4,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080420261129/1C",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-tokyo.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 5,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080520261129/D1",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-tokyo.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0105202605080520261129/97",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 6,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080620261129/86",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0105202605080620261129/4C",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 7,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080720261129/3B",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 8,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080820261129/F0",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 9,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080920261129/A5",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 10,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081020261129/9A",
+    "format": "d",
+    "source": ".local/nov29-0300/sources/search-remaining-0.json"
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 11,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081120261129/4F",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0105202605081120261129/15",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  },
+  {
+    "venue": "東京",
+    "raceNumber": 12,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081220261129/04",
+    "format": "e",
+    "source": ".local/nov29-0300/sources/search-remaining-1.json",
+    "detailUrl": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01dde0105202605081220261129/CA",
+    "derivation": "Compact endpoint/checksum conversion verified against official search results for Tokyo1/2/4/7 and Kyoto1/4/5; response header and complete names will be independently checked."
+  }
+]

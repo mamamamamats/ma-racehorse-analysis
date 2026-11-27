@@ -1,0 +1,173 @@
+[
+  {
+    "horse": "ゴーラッキー",
+    "index": 1,
+    "run": {
+      "track": "東京芝2000",
+      "name": "香港ジョッキークラブT",
+      "eval": "S",
+      "comment": "逃げて押し切って1着。マイペースで走れて力出しきれたが時計優秀で後ろに差を詰めさせず。次走折り合い不安"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ゴーラッキー",
+    "index": 2,
+    "run": {
+      "comment": "中団から伸び切れず6着。前残りの展開が向かずも差を詰めれず広げられた。出直し。中山あわず？",
+      "eval": "C",
+      "track": "中山芝1600",
+      "name": "NZT"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/4/11"
+    ]
+  },
+  {
+    "horse": "アローメタル",
+    "index": 2,
+    "run": {
+      "eval": "S",
+      "comment": "行き足ついて先行して伸びて2着。ドスローペースで前残りの展開が向いた。勝ち馬が先に抜け出して捉えられず。最後の最後で加速した印象で若干エンジンのかかり遅いかも。休み明けプラス10キロ",
+      "track": "東京芝2400",
+      "name": "ゆりかもめ賞"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/2/10"
+    ]
+  },
+  {
+    "horse": "バンダムソレール",
+    "index": 1,
+    "run": {
+      "track": "京都芝2000稍重",
+      "name": "2歳未勝利",
+      "eval": "C",
+      "comment": "二の足で先行して伸びきれず。折り合いイマイチも伸びにかける。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/10/26"
+    ]
+  },
+  {
+    "horse": "アナザーフェイス",
+    "index": 2,
+    "run": {
+      "eval": "A",
+      "comment": "二の足で先行して伸びて1着。スタートでかなり足使ったが勝ちきれた。3着以下はかなり離せたがスタート不安",
+      "name": "未勝利",
+      "track": "新潟芝1800"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/5/16"
+    ]
+  },
+  {
+    "horse": "セイリュウ",
+    "index": 0,
+    "run": {
+      "comment": "中団後ろまま。最内枠で直線不利受けた",
+      "eval": "F",
+      "name": "2歳未勝利",
+      "track": "新潟芝1000"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/8/1"
+    ]
+  },
+  {
+    "horse": "ゴールドドレッサ",
+    "index": 3,
+    "run": {
+      "name": "3歳未勝利",
+      "eval": "A",
+      "track": "福島ダ1700",
+      "comment": "出遅れて後方からまくっていって伸びて1着。馬群の内をロスなくまくれたが砂被っても足使えた。スタート課題。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/4/25"
+    ]
+  },
+  {
+    "horse": "ピリナカピリナ",
+    "index": 0,
+    "run": {
+      "name": "2歳未勝利",
+      "track": "福島芝1200",
+      "comment": "除外",
+      "eval": "F"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/11/8",
+      "2026/7/18"
+    ]
+  },
+  {
+    "horse": "コスモシグナス",
+    "index": 0,
+    "run": {
+      "comment": "二の足で番手につけて伸びず。逃げ馬に絡んでいったがらや負けすぎ",
+      "name": "2歳未勝利",
+      "eval": "D",
+      "track": "福島芝1800"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/7/11"
+    ]
+  },
+  {
+    "horse": "ディーヴァレギオン",
+    "index": 0,
+    "run": {
+      "name": "2歳未勝利",
+      "track": "中京芝2000",
+      "eval": "F",
+      "comment": "大敗。急に外に寄れていった。参考外"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/8/1"
+    ]
+  },
+  {
+    "horse": "レーヴドアンジュ",
+    "run": {
+      "name": "3歳未勝利",
+      "comment": "先行して伸びきれず11着。ジリ足。",
+      "track": "阪神ダ1200",
+      "eval": "C"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2025-04-19_%E9%98%AA%E7%A5%9E_3",
+    "officialDate": "2025/4/19",
+    "wholeReviewRef": {
+      "date": "2025/4/19",
+      "dayId": "day-2025-04-19",
+      "distance": 2000,
+      "grade": "un",
+      "name": "3歳未勝利",
+      "otherConditions": {
+        "grade": "un",
+        "surface": "ダート",
+        "track": "ダート2000",
+        "trackCondition": "良"
+      },
+      "r": 3,
+      "raceName": "3歳未勝利",
+      "raceNumber": 3,
+      "surface": "ダート",
+      "track": "ダート2000",
+      "trackCondition": "良",
+      "venue": "阪神"
+    }
+  }
+]

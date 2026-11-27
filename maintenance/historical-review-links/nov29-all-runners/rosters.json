@@ -1,0 +1,2209 @@
+[
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 1,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080120261129/DB",
+    "count": 12,
+    "horses": [
+      {
+        "name": "アルギエバ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "ヴィクトマインド",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エコロルーク",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ギニー",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "サンフォルティス",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "スマートプルーフ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ディヴィニダッド",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ハイウェイワン",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "バトルナイト",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ハレムスビ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "フェイマスウルフ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "リアルメッセージ",
+        "num": null,
+        "sourceLine": 328
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 329,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-0.json",
+        ".local/nov29-0300/sources/menus.json",
+        ".local/nov29-0300/sources/rosters-0.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 2,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080220261129/90",
+    "count": 10,
+    "horses": [
+      {
+        "name": "アルファマロン",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アルフレッド",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エイシンジュゲム",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "エスヴェドラ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "オミゴト",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ガランテリア",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ケーリュケイオン",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "サウンドファイト",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ナムラサフラン",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "マイフレダ",
+        "num": null,
+        "sourceLine": 326
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 327,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-0.json",
+        ".local/nov29-0300/sources/rosters-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 3,
+    "name": "メイクデビュー京都",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080320261129/45",
+    "count": 13,
+    "horses": [
+      {
+        "name": "アビシニアン",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "イロアセヌ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "ヴィシュヌ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ウインガウェイン",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "オタヴァ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "クラナカン",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "スチールラン",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "スーサンウィナー",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ソヴァジーヌ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ナムラルピナス",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "フルスタック",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "メイショウオニクス",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "メイショウカサミラ",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-0.json",
+        ".local/nov29-0300/sources/rosters-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 4,
+    "name": "3歳以上1勝クラス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080420261129/FA",
+    "count": 14,
+    "horses": [
+      {
+        "name": "イッタレイッタレ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "エブリデイ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エンダードラゴン",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "サトノリシャール",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "サントルドパリ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "デリュージョン",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "テーオーカイザー",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "バトルアックス",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "バンダムソレール",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "フレイムスター",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ホウオウバローロ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ルーポ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "レーヴドアンジュ",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ワンダーイロネ",
+        "num": null,
+        "sourceLine": 330
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 331,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-0.json",
+        ".local/nov29-0300/sources/rosters-0.json",
+        ".local/nov29-0300/sources/search-tokyo.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 5,
+    "name": "障害3歳以上未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080520261129/AF",
+    "count": 9,
+    "horses": [
+      {
+        "name": "アレナリア",
+        "num": null,
+        "sourceLine": 316
+      },
+      {
+        "name": "コスモマルーン",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "サトノドルチェ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "スノーリン",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ダブルジャッジ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ノーブルスカイ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ビップジーニー",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "マイネルニコラス",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ヤコブセン",
+        "num": null,
+        "sourceLine": 324
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 314,
+      "tableEnd": 325,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-1.json",
+        ".local/nov29-0300/sources/rosters-1.json",
+        ".local/nov29-0300/sources/search-tokyo.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 6,
+    "name": "メイクデビュー京都",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080620261129/64",
+    "count": 14,
+    "horses": [
+      {
+        "name": "アワードストーリー",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "ウィスパーノート",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "コパノプリンストン",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ゴールドバトラー",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ジュンスターダム",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ジーティーチャーリ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ゼヴィウス",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ゾーン",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ドゥーンオール",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "フレアクラウン",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ミッキーリチャード",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "メネヴァード",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "リリークラウド",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ロードマイラヴァー",
+        "num": null,
+        "sourceLine": 330
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 331,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-1.json",
+        ".local/nov29-0300/sources/rosters-1.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 7,
+    "name": "3歳以上1勝クラス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080720261129/19",
+    "count": 15,
+    "horses": [
+      {
+        "name": "アイランド",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アラムシャピラス",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "アーディアイリ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "エイシンティザー",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "エチゴドラゴン",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "シーリュウシー",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ピエナブラック",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ビービーバザーク",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ポップアップ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "マーゴットバディ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "メイショウオグマ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ラミエルノムスコ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ララディアーブル",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ルシャリオ",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "ワールドキッス",
+        "num": null,
+        "sourceLine": 331
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 332,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-1.json",
+        ".local/nov29-0300/sources/rosters-1.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 8,
+    "name": "3歳以上2勝クラス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080820261129/CE",
+    "count": 13,
+    "horses": [
+      {
+        "name": "アオイタケル",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "コリカンチャ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "サトノアグード",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "シホノペルフェット",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ショウナンハウル",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ニホンピロロジャー",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ハルフロンティア",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ビップヴォルフ",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "フウセン",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "プレスバーン",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ブレナヴォン",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ランツフート",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "レッドヴァリアート",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-1.json",
+        ".local/nov29-0300/sources/rosters-1.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 9,
+    "name": "白菊賞",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080920261129/83",
+    "count": 8,
+    "horses": [
+      {
+        "name": "セーニョレガーレ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "タプティ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "チカバリエンテ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ティアラード",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ビンチャリ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "マーゴットプレ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "メイプルルビー",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "モンサンラパージュ",
+        "num": null,
+        "sourceLine": 325
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 316,
+      "tableEnd": 326,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-2.json",
+        ".local/nov29-0300/sources/rosters-2.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 10,
+    "name": "花園ステークス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081020261129/78",
+    "count": 13,
+    "horses": [
+      {
+        "name": "アークドール",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "キングブルー",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "ゲキザル",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ゴッドエスパーダ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ゴールドダイアー",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "スマートケープ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "タガノエルー",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ハギノコラソン",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ハリウッドブルース",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "マンオブザマッチ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "メイショウオーロラ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "メイショウソウタ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ロードヴォイジャー",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-2.json",
+        ".local/nov29-0300/sources/rosters-2.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 11,
+    "name": "オータムリーフステークス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081120261129/2D",
+    "count": 12,
+    "horses": [
+      {
+        "name": "アスクアイルビゼア",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "エコロアゼル",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "シゲルショウグン",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "スリーピース",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "スリールミニョン",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ニシキギミッチー",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ノーブルロジャー",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ハワイアンタイム",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ヒルノドゴール",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "メイクアリープ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ルークススペイ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "レアンダー",
+        "num": null,
+        "sourceLine": 328
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 329,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-2.json",
+        ".local/nov29-0300/sources/rosters-2.json",
+        ".local/nov29-0300/sources/search-remaining-1.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "京都",
+    "r": 12,
+    "name": "第71回 京阪杯【166†Image: GⅢ】",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081220261129/E2",
+    "count": 18,
+    "horses": [
+      {
+        "name": "ジェニファー",
+        "num": 1,
+        "sourceLine": 323
+      },
+      {
+        "name": "モズナナスター",
+        "num": 2,
+        "sourceLine": 324
+      },
+      {
+        "name": "ヤブサメ",
+        "num": 3,
+        "sourceLine": 325
+      },
+      {
+        "name": "オタルエバー",
+        "num": 4,
+        "sourceLine": 326
+      },
+      {
+        "name": "レイピア",
+        "num": 5,
+        "sourceLine": 327
+      },
+      {
+        "name": "インブロリオ",
+        "num": 6,
+        "sourceLine": 328
+      },
+      {
+        "name": "リリージョワ",
+        "num": 7,
+        "sourceLine": 329
+      },
+      {
+        "name": "ゾンニッヒ",
+        "num": 8,
+        "sourceLine": 330
+      },
+      {
+        "name": "メイショウソラフネ",
+        "num": 9,
+        "sourceLine": 331
+      },
+      {
+        "name": "ルシード",
+        "num": 10,
+        "sourceLine": 332
+      },
+      {
+        "name": "インビンシブルパパ",
+        "num": 11,
+        "sourceLine": 333
+      },
+      {
+        "name": "デアヴェローチェ",
+        "num": 12,
+        "sourceLine": 334
+      },
+      {
+        "name": "ヨシノイースター",
+        "num": 13,
+        "sourceLine": 335
+      },
+      {
+        "name": "クラスペディア",
+        "num": 14,
+        "sourceLine": 336
+      },
+      {
+        "name": "フォーゲル",
+        "num": 15,
+        "sourceLine": 337
+      },
+      {
+        "name": "ビッグシーザー",
+        "num": 16,
+        "sourceLine": 338
+      },
+      {
+        "name": "ナムラクララ",
+        "num": 17,
+        "sourceLine": 339
+      },
+      {
+        "name": "エーティーマクフィ",
+        "num": 18,
+        "sourceLine": 340
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 321,
+      "tableEnd": 341,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-2.json",
+        ".local/nov29-0300/sources/rosters-2.json",
+        ".local/nov29-0300/sources/search-remaining-1.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 1,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080120261129/FD",
+    "count": 16,
+    "horses": [
+      {
+        "name": "アイアンマン",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アイデアルカット",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "アイファーエリース",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "イチザサンダー",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "グラスリズム",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "コペルニクス",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ゴーストミステリー",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "シュートザワークス",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "セイウンウェルス",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ダノンアイコニック",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ディーヴァレギオン",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "デスタンドレ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "フェスティヴガッツ",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "フクノブロッサム",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "ヤマニンスペッキオ",
+        "num": null,
+        "sourceLine": 331
+      },
+      {
+        "name": "ロジグローリー",
+        "num": null,
+        "sourceLine": 332
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 333,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/menus.json",
+        ".local/nov29-0300/sources/navigation.json",
+        "maintenance/historical-review-links/nov29-all-runners/sources/compact-discovery.json",
+        "maintenance/historical-review-links/nov29-all-runners/sources/initial-discovery.json",
+        "maintenance/historical-review-links/nov29-all-runners/sources/tokyo-01-compact.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 2,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080220261129/B2",
+    "count": 15,
+    "horses": [
+      {
+        "name": "アルモワール",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "クリガーレ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "クレイン",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "コスモシグナス",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "コスモトップ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "シネファイル",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ジーティーストーム",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "チリチョウズ",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "パウンドザロック",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ブラスオルケスター",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ペイヴザウェイ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ベニウタゲ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "マルターズゴラッソ",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ラフエルガ",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "リリーリリー",
+        "num": null,
+        "sourceLine": 331
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 332,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-3.json",
+        ".local/nov29-0300/sources/rosters-3.json",
+        ".local/nov29-0300/sources/search-remaining-0.json",
+        ".local/nov29-0300/sources/search-tokyo.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 3,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080320261129/67",
+    "count": 13,
+    "horses": [
+      {
+        "name": "イデアモッコス",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "インディジャズ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エコロガルディア",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "カヤドーシュバルツ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "クラウンサンダー",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "コナパームス",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "セイリュウ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ソポティット",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ディスペアーホープ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ドッグズノーズ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "トラストユウゼン",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ナムラアラバイ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ネバースリープ",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-3.json",
+        ".local/nov29-0300/sources/rosters-3.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 4,
+    "name": "2歳未勝利",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080420261129/1C",
+    "count": 18,
+    "horses": [
+      {
+        "name": "インワンズブラッド",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "ヴァルフォース",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エーアイクワイ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "キタノレイナ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "シエルフルール",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "スウィートルミナス",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ダブルスプリング",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ダンシングアワー",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "トムキャット",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "トーセンシントラ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ノルトハウゼン",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "バクソウシャチョウ",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ビップラージャ",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ピニドローマ",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "ピリナカピリナ",
+        "num": null,
+        "sourceLine": 331
+      },
+      {
+        "name": "フェロックス",
+        "num": null,
+        "sourceLine": 332
+      },
+      {
+        "name": "ユリア",
+        "num": null,
+        "sourceLine": 333
+      },
+      {
+        "name": "レミニシング",
+        "num": null,
+        "sourceLine": 334
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 335,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-3.json",
+        ".local/nov29-0300/sources/rosters-3.json",
+        ".local/nov29-0300/sources/search-tokyo.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 5,
+    "name": "メイクデビュー東京",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080520261129/D1",
+    "count": 11,
+    "horses": [
+      {
+        "name": "ウィアレギア",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "エフカイビーチ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "オプレンシア",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "キタノヴォイス",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "クラウドレススカイ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ジョンディミーレ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "タイセイルーセント",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ダーラヘスト",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ニシノサキガケ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "バウンシースキップ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ミスターケイ",
+        "num": null,
+        "sourceLine": 327
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 328,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-3.json",
+        ".local/nov29-0300/sources/rosters-3.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 6,
+    "name": "メイクデビュー東京",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080620261129/86",
+    "count": 11,
+    "horses": [
+      {
+        "name": "ヴェントディーオ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "ガガインフェルノ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "クドゥラカーミナ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "サーモダイナミクス",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ノードラマラマ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ファインブレイヴ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "マーズウェーブ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ラスリーズプレミア",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "リアライズプリマ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "レジューノワール",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ローズエクエス",
+        "num": null,
+        "sourceLine": 327
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 328,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-4.json",
+        ".local/nov29-0300/sources/rosters-4.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 7,
+    "name": "3歳以上1勝クラス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080720261129/3B",
+    "count": 16,
+    "horses": [
+      {
+        "name": "アシャカルッカ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アリアス",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "エスシーレイジュ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "オテンバプリンセス",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "オーシャンステラ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "ゴールドドレッサ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "ザローズハーツ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "タイセイフレッサ",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ヒサエノオモカゲ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "プレザントトーン",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "フローレスカラーズ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ペルヴォルム",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "マーガレットクレア",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ヤスヒロゴーエン",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "ルージュナリッシュ",
+        "num": null,
+        "sourceLine": 331
+      },
+      {
+        "name": "レヴェランジェ",
+        "num": null,
+        "sourceLine": 332
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 333,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-4.json",
+        ".local/nov29-0300/sources/rosters-4.json",
+        ".local/nov29-0300/sources/search-remaining-0.json",
+        ".local/nov29-0300/sources/search-remaining-1.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 8,
+    "name": "オリエンタル賞",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080820261129/F0",
+    "count": 13,
+    "horses": [
+      {
+        "name": "アッカン",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アナザーフェイス",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "アローメタル",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ウインドラート",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "カフェアローロ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "コスモアチーブ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "コンフォルツァ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "サラコスティ",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ストレートブラック",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ビッグデイメイク",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ブラックハヤテ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "マテンロウギフト",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ラヴェニュー",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-4.json",
+        ".local/nov29-0300/sources/rosters-4.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 9,
+    "name": "カトレアステークス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080920261129/A5",
+    "count": 16,
+    "horses": [
+      {
+        "name": "アメリカンフレンズ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アルティシモ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "アンドレバローズ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ウィンターブリーズ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ヴェルヴィエ",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "エコロヴォルグ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "グラスラリー",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "サイモンレコルト",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "サトノヘラクレス",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "トスカ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ニシノマサムネ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ノシェリー",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "パルパル",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ミカミッチー",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "レッドレヴェリー",
+        "num": null,
+        "sourceLine": 331
+      },
+      {
+        "name": "ロードアマデウス",
+        "num": null,
+        "sourceLine": 332
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 333,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-4.json",
+        ".local/nov29-0300/sources/rosters-4.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 10,
+    "name": "アプローズ賞",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081020261129/9A",
+    "count": 16,
+    "horses": [
+      {
+        "name": "アバレリュウ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "アルカディアカフェ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "イサギ",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "ヴリトラハン",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "エコロボルト",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "エムティエスターテ",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "オコタンペ",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "キーンセンス",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "ゴーゴーパンチ",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "ジェイエルキャリア",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ダイシンリンク",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ベアアッコチャン",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ベルブリエ",
+        "num": null,
+        "sourceLine": 329
+      },
+      {
+        "name": "ホウオウゴールド",
+        "num": null,
+        "sourceLine": 330
+      },
+      {
+        "name": "モズタチアガレ",
+        "num": null,
+        "sourceLine": 331
+      },
+      {
+        "name": "レッドアレグロ",
+        "num": null,
+        "sourceLine": 332
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 333,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-5.json",
+        ".local/nov29-0300/sources/rosters-5.json",
+        ".local/nov29-0300/sources/search-remaining-0.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 11,
+    "name": "ウェルカムステークス",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081120261129/4F",
+    "count": 13,
+    "horses": [
+      {
+        "name": "アスクコモンタレヴ",
+        "num": null,
+        "sourceLine": 317
+      },
+      {
+        "name": "オストラヴァ",
+        "num": null,
+        "sourceLine": 318
+      },
+      {
+        "name": "カニキュル",
+        "num": null,
+        "sourceLine": 319
+      },
+      {
+        "name": "カリーニョ",
+        "num": null,
+        "sourceLine": 320
+      },
+      {
+        "name": "ゴーラッキー",
+        "num": null,
+        "sourceLine": 321
+      },
+      {
+        "name": "スパークリシャール",
+        "num": null,
+        "sourceLine": 322
+      },
+      {
+        "name": "スピンザブラッド",
+        "num": null,
+        "sourceLine": 323
+      },
+      {
+        "name": "ピンキープロミス",
+        "num": null,
+        "sourceLine": 324
+      },
+      {
+        "name": "マイネルブリックス",
+        "num": null,
+        "sourceLine": 325
+      },
+      {
+        "name": "マイネルフーガ",
+        "num": null,
+        "sourceLine": 326
+      },
+      {
+        "name": "ユキワリザクラ",
+        "num": null,
+        "sourceLine": 327
+      },
+      {
+        "name": "ログラール",
+        "num": null,
+        "sourceLine": 328
+      },
+      {
+        "name": "ローベルクランツ",
+        "num": null,
+        "sourceLine": 329
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 315,
+      "tableEnd": 330,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-5.json",
+        ".local/nov29-0300/sources/rosters-5.json"
+      ]
+    }
+  },
+  {
+    "date": "2026/11/29",
+    "venue": "東京",
+    "r": 12,
+    "name": "第46回 ジャパンカップ【166†Image: GⅠ】",
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081220261129/04",
+    "count": 18,
+    "horses": [
+      {
+        "name": "ヘデントール",
+        "num": 1,
+        "sourceLine": 325
+      },
+      {
+        "name": "コスモキュランダ",
+        "num": 2,
+        "sourceLine": 326
+      },
+      {
+        "name": "メイショウタバル",
+        "num": 3,
+        "sourceLine": 327
+      },
+      {
+        "name": "クロワデュノール",
+        "num": 4,
+        "sourceLine": 328
+      },
+      {
+        "name": "シェイクユアハート",
+        "num": 5,
+        "sourceLine": 329
+      },
+      {
+        "name": "マスカレードボール",
+        "num": 6,
+        "sourceLine": 330
+      },
+      {
+        "name": "ファイアンクランツ",
+        "num": 7,
+        "sourceLine": 331
+      },
+      {
+        "name": "オンブズマン",
+        "num": 8,
+        "sourceLine": 332
+      },
+      {
+        "name": "カランダガン",
+        "num": 9,
+        "sourceLine": 333
+      },
+      {
+        "name": "ミニーホーク",
+        "num": 10,
+        "sourceLine": 334
+      },
+      {
+        "name": "ヴェルテンベルク",
+        "num": 11,
+        "sourceLine": 335
+      },
+      {
+        "name": "テアオ",
+        "num": 12,
+        "sourceLine": 336
+      },
+      {
+        "name": "アーバンシック",
+        "num": 13,
+        "sourceLine": 337
+      },
+      {
+        "name": "タガノデュード",
+        "num": 14,
+        "sourceLine": 338
+      },
+      {
+        "name": "エキサイトバイオ",
+        "num": 15,
+        "sourceLine": 339
+      },
+      {
+        "name": "ダノンデサイル",
+        "num": 16,
+        "sourceLine": 340
+      },
+      {
+        "name": "ゴリアット",
+        "num": 17,
+        "sourceLine": 341
+      },
+      {
+        "name": "エシカルダイヤモン",
+        "num": 18,
+        "sourceLine": 342
+      }
+    ],
+    "complete": true,
+    "evidence": {
+      "tableStart": 323,
+      "tableEnd": 343,
+      "dateAndVenueConfirmed": true,
+      "raceNumberConfirmed": true,
+      "missingRosterLines": [],
+      "conflictingRosterLines": [],
+      "sourceFiles": [
+        ".local/nov29-0300/sources/headers-5.json",
+        ".local/nov29-0300/sources/rosters-5.json"
+      ]
+    }
+  }
+]

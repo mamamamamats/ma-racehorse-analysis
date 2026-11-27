@@ -19,5 +19,9 @@
     "finalRunAction": "進捗確認と最終報告のみ。16時以降に新たな照合・DB操作を開始しない。",
     "onDatabaseError": "DB読み書きと自動リトライを停止し、公式照合と更新準備だけ続ける。",
     "onAllHorsesFinished": "継続タスクを早期停止してよい。"
-  }
+  },
+  "isEnabled": false,
+  "stoppedAt": "2026-11-27T18:18:41.720933+00:00",
+  "stopReason": "All 24 official race rosters and all 327 starters received an initial review. Unresolved review-level holds are retained without DB writes.",
+  "completionReport": "maintenance/historical-review-links/nov29-all-runners/REPORT.md"
 }

@@ -1,0 +1,293 @@
+[
+  {
+    "horse": "アレナリア",
+    "index": 3,
+    "run": {
+      "track": "小倉芝2000",
+      "name": "小倉牝馬S",
+      "comment": "行き足ついて先行して粘りきれず8着。スムーズな競馬で軽斤量と開幕週活かせた。着差は大きくはない。自己条件から",
+      "eval": "D"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/1/24"
+    ]
+  },
+  {
+    "horse": "スピンザブラッド",
+    "index": 4,
+    "run": {
+      "eval": "A",
+      "comment": "スタート悪くなく5番手から伸びて1着。スムーズな競馬も離して逃げていた馬を差しきれた。伸びる外目通れた。小頭数",
+      "name": "栗島特別",
+      "track": "新潟芝1800"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "スピンザブラッド",
+    "index": 7,
+    "run": {
+      "eval": "D",
+      "track": "札幌芝1800",
+      "comment": "行き足つかず後方まま。道中ポツンで流石に無理。時計かかった方が良いか。",
+      "name": "1勝クラス"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/8/2"
+    ]
+  },
+  {
+    "horse": "スピンザブラッド",
+    "index": 11,
+    "run": {
+      "name": "未勝利",
+      "comment": "中団から伸びず。長すぎ？",
+      "track": "札幌ダ2400",
+      "eval": "C"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2024/8/11"
+    ]
+  },
+  {
+    "horse": "エムティエスターテ",
+    "index": 3,
+    "run": {
+      "track": "東京ダ1400",
+      "name": "八王子特別",
+      "eval": "D",
+      "comment": "中団後ろから伸びきれず7着。進路なく外に切り替えるロス。止まってはいないが着差つけられた。先行した方が良い。"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/6/7"
+    ]
+  },
+  {
+    "horse": "エムティエスターテ",
+    "index": 4,
+    "run": {
+      "eval": "A",
+      "comment": "スタート悪くなく先行して伸びて1着。外に持ち出してからしっかり伸びて逃げ馬させた。足ためることはできた",
+      "name": "1勝クラス",
+      "track": "東京ダ1400重"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "エムティエスターテ",
+    "index": 6,
+    "run": {
+      "eval": "S",
+      "track": "東京ダ1300稍重",
+      "comment": "スタートよく先行して伸びて2着。スムーズな競馬で展開向いた。完璧な競馬も勝ち馬に競り負け。後ろは離している。",
+      "name": "未勝利"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2025/5/17",
+      "2025/4/27"
+    ]
+  },
+  {
+    "horse": "レーヴドアンジュ",
+    "index": 2,
+    "run": {
+      "eval": "C",
+      "track": "阪神ダ1800稍重",
+      "name": "1勝クラス",
+      "comment": "出遅れて後方まま。後ろすぎた。前が止まらない馬場と展開は向かず。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/4/12"
+    ]
+  },
+  {
+    "horse": "レーヴドアンジュ",
+    "index": 3,
+    "run": {
+      "eval": "C",
+      "name": "1勝クラス",
+      "comment": "後方まま。休み明けマイナス14キロで後ろすぎ。",
+      "track": "小倉芝1200"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/2/14"
+    ]
+  },
+  {
+    "horse": "エコロボルト",
+    "index": 2,
+    "run": {
+      "comment": "先行して伸びず。",
+      "eval": "C",
+      "track": "京都ダ1400",
+      "name": "3歳1勝クラス"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/5/31"
+    ]
+  },
+  {
+    "horse": "エコロボルト",
+    "index": 4,
+    "run": {
+      "name": "2歳未勝利",
+      "eval": "C",
+      "track": "京都ダ1400稍重",
+      "comment": "中団から伸びず。"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/11/9"
+    ]
+  },
+  {
+    "horse": "サトノアグード",
+    "index": 2,
+    "run": {
+      "name": "3歳以上1勝クラス",
+      "comment": "スタートよく先行して粘って2着。スムーズな競馬で内前有利の展開が向いたが勝ち馬には競り負け。休み明けで自力は見せており同じように走れれば。",
+      "track": "阪神芝1800稍重",
+      "eval": "B"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ジェイエルキャリア",
+    "index": 2,
+    "run": {
+      "track": "東京ダ1400",
+      "name": "3歳1勝クラス",
+      "comment": "後方から伸びきれず7着。足使えているが後ろ過ぎた。",
+      "eval": "D"
+    },
+    "status": "missing-app-race",
+    "candidateDates": [
+      "2026/2/7"
+    ]
+  },
+  {
+    "horse": "フウセン",
+    "index": 0,
+    "run": {
+      "name": "セントライト記念",
+      "track": "中山芝2200稍重",
+      "comment": "スタート五分で中団につけたがコーナーで位置下げて直線後ろから伸びきれず9着。内を立ち回れたが位置悪く展開向かず。止まってはいなかった。展開向いてどうか",
+      "eval": "F"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "ピエナブラック",
+    "index": 1,
+    "run": {
+      "name": "2歳未勝利",
+      "comment": "5番手から伸びず。",
+      "eval": "C",
+      "track": "阪神ダ1800"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2025/9/27"
+    ]
+  },
+  {
+    "horse": "チカバリエンテ",
+    "index": 3,
+    "run": {
+      "track": "函館芝1200",
+      "name": "2歳未勝利",
+      "comment": "スタートイマイチで後方から伸びて2着。大外回すロスもいい足は使えた。小頭数でスタートかなり課題。",
+      "eval": "B"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/7/5",
+      "2026/6/28"
+    ]
+  },
+  {
+    "horse": "オテンバプリンセス",
+    "index": 1,
+    "run": {
+      "track": "札幌ダ1700稍重",
+      "name": "3歳以上1勝クラス",
+      "eval": "D",
+      "comment": "中団から伸びず。外回すロスもジリ足。コーナーから下がっており何かあった？"
+    },
+    "status": "generic-without-own-finish",
+    "candidateDates": [
+      "2026/8/8"
+    ]
+  },
+  {
+    "horse": "インビンシブルパパ",
+    "index": 0,
+    "run": {
+      "comment": "逃げて粘れず。流石にペース早すぎ。もう少しペース落としたいが一歩目早くないため同型がいると厳しい？",
+      "eval": "F",
+      "track": "中京芝1200",
+      "name": "CBC賞"
+    },
+    "status": "ambiguous-official-races",
+    "candidateDates": [
+      "2026/8/9",
+      "2025/8/10"
+    ]
+  },
+  {
+    "horse": "インビンシブルパパ",
+    "index": 8,
+    "run": {
+      "name": "グランアレグリアC",
+      "comment": "逃げて1着。ペース流れている中勝ちきれたのは評価できる。地力は高いが脆さもあるか。逃げられないとやや不安",
+      "track": "京都ダ1400",
+      "eval": "A"
+    },
+    "status": "no-official-match",
+    "candidateDates": []
+  },
+  {
+    "horse": "レーヴドアンジュ",
+    "run": {
+      "name": "3歳未勝利",
+      "comment": "先行して伸びきれず11着。ジリ足。",
+      "track": "阪神ダ1200",
+      "eval": "C"
+    },
+    "status": "whole-review-metadata-conflict",
+    "raceId": "race_day-2025-04-19_%E9%98%AA%E7%A5%9E_3",
+    "officialDate": "2025/4/19",
+    "wholeReviewRef": {
+      "date": "2025/4/19",
+      "dayId": "day-2025-04-19",
+      "distance": 2000,
+      "grade": "un",
+      "name": "3歳未勝利",
+      "otherConditions": {
+        "grade": "un",
+        "surface": "ダート",
+        "track": "ダート2000",
+        "trackCondition": "良"
+      },
+      "r": 3,
+      "raceName": "3歳未勝利",
+      "raceNumber": 3,
+      "surface": "ダート",
+      "track": "ダート2000",
+      "trackCondition": "良",
+      "venue": "阪神"
+    }
+  }
+]

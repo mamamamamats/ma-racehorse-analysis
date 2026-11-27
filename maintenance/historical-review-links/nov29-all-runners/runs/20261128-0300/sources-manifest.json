@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "mode": "offline-preparation-only",
+  "asOfJst": "2026-11-28",
+  "targetDate": "2026/11/29",
+  "sourceRepositoryCommit": "1e1a238487aa84b3fb7e8ad8d5f429766c7c2f3a",
+  "masterExportedAt": "2026-11-27T15:00:48.103Z",
+  "masterZipSha256": "1aec1c3ee8c6bcbc2e572e92e2678fe50cb860c757ba5d786e587944753027f3",
+  "masterSelectionSha256": "1939fc0dd07e870ea21fa361fbd9968b49c2f61c4fc5ab814c71e0ac9e4d689d",
+  "sourceArchiveSha256": "19ad10c2bb008c45417b3eaa9cac871a808b2c25f48f49dc4a9faa90a13761e8",
+  "sourceFiles": 72,
+  "newProfiles": 75,
+  "newCompleteProfiles": 75,
+  "reusedProfiles": 98,
+  "newBatches": [
+    "batch-071",
+    "batch-072",
+    "batch-073"
+  ],
+  "dbReads": 0,
+  "dbWrites": 0
+}

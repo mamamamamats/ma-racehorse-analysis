@@ -1,0 +1,20 @@
+{
+  "id": "batch-071",
+  "preparedAt": "2026-11-27T18:05:50.192Z",
+  "officialHistories": 62,
+  "completeOfficialHistories": 62,
+  "confirmedHorses": 62,
+  "confirmedReviews": 62,
+  "heldReviews": 165,
+  "heldReasons": {
+    "no-official-match": 48,
+    "ambiguous-official-races": 33,
+    "generic-without-own-finish": 53,
+    "missing-app-race": 29,
+    "whole-review-metadata-conflict": 2
+  },
+  "dbReads": 0,
+  "dbWrites": 0,
+  "planSha256": "b1ecd2e045ce6c58092e7b177874b41bdf03eda85dc63ee9b88a25533abe73f1",
+  "fullDatabaseMatchingComplete": false
+}

@@ -1,0 +1,238 @@
+[
+  {
+    "venue": "京都",
+    "r": 1,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080120261129/DB",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-0.json",
+      ".local/nov29-0300/sources/menus.json",
+      ".local/nov29-0300/sources/rosters-0.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 2,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080220261129/90",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-0.json",
+      ".local/nov29-0300/sources/rosters-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 3,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080320261129/45",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-0.json",
+      ".local/nov29-0300/sources/rosters-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 4,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080420261129/FA",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-0.json",
+      ".local/nov29-0300/sources/rosters-0.json",
+      ".local/nov29-0300/sources/search-tokyo.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 5,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080520261129/AF",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-1.json",
+      ".local/nov29-0300/sources/rosters-1.json",
+      ".local/nov29-0300/sources/search-tokyo.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 6,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080620261129/64",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-1.json",
+      ".local/nov29-0300/sources/rosters-1.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 7,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080720261129/19",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-1.json",
+      ".local/nov29-0300/sources/rosters-1.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 8,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080820261129/CE",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-1.json",
+      ".local/nov29-0300/sources/rosters-1.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 9,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605080920261129/83",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-2.json",
+      ".local/nov29-0300/sources/rosters-2.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 10,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081020261129/78",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-2.json",
+      ".local/nov29-0300/sources/rosters-2.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 11,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081120261129/2D",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-2.json",
+      ".local/nov29-0300/sources/rosters-2.json",
+      ".local/nov29-0300/sources/search-remaining-1.json"
+    ]
+  },
+  {
+    "venue": "京都",
+    "r": 12,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0108202605081220261129/E2",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-2.json",
+      ".local/nov29-0300/sources/rosters-2.json",
+      ".local/nov29-0300/sources/search-remaining-1.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 1,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080120261129/FD",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/menus.json",
+      ".local/nov29-0300/sources/navigation.json",
+      "maintenance/historical-review-links/nov29-all-runners/sources/compact-discovery.json",
+      "maintenance/historical-review-links/nov29-all-runners/sources/initial-discovery.json",
+      "maintenance/historical-review-links/nov29-all-runners/sources/tokyo-01-compact.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 2,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080220261129/B2",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-3.json",
+      ".local/nov29-0300/sources/rosters-3.json",
+      ".local/nov29-0300/sources/search-remaining-0.json",
+      ".local/nov29-0300/sources/search-tokyo.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 3,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080320261129/67",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-3.json",
+      ".local/nov29-0300/sources/rosters-3.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 4,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080420261129/1C",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-3.json",
+      ".local/nov29-0300/sources/rosters-3.json",
+      ".local/nov29-0300/sources/search-tokyo.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 5,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080520261129/D1",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-3.json",
+      ".local/nov29-0300/sources/rosters-3.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 6,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080620261129/86",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-4.json",
+      ".local/nov29-0300/sources/rosters-4.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 7,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080720261129/3B",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-4.json",
+      ".local/nov29-0300/sources/rosters-4.json",
+      ".local/nov29-0300/sources/search-remaining-0.json",
+      ".local/nov29-0300/sources/search-remaining-1.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 8,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080820261129/F0",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-4.json",
+      ".local/nov29-0300/sources/rosters-4.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 9,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605080920261129/A5",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-4.json",
+      ".local/nov29-0300/sources/rosters-4.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 10,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081020261129/9A",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-5.json",
+      ".local/nov29-0300/sources/rosters-5.json",
+      ".local/nov29-0300/sources/search-remaining-0.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 11,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081120261129/4F",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-5.json",
+      ".local/nov29-0300/sources/rosters-5.json"
+    ]
+  },
+  {
+    "venue": "東京",
+    "r": 12,
+    "url": "https://sp.jra.jp/JRADB/accessD.html?CNAME=sw01ddd0105202605081220261129/04",
+    "sourceFiles": [
+      ".local/nov29-0300/sources/headers-5.json",
+      ".local/nov29-0300/sources/rosters-5.json"
+    ]
+  }
+]

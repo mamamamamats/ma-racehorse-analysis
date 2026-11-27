@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "files": 0,
+  "retrievedProfiles": 20,
+  "completeOfficialHistories": 20,
+  "sourceArchiveSha256": "bd87142188c05223cc725da178ed668861bed277c9296c77de404faa30101305",
+  "sharedSourceArchive": "maintenance/historical-review-links/nov29-all-runners/runs/20261128-0300/source-responses.json.gz",
+  "sharedSourceArchiveSha256": "19ad10c2bb008c45417b3eaa9cac871a808b2c25f48f49dc4a9faa90a13761e8",
+  "masterSelection": "maintenance/historical-review-links/nov29-all-runners/runs/20261128-0300/master-selection.json.gz",
+  "masterSelectionSha256": "1939fc0dd07e870ea21fa361fbd9968b49c2f61c4fc5ab814c71e0ac9e4d689d",
+  "masterZipSha256": "1aec1c3ee8c6bcbc2e572e92e2678fe50cb860c757ba5d786e587944753027f3",
+  "masterExportedAt": "2026-11-27T15:00:48.103Z",
+  "reusedHistorySources": [],
+  "note": "No DB access. Raw responses are stored once in the shared run archive; this immutable batch wrapper references its SHA-256. Complete tables must be reparsed from the shared archive. Existing histories are reused with exact source-file hashes."
+}
