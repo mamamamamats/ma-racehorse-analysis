@@ -9,3 +9,8 @@ test('ties always use horse number even if entry order differs',()=>{const i={..
 test('missing lap data is excluded, not scored as zero; baseline bonuses retain their definition',()=>{const i={...input,reviews:[],horses:[{name:'A',races:Array.from({length:4},()=>({eval:'S'}))}],entries:[{name:'A',num:1}]};const a=E.calculate(i,helpers).ranked[0];assert.equal(a.factors.lap,null);assert.equal(a.baseScore,6);assert.ok(Math.abs(a.score-12.3)<1e-12);});
 test('different lap classes/settings have different fingerprints and cannot masquerade as identical inputs',()=>{const a=E.calculate(input,helpers),b=E.calculate({...input,context:{...context,lapClass:'graded'}},helpers);assert.notEqual(a.fingerprint,b.fingerprint);assert.equal(b.ranked[0].factors.lap,null);});
 test('old engine snapshots never count as current shared standard records',()=>{assert.notEqual(E.VERSION,'custom-ai-v1');assert.equal(E.KEYS.length,6);});
+test('display scale bounds cover the attainable standard and maximum-weight totals',()=>{
+ const i={...input,reviews:[],horses:[{name:'A',races:Array.from({length:4},()=>({eval:'S'}))}],entries:[{name:'A',num:1}]};
+ assert.ok(Math.abs(E.calculate(i,helpers).ranked[0].score-12.3)<1e-9);
+ assert.ok(Math.abs(E.calculate({...i,weights:Object.fromEntries(E.KEYS.map(k=>[k,6]))},helpers).ranked[0].score-18.6)<1e-9);
+});
