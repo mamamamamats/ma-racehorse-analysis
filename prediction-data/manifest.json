@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generation": "f2269d67e394c97a0498f999d4d30caa1ad57881d948f489f5a2cad34c7f9f0a",
-  "startedAt": "2026-11-27T15:00:57.927Z",
-  "exportedAt": "2026-11-27T15:01:37.710Z",
+  "generation": "bdf9f647478ab2e7402c25c4552b8a17d1cf0dca381bd7c122782c4b035a6f1f",
+  "startedAt": "2026-11-28T15:03:31.411Z",
+  "exportedAt": "2026-11-28T15:04:08.675Z",
   "files": [
     {
       "collection": "predictions",
@@ -31,10 +31,10 @@
     {
       "collection": "raceResults",
       "month": "2026-11",
-      "path": "raceResults/2026-11-4b64d81290c6dfaf.json",
-      "sha256": "4b64d81290c6dfaf0c7a2667397655cd1272aea91125f94521a49a19bd89c0b2",
+      "path": "raceResults/2026-11-1d720afc1ff13d6e.json",
+      "sha256": "1d720afc1ff13d6e952f0257e99088e9ebdd3ecb8f76f03a37544f8edde5955c",
       "count": 222,
-      "bytes": 281344
+      "bytes": 281332
     },
     {
       "collection": "raceReviews",
@@ -607,312 +607,312 @@
     {
       "collection": "raceDays",
       "month": "2026-11",
-      "path": "raceDays/2026-11-838210ef61b3afcd.json",
-      "sha256": "838210ef61b3afcd64bf11751ad1d86a40b83807a784ba11ffdc11735164e347",
+      "path": "raceDays/2026-11-9ea840580f8e34f8.json",
+      "sha256": "9ea840580f8e34f875bfb4ab4e545d0442e73a4c23902f947721c20c81e18e82",
       "count": 10,
-      "bytes": 222644
+      "bytes": 241464
     },
     {
       "collection": "positionRecords",
       "month": "2023-12",
-      "path": "positionRecords/2023-12-2faacda35dd0b567.json",
-      "sha256": "2faacda35dd0b567a5eba34fb853e31c678d051790e94bc5e584127fbea9a4e2",
-      "count": 151,
-      "bytes": 62471
+      "path": "positionRecords/2023-12-1d05d1670dbea2d4.json",
+      "sha256": "1d05d1670dbea2d494722b3df5b5ea6d898e6c5563d57b1cd0ae9e9c9cbfc006",
+      "count": 181,
+      "bytes": 74801
     },
     {
       "collection": "positionRecords",
       "month": "2024-01",
-      "path": "positionRecords/2024-01-a13e5047467f30fd.json",
-      "sha256": "a13e5047467f30fdebc04af33d356f62b9e2e6df1f6182b269be6cee397aab57",
-      "count": 158,
-      "bytes": 65070
+      "path": "positionRecords/2024-01-3da18d0315f7dd32.json",
+      "sha256": "3da18d0315f7dd32a2b02212cd5d8b50b1f8e3fe634dc9ee99f8d72060c52500",
+      "count": 202,
+      "bytes": 83194
     },
     {
       "collection": "positionRecords",
       "month": "2024-02",
-      "path": "positionRecords/2024-02-ea4dcecf3fbb59d1.json",
-      "sha256": "ea4dcecf3fbb59d1c55dd8109a3efdc9b74a132b1db225d98b366b01decf0996",
-      "count": 157,
-      "bytes": 64721
+      "path": "positionRecords/2024-02-2288ca36476f3bd6.json",
+      "sha256": "2288ca36476f3bd6b8d9d01c23e1ff77d4e1f065b6a50d79a212b0c6c9e85f00",
+      "count": 184,
+      "bytes": 75692
     },
     {
       "collection": "positionRecords",
       "month": "2024-03",
-      "path": "positionRecords/2024-03-4a72ac87a7ba74ed.json",
-      "sha256": "4a72ac87a7ba74ed0be1c70ce266f5312aa18e032acd1a86eb9fb07743c8689b",
-      "count": 239,
-      "bytes": 98310
+      "path": "positionRecords/2024-03-d8760fbf9ee44f21.json",
+      "sha256": "d8760fbf9ee44f21c30cc18a1fba1f19464db83d5fd9d15c8746403f8f78f388",
+      "count": 312,
+      "bytes": 128467
     },
     {
       "collection": "positionRecords",
       "month": "2024-04",
-      "path": "positionRecords/2024-04-dc27a62e046d18d2.json",
-      "sha256": "dc27a62e046d18d23fda34fe4b1be41eb7c901f8b06d2f08691e323520cecd33",
-      "count": 253,
-      "bytes": 104120
+      "path": "positionRecords/2024-04-dd8444b52035f4c4.json",
+      "sha256": "dd8444b52035f4c47cb94b4136e65914875ede7008fa64d7a14fd99ce18a4bee",
+      "count": 335,
+      "bytes": 137956
     },
     {
       "collection": "positionRecords",
       "month": "2024-05",
-      "path": "positionRecords/2024-05-5f53af89c8617f05.json",
-      "sha256": "5f53af89c8617f05c2d915e00a1568e3c64625847a1f0951be5ee3f7809448f4",
-      "count": 294,
-      "bytes": 121122
+      "path": "positionRecords/2024-05-01a731fe2536932c.json",
+      "sha256": "01a731fe2536932cb12b3459e2e27274a052edc75cb07e1b72c0f13481b172f7",
+      "count": 377,
+      "bytes": 155385
     },
     {
       "collection": "positionRecords",
       "month": "2024-06",
-      "path": "positionRecords/2024-06-775e9bb5f980cb8d.json",
-      "sha256": "775e9bb5f980cb8d036e4ab2af5b8a0f247ae8e978d082de24292116752608e5",
-      "count": 432,
-      "bytes": 178344
+      "path": "positionRecords/2024-06-41d9b68be8a36958.json",
+      "sha256": "41d9b68be8a36958480b53038f810e34e14250b5e7cd9363242bd5046d0107dd",
+      "count": 572,
+      "bytes": 236109
     },
     {
       "collection": "positionRecords",
       "month": "2024-07",
-      "path": "positionRecords/2024-07-10e6b7f4b8c120ff.json",
-      "sha256": "10e6b7f4b8c120ff7262370bbae87e3f337a419b423dfb59faf9402dba90eaff",
-      "count": 314,
-      "bytes": 129605
+      "path": "positionRecords/2024-07-c58c0dbc475ab00d.json",
+      "sha256": "c58c0dbc475ab00dac47d1193587b6ac436794e29ff760eac34b60fcf0b09ca9",
+      "count": 434,
+      "bytes": 179274
     },
     {
       "collection": "positionRecords",
       "month": "2024-08",
-      "path": "positionRecords/2024-08-6542c7e400834171.json",
-      "sha256": "6542c7e40083417149fda262f7d238ef3e927ebae201d261a9088e5445e7e982",
-      "count": 484,
-      "bytes": 200067
+      "path": "positionRecords/2024-08-349e66a1d6d57744.json",
+      "sha256": "349e66a1d6d57744b5ec6d01a6d2c70bc06fda9445c795d4fbe9959574826b27",
+      "count": 628,
+      "bytes": 259556
     },
     {
       "collection": "positionRecords",
       "month": "2024-09",
-      "path": "positionRecords/2024-09-be23aecb1422904b.json",
-      "sha256": "be23aecb1422904b366e311eb099ceaeb80d5b12509b4f90c854310ccc934253",
-      "count": 536,
-      "bytes": 221202
+      "path": "positionRecords/2024-09-189422d0cfcb8514.json",
+      "sha256": "189422d0cfcb8514c42a7cb6e5d449fb8cc84cf048a396b11adfa2fefcc831d8",
+      "count": 672,
+      "bytes": 277270
     },
     {
       "collection": "positionRecords",
       "month": "2024-10",
-      "path": "positionRecords/2024-10-e94f0887c479732b.json",
-      "sha256": "e94f0887c479732b47d146ee146f4101cb00dcd1ad41743f3aa166b3321ec1b3",
-      "count": 655,
-      "bytes": 270653
+      "path": "positionRecords/2024-10-645d75a9852c72a2.json",
+      "sha256": "645d75a9852c72a236868fc7341e184288de2dc6f52dc3d39a2a1806d55d023b",
+      "count": 785,
+      "bytes": 324170
     },
     {
       "collection": "positionRecords",
       "month": "2024-11",
-      "path": "positionRecords/2024-11-a2d240cbe46f5427.json",
-      "sha256": "a2d240cbe46f5427bd08032540ea222f752c6acade76b59968db026fb51995c4",
-      "count": 729,
-      "bytes": 300998
+      "path": "positionRecords/2024-11-3b12d2b9e5df9737.json",
+      "sha256": "3b12d2b9e5df97377b689916cd1cd0d51d3a846582415b838341ae8615d1f5b8",
+      "count": 877,
+      "bytes": 362016
     },
     {
       "collection": "positionRecords",
       "month": "2024-12",
-      "path": "positionRecords/2024-12-b75aae426aac3b4f.json",
-      "sha256": "b75aae426aac3b4f4c5e97389024e1149795f167ca54c17b834febcf812d2306",
-      "count": 601,
-      "bytes": 247831
+      "path": "positionRecords/2024-12-00ef02cc0b8c2159.json",
+      "sha256": "00ef02cc0b8c2159698093bf3841947eac3c46782798c46fafc18ed28574442b",
+      "count": 716,
+      "bytes": 295224
     },
     {
       "collection": "positionRecords",
       "month": "2025-01",
-      "path": "positionRecords/2025-01-e09cb215b7b5cf88.json",
-      "sha256": "e09cb215b7b5cf8807383bdc0500b05e7933de9ebf0ef3b78e7490e58c374316",
-      "count": 658,
-      "bytes": 271529
+      "path": "positionRecords/2025-01-c06fc70768e9454a.json",
+      "sha256": "c06fc70768e9454abc0f007dcb49c4add853c4caa7afe856c76e8ed67bb3434f",
+      "count": 812,
+      "bytes": 334844
     },
     {
       "collection": "positionRecords",
       "month": "2025-02",
-      "path": "positionRecords/2025-02-26c05bcc6dc0237f.json",
-      "sha256": "26c05bcc6dc0237f91c9e1acfa88264d8a6c84eb09ada901d441ab8a16b0fef8",
-      "count": 852,
-      "bytes": 352266
+      "path": "positionRecords/2025-02-4c9363e28f01444b.json",
+      "sha256": "4c9363e28f01444b4ea12b55e93e7c93dd7f00fed812fa66c32f066eea002650",
+      "count": 1021,
+      "bytes": 422274
     },
     {
       "collection": "positionRecords",
       "month": "2025-03",
-      "path": "positionRecords/2025-03-464e8fc4e2be8a11.json",
-      "sha256": "464e8fc4e2be8a118e753d032757fe9ee9d4122587010d3c596fd536214cef65",
-      "count": 1147,
-      "bytes": 473051
+      "path": "positionRecords/2025-03-7b2e49010ab9ec63.json",
+      "sha256": "7b2e49010ab9ec63db5059c424e375e11d55266a6098c57088e0e09ce6590f85",
+      "count": 1362,
+      "bytes": 561921
     },
     {
       "collection": "positionRecords",
       "month": "2025-04",
-      "path": "positionRecords/2025-04-247212b5bb2ef349.json",
-      "sha256": "247212b5bb2ef349ec4d2da04bf56a13881ae06f82114bf7c933bdc403b7a836",
-      "count": 835,
-      "bytes": 344602
+      "path": "positionRecords/2025-04-38b3b24afa5831b7.json",
+      "sha256": "38b3b24afa5831b74cef73e0c6acbc8c9c6523a221e7edcc2eb0e8e06c181a10",
+      "count": 1023,
+      "bytes": 422133
     },
     {
       "collection": "positionRecords",
       "month": "2025-05",
-      "path": "positionRecords/2025-05-45e8c315b5636b50.json",
-      "sha256": "45e8c315b5636b508634ec350bc51ed5fe99af97ceee76792c9e362f2b187889",
-      "count": 779,
-      "bytes": 321352
+      "path": "positionRecords/2025-05-d4c403631027c862.json",
+      "sha256": "d4c403631027c86244316735e69f62829e7834fdbb9dd4e705991d187168de9d",
+      "count": 888,
+      "bytes": 366250
     },
     {
       "collection": "positionRecords",
       "month": "2025-06",
-      "path": "positionRecords/2025-06-1e1d87a16c8c89f0.json",
-      "sha256": "1e1d87a16c8c89f07424ac25ed5875e03142d7d624b00c5503d6ce75000a5ea0",
-      "count": 656,
-      "bytes": 271212
+      "path": "positionRecords/2025-06-b2bdc7b112a4a24f.json",
+      "sha256": "b2bdc7b112a4a24f8b5faf3b8bfb8ecf8e22be719a0a16c1119e0b81b5f1052e",
+      "count": 749,
+      "bytes": 309844
     },
     {
       "collection": "positionRecords",
       "month": "2025-07",
-      "path": "positionRecords/2025-07-5a0791b0125f829e.json",
-      "sha256": "5a0791b0125f829e079714a5809a07081709ebd08b2f718c991423230791c8a7",
-      "count": 581,
-      "bytes": 240318
+      "path": "positionRecords/2025-07-66845fa2b10f7cfd.json",
+      "sha256": "66845fa2b10f7cfdd3cc3a8c49f89196774b2b450e983b8f1960b812edbb3df3",
+      "count": 695,
+      "bytes": 287356
     },
     {
       "collection": "positionRecords",
       "month": "2025-08",
-      "path": "positionRecords/2025-08-1bbe4aaf5bc82ee2.json",
-      "sha256": "1bbe4aaf5bc82ee298a74f169342e531b781308287714de54a7ce58ed955ca98",
-      "count": 812,
-      "bytes": 335089
+      "path": "positionRecords/2025-08-830b7d39deba31ec.json",
+      "sha256": "830b7d39deba31ec490db26a62df226caf30e0d0da738854a179fced811d8894",
+      "count": 974,
+      "bytes": 401917
     },
     {
       "collection": "positionRecords",
       "month": "2025-09",
-      "path": "positionRecords/2025-09-b6ceaf9a161ec90b.json",
-      "sha256": "b6ceaf9a161ec90b8a16bd79dca7c87af20100b18008209e1b94812180078f21",
-      "count": 648,
-      "bytes": 267957
+      "path": "positionRecords/2025-09-64a98ddd09461a3f.json",
+      "sha256": "64a98ddd09461a3ffe4447f18a8ee40b57bc5aafc3f6a0fc0c59b01e2f486c5d",
+      "count": 803,
+      "bytes": 331732
     },
     {
       "collection": "positionRecords",
       "month": "2025-10",
-      "path": "positionRecords/2025-10-53c92b356b331c7b.json",
-      "sha256": "53c92b356b331c7ba82251d30793fac148dd41b8756f5ca0e8be7bad7b7c8ddd",
-      "count": 803,
-      "bytes": 332276
+      "path": "positionRecords/2025-10-3b297a6fcc3df5dd.json",
+      "sha256": "3b297a6fcc3df5dd1c37706e378153709c35bb9a411f61d0d9ce5175a17cb706",
+      "count": 995,
+      "bytes": 411457
     },
     {
       "collection": "positionRecords",
       "month": "2025-11",
-      "path": "positionRecords/2025-11-244030e848316c61.json",
-      "sha256": "244030e848316c61ab3fca3f45c3baff880a2182f3c1d4d9fde6407405f433bd",
-      "count": 935,
-      "bytes": 386159
+      "path": "positionRecords/2025-11-55bfc0a1768d5c82.json",
+      "sha256": "55bfc0a1768d5c822bc4932b092d21283d4fb402017acbc4ccdaea4a90a228a7",
+      "count": 1227,
+      "bytes": 506737
     },
     {
       "collection": "positionRecords",
       "month": "2025-12",
-      "path": "positionRecords/2025-12-c6d066e71baa0ed2.json",
-      "sha256": "c6d066e71baa0ed217e700ec966e288eefc93ec6de5858ccbf131f7dd82719a8",
-      "count": 728,
-      "bytes": 300830
+      "path": "positionRecords/2025-12-3f085c3e01a52871.json",
+      "sha256": "3f085c3e01a52871922e7c6960d6d56534563802bf95f00c69e14c8daff93a28",
+      "count": 943,
+      "bytes": 389889
     },
     {
       "collection": "positionRecords",
       "month": "2026-01",
-      "path": "positionRecords/2026-01-d62a4a627f9054df.json",
-      "sha256": "d62a4a627f9054dfd91f6ca958f86d72019eae3c7c401a65886da6fb9d2b9dad",
-      "count": 383,
-      "bytes": 158843
+      "path": "positionRecords/2026-01-0ded841a13452f1b.json",
+      "sha256": "0ded841a13452f1b35e48eda2114ab6b86d4f37d6a26ba0c44fb1619ffed738b",
+      "count": 456,
+      "bytes": 189042
     },
     {
       "collection": "positionRecords",
       "month": "2026-02",
-      "path": "positionRecords/2026-02-f47cae639bb88c2a.json",
-      "sha256": "f47cae639bb88c2ac8fe89813697b4762ba5d920783c1602e3be95332d7b2873",
-      "count": 271,
-      "bytes": 112241
+      "path": "positionRecords/2026-02-c5e125855b4dbd9c.json",
+      "sha256": "c5e125855b4dbd9cc086ceda1420ed5668bc232697774d6e6e025e5e5a2bc999",
+      "count": 318,
+      "bytes": 131529
     },
     {
       "collection": "positionRecords",
       "month": "2026-03",
-      "path": "positionRecords/2026-03-95e97dbabfc2e9a3.json",
-      "sha256": "95e97dbabfc2e9a37d79d3dcda0cb7c780248cf28e507ade9388e5141d4663c4",
-      "count": 465,
-      "bytes": 192954
+      "path": "positionRecords/2026-03-59efaa9bf4700e6f.json",
+      "sha256": "59efaa9bf4700e6f435e7366956aec20d57e4865d9b0d3e16004e2332d634182",
+      "count": 550,
+      "bytes": 228307
     },
     {
       "collection": "positionRecords",
       "month": "2026-04",
-      "path": "positionRecords/2026-04-7c14cb992630b1de.json",
-      "sha256": "7c14cb992630b1de8a931dc8720541ab74874a5127b746cb37f33b4966c4ed8f",
-      "count": 557,
-      "bytes": 231010
+      "path": "positionRecords/2026-04-57535a35c0ad2fca.json",
+      "sha256": "57535a35c0ad2fca304bdc0900932aa24d142d5870f7b6e340e19a6c2f7a4608",
+      "count": 699,
+      "bytes": 290066
     },
     {
       "collection": "positionRecords",
       "month": "2026-05",
-      "path": "positionRecords/2026-05-26368921729c952e.json",
-      "sha256": "26368921729c952e93dfe460793e8e97bda52662a58e03fd75f173b528aa84df",
-      "count": 790,
-      "bytes": 327754
+      "path": "positionRecords/2026-05-751fdb5ba0399ccd.json",
+      "sha256": "751fdb5ba0399ccd09e1e5e85c8f2bb5a2c1c9e273b1ac40dd620ff20ce9ba73",
+      "count": 973,
+      "bytes": 403807
     },
     {
       "collection": "positionRecords",
       "month": "2026-06",
-      "path": "positionRecords/2026-06-9de6bbbdbf3bce6c.json",
-      "sha256": "9de6bbbdbf3bce6c6e3de5c52469650a8817895888dfa000af3811c33f5d820f",
-      "count": 194,
-      "bytes": 80697
+      "path": "positionRecords/2026-06-cd6bb0e6541b66c2.json",
+      "sha256": "cd6bb0e6541b66c2f626f81c4a11a18e7eb5971b45b8d077795ea6a034b04b5a",
+      "count": 247,
+      "bytes": 102661
     },
     {
       "collection": "positionRecords",
       "month": "2026-07",
-      "path": "positionRecords/2026-07-09df8ad4903e87c2.json",
-      "sha256": "09df8ad4903e87c28e87e6cf2894ce161f282bcea12642704b3caf92655b403e",
-      "count": 469,
-      "bytes": 194440
+      "path": "positionRecords/2026-07-d87e623a72644279.json",
+      "sha256": "d87e623a726442797f63b088b8a384c0f1327b366f896cb479e349b90ddbb6eb",
+      "count": 594,
+      "bytes": 245873
     },
     {
       "collection": "positionRecords",
       "month": "2026-08",
-      "path": "positionRecords/2026-08-87d5609e39324a36.json",
-      "sha256": "87d5609e39324a369d112172a902d341dd6e2cc6c81b0ae8cf069a10d96b4b86",
-      "count": 807,
-      "bytes": 333778
+      "path": "positionRecords/2026-08-4d2486aa33906da7.json",
+      "sha256": "4d2486aa33906da786cb4bab4cc850e4d105bf4801e9f4faa53ed1038a07c129",
+      "count": 1030,
+      "bytes": 426033
     },
     {
       "collection": "positionRecords",
       "month": "2026-09",
-      "path": "positionRecords/2026-09-3975414b60ff5872.json",
-      "sha256": "3975414b60ff58726ae52083b9b0a3872a1b31955fc12842b6f95fd44092068a",
-      "count": 521,
-      "bytes": 216056
+      "path": "positionRecords/2026-09-9cb41b87faad7120.json",
+      "sha256": "9cb41b87faad7120e644612a3f21755f57aeb8e024684822c1c31a39df48a680",
+      "count": 675,
+      "bytes": 280101
     },
     {
       "collection": "positionRecords",
       "month": "2026-10",
-      "path": "positionRecords/2026-10-eaabad023cbd45d5.json",
-      "sha256": "eaabad023cbd45d55279cd4fd502c9c7740ee733202bcb19a315077c2beddd6f",
-      "count": 947,
-      "bytes": 388533
+      "path": "positionRecords/2026-10-5c6407ea68477600.json",
+      "sha256": "5c6407ea68477600d6a65ae8b1ab02aa031eb3f0e55b4b1f4f326e8d9668dc67",
+      "count": 1167,
+      "bytes": 481279
     },
     {
       "collection": "positionRecords",
       "month": "2026-11",
-      "path": "positionRecords/2026-11-880d4ce28c3441cb.json",
-      "sha256": "880d4ce28c3441cb56b5de195bb9dfa387feb4db871b30124d37dbddec0ceac7",
-      "count": 1640,
-      "bytes": 704761
+      "path": "positionRecords/2026-11-3355dc84faf416b1.json",
+      "sha256": "3355dc84faf416b1e2adabce64a06789a8e1a3a1ecba6de2fbdb92069415f790",
+      "count": 1681,
+      "bytes": 725462
     },
     {
       "collection": "positionRecords",
       "month": "undated",
-      "path": "positionRecords/undated-f26146e197a7ad8b.json",
-      "sha256": "f26146e197a7ad8be1f97cf99c581776e6e65ad0ae3f60bdc1ab661b2094fd14",
-      "count": 78,
-      "bytes": 32266
+      "path": "positionRecords/undated-7c97ced1b9ae711f.json",
+      "sha256": "7c97ced1b9ae711fcfaa443f48443f452d9ef90dfda9db4938c8aa01a45d4df4",
+      "count": 105,
+      "bytes": 43533
     },
     {
       "collection": "meta",
       "month": "all",
-      "path": "meta/public-92867053081a15c3.json",
-      "sha256": "92867053081a15c345d4a499fbba10c955dbecaa1ce37c498123bf0bcfb6d6d5",
+      "path": "meta/public-6535f16c5f62e0e6.json",
+      "sha256": "6535f16c5f62e0e6b24865392d78b6e88f7a069fe90ce8bf16ff70af7417aa03",
       "count": 3,
       "bytes": 22621
     }
@@ -922,6 +922,6 @@
     "raceResults": 261,
     "raceReviews": 8779,
     "raceDays": 322,
-    "positionRecords": 21559
+    "positionRecords": 26262
   }
 }
