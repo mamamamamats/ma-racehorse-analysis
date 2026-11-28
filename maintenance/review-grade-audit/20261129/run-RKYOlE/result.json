@@ -1,0 +1,12 @@
+{
+  "planSha256": "21d10797a01ba535646688ac4e3f89b271b06a8a182bb0a82c2561b90745ddd4",
+  "readHorses": 0,
+  "savedHorses": 0,
+  "changedReviews": 0,
+  "skipped": [],
+  "stopped": {
+    "horseName": "インビンシブルパパ",
+    "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+  },
+  "finishedAt": "2026-11-28T07:56:53.839Z"
+}

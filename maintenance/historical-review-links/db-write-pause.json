@@ -1,6 +1,9 @@
 {
-  "paused": false,
-  "resumedAt": "2026-11-28T07:17:22.630072+00:00",
-  "authorization": "ユーザーの2026-11-28「DBの更新を進めてください」指示により明示再開。最初のDBエラーで停止。",
-  "previousPauseRecord": "maintenance/historical-review-links/runs/20261128-db-resume/previous-db-write-pause.json"
+  "paused": true,
+  "stoppedAt": "2026-11-28T07:56:53.838Z",
+  "reason": {
+    "horseName": "インビンシブルパパ",
+    "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+  },
+  "note": "Stop all DB operations. No automatic retry."
 }

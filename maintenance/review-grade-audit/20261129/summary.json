@@ -1,0 +1,20 @@
+{
+  "targetDate": "2026/11/29",
+  "rosterHorses": 327,
+  "horseRecords": 193,
+  "reviewedHorses": 191,
+  "reviews": 1516,
+  "sReviews": 151,
+  "sAutoCorrectionPrepared": 20,
+  "sAutoCorrectionHorses": 18,
+  "sApprovalRequired": 81,
+  "sRetained": 50,
+  "dReviews": 335,
+  "dApprovalCandidates": 85,
+  "dbReadAttempts": 1,
+  "dbSuccessfulReads": 0,
+  "dbWrites": 0,
+  "status": "paused-after-first-quota-error",
+  "failureRecord": "run-RKYOlE/result.json",
+  "approvalList": "APPROVAL.md"
+}
