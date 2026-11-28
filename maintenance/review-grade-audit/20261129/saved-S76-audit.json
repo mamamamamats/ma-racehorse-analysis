@@ -1,0 +1,10 @@
+{
+  "horses": 37,
+  "reviews": 50,
+  "dbReads": 37,
+  "dbWriteCommits": 37,
+  "verified": "commit receipts replayed; only eval changes, comments, race links and array order preserved",
+  "scope": "S1 through S76 only",
+  "afterS76Writes": 0,
+  "dWrites": 0
+}

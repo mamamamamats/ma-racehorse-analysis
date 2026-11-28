@@ -1,0 +1,19 @@
+{
+  "scope": "S1〜S76の変更対象のみ。従来据え置きは維持。",
+  "overrides": {
+    "S15": "B",
+    "S18": "B",
+    "S19": "B",
+    "S42": "B",
+    "S47": "B",
+    "S55": "F",
+    "S57": "B",
+    "S59": "B",
+    "S71": "B",
+    "S76": "B"
+  },
+  "approvedReviews": 50,
+  "approvedHorses": 37,
+  "excluded": "S77以降全件・D全件・修正済み項目",
+  "plan": "plan-user-approved-through-S76.json"
+}

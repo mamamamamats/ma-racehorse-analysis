@@ -1,0 +1,9 @@
+{
+  "paused": true,
+  "stoppedAt": "2026-11-28T07:56:53.838Z",
+  "reason": {
+    "horseName": "インビンシブルパパ",
+    "error": "Firestore HTTP 429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded.\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+  },
+  "note": "Stop all DB operations. No automatic retry."
+}

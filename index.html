@@ -174558,13 +174558,15 @@ function publicCacheTime(value) {
   return Date.parse(value || '') || 0;
 }
 function publicCacheUpdates(incoming, existing, key, exportedAt) {
-  const cutoff = publicCacheTime(exportedAt), known = new Map(existing.map(row => [row[key], row]));
+  const known = new Map(existing.map(row => [row[key], row]));
   return incoming.flatMap(row => {
-    const local = known.get(row[key]);
-    if (!local) return [{...row, _publicSnapshotAt: exportedAt}];
+    // Individually verified public patches must not refresh unrelated baseline rows.
+    const snapshotAt = publicCacheTime(row._publicSnapshotAt) > publicCacheTime(exportedAt) ? row._publicSnapshotAt : exportedAt;
+    const cutoff = publicCacheTime(snapshotAt), local = known.get(row[key]);
+    if (!local) return [{...row, _publicSnapshotAt: snapshotAt}];
     if (!cutoff || Math.max(publicCacheTime(local.archiveUpdatedAt), publicCacheTime(local._localSavedAt),
       publicCacheTime(local._dbVerifiedAt), publicCacheTime(local._publicSnapshotAt)) > cutoff) return [];
-    const candidate = {...row, _publicSnapshotAt: exportedAt};
+    const candidate = {...row, _publicSnapshotAt: snapshotAt};
     return JSON.stringify(local) === JSON.stringify(candidate) ? [] : [candidate];
   });
 }

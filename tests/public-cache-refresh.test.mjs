@@ -44,3 +44,7 @@ test('review loader reads archive before Firebase gate; pending badges are not l
  e.raceConditionReviewError='offline';assert.match(e.horseRaceEventBadges({}),/取得できません/);
  e.raceConditionReviewRecords=[];assert.match(e.horseRaceEventBadges({}),/未登録・紐づけ未確認/);
 });
+test('individual verified grade patches refresh only that horse and preserve later local edits',()=>{
+ const verified='2026-11-28T08:30:27Z',patch={...latest,_publicSnapshotAt:verified},later={...latest,name:'別馬'},local=[{...latest,races:[{eval:'S'}],_publicSnapshotAt:'2026-11-28T07:50:00Z'},{...later,_localSavedAt:'2026-11-28T07:50:00Z'}];
+ const changed=env.publicCacheUpdates([patch,later],local,'name',exportedAt);assert.equal(changed.length,1);assert.equal(changed[0].name,latest.name);assert.equal(changed[0]._publicSnapshotAt,verified);assert.equal(env.publicCacheUpdates([patch],[{...latest,_localSavedAt:'2026-11-28T09:00:00Z'}],'name',exportedAt).length,0);
+});
