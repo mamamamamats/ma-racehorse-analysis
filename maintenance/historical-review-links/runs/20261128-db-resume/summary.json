@@ -1,0 +1,21 @@
+{
+  "readHorses": 1212,
+  "savedHorses": 1211,
+  "linkedReviews": 4681,
+  "alreadyLinkedReviews": 0,
+  "stopped": [],
+  "skipped": [
+    {
+      "batch": "batch-030",
+      "key": "[\"アーバンシック\",\"race_day-2026-03-15_%E4%B8%AD%E4%BA%AC_11\",\"[\\\"金鯱賞\\\",\\\"中京芝2000\\\",\\\"C\\\",\\\"中団後方から伸びず。折り合いイマイチもジリ足。休み明けで状態戻っていない？\\\"]\"]",
+      "reason": "review changed or duplicated"
+    },
+    {
+      "batch": "batch-030",
+      "key": "[\"アーバンシック\",\"race_day-2025-11-02_%E6%9D%B1%E4%BA%AC_11\",\"[\\\"天皇賞(秋)\\\",\\\"東京芝2000\\\",\\\"C\\\",\\\"出遅れて後方から伸びきれず5着。どスローペースで位置が悪かった。最後まで伸びており前走から立て直せた。良馬場の広いコースはやはりベストもスタートは課題。距離もう少しあっても。\\\"]\"]",
+      "reason": "review changed or duplicated"
+    }
+  ],
+  "officialProofsRechecked": 24298,
+  "finishedAt": "2026-11-28T07:28:49.744Z"
+}

@@ -85,5 +85,19 @@
     "officialProfilesReparsed": 75,
     "preparedReviewsReproduced": 247,
     "protectedDataUnchanged": true
+  },
+  "dbUpdate": {
+    "finishedAt": "2026-11-28T07:28:49.744Z",
+    "mode": "user-authorized-apply",
+    "priorityBatchesCompleted": [
+      "batch-069",
+      "batch-070",
+      "batch-071",
+      "batch-072",
+      "batch-073"
+    ],
+    "newPriorityLinksSaved": 264,
+    "dbErrors": 0,
+    "summary": "../runs/20261128-db-resume/summary.json"
   }
 }
