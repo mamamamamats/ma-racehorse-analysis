@@ -10,11 +10,11 @@
   "sApprovalRequired": 0,
   "sRetained": 50,
   "dReviews": 333,
-  "dApprovalCandidates": 83,
-  "dbReadAttempts": 73,
-  "dbSuccessfulReads": 72,
-  "dbWrites": 72,
-  "status": "all-approved-S-reviews-saved-D-awaiting-approval",
+  "dApprovalCandidates": 49,
+  "dbReadAttempts": 98,
+  "dbSuccessfulReads": 97,
+  "dbWrites": 97,
+  "status": "approved-S-and-D-through-103-saved",
   "failureRecord": "run-RKYOlE/result.json",
   "approvalList": "APPROVAL.md",
   "initialAudit": {
@@ -32,17 +32,23 @@
     "D140": "C",
     "D141": "C"
   },
-  "activePlan": "plan-user-approved-after-S76.json",
-  "savedReviewChanges": 103,
-  "savedHorses": 72,
+  "activePlan": "plan-user-approved-through-D103.json",
+  "savedReviewChanges": 137,
+  "savedHorses": 84,
   "savedRun": "run-schRIZ",
   "afterS76DbChanges": 0,
-  "dDbChanges": 0,
+  "dDbChanges": 34,
   "latestRunErrors": 0,
   "initialQuotaFailurePreserved": true,
   "publicHorsePatches": 37,
   "noteSavedHorses": "Unique horses across both successful runs",
-  "lastRunChanges": 53,
-  "lastRunHorses": 35,
-  "publicHorsePatchesLastRun": 35
+  "lastRunChanges": 34,
+  "lastRunHorses": 25,
+  "publicHorsePatchesLastRun": 25,
+  "d103AndEarlierSaved": 34,
+  "dAfter103Saved": 0,
+  "savedDGradeCounts": {
+    "B": 21,
+    "C": 13
+  }
 }

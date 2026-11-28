@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-/* Explicit, frozen S-grade corrections only; never modifies uncertain candidates. */
+/* Explicit, frozen grade corrections only; never modifies uncertain candidates. */
 import fs from 'node:fs/promises';import path from 'node:path';import {fileURLToPath} from 'node:url';import {createHash} from 'node:crypto';import {request,encode,decode,atomic} from './apply-historical-review-links.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),base='https://firestore.googleapis.com/v1/projects/ma-racehorse-analysis/databases/(default)/documents';
 export function prepare(raw,updates){
  if(!raw.updateTime||!raw.fields?.races)throw Error('Missing live reviews/updateTime');if(decode(raw.fields.deleted||{booleanValue:false}))throw Error('Horse deleted');
  const races=decode(raw.fields.races),next=structuredClone(raw.fields.races),accepted=[],skipped=[];
  const sig=r=>JSON.stringify([r.name||'',r.track||'',r.comment||'',r.eval||'']);
- for(const u of updates){if(u.status!=='apply'||u.original.eval!=='S'||(!['A','B','C','F'].includes(u.proposedGrade)||(u.proposedGrade==='F'&&u.approval?.type!=='user-explicit')))throw Error('Unapproved grade change');const indices=races.map((r,i)=>sig(r)===sig(u.original)?i:-1).filter(i=>i>=0);if(indices.length!==1){skipped.push({id:u.id,reason:'Latest review changed or ambiguous'});continue;}const i=indices[0];if(u.original.raceId&&races[i].raceId!==u.original.raceId){skipped.push({id:u.id,reason:'Race identity changed'});continue;}next.arrayValue.values[i].mapValue.fields.eval=encode(u.proposedGrade);accepted.push({...u,liveIndex:i});}
+ for(const u of updates){if(u.status!=='apply'||(!['S','D'].includes(u.original.eval)||(u.original.eval==='D'&&u.approval?.type!=='user-explicit'))||(!['A','B','C','F'].includes(u.proposedGrade)||(u.proposedGrade==='F'&&u.approval?.type!=='user-explicit')))throw Error('Unapproved grade change');const indices=races.map((r,i)=>sig(r)===sig(u.original)?i:-1).filter(i=>i>=0);if(indices.length!==1){skipped.push({id:u.id,reason:'Latest review changed or ambiguous'});continue;}const i=indices[0];if(u.original.raceId&&races[i].raceId!==u.original.raceId){skipped.push({id:u.id,reason:'Race identity changed'});continue;}next.arrayValue.values[i].mapValue.fields.eval=encode(u.proposedGrade);accepted.push({...u,liveIndex:i});}
  return {accepted,skipped,write:accepted.length?{update:{name:raw.name,fields:{races:next}},updateMask:{fieldPaths:['races']},currentDocument:{updateTime:raw.updateTime},updateTransforms:[{fieldPath:'archiveUpdatedAt',setToServerValue:'REQUEST_TIME'}]}:null};
 }
 async function main(){

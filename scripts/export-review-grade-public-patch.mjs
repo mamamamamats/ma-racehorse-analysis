@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+/* Replay successful receipts and publish only their horses. No DB access. */
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';import {fileURLToPath} from 'node:url';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';import {decode} from './apply-historical-review-links.mjs';import {prepare} from './apply-review-grade-audit.mjs';
+const root=fileURLToPath(new URL('../',import.meta.url)),base=path.join(root,'maintenance/review-grade-audit/20261129'),[run,label]=process.argv.slice(2);if(!/^run-[a-zA-Z0-9]+$/.test(run||'')||!/^[a-zA-Z0-9-]+$/.test(label||''))throw Error('Usage: run-directory audit-label');
+const dir=path.join(base,run),result=JSON.parse(await fs.readFile(path.join(dir,'result.json'),'utf8'));if(!result.finishedAt)throw Error('Queue still active');let plan;
+for(const name of (await fs.readdir(base)).filter(n=>n.startsWith('plan')&&n.endsWith('.json'))){const bytes=await fs.readFile(path.join(base,name));if(createHash('sha256').update(bytes).digest('hex')===result.planSha256){plan=JSON.parse(bytes);break;}}
+assert.ok(plan,'Receipt must have an immutable plan');const byId=new Map(plan.updates.map(u=>[u.id,u])),patches=[];let reviews=0;
+for(const name of (await fs.readdir(dir)).filter(n=>n.endsWith('.commit.json'))){const c=JSON.parse(await fs.readFile(path.join(dir,name),'utf8')),raw=JSON.parse(await fs.readFile(path.join(dir,name.replace('.commit.json','.before.json')),'utf8'));assert.equal(c.response.writeResults.length,1);assert.ok(Number.isFinite(Date.parse(c.response.commitTime)));for(const u of c.accepted){const {liveIndex,...original}=u;assert.deepEqual(original,byId.get(u.id));}assert.deepEqual(prepare(raw,c.accepted).write,c.write);const horse=Object.fromEntries(Object.entries(raw.fields).map(([k,v])=>[k,decode(v)])),old=horse.races;horse.races=decode(c.write.update.fields.races);assert.equal(old.length,horse.races.length);for(let i=0;i<old.length;i++){const strip=r=>Object.fromEntries(Object.entries(r).filter(([k])=>k!=='eval'));assert.deepEqual(strip(old[i]),strip(horse.races[i]));}horse.archiveUpdatedAt=c.response.commitTime;horse._publicSnapshotAt=c.response.commitTime;patches.push(horse);reviews+=c.accepted.length;}
+assert.equal(reviews,result.changedReviews);assert.equal(patches.length,result.savedHorses);if(!patches.length)throw Error('No successful writes to export');
+const py=`import json,zipfile,pathlib,hashlib,sys
+x=json.load(sys.stdin);p=pathlib.Path(x['root'])/'keiba-data.json.zip';raw=p.read_bytes();z=zipfile.ZipFile(p);name=z.namelist()[0];old=json.loads(z.read(name));d=json.loads(z.read(name));by={h['name']:h for h in x['horses']};updated=[]
+for i,h in enumerate(d['horses']):
+ if h['name'] in by:d['horses'][i]=by[h['name']];updated.append(h['name'])
+assert len(updated)==len(by)
+assert old['raceDays']==d['raceDays'] and old['memos']==d['memos'] and old['exportedAt']==d['exportedAt']
+assert all(h==d['horses'][i] for i,h in enumerate(old['horses']) if h['name'] not in by)
+with zipfile.ZipFile(str(p)+'.tmp','w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:z.writestr(name,json.dumps(d,ensure_ascii=False,separators=(',',':')))
+pathlib.Path(str(p)+'.tmp').replace(p)
+print(json.dumps({'unchangedBaselineExportedAt':d['exportedAt'],'onlyPatchedHorses':updated,'beforeSha256':hashlib.sha256(raw).hexdigest(),'afterSha256':hashlib.sha256(p.read_bytes()).hexdigest(),'extraDbReads':0}))`;
+const proc=spawnSync('python',['-c',py],{input:JSON.stringify({root,horses:patches}),encoding:'utf8',maxBuffer:32*1024*1024});if(proc.status!==0)throw Error(proc.stderr);const patch=JSON.parse(proc.stdout),audit={run,planSha256:result.planSha256,horses:patches.length,reviews,readHorses:result.readHorses,errors:result.stopped?1:0,verified:'Only eval changed; comments, links, order and unmodified horses preserved',extraDbReads:0};await fs.writeFile(path.join(base,label+'-public-patch.json'),JSON.stringify(patch,null,2));await fs.writeFile(path.join(base,label+'-saved-audit.json'),JSON.stringify(audit,null,2));console.log(JSON.stringify(audit));

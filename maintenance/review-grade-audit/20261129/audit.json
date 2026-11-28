@@ -5309,9 +5309,16 @@
         "date": "2025/12/21"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D4",
@@ -5354,9 +5361,16 @@
         "dayId": "day-2025-12-07"
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D6",
@@ -5399,9 +5413,16 @@
         "raceName": "3歳未勝利"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D8",
@@ -5444,9 +5465,16 @@
         "surface": "ダート"
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D10",
@@ -5458,9 +5486,16 @@
       "eval": "D",
       "track": "中京芝2000稍重"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D12",
@@ -5472,9 +5507,16 @@
       "track": "阪神芝2200",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D15",
@@ -5486,9 +5528,16 @@
       "eval": "D",
       "track": "中山芝1200"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D22",
@@ -5500,9 +5549,16 @@
       "eval": "D",
       "comment": "4,5番手から伸びきれず5着。前残りの展開で前の馬が上位も着差かなりある。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D28",
@@ -5514,9 +5570,16 @@
       "eval": "D",
       "comment": "中団から伸び切れず4着。ハイペースの展開が向いた。さらに後ろの馬が上位。評価はできない。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D32",
@@ -5559,9 +5622,16 @@
       },
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D33",
@@ -5604,9 +5674,16 @@
         "officialFieldSize": 10
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D38",
@@ -5618,9 +5695,16 @@
       "eval": "D",
       "comment": "中団前目から伸びきれず4着。内前の馬が上位もこの馬もスムーズな競馬。着差ややある。"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D40",
@@ -5664,9 +5748,16 @@
       },
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D48",
@@ -5709,9 +5800,16 @@
       },
       "name": "2勝クラス"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D49",
@@ -5755,9 +5853,16 @@
       },
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D50",
@@ -5800,9 +5905,16 @@
       "eval": "D",
       "comment": "行き足ついて中団前目につけて伸びきれず8着。4コーナーで外を回しており直線も進路を切り替えており評価を下げる必要はない。ジリジリ伸びている。先行できれば。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D52",
@@ -5845,9 +5957,16 @@
       },
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D54",
@@ -5890,9 +6009,16 @@
         "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002023110036/12"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D55",
@@ -5935,9 +6061,16 @@
       "track": "東京芝1400稍重",
       "name": "京王杯2歳S"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D67",
@@ -5979,9 +6112,16 @@
         "trackCondition": "良"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D68",
@@ -6024,9 +6164,16 @@
       "raceId": "race_day-2024-11-03_%E6%9D%B1%E4%BA%AC_9",
       "comment": "スタート五分で中団から伸びきれず5着。ロスなく立ち回れており最後まで止まっていないが好評価はできない。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D71",
@@ -6068,9 +6215,16 @@
         "officialFieldSize": 14
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D74",
@@ -6082,9 +6236,16 @@
       "track": "阪神芝2400",
       "eval": "D"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D78",
@@ -6127,9 +6288,16 @@
         "distance": 1800
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D79",
@@ -6172,9 +6340,16 @@
       },
       "name": "京都記念"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D83",
@@ -6216,9 +6391,16 @@
         "distance": 1800
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D86",
@@ -6261,9 +6443,16 @@
       "comment": "先行して伸びきれず5着。スムーズな競馬もペース早すぎたか。逃げた馬が勝利してはいる。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D90",
@@ -6306,9 +6495,16 @@
       "comment": "中団やや後ろから伸びきれず5着。馬群の間をロス最小限に走れたが内に行ってしまった。大きくは負けていない。長い距離よさそう",
       "raceId": "race_day-2026-05-24_%E6%9D%B1%E4%BA%AC_7"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D93",
@@ -6320,9 +6516,16 @@
       "comment": "出遅れて後方からまくっていって伸びきれず4着。終始外を回すロスの多い競馬のため評価を下げる必要はないがうまく進出できていた。スタート改善すれば。",
       "track": "福島芝1800"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D96",
@@ -6334,9 +6537,16 @@
       "comment": "出遅れて後方から伸びきれず5着。直線時点で上位と離れすぎていたため評価を下げる必要はない。スタート改善必須。",
       "name": "未勝利"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D97",
@@ -6348,9 +6558,16 @@
       "name": "未勝利",
       "comment": "二の足で中団外につけて直線ジリジリのびて5着。外枠のため終始やや外を回しながらの競馬のため大きく評価を下げる必要はない。上位は前の馬で位置取りの差が大きいもう少し内なら。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D100",
@@ -6362,9 +6579,16 @@
       "track": "小倉芝1200",
       "name": "耶馬溪特別"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D102",
@@ -6376,9 +6600,16 @@
       "track": "京都芝1400不",
       "name": "ファンタジーS"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D103",
@@ -6420,9 +6651,16 @@
         "officialDate": "2026/3/15"
       }
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "D103まで承認。D4/8/55/15/33/38/71/74/78/79/90/100/103はB、その他は提示案どおり。D104以降は未承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-Al01ZT",
+    "savedAt": "2026-11-28T11:10:52.186Z"
   },
   {
     "id": "D106",
