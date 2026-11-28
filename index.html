@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script src="vendor/jszip-3.10.1.min.js?v=3.10.1"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>document.documentElement.dataset.keibaMode = new URLSearchParams(location.search).has('edit') ? 'admin' : 'public';</script>
@@ -174372,7 +174373,7 @@ async function initApp() {
 }
 
 // アプリ起動
-initApp().catch(e => {
+initApp().then(()=>{window.publicAppReady=true;window.dispatchEvent(new Event('public-app-ready'));}).catch(e => {
   console.error('initApp失敗:', e);
   raceDays = raceDays || [];
   horses   = horses || [];
@@ -174507,13 +174508,18 @@ const GITHUB_DATA_CODE_VER = '4';
 const _notionIdToLocation = {};
 
 // zipまたはjsonからペイロードを取得するヘルパー
+async function publicSnapshotFetch(url) {
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),30000);
+  try { return await fetch(url+'?_snapshot='+Date.now(), {cache:'no-store',signal:controller.signal}); }
+  finally { clearTimeout(timer); }
+}
 async function _fetchPayload() {
   // 公開JSONを正とする。ZIPはJSON取得に失敗した場合のみ使用する。
   try {
-    const resJson = await fetch(GITHUB_DATA_URL_JSON, { cache: 'no-store' });
+    const resJson = await publicSnapshotFetch(GITHUB_DATA_URL_JSON);
     if (resJson.ok) {
       const payload = await resJson.json();
-      if (Array.isArray(payload?.horses) && Array.isArray(payload?.raceDays)) return payload;
+      if (Array.isArray(payload?.horses) && Array.isArray(payload?.raceDays)) { window.publicSnapshotSource={url:GITHUB_DATA_URL_JSON,etag:resJson.headers.get('ETag')||resJson.headers.get('Last-Modified')}; return payload; }
       throw new Error('JSONのデータ形式が不正です');
     }
     throw new Error('JSON HTTP ' + resJson.status);
@@ -174521,7 +174527,7 @@ async function _fetchPayload() {
     console.warn('[keiba] 公開JSON取得失敗。ZIPを試行:', e.message);
   }
   try {
-    const resZip = await fetch(GITHUB_DATA_URL_ZIP, { cache: 'no-store' });
+    const resZip = await publicSnapshotFetch(GITHUB_DATA_URL_ZIP);
     if (!resZip.ok) return null;
     if (typeof JSZip === 'undefined') throw new Error('JSZip未ロード');
     const zip = await JSZip.loadAsync(await resZip.blob());
@@ -174529,6 +174535,7 @@ async function _fetchPayload() {
     if (!jsonName) throw new Error('ZIP内のJSONが見つかりません');
     const payload = JSON.parse(await zip.files[jsonName].async('string'));
     if (!Array.isArray(payload?.horses) || !Array.isArray(payload?.raceDays)) throw new Error('ZIPのデータ形式が不正です');
+    window.publicSnapshotSource={url:GITHUB_DATA_URL_ZIP,etag:resZip.headers.get('ETag')||resZip.headers.get('Last-Modified')};
     return payload;
   } catch(e) {
     console.warn('[keiba] 公開データを取得できません:', e);
@@ -174572,10 +174579,11 @@ function publicCacheUpdates(incoming, existing, key, exportedAt) {
 }
 
 async function fetchGitHubData() {
-  if (isEditMode) return;
+  if (isEditMode) return {ok:false};
+  window.publicSnapshotLoadOK=false;
   try {
     const payload = await _fetchPayload();
-    if (!payload || !Array.isArray(payload.raceDays) || !Array.isArray(payload.horses)) return;
+    if (!payload || !Array.isArray(payload.raceDays) || !Array.isArray(payload.horses)) return {ok:false};
     const existingDays = await idbGetAll('raceDays');
     const existingHorses = await idbGetAll('horses');
     const deletedHorseNames = getDeletedHorseNames();
@@ -174589,9 +174597,12 @@ async function fetchGitHubData() {
     // 保存完了後にだけバージョン記録する。
     localStorage.setItem(GITHUB_DATA_VERSION_KEY, payloadVersion);
     invalidateHorseCache();
+    window.publicSnapshotLoadOK=true;
     console.log('[keiba] 公開JSON照合: JSON馬', validHorses.length, '頭 / ローカル', existingHorses.length, '頭 / 更新', horseUpdates.length, '頭');
+    return {ok:true,changed:horseUpdates.length+dayUpdates.length};
   } catch(e) {
     console.error('[keiba] 公開データ読み込みに失敗。既存データは保持:', e);
+    return {ok:false};
   }
 }
 
@@ -180468,7 +180479,7 @@ async function createHorsePageInline(btn) {
 </script>
 
 <!-- JSZip for zip support -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- ZIP decoder is loaded locally in the head before startup. -->
 
 <script>
 // ===== AI予想アシスタント（現在のアプリ内データだけで分析） =====
@@ -182329,5 +182340,6 @@ async function publicHistoryMore(){
 <script src="pace-workspace.js?v=20261126-1"></script>
 <script src="review-chronology.js?v=20261116-1"></script>
 <script src="review-chronology-ui.js?v=20261116-1"></script>
+<script src="public-refresh.js?v=20261128-refresh1"></script>
 </body>
 </html>

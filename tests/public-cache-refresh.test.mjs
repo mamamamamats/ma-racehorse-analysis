@@ -29,9 +29,9 @@ test('repeated opening avoids writes, missing records restored and extra local h
 });
 test('public startup repairs existing rows without Firestore calls and commits version after writes',async()=>{
  const writes=[],storage=[];
- const e={isEditMode:false,_fetchPayload:async()=>({exportedAt,horses:[latest],raceDays:[]}),idbGetAll:async s=>s==='horses'?[{name:latest.name,races:[]}]:[],getDeletedHorseNames:()=>new Set(),idbPutAll:async(s,rows)=>writes.push([s,rows]),localStorage:{setItem:(...args)=>storage.push(args)},GITHUB_DATA_VERSION_KEY:'version',invalidateHorseCache:()=>{},console};
+ const e={window:{},isEditMode:false,_fetchPayload:async()=>({exportedAt,horses:[latest],raceDays:[]}),idbGetAll:async s=>s==='horses'?[{name:latest.name,races:[]}]:[],getDeletedHorseNames:()=>new Set(),idbPutAll:async(s,rows)=>writes.push([s,rows]),localStorage:{setItem:(...args)=>storage.push(args)},GITHUB_DATA_VERSION_KEY:'version',invalidateHorseCache:()=>{},console};
  vm.runInNewContext(helpers+html.slice(html.indexOf('async function fetchGitHubData('),html.indexOf('\nfunction exportData()')),e);
- await e.fetchGitHubData();assert.equal(writes[0][1][0].races[0].eval,'B');assert.equal(storage.length,1);
+ assert.equal((await e.fetchGitHubData()).ok,true);assert.equal(e.window.publicSnapshotLoadOK,true);assert.equal(writes[0][1][0].races[0].eval,'B');assert.equal(storage.length,1);
  e.isEditMode=true;await e.fetchGitHubData();assert.equal(writes.length,1);
 });
 test('review loader reads archive before Firebase gate; pending badges are not labeled unregistered',async()=>{
