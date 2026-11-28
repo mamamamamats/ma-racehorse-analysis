@@ -3,9 +3,10 @@
  'use strict';
  const day=x=>{const m=String(x||'').match(/(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:'';};
  const add=(date,n)=>{const d=new Date(day(date)+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
- function week(date){const key=day(date);if(!key)throw Error('開催日が不正です');const d=new Date(key+'T00:00:00Z'),dow=d.getUTCDay(),start=add(key,-((dow+6)%7));return {start,end:add(start,6)};}
+ function week(date,dates=[]){const key=day(date);if(!key)throw Error('開催日が不正です');const dow=new Date(key+'T00:00:00Z').getUTCDay(),offset=dow===6?0:dow<=1?-(dow+1):6-dow,start=add(key,offset),monday=add(start,2);return {start,end:add(start,key===monday||dates.some(x=>day(x)===monday)?2:1)};}
+ function scheduleDates(now=Date.now(),dates=[]){const key=japanDay(now),dow=new Date(key+'T00:00:00Z').getUTCDay(),anchor=dow===1&&!dates.some(x=>day(x)===key)?add(key,5):key,period=week(anchor,dates);return [period.start,add(period.start,1),...(period.end===add(period.start,2)?[period.end]:[])];}
  const japanDay=now=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now));
- function expiry(weekEnd){return new Date(add(weekEnd,8)+'T00:00:00+09:00').toISOString();}
+ function expiry(weekEnd){const end=day(weekEnd),sunday=new Date(end+'T00:00:00Z').getUTCDay()===1?add(end,-1):end;return new Date(add(sunday,8)+'T00:00:00+09:00').toISOString();}
  function visible(record,now=Date.now()){return !!record&&record.schemaVersion===1&&Number.isFinite(Date.parse(record.expiresAt))&&Date.parse(record.publishedAt)<=Number(now)&&Number(now)<Date.parse(record.expiresAt);}
  function validate(record){
   if(!record||record.schemaVersion!==1||!record.card)return false;const c=record.card,n=(x)=>typeof x==='number'&&Number.isFinite(x)&&x>=0;if(!c.summary||!['saved','total','wins','places','pending','excluded'].every(k=>n(c.summary[k])))return false;
@@ -14,5 +15,5 @@
   if(c.betMode!=null&&!['box','axis','formation'].includes(c.betMode))return false;if(c.betLabel!=null&&typeof c.betLabel!=='string')return false;if(c.betDescription!=null&&typeof c.betDescription!=='string')return false;
   return typeof c.dateLabel==='string'&&typeof c.configLabel==='string'&&typeof c.ranksLabel==='string'&&n(c.stake);
  }
- return {day,add,week,japanDay,expiry,visible,validate};
+ return {day,add,week,scheduleDates,japanDay,expiry,visible,validate};
 });

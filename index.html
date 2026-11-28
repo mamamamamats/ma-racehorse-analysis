@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script src="weekly-publication-model.js?v=20261128-meeting1"></script>
 <script src="vendor/jszip-3.10.1.min.js?v=3.10.1"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -174744,20 +174745,7 @@ function updateBreadcrumb() {
 
 // ================= WEEK RACES =================
 function getThisWeekDates() {
-  const today = new Date();
-  const dow = today.getDay(); // 0=日, 6=土
-  const sat = new Date(today);
-  if (dow === 0) {
-    // 日曜日の場合は昨日（土曜日）を基準にする
-    sat.setDate(today.getDate() - 1);
-  } else {
-    // それ以外は次の土曜日（または今日が土曜ならそのまま）
-    sat.setDate(today.getDate() + (dow === 6 ? 0 : (6 - dow + 7) % 7));
-  }
-  const sun = new Date(sat);
-  sun.setDate(sat.getDate() + 1);
-  const fmt = d => `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
-  return [fmt(sat), fmt(sun)];
+  return window.WeeklyPublicationModel.scheduleDates(Date.now(),(raceDays||[]).map(d=>d.date)).map(key=>key.split('-').map(Number).join('/'));
 }
 
 // 近走の track フィールドから競馬場名を抽出する
@@ -182324,22 +182312,22 @@ async function publicHistoryMore(){
 <script src="podium-traits-model.js?v=20261117-1"></script>
 <script src="weekly-report-visuals.js?v=20261126-formations1"></script>
 <script src="day-going-model.js?v=20261115-4"></script>
-<script src="weekly-publication-model.js?v=20261126-formations1"></script>
+
 <script src="analysis-archive-model.js?v=20261117-1"></script>
 <script src="prediction-diagnosis-model.js?v=20261124-1"></script>
 <script src="prediction-diagnosis-ui.js?v=20261124-1"></script>
 <script src="verified-review-links.js?v=20261126-1"></script>
 <script src="horse-review-link-ui.js?v=20261126-official1"></script>
-<script src="race-review-tools.js?v=20261126-formations1"></script>
+<script src="race-review-tools.js?v=20261128-meeting1"></script>
 <script src="day-going-settings.js?v=20261115-4"></script>
 <script src="running-style-data.js?v=20261115-8"></script>
 <script src="weight-research-ui.js?v=20261122-1"></script>
 <script src="analysis-workspace.js?v=20261124-1"></script>
-<script src="weekly-publication.js?v=20261126-formations1"></script>
+<script src="weekly-publication.js?v=20261128-meeting1"></script>
 <script src="public-condition-traits.js?v=20261117-1"></script>
 <script src="pace-workspace.js?v=20261126-1"></script>
 <script src="review-chronology.js?v=20261116-1"></script>
 <script src="review-chronology-ui.js?v=20261116-1"></script>
-<script src="public-refresh.js?v=20261128-refresh1"></script>
+<script src="public-refresh.js?v=20261128-meeting1"></script>
 </body>
 </html>

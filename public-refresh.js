@@ -1,7 +1,7 @@
 /* Public resume/manual updates. Fetches static files only; no Firebase calls. */
 (()=>{
  'use strict';if(isEditMode)return;
- const VERSION='20261128-refresh1';let busy=null,lastCheck=0,hiddenAt=0;
+ const VERSION='20261128-meeting1';let busy=null,lastCheck=0,hiddenAt=0;
  const box=document.createElement('div');box.id='publicRefreshControls';box.style.cssText='margin:0 auto 18px;max-width:860px;display:flex;gap:12px;align-items:center;flex-wrap:wrap';box.innerHTML='<button type="button" class="btn-back" id="publicRefreshButton">↻ 最新データを読み込む</button><span role="status" aria-live="polite" style="font-size:12px;color:var(--muted2)"></span>';
  const host=document.querySelector('#view-home .home-page')||document.querySelector('#view-home');if(host){const hero=host.querySelector('.home-hero');if(hero)hero.after(box);else host.prepend(box);}
  const button=box.querySelector('button'),status=box.querySelector('[role="status"]');
