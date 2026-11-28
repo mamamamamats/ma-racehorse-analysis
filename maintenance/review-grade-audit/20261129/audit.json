@@ -544,9 +544,10 @@
       "comment": "先行して押し切って1着。一度刺されたが再度伸びて競り勝った。前有利の展開と馬場は向いていた。",
       "eval": "S"
     },
-    "status": "approval-required",
+    "status": "already-corrected-in-latest-public-json",
     "proposedGrade": "A",
-    "reason": "Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。"
+    "reason": "Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。 最新公開JSON（2026-11-28T07:50:08.195Z）で提案評価への変更を確認。再更新しない。",
+    "latestGrade": "A"
   },
   {
     "id": "S26",
@@ -1342,9 +1343,10 @@
         "officialFieldSize": 15
       }
     },
-    "status": "approval-required",
+    "status": "already-corrected-in-latest-public-json",
     "proposedGrade": "A",
-    "reason": "Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。"
+    "reason": "Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。 最新公開JSON（2026-11-28T07:50:08.195Z）で提案評価への変更を確認。再更新しない。",
+    "latestGrade": "A"
   },
   {
     "id": "S53",
@@ -2158,9 +2160,10 @@
       "comment": "内枠から逃げて押し切って1着。ロスなく走って完璧な競馬。時計は早くない。",
       "name": "未勝利"
     },
-    "status": "apply",
+    "status": "already-corrected-in-latest-public-json",
     "proposedGrade": "B",
-    "reason": "ロスなく完璧な逃げ切りで時計は早くないと明記。"
+    "reason": "ロスなく完璧な逃げ切りで時計は早くないと明記。 最新公開JSON（2026-11-28T07:50:08.195Z）で提案評価への変更を確認。再更新しない。",
+    "latestGrade": "B"
   },
   {
     "id": "S78",
@@ -6084,9 +6087,10 @@
       "name": "未勝利",
       "comment": "先行して伸びきれず5着。スムーズな競馬で伸び負け。止まっているわけではないがきれ負け"
     },
-    "status": "approval-required",
+    "status": "already-corrected-in-latest-public-json",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。 最新公開JSON（2026-11-28T07:50:08.195Z）で提案評価への変更を確認。再更新しない。",
+    "latestGrade": "C"
   },
   {
     "id": "D141",
@@ -6098,9 +6102,10 @@
       "comment": "先行して伸びきれず5着。仕掛け早かったがペースは早くなく時計も早くはない。直線までためたいか。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "already-corrected-in-latest-public-json",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。 最新公開JSON（2026-11-28T07:50:08.195Z）で提案評価への変更を確認。再更新しない。",
+    "latestGrade": "C"
   },
   {
     "id": "D147",
