@@ -15,3 +15,9 @@ test('missing evidence remains unknown and does not fabricate average times or a
 test('SVG wraps long content, grows in height and escapes all supplied text',()=>{
  const card=Share.capture({...selection,picks:Array.from({length:8},(_,i)=>({...selection.picks[0],num:i+1,name:'非常に長い馬名と表示の確認',reason:'東京コースで好走。'.repeat(35)+'<&script>"'}))},{...context,raceName:'長いレース名'.repeat(7)+'<&script>'});const svg=Share.svg(card);assert.ok(Number(svg.match(/height="(\d+)"/)[1])>2000);assert.match(svg,/&lt;/);assert.doesNotMatch(svg,/<script>|foreignObject/);assert.ok(Share.wrap('あいうえお'.repeat(20),300,30).every(s=>Array.from(s).length<=10));assert.equal((svg.match(/非常に長い馬名と表示の確認/g)||[]).length,8);
 });
+test('lap graphics preserve counts and normalize partial 100m segments without changing the prediction',()=>{
+ const profile={count:6,front200:12.1,back200:11.9,interpolated:true,laps:[6,12,12,12,12,12,12,12,12],segments:[100,200,200,200,200,200,200,200,200]};
+ const original=JSON.stringify(selection),card=Share.capture(selection,{...context,distance:1700,profile});assert.equal(card.lapPoints[0].seconds,12);assert.equal(card.lapPoints[0].distance,100);assert.equal(card.lapPoints.at(-1).distance,1700);profile.laps[0]=90;assert.equal(card.lapPoints[0].seconds,12);assert.equal(JSON.stringify(selection),original);
+ const svg=Share.svg(card);assert.match(svg,/data-chart="lap-pattern-distribution"/);assert.match(svg,/data-chart="average-lap"/);assert.match(svg,/後傾 8R \/ 67%/);assert.match(svg,/200m換算/);assert.match(svg,/上ほど速い/);assert.match(svg,/100m/);assert.match(svg,/1700m/);assert.doesNotMatch(svg,/NaN|Infinity/);
+ const missing=Share.svg(Share.capture(selection,{...context,profile:{...profile,segments:[200]}}));assert.doesNotMatch(missing,/data-chart="average-lap"/);assert.match(missing,/区間データなし/);
+});
