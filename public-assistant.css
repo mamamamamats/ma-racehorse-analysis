@@ -22,3 +22,5 @@ html[data-keiba-mode="public"] .public-panel{border-radius:18px;border-color:var
 .pace-prediction{border:1px solid #79edc955;border-radius:12px;padding:18px;margin:16px 0;background:var(--card,#15232a);color:var(--text,#eee)}.pace-prediction h3{margin:0 0 12px}.pace-prediction p{font-size:12px;line-height:1.7;margin:7px 0}.pace-pick{border-top:1px solid #9bbed425;padding:12px 0}.pace-pick strong{display:block;font-size:16px}.pace-pick small,.pace-prediction small{color:var(--muted,#9bbed4)}.pace-prediction summary{cursor:pointer;font-size:12px}
 
 .pa-score-axis{display:flex;justify-content:space-between;font-size:9px;color:#8fa3b5;font-variant-numeric:tabular-nums;margin:4px 0 8px}.pa-score-stack,.pa-comparison-track{background-image:repeating-linear-gradient(to right,transparent 0,transparent calc(25% - 1px),#8fa7c22b calc(25% - 1px),#8fa7c22b 25%)}
+
+.pa-coverage-warning{padding:12px 16px;border:1px solid #b39850;border-radius:10px;background:#efd18b12;color:#efd18b;line-height:1.7}

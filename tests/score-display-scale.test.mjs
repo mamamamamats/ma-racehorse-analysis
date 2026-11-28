@@ -18,3 +18,7 @@ test('weight-based tiers and overflow are independent of race scores',()=>{
  assert.deepEqual(Scale.parts(6,6.3,10),{base:60,bonus:40});
  for(const weight of [3,4,6]){const weights={venue:weight,distance:weight,condition:weight};const card=Share.capture({picks:[{num:1,originalScore:12.3,baseScore:6,bonusScore:6.3}]},{weights});assert.equal(card.scoreMax,Scale.maximum(weights));assert.match(Share.svg(card),new RegExp('data-score-max="'+card.scoreMax+'"'));weights.venue=0;assert.equal(card.scoreMax,Scale.maximum({venue:weight,distance:weight,condition:weight}));}
 });
+test('prediction image shows evaluation coverage and warns at or below eighty percent',()=>{
+ for(const scored of [0,8,9,10]){const context={scoreRows:Array.from({length:10},(_,i)=>({num:i+1,score:i<scored?3:null}))};const card=Share.capture({picks:[]},context),svg=Share.svg(card);assert.deepEqual(card.coverage,{total:10,scored});assert.ok(svg.includes('評価済み '+scored+'頭'));assert.equal(svg.includes('評価できている頭数が少ないため注意'),scored<=8);}
+ const empty=Share.capture({picks:[]},{scoreRows:[]});assert.equal(Share.svg(empty).includes('評価できている頭数が少ないため注意'),false);
+});
