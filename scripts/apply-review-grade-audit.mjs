@@ -10,7 +10,7 @@ export function prepare(raw,updates){
  return {accepted,skipped,write:accepted.length?{update:{name:raw.name,fields:{races:next}},updateMask:{fieldPaths:['races']},currentDocument:{updateTime:raw.updateTime},updateTransforms:[{fieldPath:'archiveUpdatedAt',setToServerValue:'REQUEST_TIME'}]}:null};
 }
 async function main(){
- const dir=path.join(root,'maintenance/review-grade-audit/20261129'),bytes=await fs.readFile(path.join(dir,'plan-user-approved-through-S76.json')),plan=JSON.parse(bytes),apply=process.argv.includes('--apply');if(createHash('sha256').update(await fs.readFile(path.join(root,plan.source))).digest('hex')!==plan.sourceSha256)throw Error('Source hash mismatch');
+ const dir=path.join(root,'maintenance/review-grade-audit/20261129'),bytes=await fs.readFile(path.resolve(dir,process.argv.includes('--plan')?process.argv[process.argv.indexOf('--plan')+1]:'plan-user-approved-after-S76.json')),plan=JSON.parse(bytes),apply=process.argv.includes('--apply');if(createHash('sha256').update(await fs.readFile(path.join(root,plan.source))).digest('hex')!==plan.sourceSha256)throw Error('Source hash mismatch');
  if(!apply){console.log(JSON.stringify({mode:'offline-preview',reviews:plan.updates.length,horses:new Set(plan.updates.map(u=>u.horseName)).size}));return;}
  const pause=JSON.parse(await fs.readFile(path.join(root,'maintenance/historical-review-links/db-write-pause.json'),'utf8'));if(pause.paused)throw Error('DB paused');
  const lockPath=path.join(root,'.local/historical-review-links/queue.lock'),lock=await fs.open(lockPath,'wx');await lock.writeFile(JSON.stringify({pid:process.pid,task:'review-grade-audit',startedAt:new Date().toISOString()}));

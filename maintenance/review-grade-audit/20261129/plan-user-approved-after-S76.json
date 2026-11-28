@@ -1,0 +1,1929 @@
+{
+  "schemaVersion": 1,
+  "targetDate": "2026/11/29",
+  "source": "maintenance/historical-review-links/nov29-all-runners/runs/20261128-0300/master-selection.json.gz",
+  "sourceSha256": "1939fc0dd07e870ea21fa361fbd9968b49c2f61c4fc5ab814c71e0ac9e4d689d",
+  "authorization": "S77以降の提案を承認。S82/83/90/97/128/137/140/143をAへ。S114とS142は据え置き。その他は前回一覧のとおり。Dは未承認。",
+  "updates": [
+    {
+      "id": "S78",
+      "horseName": "ビッグシーザー",
+      "sourceIndex": 7,
+      "original": {
+        "comment": "スタートよく先行して伸びて1着。完璧な競馬。京都得意で展開向いたが逃げ馬をきっちり差しきれた。",
+        "track": "京都芝1200",
+        "raceId": "race_day-2024-11-24_%E4%BA%AC%E9%83%BD_12",
+        "eval": "S",
+        "name": "京阪杯",
+        "linkVerification": {
+          "officialDate": "2024/11/24",
+          "officialFinish": 1,
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-26T10:27:08.703Z",
+          "officialFieldSize": 18,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102020100896/6F"
+        },
+        "raceRef": {
+          "name": "京阪杯",
+          "dayId": "day-2024-11-24",
+          "surface": "芝",
+          "trackCondition": "良",
+          "raceNumber": 12,
+          "venue": "京都",
+          "raceName": "京阪杯",
+          "r": 12,
+          "distance": 1200,
+          "track": "芝1200",
+          "grade": "g2",
+          "date": "2024/11/24"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "展開が向いた完璧な競馬での勝利。S71同様、逃げ馬を差した事実だけで独立した高内容としない。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S80",
+      "horseName": "ビッグシーザー",
+      "sourceIndex": 11,
+      "original": {
+        "eval": "S",
+        "name": "函館スプリントS",
+        "comment": "スタートよく中団前目につけて直線伸びて3着。内前有利の展開で外を回すロスがあったため見直しは可能。今回は枠による敗戦か。スムーズに走ることができれば力はある。時計がかかっている方が好走傾向。パフォーマンスも良い？",
+        "track": "函館芝1200"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S81",
+      "horseName": "ピエナブラック",
+      "sourceIndex": 0,
+      "original": {
+        "track": "京都ダ1900",
+        "name": "未勝利",
+        "eval": "S",
+        "comment": "スタートよく番手から伸びて1着。スムーズな競馬で前有利の展開が向いた。差を詰めさせずも大きな差はない。"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S82",
+      "horseName": "ファイアンクランツ",
+      "sourceIndex": 5,
+      "original": {
+        "raceRef": {
+          "grade": "g2",
+          "surface": "芝",
+          "date": "2025/4/26",
+          "venue": "東京",
+          "track": "芝2400",
+          "r": 11,
+          "raceNumber": 11,
+          "name": "青葉賞",
+          "distance": 2400,
+          "trackCondition": "良",
+          "raceName": "青葉賞",
+          "dayId": "day-2025-04-26"
+        },
+        "eval": "S",
+        "name": "青葉賞",
+        "track": "東京芝2400",
+        "comment": "中団後方から伸びて2着。勝ち馬にマークされたか。スローペースを加速ラップで差しておりやはり力ある。勝ち馬と差はない。",
+        "raceId": "race_day-2025-04-26_%E6%9D%B1%E4%BA%AC_11",
+        "linkVerification": {
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+          "verifiedAt": "2026-11-27T05:22:22.903Z",
+          "officialGoing": "良",
+          "source": "jra-official-history",
+          "officialFieldSize": 13,
+          "officialFinish": 2,
+          "officialDate": "2025/4/26",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ]
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S83",
+      "horseName": "ファイアンクランツ",
+      "sourceIndex": 7,
+      "original": {
+        "name": "ゆりかもめ賞",
+        "comment": "中団後ろから伸びて2着。直線進路なく外から蓋されて追い出しが遅れるロスはあったが伸びてきた。勝ち馬がスムーズで加速ラップ。この馬も止まっていない。",
+        "raceRef": {
+          "distance": 2400,
+          "name": "ゆりかもめ賞",
+          "r": 9,
+          "trackCondition": "良",
+          "dayId": "day-2025-02-09",
+          "raceName": "ゆりかもめ賞",
+          "raceNumber": 9,
+          "surface": "芝",
+          "venue": "東京",
+          "track": "芝2400",
+          "date": "2025/2/9",
+          "grade": "g3"
+        },
+        "eval": "S",
+        "track": "東京芝2400",
+        "raceId": "race_day-2025-02-09_%E6%9D%B1%E4%BA%AC_9",
+        "linkVerification": {
+          "officialGoing": "良",
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-27T05:22:22.903Z",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialFinish": 2,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022104720/F0",
+          "officialDate": "2025/2/9",
+          "officialFieldSize": 11
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S84",
+      "horseName": "フウセン",
+      "sourceIndex": 3,
+      "original": {
+        "track": "京都芝2200",
+        "name": "未勝利",
+        "comment": "スタートよく5番手から伸びて1着。スムーズな競馬もいい手応えで快勝。時計悪くないが開幕週の高速馬場。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "好手応えの快勝だが開幕週の高速馬場。時計「悪くない」はS76同様、Aを裏付ける十分な上積みとはしない。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S85",
+      "horseName": "フォーゲル",
+      "sourceIndex": 5,
+      "original": {
+        "comment": "行き足ついて4番手から伸びて3着。内を取れたが折り合い欠いていた。勝ち馬にはキレ負けも2着馬とは大きな差はない。気性課題。",
+        "eval": "S",
+        "name": "**マーガレットS**",
+        "track": "阪神芝1200"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "内で脚を溜めた3着で勝ち馬にキレ負け。折り合い難はあるが、S42・S19同様にB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S86",
+      "horseName": "フレイムスター",
+      "sourceIndex": 11,
+      "original": {
+        "comment": "スタートよく逃げて押し切って1着。マイペースで走れて押し切れた。ペース自体は遅くなく時計も悪くはない。持続力勝負が得意？",
+        "track": "阪神芝1600",
+        "raceId": "race_day-2025-12-27_%E9%98%AA%E7%A5%9E_4",
+        "eval": "S",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "verifiedAt": "2026-11-27T02:13:05.864Z",
+          "officialGoing": "良",
+          "source": "jra-official-history",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102023101577/C2",
+          "officialFieldSize": 15,
+          "officialFinish": 1,
+          "officialDate": "2025/12/27"
+        },
+        "name": "2歳未勝利",
+        "raceRef": {
+          "date": "2025/12/27",
+          "trackCondition": "良",
+          "dayId": "day-2025-12-27",
+          "distance": 1600,
+          "raceName": "2歳未勝利",
+          "r": 4,
+          "surface": "芝",
+          "grade": "un",
+          "raceNumber": 4,
+          "track": "芝1600",
+          "venue": "阪神",
+          "name": "2歳未勝利"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "マイペースの逃げ切り。「時計悪くない」はS18同様、独立した高評価根拠にしない。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S89",
+      "horseName": "ブレナヴォン",
+      "sourceIndex": 3,
+      "original": {
+        "eval": "S",
+        "comment": "行き足つかず後方から伸びて2着。直線時点でやや後ろすぎた。最後まで足は使えているためスタート改善必須。",
+        "name": "新馬2025/7/6",
+        "track": "小倉芝1800"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "後方から2着で末脚は使えたが、勝ち馬との差・時計の裏付けは不明。S57・S59同様にB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S90",
+      "horseName": "ヘデントール",
+      "sourceIndex": 3,
+      "original": {
+        "eval": "S",
+        "comment": "スタート良かったが控えて中団から伸びて1着。スムーズな競馬でやや差しの届く展開が向いた。3着以下とは着差があり地力の高さを見せた。",
+        "raceRef": {
+          "distance": 3200,
+          "surface": "芝",
+          "otherConditions": {
+            "trackCondition": "良",
+            "track": "芝3200",
+            "grade": "g1",
+            "surface": "芝"
+          },
+          "name": "天皇賞（春）",
+          "r": 11,
+          "dayId": "day-2025-05-04",
+          "grade": "g1",
+          "raceNumber": 11,
+          "raceName": "天皇賞（春）",
+          "date": "2025/5/4",
+          "venue": "京都",
+          "track": "芝3200",
+          "trackCondition": "良"
+        },
+        "track": "京都芝3200",
+        "raceId": "race_day-2025-05-04_%E4%BA%AC%E9%83%BD_11",
+        "name": "天皇賞・春"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S91",
+      "horseName": "ヘデントール",
+      "sourceIndex": 4,
+      "original": {
+        "name": "ダイヤモンドS",
+        "track": "東京芝3400",
+        "comment": "先行して伸びて1着。完勝。スローペースの展開は向いた。",
+        "raceId": "race_day-2025-02-22_%E6%9D%B1%E4%BA%AC_11",
+        "raceRef": {
+          "grade": "g3",
+          "track": "芝3400",
+          "raceNumber": 11,
+          "venue": "東京",
+          "r": 11,
+          "distance": 3400,
+          "name": "ダイヤモンドS",
+          "trackCondition": "良",
+          "date": "2025/2/22",
+          "surface": "芝",
+          "raceName": "ダイヤモンドS",
+          "otherConditions": {
+            "track": "芝3400",
+            "surface": "芝",
+            "grade": "g3",
+            "trackCondition": "良"
+          },
+          "dayId": "day-2025-02-22"
+        },
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S93",
+      "horseName": "ヘデントール",
+      "sourceIndex": 7,
+      "original": {
+        "comment": "スタート出遅れて2コーナーでまくっていって先行して直線伸びて1着。スローペースで前有利の展開は向いていたが折り合いギリギリでまくるロスがありながらの勝利。時計は早くなくスタートかなり悪いため課題は多い。",
+        "raceId": "race_day-2024-06-16_%E6%9D%B1%E4%BA%AC_9",
+        "name": "町田特別",
+        "track": "東京芝2400",
+        "eval": "S",
+        "raceRef": {
+          "date": "2024/6/16",
+          "grade": "op",
+          "track": "芝2400",
+          "venue": "東京",
+          "otherConditions": {
+            "track": "芝2400",
+            "surface": "芝",
+            "grade": "op",
+            "trackCondition": "良"
+          },
+          "raceNumber": 9,
+          "raceName": "町田特別",
+          "trackCondition": "良",
+          "r": 9,
+          "surface": "芝",
+          "distance": 2400,
+          "dayId": "day-2024-06-16",
+          "name": "町田特別"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S94",
+      "horseName": "ベアアッコチャン",
+      "sourceIndex": 4,
+      "original": {
+        "name": "2歳未勝利",
+        "track": "中山ダ1200",
+        "eval": "S",
+        "comment": "スタートイマイチで後方から伸びて1着。後ろすぎたが一気の足で差し切れた。前が争って楽に走れない展開ではあった。時計早くないためスタート課題"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "前が争う差し向きの展開で時計も早くない。後方一気の勝利だけでAにしない。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S95",
+      "horseName": "ベルブリエ",
+      "sourceIndex": 11,
+      "original": {
+        "eval": "S",
+        "linkVerification": {
+          "source": "jra-official-history",
+          "officialFieldSize": 16,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "verifiedAt": "2026-11-26T10:27:08.726Z",
+          "officialDate": "2024/11/3",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021106639/45",
+          "officialFinish": 1
+        },
+        "raceRef": {
+          "trackCondition": "重",
+          "date": "2024/11/3",
+          "grade": "1s",
+          "raceName": "3歳以上1勝クラス",
+          "track": "ダート1600",
+          "r": 7,
+          "distance": 1600,
+          "venue": "東京",
+          "raceNumber": 7,
+          "name": "3歳以上1勝クラス",
+          "dayId": "day-2024-11-03",
+          "surface": "ダート"
+        },
+        "track": "東京ダ1600重",
+        "comment": "スタート五分で中団から伸びて1着。スムーズに外に出せて完璧な競馬だった。しっかり走れた。良馬場でどうか。",
+        "name": "1勝クラス",
+        "raceId": "race_day-2024-11-03_%E6%9D%B1%E4%BA%AC_7"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S96",
+      "horseName": "ホウオウゴールド",
+      "sourceIndex": 13,
+      "original": {
+        "comment": "逃げて押し切って1着。マイペースの競馬で楽な展開だった。控えてどうか。",
+        "eval": "S",
+        "track": "東京ダ1600",
+        "name": "新馬2025/2/16"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：マイペースの楽な展開の逃げ切り。追加の高内容は記載されていない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S97",
+      "horseName": "マイネルフーガ",
+      "sourceIndex": 15,
+      "original": {
+        "comment": "先行して伸びて2着。勝ち馬とは位置取りの差。時計優秀。きれ勝負どうか。",
+        "raceId": "race_day-2025-02-16_%E6%9D%B1%E4%BA%AC_5",
+        "name": "未勝利",
+        "track": "東京芝1800",
+        "linkVerification": {
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022106813/61",
+          "source": "jra-official-history",
+          "officialFieldSize": 16,
+          "officialDate": "2025/2/16",
+          "officialFinish": 2,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "verifiedAt": "2026-11-26T10:27:08.717Z"
+        },
+        "raceRef": {
+          "distance": 1800,
+          "trackCondition": "良",
+          "raceName": "3歳未勝利",
+          "surface": "芝",
+          "dayId": "day-2025-02-16",
+          "date": "2025/2/16",
+          "grade": "un",
+          "r": 5,
+          "name": "3歳未勝利",
+          "venue": "東京",
+          "raceNumber": 5,
+          "track": "芝1800"
+        },
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S102",
+      "horseName": "マンオブザマッチ",
+      "sourceIndex": 3,
+      "original": {
+        "raceId": "race_day-2026-05-10_%E6%96%B0%E6%BD%9F_10",
+        "track": "新潟ダ1800",
+        "name": "五泉特別",
+        "raceRef": {
+          "date": "2026/5/10",
+          "dayId": "day-2026-05-10",
+          "trackCondition": "良",
+          "raceName": "五泉特別",
+          "raceNumber": 10,
+          "distance": 1800,
+          "grade": "op",
+          "surface": "ダート",
+          "track": "ダート1800",
+          "venue": "新潟",
+          "r": 10,
+          "name": "五泉特別"
+        },
+        "comment": "行き足ついて先行して伸びて1着。スムーズな競馬で前有利の展開は向いたが着差つけて快勝。ローカルで完璧な競馬。",
+        "eval": "S",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2026/5/10",
+          "verifiedAt": "2026-11-25T23:44:13.208Z",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022101677/80",
+          "officialFinish": 1,
+          "officialFieldSize": 14,
+          "source": "jra-official-history"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S103",
+      "horseName": "マンオブザマッチ",
+      "sourceIndex": 4,
+      "original": {
+        "comment": "行き足ついて先行して粘って2着。スローペースの展開が向いて勝ち馬には刺された。完璧な競馬できた。",
+        "linkVerification": {
+          "verifiedAt": "2026-11-25T23:44:13.208Z",
+          "officialFieldSize": 16,
+          "officialFinish": 2,
+          "officialDate": "2025/12/20",
+          "source": "jra-official-history",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022101677/80"
+        },
+        "name": "1勝クラス",
+        "raceId": "race_day-2025-12-20_%E9%98%AA%E7%A5%9E_7",
+        "track": "阪神ダ1800",
+        "eval": "S",
+        "raceRef": {
+          "venue": "阪神",
+          "name": "3歳以上1勝クラス",
+          "track": "ダート1800",
+          "grade": "1s",
+          "raceNumber": 7,
+          "distance": 1800,
+          "raceName": "3歳以上1勝クラス",
+          "dayId": "day-2025-12-20",
+          "surface": "ダート",
+          "date": "2025/12/20",
+          "trackCondition": "良",
+          "r": 7
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：スローペースが向いて完璧な競馬でも勝ち馬に差された2着。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S105",
+      "horseName": "マーゴットバディ",
+      "sourceIndex": 3,
+      "original": {
+        "track": "阪神ダ1800",
+        "name": "未勝利",
+        "eval": "S",
+        "comment": "行き足ついて逃げて押し切って1着。マイペースで走れたが着差つけて快勝。時計悪くないがこの週はかなり早い時計でていたため高速馬場の可能性あり"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S106",
+      "horseName": "メイクアリープ",
+      "sourceIndex": 4,
+      "original": {
+        "track": "",
+        "name": "チャンピオンズC",
+        "comment": "内を先行して粘って7着。完璧な競馬でG1ではやや足りないか。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S107",
+      "horseName": "メイショウソウタ",
+      "sourceIndex": 18,
+      "original": {
+        "linkVerification": {
+          "verifiedAt": "2026-11-25T23:44:13.206Z",
+          "source": "jra-official-history",
+          "officialDate": "2024/6/16",
+          "officialFinish": 1,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021103263/32",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "officialFieldSize": 16
+        },
+        "name": "未勝利",
+        "raceRef": {
+          "raceNumber": 2,
+          "raceName": "3歳未勝利",
+          "grade": "un",
+          "trackCondition": "稍重",
+          "distance": 1800,
+          "venue": "京都",
+          "surface": "ダート",
+          "date": "2024/6/16",
+          "track": "ダート1800",
+          "r": 2,
+          "name": "3歳未勝利",
+          "dayId": "day-2024-06-16"
+        },
+        "raceId": "race_day-2024-06-16_%E4%BA%AC%E9%83%BD_2",
+        "comment": "スタートよく先行して直線伸びて1着。スムーズな競馬で砂も被らず完璧な競馬のため素直に高評価はできない。展開向いての好走多い。馬群で競馬してどうか。",
+        "track": "京都ダ1800稍重",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：砂を被らず完璧な競馬なので高評価できず、展開向きの好走が多いと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S108",
+      "horseName": "メイショウソウタ",
+      "sourceIndex": 20,
+      "original": {
+        "name": "未勝利",
+        "raceId": "race_day-2024-02-10_%E4%BA%AC%E9%83%BD_2",
+        "comment": "スタート良かったが控えて中団から伸びて2着。前の馬での決着の中最後まで伸びて追い込んできたのは評価できる。メンバーレベルはやや疑問だが次走もある程度期待はできる。",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021103263/32",
+          "source": "jra-official-history",
+          "officialFinish": 2,
+          "officialDate": "2024/2/10",
+          "officialFieldSize": 11,
+          "verifiedAt": "2026-11-25T23:44:13.206Z"
+        },
+        "track": "京都ダ1900",
+        "raceRef": {
+          "trackCondition": "良",
+          "track": "ダート1900",
+          "raceNumber": 2,
+          "venue": "京都",
+          "name": "3歳未勝利",
+          "grade": "un",
+          "dayId": "day-2024-02-10",
+          "date": "2024/2/10",
+          "r": 2,
+          "raceName": "3歳未勝利",
+          "surface": "ダート",
+          "distance": 1900
+        },
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S109",
+      "horseName": "メイショウソラフネ",
+      "sourceIndex": 8,
+      "original": {
+        "name": "タンザナイトS",
+        "track": "京都芝1200",
+        "comment": "中団前目から伸びて1着。スムーズな競馬で展開向いたが完勝。京都得意。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "スムーズに展開が向いて勝利。完勝という表現のみでAとせずS71同様にB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S110",
+      "horseName": "メイショウソラフネ",
+      "sourceIndex": 11,
+      "original": {
+        "eval": "S",
+        "comment": "スタート五分で中断後ろにつけて伸びきれず7着。直線詰まって追い出しが遅れるロスがあったため評価を下げる必要はない。位置取りは完璧で足は溜まった印象。",
+        "name": "北九州記念",
+        "track": "小倉芝1200稍重"
+      },
+      "status": "apply",
+      "proposedGrade": "F",
+      "reason": "進路が詰まり追い出しが遅れた7着。「評価を下げる必要なし」を能力の高評価へ置き換えず、S55同様に度外視候補。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S111",
+      "horseName": "メイショウソラフネ",
+      "sourceIndex": 14,
+      "original": {
+        "raceId": "race_day-2024-01-13_%E4%BA%AC%E9%83%BD_11",
+        "comment": "先行して二着。内前有利の展開が完璧に向いていたため素直に高評価はできない。1200でも先行できたのは収穫。前残りのレースで狙いたい。",
+        "name": "淀短距離S",
+        "linkVerification": {
+          "source": "jra-official-history",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2024/1/13",
+          "officialFinish": 2,
+          "officialFieldSize": 17,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102019103714/26",
+          "verifiedAt": "2026-11-26T10:27:08.722Z"
+        },
+        "track": "京都芝1200",
+        "raceRef": {
+          "distance": 1200,
+          "date": "2024/1/13",
+          "trackCondition": "良",
+          "dayId": "day-2024-01-13",
+          "raceName": "淀短距離S",
+          "grade": "g3",
+          "name": "淀短距離S",
+          "raceNumber": 11,
+          "surface": "芝",
+          "r": 11,
+          "venue": "京都",
+          "track": "芝1200"
+        },
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：内前有利が完璧に向き、素直に高評価できないと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S112",
+      "horseName": "メイショウタバル",
+      "sourceIndex": 3,
+      "original": {
+        "raceRef": {
+          "track": "芝2200",
+          "venue": "阪神",
+          "raceNumber": 11,
+          "raceName": "宝塚記念",
+          "surface": "芝",
+          "name": "宝塚記念",
+          "distance": 2200,
+          "grade": "g1",
+          "dayId": "day-2025-06-15",
+          "trackCondition": "稍重",
+          "date": "2025/6/15",
+          "r": 11
+        },
+        "eval": "S",
+        "track": "阪神芝2200稍重",
+        "name": "宝塚記念",
+        "comment": "逃げて押し切って1着。マイペースで折り合いついた。馬場展開がハマった印象もハマれば強い。",
+        "raceId": "race_day-2025-06-15_%E9%98%AA%E7%A5%9E_11",
+        "linkVerification": {
+          "officialFieldSize": 17,
+          "verifiedAt": "2026-11-27T05:12:15.601Z",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021103272/B6",
+          "officialDate": "2025/6/15",
+          "source": "jra-official-history",
+          "officialGoing": "稍重",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "officialFinish": 1
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S113",
+      "horseName": "メイショウタバル",
+      "sourceIndex": 6,
+      "original": {
+        "eval": "S",
+        "track": "中京芝2200稍重",
+        "raceId": "race_day-2024-09-22_%E4%B8%AD%E4%BA%AC_11",
+        "raceRef": {
+          "grade": "g2",
+          "venue": "中京",
+          "date": "2024/9/22",
+          "track": "芝2200",
+          "raceNumber": 11,
+          "surface": "芝",
+          "r": 11,
+          "name": "神戸新聞杯",
+          "distance": 2200,
+          "raceName": "神戸新聞杯",
+          "trackCondition": "稍重",
+          "dayId": "day-2024-09-22"
+        },
+        "linkVerification": {
+          "officialGoing": "稍重",
+          "verifiedAt": "2026-11-27T05:12:15.601Z",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "source": "jra-official-history",
+          "officialFinish": 1,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021103272/B6",
+          "officialDate": "2024/9/22",
+          "officialFieldSize": 14
+        },
+        "comment": "二の足で逃げて押し切って1着。直線時点でかなり離して逃げることができたため素直に高評価はできない。馬場も向いた。",
+        "name": "神戸新聞杯"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：直線まで離して逃げ、素直に高評価できない、馬場も向いたと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S115",
+      "horseName": "モズタチアガレ",
+      "sourceIndex": 9,
+      "original": {
+        "name": "1勝クラス",
+        "linkVerification": {
+          "source": "jra-official-history",
+          "officialDate": "2025/8/30",
+          "verifiedAt": "2026-11-26T10:27:08.688Z",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022106010/80",
+          "officialFieldSize": 12,
+          "officialFinish": 2,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ]
+        },
+        "raceRef": {
+          "name": "3歳以上1勝クラス",
+          "dayId": "day-2025-08-30",
+          "surface": "ダート",
+          "raceName": "3歳以上1勝クラス",
+          "distance": 1400,
+          "raceNumber": 12,
+          "venue": "中京",
+          "track": "ダート1400",
+          "trackCondition": "良",
+          "grade": "1s",
+          "r": 12,
+          "date": "2025/8/30"
+        },
+        "raceId": "race_day-2025-08-30_%E4%B8%AD%E4%BA%AC_12",
+        "comment": "中団から伸びて2着。前が止まらず。ほとんど差はない。",
+        "eval": "S",
+        "track": "中京ダ1400"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "前が止まらず差のない2着だが、ロス克服・時計等の強い裏付けなし。S57・S59と揃える。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S116",
+      "horseName": "モズナナスター",
+      "sourceIndex": 3,
+      "original": {
+        "raceId": "race_day-2026-04-12_%E4%B8%AD%E5%B1%B1_11",
+        "raceRef": {
+          "track": "芝1200",
+          "trackCondition": "良",
+          "venue": "中山",
+          "name": "春雷S",
+          "r": 11,
+          "grade": "g3",
+          "date": "2026/4/12",
+          "dayId": "day-2026-04-12",
+          "raceNumber": 11,
+          "surface": "芝",
+          "distance": 1200,
+          "raceName": "春雷S"
+        },
+        "name": "春雷S",
+        "eval": "S",
+        "comment": "スタート良かったが大外枠のため控えて後方から伸びて2着。かなり位置悪かったが足ためることはできた。斤量軽くいい足使えた。上がり速い足でこれまでにない競馬できた。次走でも力発揮できるか",
+        "linkVerification": {
+          "verifiedAt": "2026-11-26T10:01:23.629Z",
+          "source": "jra-official-history",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022100490/11",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialFieldSize": 16,
+          "officialFinish": 2,
+          "officialDate": "2026/4/12"
+        },
+        "track": "中山芝1200"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S117",
+      "horseName": "モズナナスター",
+      "sourceIndex": 15,
+      "original": {
+        "name": "ファンタジーS",
+        "track": "京都芝1400不",
+        "comment": "逃げて粘って2着。ペース早くなく前有利の展開が向いていたため素直に好評価はできない。完璧だった。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：遅いペース・前有利・完璧な競馬で高評価できないと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S118",
+      "horseName": "ヤブサメ",
+      "sourceIndex": 5,
+      "original": {
+        "comment": "中団後ろから伸びて1着。ペース早くなく後ろだったがいい足で差しきれた。外のび馬場だった？展開待ち。",
+        "eval": "S",
+        "track": "京都芝1200",
+        "raceRef": {
+          "raceName": "淀短距離S",
+          "trackCondition": "良",
+          "date": "2026/1/11",
+          "grade": "g3",
+          "distance": 1200,
+          "track": "芝1200",
+          "venue": "京都",
+          "r": 11,
+          "dayId": "day-2026-01-11",
+          "name": "淀短距離S",
+          "raceNumber": 11,
+          "surface": "芝"
+        },
+        "name": "淀短距離S",
+        "linkVerification": {
+          "verifiedAt": "2026-11-26T09:41:32.706Z",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002021103116/0A",
+          "officialFieldSize": 16,
+          "officialFinish": 1,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2026/1/11",
+          "source": "jra-official-history"
+        },
+        "raceId": "race_day-2026-01-11_%E4%BA%AC%E9%83%BD_11"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S121",
+      "horseName": "ユキワリザクラ",
+      "sourceIndex": 9,
+      "original": {
+        "raceId": "race_day-2024-03-03_%E4%B8%AD%E5%B1%B1_6",
+        "name": "未勝利",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2024/3/3",
+          "officialFieldSize": 18,
+          "verifiedAt": "2026-11-27T05:12:15.606Z",
+          "officialGoing": "稍重",
+          "source": "jra-official-history",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102021103678/2C",
+          "officialFinish": 1
+        },
+        "track": "中山芝2000",
+        "raceRef": {
+          "date": "2024/3/3",
+          "raceNumber": 6,
+          "grade": "un",
+          "surface": "芝",
+          "track": "芝2000",
+          "distance": 2000,
+          "raceName": "3歳未勝利",
+          "venue": "中山",
+          "dayId": "day-2024-03-03",
+          "r": 6,
+          "name": "3歳未勝利",
+          "trackCondition": "稍重"
+        },
+        "comment": "スタートよく逃げて押し切って１着。マイペースの逃げで内前有利の展開と馬場が向いていたため素直に高評価はできない。完璧なレースだった。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：内前有利の馬場・展開が向いた完璧な逃げで高評価できないと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S122",
+      "horseName": "ヨシノイースター",
+      "sourceIndex": 14,
+      "original": {
+        "name": "北九州記念",
+        "eval": "S",
+        "track": "小倉芝1200稍重",
+        "comment": "スタートよく先行して粘って2着。直線時点で後ろとは差があったため素直に高評価はできない。勝ち馬との差も直線時点での差のため悲観する必要はないが勝ち馬は3歳馬。重賞でも展開むけば好走可能。メンバーレベルは高くない。"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S123",
+      "horseName": "ヨシノイースター",
+      "sourceIndex": 16,
+      "original": {
+        "track": "中山芝1200",
+        "name": "オーシャンS",
+        "eval": "S",
+        "comment": "スタートよく先行して直線伸びてはいたが４着。やや追い出しにロスはあったがほぼ完璧なレースだったため素直に高評価はできないが重賞でも戦える力はある。"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S124",
+      "horseName": "ランツフート",
+      "sourceIndex": 3,
+      "original": {
+        "eval": "S",
+        "track": "京都芝2400",
+        "comment": "先行して伸びて1着。内をロスなく走ってスローペースの内前残りの展開が向いた。完璧な競馬で斤量も軽かった。スタートでれた。",
+        "name": "1勝クラス"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：スローペースの内前残り、内でロスなし、軽斤量と複数の恩恵を明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S128",
+      "horseName": "リリージョワ",
+      "sourceIndex": 4,
+      "original": {
+        "eval": "S",
+        "comment": "逃げて押し切って1着。マイペースで走れた。後ろを大きく離して逃げていたがペースは早すぎず完璧な走り。時計は優秀で自力は見せた。控えて走れるか。",
+        "name": "もみじS",
+        "track": "京都芝1400"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S130",
+      "horseName": "ルシード",
+      "sourceIndex": 8,
+      "original": {
+        "name": "1勝クラス",
+        "raceRef": {
+          "name": "3歳以上1勝クラス",
+          "r": 9,
+          "venue": "札幌",
+          "track": "芝1200",
+          "grade": "1s",
+          "trackCondition": "良",
+          "surface": "芝",
+          "distance": 1200,
+          "raceNumber": 9,
+          "raceName": "3歳以上1勝クラス",
+          "dayId": "day-2025-08-02",
+          "date": "2025/8/2"
+        },
+        "track": "札幌芝1200",
+        "raceId": "race_day-2025-08-02_%E6%9C%AD%E5%B9%8C_9",
+        "linkVerification": {
+          "officialFieldSize": 10,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022103592/0E",
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-26T10:56:48.069Z",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2025/8/2",
+          "officialFinish": 1
+        },
+        "comment": "行き足ついて番手から伸びて1着。スムーズな競馬も着差つけて完勝。揉まれてどうか。",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S132",
+      "horseName": "ルークススペイ",
+      "sourceIndex": 5,
+      "original": {
+        "comment": "5,6番手から伸びて2着。足ためれて進路空いてからいい足使えた。勝ち馬に僅かに届かず。差はなく展開次第でチャンスありそう。",
+        "name": "2勝クラス",
+        "raceId": "race_day-2025-12-06_%E9%98%AA%E7%A5%9E_8",
+        "linkVerification": {
+          "source": "jra-official-history",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101543/3A",
+          "verifiedAt": "2026-11-26T10:27:08.727Z",
+          "officialFieldSize": 16,
+          "officialDate": "2025/12/6",
+          "officialFinish": 2
+        },
+        "eval": "S",
+        "raceRef": {
+          "date": "2025/12/6",
+          "r": 8,
+          "raceNumber": 8,
+          "dayId": "day-2025-12-06",
+          "trackCondition": "良",
+          "surface": "ダート",
+          "grade": "2s",
+          "name": "３歳以上2勝クラス",
+          "track": "ダート1400",
+          "raceName": "３歳以上2勝クラス",
+          "distance": 1400,
+          "venue": "阪神"
+        },
+        "track": "阪神ダ1400"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "進路が空いて脚を使った2着。勝ち馬と僅差でもS57・S59同様にB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S133",
+      "horseName": "ルークススペイ",
+      "sourceIndex": 8,
+      "original": {
+        "track": "東京ダ1400",
+        "raceRef": {
+          "r": 7,
+          "grade": "1s",
+          "venue": "東京",
+          "distance": 1400,
+          "date": "2025/6/8",
+          "raceName": "3歳以上1勝クラス",
+          "raceNumber": 7,
+          "trackCondition": "良",
+          "track": "ダート1400",
+          "name": "3歳以上1勝クラス",
+          "surface": "ダート",
+          "dayId": "day-2025-06-08"
+        },
+        "eval": "S",
+        "name": "1勝クラス",
+        "raceId": "race_day-2025-06-08_%E6%9D%B1%E4%BA%AC_7",
+        "comment": "スタートよく先行して伸びて1着。スムーズな競馬で砂を被らずに走れた。1400にも対応できて時計悪くない。",
+        "linkVerification": {
+          "verifiedAt": "2026-11-26T10:27:08.727Z",
+          "officialFieldSize": 16,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101543/3A",
+          "officialDate": "2025/6/8",
+          "officialFinish": 1,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "source": "jra-official-history"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "砂を被らずスムーズな勝利。「時計悪くない」はS76同様、Aの独立根拠として扱わない。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S134",
+      "horseName": "ルークススペイ",
+      "sourceIndex": 16,
+      "original": {
+        "raceRef": {
+          "track": "ダート1400",
+          "venue": "東京",
+          "name": "2歳未勝利",
+          "raceNumber": 2,
+          "grade": "un",
+          "r": 2,
+          "dayId": "day-2024-10-05",
+          "date": "2024/10/5",
+          "surface": "ダート",
+          "distance": 1400,
+          "raceName": "2歳未勝利",
+          "trackCondition": "重"
+        },
+        "eval": "S",
+        "raceId": "race_day-2024-10-05_%E6%9D%B1%E4%BA%AC_2",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022101543/3A",
+          "verifiedAt": "2026-11-26T10:27:08.727Z",
+          "source": "jra-official-history",
+          "officialDate": "2024/10/5",
+          "officialFinish": 1,
+          "officialFieldSize": 16
+        },
+        "track": "東京ダ1400重",
+        "name": "2歳未勝利",
+        "comment": "逃げて押し切って1着。スムーズな競馬で前有利の展開と馬場が向いていたため素直に高評価はできない。良馬場でどうか。"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：前有利の馬場・展開が向いたため素直に高評価できないと明記。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S135",
+      "horseName": "ルージュナリッシュ",
+      "sourceIndex": 14,
+      "original": {
+        "name": "新馬2024/11/9",
+        "comment": "逃げて1着。スムーズで完璧な競馬。",
+        "track": "東京芝1600",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S137",
+      "horseName": "レイピア",
+      "sourceIndex": 5,
+      "original": {
+        "name": "京阪杯",
+        "comment": "スタート五分で中団内から伸びきれず4着。ロスなく走れたが前の馬が下がってきてやや不利受けた。差のないところまでは走れており馬場も最後外の方が伸びる馬場。2,3着は重賞でも好走しておりこの馬も展開向けばチャンスはあるか。内枠はいい",
+        "raceId": "race_day-2025-11-30_%E4%BA%AC%E9%83%BD_12",
+        "track": "京都芝1200",
+        "linkVerification": {
+          "officialFinish": 4,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103066/9C",
+          "verifiedAt": "2026-11-26T10:01:23.632Z",
+          "officialFieldSize": 18,
+          "source": "jra-official-history",
+          "officialDate": "2025/11/30"
+        },
+        "raceRef": {
+          "venue": "京都",
+          "name": "京阪杯",
+          "surface": "芝",
+          "raceNumber": 12,
+          "track": "芝1200",
+          "r": 12,
+          "trackCondition": "良",
+          "grade": "g2",
+          "distance": 1200,
+          "raceName": "京阪杯",
+          "dayId": "day-2025-11-30",
+          "date": "2025/11/30"
+        },
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "やや不利はあるが内でロスなく走った4着。S15同様、僅差や将来の好走可能性と高内容を分けてB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S138",
+      "horseName": "レイピア",
+      "sourceIndex": 6,
+      "original": {
+        "raceRef": {
+          "date": "2025/11/9",
+          "trackCondition": "良",
+          "r": 11,
+          "dayId": "day-2025-11-09",
+          "raceNumber": 11,
+          "surface": "芝",
+          "grade": "g3",
+          "distance": 1200,
+          "track": "芝1200",
+          "name": "みちのくS",
+          "raceName": "みちのくS",
+          "venue": "福島"
+        },
+        "eval": "S",
+        "linkVerification": {
+          "officialFieldSize": 16,
+          "source": "jra-official-history",
+          "officialDate": "2025/11/9",
+          "verifiedAt": "2026-11-26T10:01:23.632Z",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialFinish": 1,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103066/9C"
+        },
+        "track": "福島芝1200",
+        "name": "みちのくS",
+        "comment": "逃げて押し切って1着。マイペースで内前有利の展開が向いた。後ろに差を詰めさせずに勝ちきれた。",
+        "raceId": "race_day-2025-11-09_%E7%A6%8F%E5%B3%B6_11"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "マイペース・内前有利で逃げ切り。差を詰めさせないことだけではAにせずS71同様にB案。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S139",
+      "horseName": "レイピア",
+      "sourceIndex": 9,
+      "original": {
+        "eval": "S",
+        "linkVerification": {
+          "verifiedAt": "2026-11-26T10:01:23.632Z",
+          "officialFieldSize": 15,
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103066/9C",
+          "officialFinish": 1,
+          "officialDate": "2025/6/15",
+          "source": "jra-official-history"
+        },
+        "comment": "スタート五分で中団から伸びて1着。ハイペースの展開でスムーズな競馬だったが完勝。スタートもう少し",
+        "raceRef": {
+          "surface": "芝",
+          "raceNumber": 9,
+          "trackCondition": "稍重",
+          "name": "武庫川特別",
+          "dayId": "day-2025-06-15",
+          "venue": "阪神",
+          "track": "芝1200",
+          "distance": 1200,
+          "grade": "op",
+          "date": "2025/6/15",
+          "r": 9,
+          "raceName": "武庫川特別"
+        },
+        "track": "阪神芝1200稍重",
+        "name": "武庫川特別",
+        "raceId": "race_day-2025-06-15_%E9%98%AA%E7%A5%9E_9"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S140",
+      "horseName": "レイピア",
+      "sourceIndex": 18,
+      "original": {
+        "name": "2歳未勝利",
+        "raceRef": {
+          "name": "2歳未勝利",
+          "raceNumber": 1,
+          "venue": "小倉",
+          "track": "芝1200",
+          "grade": "un",
+          "r": 1,
+          "raceName": "2歳未勝利",
+          "dayId": "day-2024-06-29",
+          "distance": 1200,
+          "date": "2024/6/29",
+          "surface": "芝",
+          "trackCondition": "良"
+        },
+        "track": "小倉芝1200",
+        "raceId": "race_day-2024-06-29_%E5%B0%8F%E5%80%89_1",
+        "linkVerification": {
+          "officialFieldSize": 7,
+          "verifiedAt": "2026-11-26T10:01:23.632Z",
+          "officialFinish": 1,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022103066/9C",
+          "source": "jra-official-history",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialDate": "2024/6/29"
+        },
+        "eval": "S",
+        "comment": "スタートよく逃げて押し切って1着。ペースは早かったがマイペースで逃げれた？馬也で押し切っての勝利で力上位。時計も悪くない。スピードある。"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S141",
+      "horseName": "レッドアレグロ",
+      "sourceIndex": 2,
+      "original": {
+        "name": "1勝クラス",
+        "comment": "スタートよく先行して伸びて1着。スムーズな競馬で前有利の展開と馬場が向いた。特殊な馬場も圧勝。足抜きいい馬場得意か。",
+        "track": "東京ダ1600不良",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S143",
+      "horseName": "レッドアレグロ",
+      "sourceIndex": 6,
+      "original": {
+        "eval": "S",
+        "name": "未勝利",
+        "comment": "スタートよく3番手から伸びたが2着まで。前残りの展開は向いていたため素直に高評価はできないが上位３頭が抜けておりタイムも優秀だった。次走好勝負可能。",
+        "track": "東京ダ1400"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "独立した好時計・ラップ・圧勝・ロス克服・展開逆行などの肯定的内容あり。今回の限定基準では変更しない。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S144",
+      "horseName": "レッドヴァリアート",
+      "sourceIndex": 9,
+      "original": {
+        "raceRef": {
+          "trackCondition": "良",
+          "raceNumber": 6,
+          "date": "2025/7/12",
+          "dayId": "day-2025-07-12",
+          "surface": "芝",
+          "r": 6,
+          "grade": "un",
+          "track": "芝2600",
+          "raceName": "3歳未勝利",
+          "name": "3歳未勝利",
+          "distance": 2600,
+          "venue": "函館"
+        },
+        "eval": "S",
+        "track": "函館芝2600",
+        "name": "未勝利",
+        "raceId": "race_day-2025-07-12_%E5%87%BD%E9%A4%A8_6",
+        "comment": "スタートよく先行して伸びて1着。ロスなく走れて完璧な競馬。着差つけて快勝。",
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialFieldSize": 16,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022105290/5A",
+          "officialDate": "2025/7/12",
+          "officialFinish": 1,
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-26T10:56:48.069Z"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S146",
+      "horseName": "ロードヴォイジャー",
+      "sourceIndex": 8,
+      "original": {
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish"
+          ],
+          "officialGoing": "良",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022101821/E0",
+          "officialFinish": 1,
+          "officialDate": "2025/3/8",
+          "officialFieldSize": 12,
+          "verifiedAt": "2026-11-27T04:04:08.989Z",
+          "source": "jra-official-history"
+        },
+        "eval": "S",
+        "raceId": "race_day-2025-03-08_%E9%98%AA%E7%A5%9E_2",
+        "comment": "逃げて押し切って1着。スローペースの展開が向いた。着差つけて快勝。ペース上がってどうか。",
+        "raceRef": {
+          "dayId": "day-2025-03-08",
+          "raceNumber": 2,
+          "surface": "ダート",
+          "raceName": "3歳未勝利",
+          "distance": 1800,
+          "name": "3歳未勝利",
+          "r": 2,
+          "trackCondition": "良",
+          "date": "2025/3/8",
+          "track": "ダート1800",
+          "venue": "阪神",
+          "grade": "un"
+        },
+        "track": "阪神ダ1800",
+        "name": "未勝利"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S148",
+      "horseName": "ワールドキッス",
+      "sourceIndex": 10,
+      "original": {
+        "eval": "S",
+        "linkVerification": {
+          "officialFinish": 2,
+          "officialGoing": "稍重",
+          "officialFieldSize": 12,
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022104382/8B",
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-27T05:13:56.747Z",
+          "officialDate": "2024/9/1"
+        },
+        "track": "札幌芝1500稍重",
+        "comment": "出遅れて後方外から伸びて2着。かなり大外を回すロスがあったがやや差しに展開向いていた？？ため高評価はできないか。スタート改善しないと厳しいか。",
+        "raceRef": {
+          "dayId": "day-2024-09-01",
+          "trackCondition": "稍重",
+          "raceNumber": 1,
+          "r": 1,
+          "name": "2歳未勝利",
+          "track": "芝1500",
+          "date": "2024/9/1",
+          "venue": "札幌",
+          "surface": "芝",
+          "raceName": "2歳未勝利",
+          "distance": 1500,
+          "grade": "un"
+        },
+        "raceId": "race_day-2024-09-01_%E6%9C%AD%E5%B9%8C_1",
+        "name": "2歳未勝利"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S149",
+      "horseName": "ヴェルテンベルク",
+      "sourceIndex": 1,
+      "original": {
+        "track": "",
+        "name": "天皇賞（春）京都芝3200",
+        "comment": "行き足つかず後方から伸びて2着。後ろすぎたが足溜めれて差し有利の展開が向いた。これまでスローペースばかりだったがタフな長距離の持続力勝負が得意か。力見せた",
+        "eval": "S"
+      },
+      "status": "apply",
+      "proposedGrade": "A",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S150",
+      "horseName": "ヴェルテンベルク",
+      "sourceIndex": 3,
+      "original": {
+        "eval": "S",
+        "comment": "中団前目うちから伸びきれず6着。ロスなく走れて完璧な競馬で伸び負け。力は出しきれて伸び負けているわけではない。スローすぎて上がり早かったか。",
+        "name": "ステイヤーズS",
+        "track": "中山芝3600"
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "直近のユーザー判断で再点検：Sの根拠が薄い可能性はあるが、勝ち方・着差・不利・時計等の判断余地があり断定しない。 提案評価は暫定であり、承認後も最新回顧と照合してから保存する。",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    },
+    {
+      "id": "S151",
+      "horseName": "ヴリトラハン",
+      "sourceIndex": 6,
+      "original": {
+        "comment": "スタート早くなく中団後ろから早めに動いて伸びて1着。馬群の中からロス最小限に抜けてこれた。2着とは大きな差はないか。今回はかなりうまく位置取れた。スタート課題",
+        "eval": "S",
+        "raceId": "race_day-2025-11-01_%E4%BA%AC%E9%83%BD_7",
+        "track": "京都ダ1400重",
+        "name": "1勝クラス",
+        "raceRef": {
+          "distance": 1400,
+          "name": "3歳以上1勝クラス",
+          "dayId": "day-2025-11-01",
+          "raceName": "3歳以上1勝クラス",
+          "raceNumber": 7,
+          "trackCondition": "重",
+          "surface": "ダート",
+          "venue": "京都",
+          "track": "ダート1400",
+          "grade": "1s",
+          "r": 7,
+          "date": "2025/11/1"
+        },
+        "linkVerification": {
+          "evidence": [
+            "official-horse-history",
+            "app-starting-list",
+            "race-name",
+            "course",
+            "own-finish",
+            "going"
+          ],
+          "officialFieldSize": 16,
+          "officialFinish": 1,
+          "officialGoing": "重",
+          "officialDate": "2025/11/1",
+          "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022105302/FA",
+          "source": "jra-official-history",
+          "verifiedAt": "2026-11-27T02:16:57.707Z"
+        }
+      },
+      "status": "apply",
+      "proposedGrade": "B",
+      "reason": "馬群をロス最小限に抜けた僅差の勝利。S71同様、うまく運べたことと高内容を分ける。",
+      "previousProposedGrade": "A",
+      "approval": {
+        "type": "user-explicit",
+        "scope": "S77以降の一覧を承認。S82/83/90/97/128/137/140/143はA、S114/142はS据え置き。D未承認。"
+      }
+    }
+  ],
+  "previousPlan": "plan-user-approved-through-S76.json",
+  "latestPublicSourceCheck": "latest-public-source-check.json"
+}
