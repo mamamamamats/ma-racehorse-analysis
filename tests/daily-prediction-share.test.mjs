@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+test('daily card uses standard engine picks, preserves missing races and never uses database APIs',async()=>{
+ let exported,options;const calls=[];const day={id:'day',date:'2026/11/29',venues:[{name:'東京',races:[{r:12,name:'最終戦',horses:[]},{r:11,name:'A&B杯',horses:[]},{r:1,name:'新馬',exclude:true}]}]};
+ const env={isEditMode:true,raceDays:[day],showToast:message=>assert.fail(message),window:{dayStandardEligible:r=>!r.exclude,SharedPredictionRuntime:{ensure:async o=>{options=o},goingFor:()=> '良',calculate:(d,v,r,o)=>{calls.push([r.r,o]);return {ranked:Array.from({length:10},(_,i)=>({score:i<8?3:null})),selection:{picks:r.r===11?[{mark:'◎',num:7,name:'本命馬'}]:[]}}}},PredictionShare:{openCard:(card,svg)=>{exported={card,svg}}}}};
+ vm.runInNewContext(fs.readFileSync(new URL('../daily-prediction-share.js',import.meta.url),'utf8'),env);const trigger={disabled:false};await env.window.DailyPredictionShare.open('day',trigger);
+ assert.equal(options.publicOnly,true);assert.deepEqual(calls.map(x=>x[0]),[11,12]);assert.ok(calls.every(x=>Object.values(x[1].weights).every(v=>v===3)));assert.equal(exported.card.rows[0].pick.name,'本命馬');assert.equal(exported.card.rows[1].pick,null);assert.match(exported.svg,/A&amp;B杯/);assert.match(exported.svg,/評価不足・予想なし/);assert.match(exported.svg,/評価済み8割以下/);assert.equal(trigger.disabled,false);
+});
