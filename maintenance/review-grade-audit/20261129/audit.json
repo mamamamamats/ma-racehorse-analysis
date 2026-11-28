@@ -6703,9 +6703,16 @@
       },
       "track": "新潟芝1600"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D109",
@@ -6747,9 +6754,16 @@
         "officialFinish": 4
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D111",
@@ -6761,9 +6775,16 @@
       "comment": "後方から伸びきれず5着。流石に後ろすぎ。前残りの展開が向かず。最後よく伸びている。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D112",
@@ -6775,9 +6796,16 @@
       "eval": "D",
       "comment": "スタート五分も位置取れず中団後ろから伸びきれず5着。内前有利の展開と馬場が向かず進路切り替えてエンジンのかかりが遅かった。最後伸びてはいた。展開向いてどうか。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D113",
@@ -6789,9 +6817,16 @@
       "name": "1勝クラス",
       "track": "京都ダ1400稍重"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D116",
@@ -6833,9 +6868,16 @@
       },
       "raceId": "race_day-2025-03-09_%E9%98%AA%E7%A5%9E_8"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D118",
@@ -6847,9 +6889,16 @@
       "comment": "スタート行き足ついて先行したが直線伸びきれず4着。4コーナーでややスムーズに加速できていなかったた。最後もう一度詰めており大きく評価を下げる必要はない。前有利の展開は向いていた。",
       "name": "未勝利"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D120",
@@ -6893,9 +6942,16 @@
       },
       "name": "1勝クラス"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D124",
@@ -6938,9 +6994,16 @@
       "comment": "中団前目内から伸びきれず5着。勝ち馬の後ろからロスなく走れたが伸び負け。大きくは負けていないが斤量軽かった。",
       "name": "元町S"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D125",
@@ -6952,9 +7015,16 @@
       "eval": "D",
       "name": "ドンカスターC"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D126",
@@ -6966,9 +7036,16 @@
       "comment": "先行して伸びきれず5着。スローペースで展開向いたが上位には力負け。休み明けプラス18キロ",
       "name": "茶臼山高原特別"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D129",
@@ -6980,9 +7057,16 @@
       "track": "京都芝1400",
       "comment": "スタート悪くなく中団前目から伸びきれず4着。スムーズな競馬だったが追い込み決着で外差し有利の展開と馬場が向いていないため悲観する必要はない。距離短縮対応できた。直線馬場の良さそうな外目を通れてはいた。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D130",
@@ -7024,9 +7108,16 @@
       },
       "name": "米子S"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D133",
@@ -7038,9 +7129,16 @@
       "name": "新馬2025/1/11",
       "track": "中京ダ1800"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D136",
@@ -7082,9 +7180,16 @@
       "name": "1勝クラス",
       "comment": "先行して伸びきれず5着。内をロスなく走れてスローペースの展開が向いて伸び負け。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D138",
@@ -7096,9 +7201,16 @@
       "track": "東京ダ1600",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D140",
@@ -7172,9 +7284,16 @@
         "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud002022102397/FC"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D148",
@@ -7186,9 +7305,16 @@
       "eval": "D",
       "track": "阪神芝1800"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D152",
@@ -7231,9 +7357,16 @@
       },
       "comment": "スタートよく逃げて粘りきれず5着。マイペースで走れてスローペースの展開が向いた。上位には力負け。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D159",
@@ -7276,9 +7409,16 @@
       },
       "track": "東京ダ1400重"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D160",
@@ -7321,9 +7461,16 @@
         "surface": "ダート"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D162",
@@ -7335,9 +7482,16 @@
       "eval": "D",
       "comment": "スタート悪くなかったが控えて中団から伸びきれず5着。内を走れたが動けず直線で位置悪くなった。最後止まってはいない。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D165",
@@ -7349,9 +7503,16 @@
       "eval": "D",
       "name": "未勝利"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D166",
@@ -7363,9 +7524,16 @@
       "eval": "D",
       "comment": "スタートよく先行して伸びきれず5着。スムーズな競馬で高評価はできない。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D168",
@@ -7407,9 +7575,16 @@
         "raceNumber": 3
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D177",
@@ -7451,9 +7626,16 @@
       },
       "name": "1勝クラス"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D181",
@@ -7465,9 +7647,16 @@
       "track": "京都芝1200稍重",
       "comment": "スタートイマイチも二の足で中団につけて直線伸びきれず5着。スタートで足使ってしまったか。止まっておらずやはり京都得意。もう少し立ち回り活かしたい。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D184",
@@ -7509,9 +7698,16 @@
       "eval": "D",
       "track": "京都ダ1400"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D186",
@@ -7553,9 +7749,16 @@
       },
       "track": "京都芝1400"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D188",
@@ -7567,9 +7770,16 @@
       "name": "フィリーズレビュー",
       "track": "阪神芝1400"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D196",
@@ -7611,9 +7821,16 @@
         "officialFieldSize": 10
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D197",
@@ -7625,9 +7842,16 @@
       "name": "新馬2024/6/30",
       "track": "函館芝1800"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "B",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D205",
@@ -7670,9 +7894,16 @@
       },
       "track": "函館ダ1000稍重"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D207",
@@ -7684,9 +7915,16 @@
       "comment": "逃げて粘りきれず5着。スムーズな競馬で好評価はできない。時計早くない。小回りで",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D208",
@@ -7728,9 +7966,16 @@
         "officialDate": "2025/2/22"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D209",
@@ -7742,9 +7987,16 @@
       "comment": "先行して伸びきれず4着。スムーズな競馬で展開向いた。上位とやや着差ある。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D210",
@@ -7756,9 +8008,16 @@
       "track": "中山ダ1200",
       "name": "2歳1勝クラス"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D215",
@@ -7801,9 +8060,16 @@
       "name": "1勝クラス",
       "comment": "先行して伸びきれず5着。ロスなく立ち回れてスムーズな競馬も伸び負け。ダート走れたが着差はある。"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D216",
@@ -7815,9 +8081,16 @@
       "track": "中山芝1600",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D218",
@@ -7859,9 +8132,16 @@
         "url": "https://www.jra.go.jp/JRADB/accessU.html?CNAME=pw01dud102022105290/5A"
       }
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D221",
@@ -7873,9 +8153,16 @@
       "comment": "先行して伸びきれず5着。スムーズな競馬で上位にキレ負け",
       "track": "新潟芝1600"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D223",
@@ -7887,9 +8174,16 @@
       "comment": "逃げて粘りきれず5着。前有利な展開が向いてスムーズな競馬だった。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D224",
@@ -7901,9 +8195,16 @@
       "eval": "D",
       "track": "中山ダ1200"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D225",
@@ -7946,9 +8247,16 @@
       },
       "raceId": "race_day-2025-11-08_%E7%A6%8F%E5%B3%B6_12"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D228",
@@ -7960,9 +8268,16 @@
       "comment": "スタート五分で中団から伸びきれず4着。スムーズな競馬で外のび馬場と差し有利の展開が向いたが上位にはキレ負け。現状の力は出しきれた印象でベストは中距離の印象。",
       "eval": "D"
     },
-    "status": "approval-required",
-    "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "status": "saved",
+    "proposedGrade": "B",
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "B",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D231",
@@ -7974,9 +8289,16 @@
       "track": "京都芝1600",
       "name": "1勝クラス"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D232",
@@ -7988,9 +8310,16 @@
       "comment": "中断前目から伸びきれず5着。ペース流れたがやや外回した。上位と着差ある。メンバーなど恵まれる必要あり。",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D236",
@@ -8002,9 +8331,16 @@
       "track": "京都ダ1400稍重",
       "eval": "D"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   },
   {
     "id": "D237",
@@ -8016,8 +8352,15 @@
       "track": "小倉芝1200",
       "name": "新馬2024/7/21"
     },
-    "status": "approval-required",
+    "status": "saved",
     "proposedGrade": "C",
-    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。"
+    "reason": "着順だけで昇格せず、着差・頭数・不利・走破内容を要確認。本文とDの釣り合いを確認する候補。",
+    "approval": {
+      "type": "user-explicit",
+      "scope": "残り49件はD228をB、その他は提示案どおり承認。"
+    },
+    "savedGrade": "C",
+    "savedRun": "run-MTzbSt",
+    "savedAt": "2026-11-28T13:03:50.836Z"
   }
 ]
