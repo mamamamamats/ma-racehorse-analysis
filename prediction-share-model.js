@@ -13,7 +13,7 @@
   const valid=p&&Array.isArray(p.laps)&&Array.isArray(p.segments)&&p.laps.length>=2&&p.laps.length===p.segments.length&&p.laps.every(v=>number(v)!=null&&v>0)&&p.segments.every(v=>number(v)!=null&&v>0)&&Math.abs(p.segments.reduce((a,b)=>a+b,0)-distance)<.01;
   const lapPoints=valid?p.laps.map((v,i)=>({seconds:v*200/p.segments[i],distance:p.segments.slice(0,i+1).reduce((a,b)=>a+b,0)})):[];
   const counts=Object.fromEntries(Object.keys(labels).map(k=>[k,Math.max(0,Number(selection.counts?.[k])||0)]));
-  return {raceName:clean(context.raceName||'レース名未登録'),date:clean(context.date),venue:clean(context.venue),raceNumber:clean(context.raceNumber),surface:clean(context.surface),distance,going:clean(context.going||'馬場未登録'),classLabel:clean(context.classLabel||classes[context.lapClass]||'比較クラス未確認'),settingsLabel:clean(context.settingsLabel||'標準設定'),createdLabel:clean(context.createdLabel),referenceRaces:Math.max(0,Number(selection.referenceRaces)||0),averageRaces:Math.max(0,Number(p?.count??selection.mainBasis?.count)||0),pattern:labels[selection.mainPattern]?selection.mainPattern:null,counts,front:front!=null&&distance?front*distance/400:null,back:back!=null&&distance?back*distance/400:null,interpolated:!!p?.interpolated,lapPoints,picks:(selection.picks||[]).map(h=>({mark:clean(h.mark),num:clean(h.num),name:clean(h.name),score:number(h.originalScore),baseScore:number(byNum.get(String(h.num))?.baseScore??h.baseScore),bonusScore:number(byNum.get(String(h.num))?.bonusScore??h.bonusScore),reason:clean(h.reason||'評価根拠は未登録です。')})),extras:(selection.extraCandidates||[]).map(h=>({num:clean(h.num),name:clean(h.name),score:number(h.score)}))};
+  return {scoreMax:Scale.maximum(context.weights),raceName:clean(context.raceName||'レース名未登録'),date:clean(context.date),venue:clean(context.venue),raceNumber:clean(context.raceNumber),surface:clean(context.surface),distance,going:clean(context.going||'馬場未登録'),classLabel:clean(context.classLabel||classes[context.lapClass]||'比較クラス未確認'),settingsLabel:clean(context.settingsLabel||'標準設定'),createdLabel:clean(context.createdLabel),referenceRaces:Math.max(0,Number(selection.referenceRaces)||0),averageRaces:Math.max(0,Number(p?.count??selection.mainBasis?.count)||0),pattern:labels[selection.mainPattern]?selection.mainPattern:null,counts,front:front!=null&&distance?front*distance/400:null,back:back!=null&&distance?back*distance/400:null,interpolated:!!p?.interpolated,lapPoints,picks:(selection.picks||[]).map(h=>({mark:clean(h.mark),num:clean(h.num),name:clean(h.name),score:number(h.originalScore),baseScore:number(byNum.get(String(h.num))?.baseScore??h.baseScore),bonusScore:number(byNum.get(String(h.num))?.bonusScore??h.bonusScore),reason:clean(h.reason||'評価根拠は未登録です。')})),extras:(selection.extraCandidates||[]).map(h=>({num:clean(h.num),name:clean(h.name),score:number(h.score)}))};
  }
  function lapVisual(card,x,y,width){
   const colors={front_loaded:'#efd18b',back_loaded:'#7de8c5',even:'#bca8f5'},total=Object.values(card.counts).reduce((a,b)=>a+b,0);
@@ -38,12 +38,12 @@
   }else{body+=text(x,y,'平均ラップのグラフ：比較できる区間データなし',22,'#91a8b7');y+=38;}
   return {body,end:y};
  }
- function scoreBar(pick,x,y,width){
-  const parts=Scale.parts(pick.baseScore,pick.bonusScore),total=pick.score==null?0:Math.max(0,Math.min(Scale.MAX,pick.score))/Scale.MAX*width;
-  let body=`<g data-chart="horse-score" data-score-max="${Scale.MAX}" role="img" aria-label="${esc(parts?'基礎点'+pick.baseScore+'、適性加点'+pick.bonusScore:'総合'+pick.score+'点、内訳未登録')}、0〜20点の固定目盛り"><rect x="${x}" y="${y}" width="${width}" height="12" rx="5" fill="#2c3c48"/>`;
+ function scoreBar(pick,x,y,width,max){
+  const parts=Scale.parts(pick.baseScore,pick.bonusScore,max),total=pick.score==null?0:Math.max(0,Math.min(max,pick.score))/max*width;
+  let body=`<g data-chart="horse-score" data-score-max="${max}" role="img" aria-label="${esc(parts?'基礎点'+pick.baseScore+'、適性加点'+pick.bonusScore:'総合'+pick.score+'点、内訳未登録')}、0〜${max}点の固定目盛り"><rect x="${x}" y="${y}" width="${width}" height="12" rx="5" fill="#2c3c48"/>`;
   if(parts)body+=`<rect data-score-part="base" x="${x}" y="${y}" width="${width*parts.base/100}" height="12" fill="#7de8c5"/><rect data-score-part="bonus" x="${x+width*parts.base/100}" y="${y}" width="${width*parts.bonus/100}" height="12" fill="#bca8f5"/>`;
   else body+=`<rect x="${x}" y="${y}" width="${total}" height="12" fill="#91a8b7"/>`;
-  for(const tick of Scale.TICKS){const px=x+width*tick/Scale.MAX;body+=`<line x1="${px}" x2="${px}" y1="${y}" y2="${y+16}" stroke="#91a8b7" opacity=".35"/><text x="${px}" y="${y+36}" font-size="17" fill="#91a8b7" text-anchor="${tick===0?'start':tick===Scale.MAX?'end':'middle'}">${tick}</text>`;}
+  for(const tick of Scale.ticks(max)){const px=x+width*tick/max;body+=`<line x1="${px}" x2="${px}" y1="${y}" y2="${y+16}" stroke="#91a8b7" opacity=".35"/><text x="${px}" y="${y+36}" font-size="17" fill="#91a8b7" text-anchor="${tick===0?'start':tick===max?'end':'middle'}">${tick}</text>`;}
   return body+'</g>';
  }
  function svg(card){
@@ -56,8 +56,8 @@
   block=lines([card.surface+(card.distance?card.distance+'m':''),card.going,card.settingsLabel].filter(Boolean).join('  ／  '),pad,y,width,25,'#b4c5d1',34);body+=block.body;y+=block.height+26;
   body+=`<line x1="${pad}" y1="${y}" x2="1016" y2="${y}" stroke="#354653"/>`;y+=46;
   body+=t(pad,y,'今回の予想',29,'#f5f0e6','font-weight="700"');y+=24;
-  body+=t(480,y-24,'■ 基礎点',19,'#7de8c5')+t(605,y-24,'■ 適性加点',19,'#bca8f5')+t(1016,y-24,'全レース共通0〜20点',19,'#91a8b7','text-anchor="end"');
-  for(const pick of card.picks){const name=lines(pick.num+'番 '+pick.name,pad+112,y+44,650,36,'#f5f0e6',44,'font-weight="700"');const reason=lines(pick.reason,pad+112,y+44+name.height+67,width-142,26,'#b9cbd5',37);const height=44+name.height+67+reason.height+15;body+=`<rect x="${pad}" y="${y}" width="${width}" height="${height}" rx="18" fill="#182b36" stroke="#314753"/>`+t(pad+28,y+58,pick.mark,46,pick.mark==='☆'?'#bca8f5':'#efd18b','font-weight="700"')+name.body+t(992,y+40,pick.score==null?'未評価':pick.score.toFixed(2)+'点',24,'#7de8c5','text-anchor="end"')+scoreBar(pick,pad+112,y+44+name.height+9,width-144)+reason.body;y+=height+16;}
+  body+=t(480,y-24,'■ 基礎点',19,'#7de8c5')+t(605,y-24,'■ 適性加点',19,'#bca8f5')+t(1016,y-24,'表示上限'+(card.scoreMax||10)+'点',19,'#91a8b7','text-anchor="end"');
+  for(const pick of card.picks){const name=lines(pick.num+'番 '+pick.name,pad+112,y+44,650,36,'#f5f0e6',44,'font-weight="700"');const reason=lines(pick.reason,pad+112,y+44+name.height+67,width-142,26,'#b9cbd5',37);const height=44+name.height+67+reason.height+15;body+=`<rect x="${pad}" y="${y}" width="${width}" height="${height}" rx="18" fill="#182b36" stroke="#314753"/>`+t(pad+28,y+58,pick.mark,46,pick.mark==='☆'?'#bca8f5':'#efd18b','font-weight="700"')+name.body+t(992,y+40,pick.score==null?'未評価':pick.score.toFixed(2)+'点',24,'#7de8c5','text-anchor="end"')+scoreBar(pick,pad+112,y+44+name.height+9,width-144,card.scoreMax||10)+reason.body;y+=height+16;}
   if(!card.picks.length){body+=t(pad,y+34,'評価できる出走馬がありません',27,'#b9cbd5');y+=80;}
   y+=28;body+=t(pad,y,'この条件のラップ判断材料',29,'#f5f0e6','font-weight="700"');y+=45;
   const lapLines=[card.pattern?labels[card.pattern]+'想定':'ラップ構成は判断材料不足',`${card.venue}・${card.surface}${card.distance||''}m・${card.going} ／ ${card.classLabel}`,`分類済み ${card.referenceRaces}R ／ 平均ラップ ${card.averageRaces}R`];
